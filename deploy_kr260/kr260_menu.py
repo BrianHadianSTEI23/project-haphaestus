@@ -439,15 +439,21 @@ class KR260TestApp:
                     sys.exit(0)
                 else:
                     print(f"{RED}Invalid option '{choice}'. Please select 1 through 8.{RESET}")
-            except KeyboardInterrupt:
-                print(f"\n\n{GREEN}Interrupted. Exiting program.{RESET}")
+            except (KeyboardInterrupt, EOFError):
+                print(f"\n\n{GREEN}Exiting Project Hephaestus KR260 Shell. Goodbye!{RESET}")
                 self.pl.close()
                 self.uart.close()
                 sys.exit(0)
             except Exception as e:
                 print(f"\n{RED}Error: {e}{RESET}")
 
-            input(f"\n{DIM}Press Enter to return to main menu...{RESET}")
+            try:
+                input(f"\n{DIM}Press Enter to return to main menu...{RESET}")
+            except (KeyboardInterrupt, EOFError):
+                print(f"\n\n{GREEN}Exiting Project Hephaestus KR260 Shell. Goodbye!{RESET}")
+                self.pl.close()
+                self.uart.close()
+                sys.exit(0)
 
 
 def main():
