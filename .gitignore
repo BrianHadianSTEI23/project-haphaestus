@@ -1,0 +1,24 @@
+# ==============================================================================
+# AMD Kria KR260 Robotics Starter Kit - Project Hephaestus
+# Author: Brian A. Hadian
+# Git Ignore Configuration
+# ==============================================================================
+
+# Vivado CAD temporary and journal files
+.Xil/
+*.jou
+*.log
+vivado*.backup.*
+
+# Simulation binary outputs and waveforms
+*.vcd
+build/sim/
+
+# Vivado Project generated files
+build/vivado_proj/
+
+# Python compiled cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/

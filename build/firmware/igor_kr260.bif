@@ -1,0 +1,4 @@
+all:
+{
+    [destination_device = pl] /home/hadynata/vs-code-data/hdl/project-haphaestus/build/firmware/igor_kr260.bit
+}

@@ -1,0 +1,22 @@
+/dts-v1/;
+/plugin/;
+
+&{/} {
+    fpga_region: fpga-region {
+        compatible = "fpga-region";
+        fpga-mgr = <&zynqmp_fpga_mgr>;
+        #address-cells = <2>;
+        #size-cells = <2>;
+    };
+};
+
+&fpga_region {
+    #address-cells = <2>;
+    #size-cells = <2>;
+    firmware-name = "igor_kr260/igor_kr260.bit.bin";
+
+    igor_hephaestus_core: igor_core@a0000000 {
+        compatible = "generic-uio";
+        reg = <0x0 0xa0000000 0x0 0x1000>;
+    };
+};
