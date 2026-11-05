@@ -1,0 +1,36 @@
+{
+  "laptop_rtx3050": {
+    "baseline": {
+      "latency_us": 84.94,
+      "fps": 11772.9,
+      "power_w": 38.5
+    },
+    "lewm": {
+      "latency_us": 83.71,
+      "fps": 11946.5,
+      "power_w": 39.2
+    },
+    "hjepa": {
+      "latency_us": 84.56,
+      "fps": 11826.2,
+      "power_w": 39.0
+    }
+  },
+  "laptop_cpu": {
+    "baseline": {
+      "latency_us": 45.47,
+      "fps": 21993.6,
+      "power_w": 28.0
+    },
+    "lewm": {
+      "latency_us": 44.64,
+      "fps": 22399.4,
+      "power_w": 28.0
+    },
+    "hjepa": {
+      "latency_us": 45.32,
+      "fps": 22065.3,
+      "power_w": 28.0
+    }
+  }
+}

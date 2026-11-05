@@ -3,20 +3,21 @@
 # Author: Brian A. Hadian
 # ==============================================================================
 
-.PHONY: all sim synth bd package test test-eth run clean help
+.PHONY: all sim synth bd package test test-eth presentation run clean help
 
 all: sim
 
 help:
 	@echo "Project Hephaestus - Build & Verification Targets:"
-	@echo "  make sim      : Run all Verilog HDL simulations via Icarus Verilog"
-	@echo "  make synth    : Run AMD Vivado synthesis for Kria KR260 (xck26-sfvc784-2LV-c)"
-	@echo "  make bd       : Create Vivado Zynq MPSoC Block Design with AXI connection"
-	@echo "  make package  : Package bitstream, DTBO overlay and shell.json for KR260"
-	@echo "  make test     : Run automated software & hardware test suite"
-	@echo "  make test-eth : Run automated Ethernet link & UART failover regression test"
-	@echo "  make run      : Launch interactive menu-driven KR260 test runner"
-	@echo "  make clean    : Clean build artifacts and simulation dump files"
+	@echo "  make sim          : Run all Verilog HDL simulations via Icarus Verilog"
+	@echo "  make synth        : Run AMD Vivado synthesis for Kria KR260 (xck26-sfvc784-2LV-c)"
+	@echo "  make bd           : Create Vivado Zynq MPSoC Block Design with AXI connection"
+	@echo "  make package      : Package bitstream, DTBO overlay and shell.json for KR260"
+	@echo "  make test         : Run automated software & hardware test suite"
+	@echo "  make test-eth     : Run automated Ethernet link & UART failover regression test"
+	@echo "  make presentation : Compile LaTeX Beamer 5-slide presentation (presentation.pdf)"
+	@echo "  make run          : Launch interactive menu-driven KR260 test runner"
+	@echo "  make clean        : Clean build artifacts and simulation dump files"
 
 sim:
 	@bash scripts/run_simulation.sh
@@ -35,6 +36,13 @@ test:
 
 test-eth:
 	@python3 deploy_kr260/test_ethernet_failover.py
+
+presentation:
+	@mkdir -p presentation/slides
+	@pdflatex -interaction=nonstopmode -output-directory=presentation presentation/presentation.tex
+	@pdflatex -interaction=nonstopmode -output-directory=presentation presentation/presentation.tex
+	@pdftoppm -png -r 150 presentation/presentation.pdf presentation/slides/slide
+	@echo "Presentation compiled to presentation/presentation.pdf (5 slides)"
 
 run:
 	@./run_kr260.sh

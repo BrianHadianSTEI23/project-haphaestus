@@ -1,0 +1,107 @@
+<mujoco model="jetauto_amr_arena">
+  <compiler angle="degree" coordinate="local"/>
+  <option timestep="0.02" integrator="implicitfast" gravity="0 0 -9.81"/>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.4 0.6 0.8" rgb2="0.1 0.1 0.2" width="512" height="512"/>
+    <texture name="grid_floor" type="2d" builtin="checker" rgb1="0.85 0.85 0.85" rgb2="0.7 0.7 0.7" width="512" height="512" mark="edge" markrgb="0.5 0.5 0.5"/>
+    <material name="floor_mat" texture="grid_floor" texrepeat="5 5" reflectance="0.1"/>
+    <material name="wall_mat" rgba="0.75 0.75 0.78 1.0" reflectance="0.05"/>
+    
+    <!-- Authentic JetAuto Hiwonder Materials -->
+    <material name="jetauto_green" rgba="0.12 0.68 0.24 1.0" reflectance="0.35" specular="0.6" shininess="0.8"/>
+    <material name="dark_metal" rgba="0.12 0.12 0.14 1.0" reflectance="0.1" specular="0.3"/>
+    <material name="matte_black" rgba="0.05 0.05 0.06 1.0" reflectance="0.05"/>
+    <material name="silver_hub" rgba="0.75 0.76 0.78 1.0" reflectance="0.4" specular="0.7"/>
+    <material name="screen_display" rgba="0.15 0.22 0.35 1.0" emission="0.3"/>
+    <material name="camera_lens" rgba="0.02 0.02 0.04 1.0" reflectance="0.8" specular="0.9"/>
+  </asset>
+
+  <worldbody>
+    <light directional="true" pos="0 0 4" dir="0 0 -1" diffuse="0.9 0.9 0.9" specular="0.2 0.2 0.2"/>
+    <light directional="false" pos="0 0 3" diffuse="0.4 0.4 0.4"/>
+
+    <!-- Floor (5m x 5m room) -->
+    <geom name="floor" type="plane" size="2.5 2.5 0.1" material="floor_mat" friction="0.8 0.005 0.0001"/>
+
+    <!-- Boundary Walls -->
+    <geom name="wall_north" type="box" pos="0 2.5 0.5" size="2.5 0.05 0.5" material="wall_mat"/>
+    <geom name="wall_south" type="box" pos="0 -2.5 0.5" size="2.5 0.05 0.5" material="wall_mat"/>
+    <geom name="wall_east" type="box" pos="2.5 0 0.5" size="0.05 2.5 0.5" material="wall_mat"/>
+    <geom name="wall_west" type="box" pos="-2.5 0 0.5" size="0.05 2.5 0.5" material="wall_mat"/>
+
+    <!-- 3D Arena Overview Camera -->
+    <camera name="arena_cam" pos="0.0 -3.6 3.2" xyaxes="1 0 0  0 0.6 0.8" fovy="55"/>
+
+    <!-- Indoor Obstacles (Diverse Shapes & Colors) -->
+    <geom name="obs_red_box" type="box" pos="1.1 0.9 0.35" size="0.25 0.25 0.35" rgba="0.85 0.2 0.2 1.0"/>
+    <geom name="obs_blue_cyl" type="cylinder" pos="-1.0 1.2 0.35" size="0.25 0.35" rgba="0.2 0.4 0.85 1.0"/>
+    <geom name="obs_green_cyl" type="cylinder" pos="1.2 -1.1 0.35" size="0.22 0.35" rgba="0.2 0.75 0.3 1.0"/>
+    <geom name="obs_yellow_cyl" type="cylinder" pos="-1.2 -0.9 0.35" size="0.25 0.35" rgba="0.95 0.85 0.1 1.0"/>
+    <geom name="obs_purple_box" type="box" pos="0.0 1.7 0.35" size="0.3 0.2 0.35" rgba="0.6 0.2 0.75 1.0"/>
+    <geom name="obs_cyan_cyl" type="cylinder" pos="-0.2 -1.7 0.35" size="0.25 0.35" rgba="0.1 0.8 0.8 1.0"/>
+
+    <!-- JetAuto Mecanum AMR Body -->
+    <body name="jetauto" pos="0 0 0.048">
+      <!-- 3-DOF Holonomic Planar Joints -->
+      <joint name="slide_x" type="slide" axis="1 0 0" damping="15.0"/>
+      <joint name="slide_y" type="slide" axis="0 1 0" damping="15.0"/>
+      <joint name="hinge_z" type="hinge" axis="0 0 1" damping="8.0"/>
+
+      <!-- Primary Collision Geometry (L=302mm, W=260mm, H=220mm) -->
+      <geom name="amr_chassis" type="box" size="0.151 0.130 0.090" pos="0 0 0.090" mass="3.5" rgba="0 0 0 0"/>
+
+      <!-- Hiwonder JetAuto Visual Geometry -->
+      <!-- Lower Chassis -->
+      <geom type="box" pos="0.12 0 0.035" size="0.03 0.105 0.03" material="jetauto_green" contype="0" conaffinity="0"/>
+      <geom type="box" pos="0 0 0.025" size="0.145 0.095 0.015" material="jetauto_green" contype="0" conaffinity="0"/>
+      <geom type="box" pos="0 0.098 0.050" size="0.135 0.005 0.035" material="jetauto_green" contype="0" conaffinity="0"/>
+      <geom type="box" pos="0 -0.098 0.050" size="0.135 0.005 0.035" material="jetauto_green" contype="0" conaffinity="0"/>
+
+      <!-- Middle Tier & SLAMTEC LiDAR -->
+      <geom type="box" pos="0.03 0 0.095" size="0.085 0.085 0.004" material="jetauto_green" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="0.05 0 0.072" size="0.038 0.016" material="dark_metal" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="0.05 0 0.086" size="0.032 0.005" material="matte_black" contype="0" conaffinity="0"/>
+      <geom type="box" pos="-0.005 0.035 0.100" size="0.018 0.018 0.004" material="matte_black" contype="0" conaffinity="0"/>
+      <geom type="box" pos="-0.005 -0.035 0.100" size="0.018 0.018 0.004" material="matte_black" contype="0" conaffinity="0"/>
+
+      <!-- Upper Pedestal & Astra Depth Camera -->
+      <geom type="cylinder" pos="0.05 0 0.108" size="0.026 0.010" material="silver_hub" contype="0" conaffinity="0"/>
+      <geom type="box" pos="0.06 0 0.130" size="0.018 0.024 0.014" material="dark_metal" contype="0" conaffinity="0"/>
+      <geom type="box" pos="0.075 0 0.160" size="0.016 0.082 0.016" material="matte_black" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="0.092 0 0.160" size="0.008 0.001" euler="0 90 0" material="camera_lens" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="0.092 0.045 0.160" size="0.007 0.001" euler="0 90 0" material="camera_lens" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="0.092 -0.045 0.160" size="0.007 0.001" euler="0 90 0" material="camera_lens" contype="0" conaffinity="0"/>
+
+      <!-- Rear Electronics Bay & LCD Display -->
+      <geom type="box" pos="-0.065 0 0.075" size="0.060 0.080 0.035" material="dark_metal" contype="0" conaffinity="0"/>
+      <body name="rear_screen" pos="-0.075 0 0.110" euler="0 25 0">
+        <geom type="box" pos="0 0 0.052" size="0.007 0.082 0.052" material="matte_black" contype="0" conaffinity="0"/>
+        <geom type="box" pos="-0.008 0 0.052" size="0.001 0.075 0.045" material="screen_display" contype="0" conaffinity="0"/>
+        <geom type="cylinder" pos="0 0.060 0.125" size="0.003 0.035" euler="-10 0 0" material="matte_black" contype="0" conaffinity="0"/>
+        <geom type="cylinder" pos="0 -0.060 0.125" size="0.003 0.035" euler="10 0 0" material="matte_black" contype="0" conaffinity="0"/>
+      </body>
+
+      <!-- Mecanum Wheels -->
+      <geom type="cylinder" pos="0.105 0.132 0" size="0.048 0.022" euler="90 0 0" material="matte_black" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="0.105 0.132 0" size="0.028 0.023" euler="90 0 0" material="silver_hub" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="0.105 -0.132 0" size="0.048 0.022" euler="90 0 0" material="matte_black" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="0.105 -0.132 0" size="0.028 0.023" euler="90 0 0" material="silver_hub" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="-0.105 0.132 0" size="0.048 0.022" euler="90 0 0" material="matte_black" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="-0.105 0.132 0" size="0.028 0.023" euler="90 0 0" material="silver_hub" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="-0.105 -0.132 0" size="0.048 0.022" euler="90 0 0" material="matte_black" contype="0" conaffinity="0"/>
+      <geom type="cylinder" pos="-0.105 -0.132 0" size="0.028 0.023" euler="90 0 0" material="silver_hub" contype="0" conaffinity="0"/>
+
+      <!-- First-Person Onboard Astra Camera -->
+      <camera name="front_cam" pos="0.105 0 0.165" xyaxes="0 -1 0  0.087 0 0.996" fovy="60"/>
+      <!-- Follow-up 3D Chase Camera -->
+      <camera name="follow_cam" pos="-0.7 0 0.45" xyaxes="0 -1 0  0.4 0 0.9" fovy="65"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <velocity name="act_vx" joint="slide_x" kv="120" ctrlrange="-0.6 0.6"/>
+    <velocity name="act_vy" joint="slide_y" kv="120" ctrlrange="-0.4 0.4"/>
+    <velocity name="act_wz" joint="hinge_z" kv="60" ctrlrange="-1.5 1.5"/>
+  </actuator>
+</mujoco>
