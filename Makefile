@@ -3,7 +3,7 @@
 # Author: Brian A. Hadian
 # ==============================================================================
 
-.PHONY: all sim synth bd package test run clean help
+.PHONY: all sim synth bd package test test-eth run clean help
 
 all: sim
 
@@ -14,6 +14,7 @@ help:
 	@echo "  make bd       : Create Vivado Zynq MPSoC Block Design with AXI connection"
 	@echo "  make package  : Package bitstream, DTBO overlay and shell.json for KR260"
 	@echo "  make test     : Run automated software & hardware test suite"
+	@echo "  make test-eth : Run automated Ethernet link & UART failover regression test"
 	@echo "  make run      : Launch interactive menu-driven KR260 test runner"
 	@echo "  make clean    : Clean build artifacts and simulation dump files"
 
@@ -31,6 +32,9 @@ package:
 
 test:
 	@./run_kr260.sh --auto --mock
+
+test-eth:
+	@python3 deploy_kr260/test_ethernet_failover.py
 
 run:
 	@./run_kr260.sh

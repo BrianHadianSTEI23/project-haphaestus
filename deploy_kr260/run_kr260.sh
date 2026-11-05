@@ -24,7 +24,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Make scripts executable
-chmod +x kr260_menu.py kr260_pl_driver.py kr260_uart_driver.py kr260_fpga_manager.py 2>/dev/null || true
+chmod +x *.py 2>/dev/null || true
 
 # Launch the interactive menu
 python3 kr260_menu.py "$@"
