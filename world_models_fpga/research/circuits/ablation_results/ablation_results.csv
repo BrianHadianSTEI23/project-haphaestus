@@ -1,0 +1,12 @@
+Model,Ablation Target,Description,Grounding Drop,Spatial Drop,Avoidance Drop,Foresight Drop,Robustness Drop
+baseline,ablate_appearance,Zero out appearance features (23 dims),+31.2%,+0.4%,+0.0%,-1.1%,-0.0%
+baseline,ablate_geometry,Zero out geometry features (1 dims),-0.1%,+0.1%,+0.0%,+0.0%,+0.0%
+baseline,ablate_heading,Zero out heading features (3 dims),+1.0%,-0.6%,+0.0%,-0.2%,-0.0%
+lewm,ablate_appearance,Zero out appearance features (9 dims),+0.6%,+0.3%,+0.0%,+0.0%,+0.3%
+lewm,ablate_geometry,Zero out geometry features (10 dims),+0.6%,+0.2%,+0.0%,-0.0%,+0.4%
+lewm,ablate_heading,Zero out heading features (10 dims),+0.3%,+0.2%,+0.0%,+0.0%,+0.3%
+lewm,ablate_transition_dynamics,"Bypass predictive dynamics core (delta_s = 0, residual only)",-0.2%,-0.1%,+0.0%,-0.0%,-0.1%
+hjepa,ablate_appearance,Zero out appearance features (1 dims),+2.9%,-0.2%,+0.0%,+0.1%,-0.0%
+hjepa,ablate_geometry,Zero out geometry features (12 dims),+27.5%,+1.4%,+0.0%,-0.2%,-0.5%
+hjepa,ablate_heading,Zero out heading features (8 dims),+4.6%,-1.1%,+0.0%,-0.1%,-1.2%
+hjepa,ablate_macro_planner,Disable macro planning circuit (subgoal S* = 0),+21.1%,+0.7%,+0.0%,+0.2%,-1.7%

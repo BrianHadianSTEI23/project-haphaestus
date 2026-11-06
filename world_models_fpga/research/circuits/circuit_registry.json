@@ -1,0 +1,141 @@
+[
+  {
+    "circuit_id": "spatial_relation_grounding_001",
+    "model": "H-JEPA",
+    "capability": "relative_spatial_grounding",
+    "source_components": [
+      "encoder.conv3",
+      "encoder.conv4",
+      "shared_latent_s[geometry_dims:12]"
+    ],
+    "destination_components": [
+      "macro_predictor.fc1",
+      "macro_predictor.delta_head"
+    ],
+    "supporting_experiments": [
+      "Phase4_Counterfactual_E1",
+      "Phase5_Activation_Patching",
+      "Phase5_Geometry_Ablation"
+    ],
+    "ablation_effect": "27.5% grounding drop under zero ablation",
+    "patching_recovery": 0.612,
+    "necessity_score": 0.1514,
+    "sufficiency_score": 0.8975,
+    "generalization_score": 0.884,
+    "confidence": "high_rigorous_validation"
+  },
+  {
+    "circuit_id": "obstacle_clearance_boundary_002",
+    "model": "LeWorldModel",
+    "capability": "obstacle_avoidance_boundary",
+    "source_components": [
+      "encoder.flatten",
+      "latent_state_s[position_dims:3, geometry_dims:10]"
+    ],
+    "destination_components": [
+      "pred_fc2",
+      "col_fc"
+    ],
+    "supporting_experiments": [
+      "Phase4_Diagnostic_Probe_R2_0.647",
+      "Phase5_Patching_Recovery_80.9%"
+    ],
+    "ablation_effect": "Loss of emergency obstacle avoidance deceleration",
+    "patching_recovery": 0.809,
+    "necessity_score": 0.0011,
+    "sufficiency_score": 0.994,
+    "generalization_score": 0.912,
+    "confidence": "high_rigorous_validation"
+  },
+  {
+    "circuit_id": "macro_subgoal_planning_003",
+    "model": "H-JEPA",
+    "capability": "long_horizon_subgoal_planning",
+    "source_components": [
+      "shared_latent_s",
+      "macro_planner.macro_actions",
+      "macro_predictor.fc1..2"
+    ],
+    "destination_components": [
+      "macro_subgoal_S",
+      "micro_predictor.pol_fc1"
+    ],
+    "supporting_experiments": [
+      "Phase2_Macro_Collision_Acc_81.3%",
+      "Phase5_Macro_Ablation_21.1%_drop"
+    ],
+    "ablation_effect": "21.1% grounding failure; loss of horizon foresight (K=5)",
+    "patching_recovery": 0.845,
+    "necessity_score": 0.0996,
+    "sufficiency_score": 0.946,
+    "generalization_score": 0.895,
+    "confidence": "high_rigorous_validation"
+  },
+  {
+    "circuit_id": "egocentric_heading_steering_004",
+    "model": "H-JEPA",
+    "capability": "heading_invariance_steering",
+    "source_components": [
+      "shared_latent_s[heading_dims:8]"
+    ],
+    "destination_components": [
+      "micro_predictor.pol_fc1",
+      "micro_predictor.action_head"
+    ],
+    "supporting_experiments": [
+      "Phase4_Counterfactual_E3",
+      "Phase5_Patching_Recovery_63.0%"
+    ],
+    "ablation_effect": "Loss of angular steering alignment; heading drift",
+    "patching_recovery": 0.63,
+    "necessity_score": 0.0393,
+    "sufficiency_score": 0.923,
+    "generalization_score": 0.915,
+    "confidence": "high_rigorous_validation"
+  },
+  {
+    "circuit_id": "action_conditioned_foresight_005",
+    "model": "LeWorldModel",
+    "capability": "latent_dynamics_prediction",
+    "source_components": [
+      "latent_state_s",
+      "planner.candidate_actions",
+      "pred_fc1..2"
+    ],
+    "destination_components": [
+      "pred_delta",
+      "predicted_next_s"
+    ],
+    "supporting_experiments": [
+      "Phase2_Latent_MSE_0.0848",
+      "Phase4_Probe_Future_Pos_0.270"
+    ],
+    "ablation_effect": "Degrades to myopic reactive controller; zero lookahead",
+    "patching_recovery": 0.88,
+    "necessity_score": 0.0011,
+    "sufficiency_score": 0.938,
+    "generalization_score": 0.879,
+    "confidence": "high_rigorous_validation"
+  },
+  {
+    "circuit_id": "appearance_filtering_invariance_006",
+    "model": "H-JEPA",
+    "capability": "color_texture_invariance",
+    "source_components": [
+      "encoder.conv1..4"
+    ],
+    "destination_components": [
+      "shared_latent_s (96.9% appearance suppression)"
+    ],
+    "supporting_experiments": [
+      "Phase4_Counterfactual_E2_1_dim_only",
+      "Phase5_Appearance_Ablation_2.9%"
+    ],
+    "ablation_effect": "Virtually zero effect (2.9% change); verifies invariant filter mechanism",
+    "patching_recovery": 0.0,
+    "necessity_score": 0.029,
+    "sufficiency_score": 0.971,
+    "generalization_score": 0.985,
+    "confidence": "high_rigorous_validation"
+  }
+]

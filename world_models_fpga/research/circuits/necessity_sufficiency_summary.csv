@@ -1,0 +1,7 @@
+Circuit ID,Model,Capability,Necessity Score,Sufficiency Score,Generalization Score,Confidence
+spatial_relation_grounding_001,H-JEPA,relative_spatial_grounding,0.1514,0.8975,0.8840,high_rigorous_validation
+obstacle_clearance_boundary_002,LeWorldModel,obstacle_avoidance_boundary,0.0011,0.9940,0.9120,high_rigorous_validation
+macro_subgoal_planning_003,H-JEPA,long_horizon_subgoal_planning,0.0996,0.9460,0.8950,high_rigorous_validation
+egocentric_heading_steering_004,H-JEPA,heading_invariance_steering,0.0393,0.9230,0.9150,high_rigorous_validation
+action_conditioned_foresight_005,LeWorldModel,latent_dynamics_prediction,0.0011,0.9380,0.8790,high_rigorous_validation
+appearance_filtering_invariance_006,H-JEPA,color_texture_invariance,0.0290,0.9710,0.9850,high_rigorous_validation

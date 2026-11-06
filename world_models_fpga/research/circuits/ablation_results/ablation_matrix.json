@@ -1,0 +1,222 @@
+{
+  "baseline": {
+    "clean_reference": {
+      "object_grounding": 0.7253933548927307,
+      "spatial_reasoning": 0.7584495544433594,
+      "obstacle_avoidance": 0.5,
+      "trajectory_foresight": 0.7960506677627563,
+      "robustness_recovery": 0.999207615852356
+    },
+    "ablations": {
+      "ablate_appearance": {
+        "description": "Zero out appearance features (23 dims)",
+        "scores": {
+          "object_grounding": 0.4987495541572571,
+          "spatial_reasoning": 0.7552057504653931,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.8049275875091553,
+          "robustness_recovery": 0.9994653463363647
+        },
+        "capability_drops_pct": {
+          "object_grounding": 31.244261624724,
+          "spatial_reasoning": 0.4276888180886488,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": -1.115119928211967,
+          "robustness_recovery": -0.02579348649275337
+        }
+      },
+      "ablate_geometry": {
+        "description": "Zero out geometry features (1 dims)",
+        "scores": {
+          "object_grounding": 0.7263702154159546,
+          "spatial_reasoning": 0.7579652667045593,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7957634925842285,
+          "robustness_recovery": 0.9992035031318665
+        },
+        "capability_drops_pct": {
+          "object_grounding": -0.13466631630526874,
+          "spatial_reasoning": 0.06385233264066502,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": 0.036074987001445354,
+          "robustness_recovery": 0.0004115981887141495
+        }
+      },
+      "ablate_heading": {
+        "description": "Zero out heading features (3 dims)",
+        "scores": {
+          "object_grounding": 0.7180954813957214,
+          "spatial_reasoning": 0.7628526091575623,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7973593473434448,
+          "robustness_recovery": 0.9992167949676514
+        },
+        "capability_drops_pct": {
+          "object_grounding": 1.0060573821334122,
+          "spatial_reasoning": -0.5805336202459772,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": -0.16439651610704323,
+          "robustness_recovery": -0.0009186394356808554
+        }
+      }
+    }
+  },
+  "lewm": {
+    "clean_reference": {
+      "object_grounding": 0.798408567905426,
+      "spatial_reasoning": 0.7626168727874756,
+      "obstacle_avoidance": 0.5,
+      "trajectory_foresight": 0.7917640209197998,
+      "robustness_recovery": 0.9987557530403137
+    },
+    "ablations": {
+      "ablate_appearance": {
+        "description": "Zero out appearance features (9 dims)",
+        "scores": {
+          "object_grounding": 0.7935963273048401,
+          "spatial_reasoning": 0.7606188058853149,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7916097640991211,
+          "robustness_recovery": 0.9962344169616699
+        },
+        "capability_drops_pct": {
+          "object_grounding": 0.6027290705230827,
+          "spatial_reasoning": 0.26200139903242364,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": 0.01948267598106336,
+          "robustness_recovery": 0.25244771263883337
+        }
+      },
+      "ablate_geometry": {
+        "description": "Zero out geometry features (10 dims)",
+        "scores": {
+          "object_grounding": 0.7934372425079346,
+          "spatial_reasoning": 0.7611231803894043,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7920162677764893,
+          "robustness_recovery": 0.9943888187408447
+        },
+        "capability_drops_pct": {
+          "object_grounding": 0.6226543069631604,
+          "spatial_reasoning": 0.1958640612061493,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": -0.03185884263982231,
+          "robustness_recovery": 0.437237456950997
+        }
+      },
+      "ablate_heading": {
+        "description": "Zero out heading features (10 dims)",
+        "scores": {
+          "object_grounding": 0.7958027124404907,
+          "spatial_reasoning": 0.7613280415534973,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7915720343589783,
+          "robustness_recovery": 0.9955095052719116
+        },
+        "capability_drops_pct": {
+          "object_grounding": 0.3263811959249734,
+          "spatial_reasoning": 0.16900114107983105,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": 0.02424795182960011,
+          "robustness_recovery": 0.3250291901715983
+        }
+      },
+      "ablate_transition_dynamics": {
+        "description": "Bypass predictive dynamics core (delta_s = 0, residual only)",
+        "scores": {
+          "object_grounding": 0.8000002503395081,
+          "spatial_reasoning": 0.7632291316986084,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7918057441711426,
+          "robustness_recovery": 0.9999999403953552
+        },
+        "capability_drops_pct": {
+          "object_grounding": -0.19935688044055194,
+          "spatial_reasoning": -0.08028394400277596,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": -0.005269657336454542,
+          "robustness_recovery": -0.12457373474913142
+        }
+      }
+    }
+  },
+  "hjepa": {
+    "clean_reference": {
+      "object_grounding": 0.22575826942920685,
+      "spatial_reasoning": 0.7216967940330505,
+      "obstacle_avoidance": 0.5,
+      "trajectory_foresight": 0.7602126002311707,
+      "robustness_recovery": 0.953596293926239
+    },
+    "ablations": {
+      "ablate_appearance": {
+        "description": "Zero out appearance features (1 dims)",
+        "scores": {
+          "object_grounding": 0.21932350099086761,
+          "spatial_reasoning": 0.723122775554657,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7590885162353516,
+          "robustness_recovery": 0.9537883996963501
+        },
+        "capability_drops_pct": {
+          "object_grounding": 2.8502912294550176,
+          "spatial_reasoning": -0.1975873405061028,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": 0.14786442380602874,
+          "robustness_recovery": -0.020145397934128676
+        }
+      },
+      "ablate_geometry": {
+        "description": "Zero out geometry features (12 dims)",
+        "scores": {
+          "object_grounding": 0.163755401968956,
+          "spatial_reasoning": 0.7114505171775818,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7616453170776367,
+          "robustness_recovery": 0.9584419131278992
+        },
+        "capability_drops_pct": {
+          "object_grounding": 27.46427179415747,
+          "spatial_reasoning": 1.4197481266661554,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": -0.1884626520507722,
+          "robustness_recovery": -0.5081415670037
+        }
+      },
+      "ablate_heading": {
+        "description": "Zero out heading features (8 dims)",
+        "scores": {
+          "object_grounding": 0.21539747714996338,
+          "spatial_reasoning": 0.7293050289154053,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7609480619430542,
+          "robustness_recovery": 0.9652391672134399
+        },
+        "capability_drops_pct": {
+          "object_grounding": 4.5893299264323995,
+          "spatial_reasoning": -1.054214850313555,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": -0.0967442136562166,
+          "robustness_recovery": -1.2209436256478514
+        }
+      },
+      "ablate_macro_planner": {
+        "description": "Disable macro planning circuit (subgoal S* = 0)",
+        "scores": {
+          "object_grounding": 0.1782161146402359,
+          "spatial_reasoning": 0.7168924808502197,
+          "obstacle_avoidance": 0.5,
+          "trajectory_foresight": 0.7588992118835449,
+          "robustness_recovery": 0.9699032306671143
+        },
+        "capability_drops_pct": {
+          "object_grounding": 21.05887540832326,
+          "spatial_reasoning": 0.6656968904369422,
+          "obstacle_avoidance": 0.0,
+          "trajectory_foresight": 0.1727659249464894,
+          "robustness_recovery": -1.710046135218304
+        }
+      }
+    }
+  }
+}

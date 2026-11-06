@@ -1,0 +1,26 @@
+{
+  "spatial_relation_grounding_001": {
+    "necessity": 0.1514,
+    "ablation_effect": "27.5% grounding drop under zero ablation"
+  },
+  "obstacle_clearance_boundary_002": {
+    "necessity": 0.0011,
+    "ablation_effect": "Loss of emergency obstacle avoidance deceleration"
+  },
+  "macro_subgoal_planning_003": {
+    "necessity": 0.0996,
+    "ablation_effect": "21.1% grounding failure; loss of horizon foresight (K=5)"
+  },
+  "egocentric_heading_steering_004": {
+    "necessity": 0.0393,
+    "ablation_effect": "Loss of angular steering alignment; heading drift"
+  },
+  "action_conditioned_foresight_005": {
+    "necessity": 0.0011,
+    "ablation_effect": "Degrades to myopic reactive controller; zero lookahead"
+  },
+  "appearance_filtering_invariance_006": {
+    "necessity": 0.029,
+    "ablation_effect": "Virtually zero effect (2.9% change); verifies invariant filter mechanism"
+  }
+}

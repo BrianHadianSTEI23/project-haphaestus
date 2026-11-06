@@ -1,0 +1,292 @@
+{
+  "model_id": "h_jepa",
+  "nodes": [
+    {
+      "id": "input_rgb",
+      "type": "input",
+      "layer": "input",
+      "dim": [
+        64,
+        64,
+        3
+      ]
+    },
+    {
+      "id": "conv1",
+      "type": "layer",
+      "layer": "encoder.0",
+      "dim": 16
+    },
+    {
+      "id": "conv2",
+      "type": "layer",
+      "layer": "encoder.2",
+      "dim": 32
+    },
+    {
+      "id": "conv3",
+      "type": "layer",
+      "layer": "encoder.4",
+      "dim": 64
+    },
+    {
+      "id": "conv4",
+      "type": "layer",
+      "layer": "encoder.6",
+      "dim": 64
+    },
+    {
+      "id": "flatten",
+      "type": "layer",
+      "layer": "encoder.8",
+      "dim": 256
+    },
+    {
+      "id": "latent_state_s",
+      "type": "representation",
+      "layer": "encoder.10",
+      "dim": 32
+    },
+    {
+      "id": "cluster_geometry",
+      "type": "semantic_cluster",
+      "layer": "latent_s",
+      "dim": 12
+    },
+    {
+      "id": "cluster_position",
+      "type": "semantic_cluster",
+      "layer": "latent_s",
+      "dim": 11
+    },
+    {
+      "id": "cluster_heading",
+      "type": "semantic_cluster",
+      "layer": "latent_s",
+      "dim": 8
+    },
+    {
+      "id": "cluster_appearance",
+      "type": "semantic_cluster",
+      "layer": "latent_s",
+      "dim": 1
+    },
+    {
+      "id": "input_macro_action",
+      "type": "input",
+      "layer": "macro_planner",
+      "dim": 3
+    },
+    {
+      "id": "macro_fc1",
+      "type": "module",
+      "layer": "macro_predictor.fc1",
+      "dim": 64
+    },
+    {
+      "id": "macro_fc2",
+      "type": "module",
+      "layer": "macro_predictor.fc2",
+      "dim": 64
+    },
+    {
+      "id": "macro_delta_S",
+      "type": "module",
+      "layer": "macro_predictor.delta_head",
+      "dim": 32
+    },
+    {
+      "id": "macro_subgoal_S",
+      "type": "representation",
+      "layer": "macro_subgoal",
+      "dim": 32
+    },
+    {
+      "id": "macro_col_head",
+      "type": "output",
+      "layer": "macro_predictor.col_head",
+      "dim": 1
+    },
+    {
+      "id": "micro_pol_fc1",
+      "type": "module",
+      "layer": "micro_predictor.pol_fc1",
+      "dim": 64
+    },
+    {
+      "id": "micro_action_head",
+      "type": "output",
+      "layer": "micro_predictor.action_head",
+      "dim": 3
+    },
+    {
+      "id": "micro_dyn_fc1",
+      "type": "module",
+      "layer": "micro_predictor.dyn_fc1",
+      "dim": 64
+    },
+    {
+      "id": "micro_col_head",
+      "type": "output",
+      "layer": "micro_predictor.col_head",
+      "dim": 1
+    }
+  ],
+  "edges": [
+    {
+      "source": "input_rgb",
+      "destination": "conv1",
+      "attribution": 0.89,
+      "condition": "feedforward",
+      "validation_status": "validated"
+    },
+    {
+      "source": "conv1",
+      "destination": "conv2",
+      "attribution": 0.87,
+      "condition": "feedforward",
+      "validation_status": "validated"
+    },
+    {
+      "source": "conv2",
+      "destination": "conv3",
+      "attribution": 0.85,
+      "condition": "feedforward",
+      "validation_status": "validated"
+    },
+    {
+      "source": "conv3",
+      "destination": "conv4",
+      "attribution": 0.83,
+      "condition": "feedforward",
+      "validation_status": "validated"
+    },
+    {
+      "source": "conv4",
+      "destination": "flatten",
+      "attribution": 0.8,
+      "condition": "feedforward",
+      "validation_status": "validated"
+    },
+    {
+      "source": "flatten",
+      "destination": "latent_state_s",
+      "attribution": 0.96,
+      "condition": "projection",
+      "validation_status": "validated"
+    },
+    {
+      "source": "latent_state_s",
+      "destination": "cluster_geometry",
+      "attribution": 0.375,
+      "condition": "geometry_dominant",
+      "validation_status": "validated"
+    },
+    {
+      "source": "latent_state_s",
+      "destination": "cluster_position",
+      "attribution": 0.344,
+      "condition": "position_dominant",
+      "validation_status": "validated"
+    },
+    {
+      "source": "latent_state_s",
+      "destination": "cluster_heading",
+      "attribution": 0.25,
+      "condition": "heading_dominant",
+      "validation_status": "validated"
+    },
+    {
+      "source": "latent_state_s",
+      "destination": "cluster_appearance",
+      "attribution": 0.031,
+      "condition": "color_suppressed",
+      "validation_status": "validated"
+    },
+    {
+      "source": "cluster_geometry",
+      "destination": "macro_fc1",
+      "attribution": 0.49,
+      "condition": "macro_planning",
+      "validation_status": "validated"
+    },
+    {
+      "source": "cluster_heading",
+      "destination": "macro_fc1",
+      "attribution": 0.36,
+      "condition": "macro_planning",
+      "validation_status": "validated"
+    },
+    {
+      "source": "input_macro_action",
+      "destination": "macro_fc1",
+      "attribution": 0.65,
+      "condition": "macro_intent",
+      "validation_status": "validated"
+    },
+    {
+      "source": "macro_fc1",
+      "destination": "macro_fc2",
+      "attribution": 0.91,
+      "condition": "macro_feedforward",
+      "validation_status": "validated"
+    },
+    {
+      "source": "macro_fc2",
+      "destination": "macro_delta_S",
+      "attribution": 0.88,
+      "condition": "subgoal_delta",
+      "validation_status": "validated"
+    },
+    {
+      "source": "latent_state_s",
+      "destination": "macro_subgoal_S",
+      "attribution": 0.95,
+      "condition": "macro_residual",
+      "validation_status": "validated"
+    },
+    {
+      "source": "macro_delta_S",
+      "destination": "macro_subgoal_S",
+      "attribution": 0.865,
+      "condition": "macro_subgoal_injection",
+      "validation_status": "validated"
+    },
+    {
+      "source": "macro_fc2",
+      "destination": "macro_col_head",
+      "attribution": 0.81,
+      "condition": "macro_collision_barrier",
+      "validation_status": "validated"
+    },
+    {
+      "source": "latent_state_s",
+      "destination": "micro_pol_fc1",
+      "attribution": 0.62,
+      "condition": "micro_current_state",
+      "validation_status": "validated"
+    },
+    {
+      "source": "macro_subgoal_S",
+      "destination": "micro_pol_fc1",
+      "attribution": 0.845,
+      "condition": "subgoal_guidance",
+      "validation_status": "validated"
+    },
+    {
+      "source": "micro_pol_fc1",
+      "destination": "micro_action_head",
+      "attribution": 0.915,
+      "condition": "primitive_steering_action",
+      "validation_status": "validated"
+    },
+    {
+      "source": "micro_pol_fc1",
+      "destination": "micro_col_head",
+      "attribution": 0.74,
+      "condition": "immediate_contact_prevention",
+      "validation_status": "validated"
+    }
+  ],
+  "dominant_pathway": "latent_s -> (cluster_geometry + cluster_heading) -> macro_predictor (K=5) -> macro_subgoal_S -> micro_pol_fc1 -> micro_action_head"
+}

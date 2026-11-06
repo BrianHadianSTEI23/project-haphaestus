@@ -1,0 +1,280 @@
+{
+  "baseline": {
+    "E1_position_shift": {
+      "baseline.conv1": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.conv2": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.conv3": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.conv4": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.visual_latent_z": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.policy_fc1": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.action_head": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.visual_latent_z.cluster_appearance": {
+        "forward_recovery": 0.0,
+        "num_dims": 23,
+        "is_causal_bottleneck": false
+      },
+      "baseline.visual_latent_z.cluster_heading": {
+        "forward_recovery": 0.010564454328486432,
+        "num_dims": 3,
+        "is_causal_bottleneck": false
+      },
+      "baseline.visual_latent_z.cluster_position": {
+        "forward_recovery": 0.30567606441631845,
+        "num_dims": 5,
+        "is_causal_bottleneck": false
+      },
+      "baseline.visual_latent_z.cluster_geometry": {
+        "forward_recovery": 0.06842165074603607,
+        "num_dims": 1,
+        "is_causal_bottleneck": false
+      }
+    },
+    "E5_obstacle_insertion": {
+      "baseline.conv1": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.conv2": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.conv3": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.conv4": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.visual_latent_z": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.policy_fc1": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.action_head": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "baseline.visual_latent_z.cluster_appearance": {
+        "forward_recovery": 0.09736714977955481,
+        "num_dims": 23,
+        "is_causal_bottleneck": false
+      },
+      "baseline.visual_latent_z.cluster_heading": {
+        "forward_recovery": 0.0,
+        "num_dims": 3,
+        "is_causal_bottleneck": false
+      },
+      "baseline.visual_latent_z.cluster_position": {
+        "forward_recovery": 0.0,
+        "num_dims": 5,
+        "is_causal_bottleneck": false
+      },
+      "baseline.visual_latent_z.cluster_geometry": {
+        "forward_recovery": 0.0,
+        "num_dims": 1,
+        "is_causal_bottleneck": false
+      }
+    }
+  },
+  "lewm": {
+    "E1_position_shift": {
+      "lewm.conv1": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.conv2": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.conv3": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.conv4": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.latent_state_s": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.latent_state_s.cluster_appearance": {
+        "forward_recovery": 0.0,
+        "num_dims": 9,
+        "is_causal_bottleneck": false
+      },
+      "lewm.latent_state_s.cluster_heading": {
+        "forward_recovery": 0.0,
+        "num_dims": 10,
+        "is_causal_bottleneck": false
+      },
+      "lewm.latent_state_s.cluster_geometry": {
+        "forward_recovery": 0.0,
+        "num_dims": 10,
+        "is_causal_bottleneck": false
+      },
+      "lewm.latent_state_s.cluster_position": {
+        "forward_recovery": 0.9772318876392301,
+        "num_dims": 3,
+        "is_causal_bottleneck": true
+      }
+    },
+    "E5_obstacle_insertion": {
+      "lewm.conv1": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.conv2": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.conv3": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.conv4": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.latent_state_s": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "lewm.latent_state_s.cluster_appearance": {
+        "forward_recovery": 0.0,
+        "num_dims": 9,
+        "is_causal_bottleneck": false
+      },
+      "lewm.latent_state_s.cluster_heading": {
+        "forward_recovery": 0.0,
+        "num_dims": 10,
+        "is_causal_bottleneck": false
+      },
+      "lewm.latent_state_s.cluster_geometry": {
+        "forward_recovery": 0.0,
+        "num_dims": 10,
+        "is_causal_bottleneck": false
+      },
+      "lewm.latent_state_s.cluster_position": {
+        "forward_recovery": 0.8086882980332625,
+        "num_dims": 3,
+        "is_causal_bottleneck": true
+      }
+    }
+  },
+  "hjepa": {
+    "E1_position_shift": {
+      "hjepa.conv1": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "hjepa.shared_latent_s": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "hjepa.shared_latent_s.cluster_appearance": {
+        "forward_recovery": 0.0002551752718726887,
+        "num_dims": 1,
+        "is_causal_bottleneck": false
+      },
+      "hjepa.shared_latent_s.cluster_heading": {
+        "forward_recovery": 0.6303259659308812,
+        "num_dims": 8,
+        "is_causal_bottleneck": false
+      },
+      "hjepa.shared_latent_s.cluster_geometry": {
+        "forward_recovery": 0.6122918026347813,
+        "num_dims": 12,
+        "is_causal_bottleneck": false
+      },
+      "hjepa.shared_latent_s.cluster_position": {
+        "forward_recovery": 0.0,
+        "num_dims": 11,
+        "is_causal_bottleneck": false
+      }
+    },
+    "E5_obstacle_insertion": {
+      "hjepa.conv1": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "hjepa.shared_latent_s": {
+        "forward_recovery": 1.0,
+        "reverse_corruption_transfer": 1.0,
+        "is_causal_bottleneck": true
+      },
+      "hjepa.shared_latent_s.cluster_appearance": {
+        "forward_recovery": 0.15314771468958263,
+        "num_dims": 1,
+        "is_causal_bottleneck": false
+      },
+      "hjepa.shared_latent_s.cluster_heading": {
+        "forward_recovery": 0.6112717534604685,
+        "num_dims": 8,
+        "is_causal_bottleneck": false
+      },
+      "hjepa.shared_latent_s.cluster_geometry": {
+        "forward_recovery": 0.0,
+        "num_dims": 12,
+        "is_causal_bottleneck": false
+      },
+      "hjepa.shared_latent_s.cluster_position": {
+        "forward_recovery": 0.0,
+        "num_dims": 11,
+        "is_causal_bottleneck": false
+      }
+    }
+  }
+}

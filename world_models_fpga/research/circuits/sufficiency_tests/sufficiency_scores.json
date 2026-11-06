@@ -1,0 +1,26 @@
+{
+  "spatial_relation_grounding_001": {
+    "sufficiency": 0.8975,
+    "generalization": 0.884
+  },
+  "obstacle_clearance_boundary_002": {
+    "sufficiency": 0.994,
+    "generalization": 0.912
+  },
+  "macro_subgoal_planning_003": {
+    "sufficiency": 0.946,
+    "generalization": 0.895
+  },
+  "egocentric_heading_steering_004": {
+    "sufficiency": 0.923,
+    "generalization": 0.915
+  },
+  "action_conditioned_foresight_005": {
+    "sufficiency": 0.938,
+    "generalization": 0.879
+  },
+  "appearance_filtering_invariance_006": {
+    "sufficiency": 0.971,
+    "generalization": 0.985
+  }
+}
