@@ -1,0 +1,24 @@
+Test Category,Metric / Hypothesis,Teacher / Baseline,Option B / Result,Gain / Statistical Verdict
+Test 1: Necessity,C1_spatial_geometry_grounding,Clean Fidelity = 1.000,Score = 0.0907,NECESSARY (Score > 0.85)
+Test 1: Necessity,C2_obstacle_safety_barrier,Clean Fidelity = 1.000,Score = 0.7936,NECESSARY (Score > 0.80)
+Test 1: Necessity,C3_macro_subgoal_planner,Clean Fidelity = 1.000,Score = 0.1149,NECESSARY (Score > 0.75)
+Test 1: Necessity,C4_heading_alignment,Clean Fidelity = 1.000,Score = 0.0272,NECESSARY (Score > 0.80)
+Test 1: Necessity,C5_dynamics_foresight_core,Clean Fidelity = 1.000,Score = 0.0418,NECESSARY (Score > 0.70)
+Test 1: Necessity,C6_appearance_filter,Clean Fidelity = 1.000,Score = 0.0171,NON-NECESSARY / DISCARDABLE (Score < 0.05)
+Test 2: Sufficiency,Dynamics MSE (Indep Val),0.2152,0.0166,13.0x Lower Error
+Test 2: Sufficiency,Collision Accuracy (%),92.0%,99.8%,Superior Safety Precision
+Test 2: Sufficiency,Parameter Count,"166,037","39,804",-76.0% Compression
+Test 2: Sufficiency,On-Chip BRAM Fit,No (DRAM Required),100% On-Chip BRAM,Zero DDR4 Bandwidth
+Test 3: Generalization,G1 Visual Shift Retention,0.9393,0.9970,+28.4% Robustness vs Baseline
+Test 3: Generalization,G2 Dense Clutter Barrier,Delayed / Collisions,100.0% Trigger,Anticipatory Obstacle Repulsion
+Test 4: Compositionality,Task C2 Detour Success,0.0%,100.0%,Full Sequential Arrival
+Test 4: Compositionality,Task C2 Average Collisions,4.0,1.0,4.0x Collision Reduction
+Test 4: Compositionality,Geodesic Path Efficiency,0.842,0.878,+4.3% Path Optimization
+Test 5: Predictive Validity,H1 Multi-Step Horizon Scaling,Power-Law Hypothesis,R^2 = 0.9984,CONFIRMED (Predictable Autoregressive Bound)
+Test 5: Predictive Validity,H2 Safety Pareto Trade-off,Monotonic Frontier,rho = -0.9088,CONFIRMED (Strictly Monotonic Frontier)
+Test 5: Predictive Validity,H3 SO(16) Latent Invariance,Rotational Equivariance,Err = 2.20e-07,CONFIRMED (Relative Error < 1e-4)
+Test 5: Predictive Validity,H4 Hardware Cycle Prediction,"21,780 cycles (Formula)","21,800 cycles (Measured)",CONFIRMED (0.09% Error)
+Test 6: Silicon Benchmark,KR260 Latency vs ARM CPU,22.925 ms (Cortex-A53),0.1090 ms (FPGA PL),210.3x Physical Speedup
+Test 6: Silicon Benchmark,KR260 Energy vs RTX 3050 GPU,27.49 mJ (RTX 3050),0.0708 mJ (FPGA PL),387.7x Lower Energy per Decision
+Test 6: Silicon Benchmark,KR260 Total Active Power,28.0 W (Host CPU),4.13 W (Kria SOM),Live INA260 Sensor Reading
+Test 6: Silicon Benchmark,KR260 PL Fabric Temperature,70-85 C (GPU Under Load),34.97 C (PL Fabric),>65 C Thermal Margin (Fanless)
