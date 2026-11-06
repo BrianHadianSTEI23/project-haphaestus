@@ -1,0 +1,73 @@
+model_name,parameter_name,shape,num_elements,dtype,trainable,functional_role
+BaselineNavigationPolicy,encoder.conv1.weight,16x3x4x4,768,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.conv1.bias,16,16,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.conv2.weight,32x16x4x4,8192,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.conv2.bias,32,32,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.conv3.weight,64x32x4x4,32768,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.conv3.bias,64,64,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.conv4.weight,64x64x4x4,65536,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.conv4.bias,64,64,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.fc.weight,32x1024,32768,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,encoder.fc.bias,32,32,torch.float32,True,Visual Encoder
+BaselineNavigationPolicy,fc1.weight,64x36,2304,torch.float32,True,Policy / Head
+BaselineNavigationPolicy,fc1.bias,64,64,torch.float32,True,Policy / Head
+BaselineNavigationPolicy,fc2.weight,64x64,4096,torch.float32,True,Policy / Head
+BaselineNavigationPolicy,fc2.bias,64,64,torch.float32,True,Policy / Head
+BaselineNavigationPolicy,action_head.weight,3x64,192,torch.float32,True,Policy / Head
+BaselineNavigationPolicy,action_head.bias,3,3,torch.float32,True,Policy / Head
+BaselineNavigationPolicy,collision_head.weight,1x64,64,torch.float32,True,Policy / Head
+BaselineNavigationPolicy,collision_head.bias,1,1,torch.float32,True,Policy / Head
+LeWorldModel,encoder.0.weight,16x3x4x4,768,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.0.bias,16,16,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.2.weight,32x16x4x4,8192,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.2.bias,32,32,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.4.weight,64x32x4x4,32768,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.4.bias,64,64,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.6.weight,64x64x4x4,65536,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.6.bias,64,64,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.9.weight,32x1024,32768,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.9.bias,32,32,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.10.weight,32,32,torch.float32,True,Visual Encoder
+LeWorldModel,encoder.10.bias,32,32,torch.float32,True,Visual Encoder
+LeWorldModel,pred_fc1.weight,64x35,2240,torch.float32,True,Policy / Head
+LeWorldModel,pred_fc1.bias,64,64,torch.float32,True,Policy / Head
+LeWorldModel,pred_fc2.weight,64x64,4096,torch.float32,True,Policy / Head
+LeWorldModel,pred_fc2.bias,64,64,torch.float32,True,Policy / Head
+LeWorldModel,pred_delta.weight,32x64,2048,torch.float32,True,Policy / Head
+LeWorldModel,pred_delta.bias,32,32,torch.float32,True,Policy / Head
+LeWorldModel,col_fc.weight,1x64,64,torch.float32,True,Policy / Head
+LeWorldModel,col_fc.bias,1,1,torch.float32,True,Policy / Head
+HJEPAModel,encoder.0.weight,16x3x4x4,768,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.0.bias,16,16,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.2.weight,32x16x4x4,8192,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.2.bias,32,32,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.4.weight,64x32x4x4,32768,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.4.bias,64,64,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.6.weight,64x64x4x4,65536,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.6.bias,64,64,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.9.weight,32x1024,32768,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.9.bias,32,32,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.10.weight,32,32,torch.float32,True,Visual Encoder
+HJEPAModel,encoder.10.bias,32,32,torch.float32,True,Visual Encoder
+HJEPAModel,macro_predictor.fc1.weight,64x35,2240,torch.float32,True,Macro Predictor
+HJEPAModel,macro_predictor.fc1.bias,64,64,torch.float32,True,Macro Predictor
+HJEPAModel,macro_predictor.fc2.weight,64x64,4096,torch.float32,True,Macro Predictor
+HJEPAModel,macro_predictor.fc2.bias,64,64,torch.float32,True,Macro Predictor
+HJEPAModel,macro_predictor.delta_head.weight,32x64,2048,torch.float32,True,Macro Predictor
+HJEPAModel,macro_predictor.delta_head.bias,32,32,torch.float32,True,Macro Predictor
+HJEPAModel,macro_predictor.col_head.weight,1x64,64,torch.float32,True,Macro Predictor
+HJEPAModel,macro_predictor.col_head.bias,1,1,torch.float32,True,Macro Predictor
+HJEPAModel,micro_predictor.pol_fc1.weight,64x64,4096,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.pol_fc1.bias,64,64,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.pol_fc2.weight,64x64,4096,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.pol_fc2.bias,64,64,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.action_head.weight,3x64,192,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.action_head.bias,3,3,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.dyn_fc1.weight,64x35,2240,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.dyn_fc1.bias,64,64,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.dyn_fc2.weight,64x64,4096,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.dyn_fc2.bias,64,64,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.delta_head.weight,32x64,2048,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.delta_head.bias,32,32,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.col_head.weight,1x64,64,torch.float32,True,Micro Predictor
+HJEPAModel,micro_predictor.col_head.bias,1,1,torch.float32,True,Micro Predictor
