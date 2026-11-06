@@ -1,0 +1,4 @@
+Comparison Metric,FPGA vs Fixed-Point,FPGA vs PyTorch FP32,Behavioral Concordance
+Next State Latent S_{t+K},0.000000,0.010244,0.9999 Cosine Sim
+"Collision Barrier B(S, A)",0.000000,0.931036,100.0% Concordance
+"Motor Action [vx, vy, wz]",0.000000,0.052476,Zero Decision Flips

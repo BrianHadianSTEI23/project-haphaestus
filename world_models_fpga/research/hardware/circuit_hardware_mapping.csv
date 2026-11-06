@@ -1,0 +1,15 @@
+Component ID,Architecture Tier,Component Name,Input Dim,Output Dim,Parameters,Weight (Bytes),Precision,DSP Slices,Pipeline Depth,Data Dependency
+C1_CONV1,Tier 1: Perception,"Conv1 (3->8, k4, s2, p1)",3x64x64,8x32x32,392,784,Signed Q8.8,16,5,Raw RGB Pixel Stream
+C2_CONV2,Tier 1: Perception,"Conv2 (8->16, k4, s2, p1)",8x32x32,16x16x16,2064,4128,Signed Q8.8,32,5,Conv1 Activations
+C3_CONV3,Tier 1: Perception,"Conv3 (16->32, k4, s2, p1)",16x16x16,32x8x8,8224,16448,Signed Q8.8,32,5,Conv2 Activations
+C4_CONV4,Tier 1: Perception,"Conv4 (32->32, k4, s2, p1)",32x8x8,32x4x4,16416,32832,Signed Q8.8,32,5,Conv3 Activations
+C5_FC_ENC,Tier 1: Perception,Linear Projection (512->16),512,16,8208,16416,Signed Q8.8,16,4,Conv4 Flattened Vector
+C6_LN_ENC,Tier 1: Perception,LayerNorm (16),16,16,32,64,Signed Q8.8 (PWL inv_sqrt),4,8,Linear Projection Vector
+C7_LAT_REG,Tier 2: World State,Egocentric Polar Latent Register,16,16,0,0,Signed Q8.8 (16-bit registers),0,1,LayerNorm Latent Vector
+C8_PRED_FC1,Tier 3: Predictive Dynamics,Predictor FC1 (19->32),16 (state) + 3 (action) = 19,32,640,1280,Signed Q8.8,16,3,Latent Register + Candidate Action
+C9_PRED_FC2,Tier 3: Predictive Dynamics,Predictor FC2 (32->32),32,32,1056,2112,Signed Q8.8,16,3,Predictor FC1 Activations
+C10_DELTA_HEAD,Tier 3: Predictive Dynamics,Delta Latent Head (32->16),32,16,528,1056,Signed Q8.8,16,3,Predictor FC2 Activations
+C11_COL_HEAD,Tier 4: Decision & Safety,Collision Barrier Head (32->1),32,1,33,66,Signed Q8.8 (PWL Sigmoid),4,3,Predictor FC2 Activations (Parallel with Delta)
+C12_POLICY_FC1,Tier 5: Motor Control,Policy FC1 (32->32),16 (state) + 16 (subgoal) = 32,32,1056,2112,Signed Q8.8,16,3,Current State + Optimal Macro Subgoal
+C13_POLICY_FC2,Tier 5: Motor Control,Policy FC2 (32->32),32,32,1056,2112,Signed Q8.8,16,3,Policy FC1 Activations
+C14_ACTION_HEAD,Tier 5: Motor Control,Mecanum Action Head (32->3),32,3,99,198,Signed Q8.8 (PWL Tanh),3,3,Policy FC2 Activations

@@ -1,0 +1,15 @@
+Component ID,Component Name,MAC Ops (Single Pass),Evaluation Frequency,MAC Ops per Second,Hardware Execution Cycles,Latency @ 200MHz (us)
+C1_CONV1,"Conv1 (3->8, k4, s2, p1)",393216,2 Hz,786432,24576,122.88
+C2_CONV2,"Conv2 (8->16, k4, s2, p1)",524288,2 Hz,1048576,16384,81.92
+C3_CONV3,"Conv3 (16->32, k4, s2, p1)",524288,2 Hz,1048576,16384,81.92
+C4_CONV4,"Conv4 (32->32, k4, s2, p1)",262144,2 Hz,524288,8192,40.96
+C5_FC_ENC,Linear Projection (512->16),8192,2 Hz,16384,512,2.56
+C6_LN_ENC,LayerNorm (16),64,2 Hz,128,32,0.16
+C7_LAT_REG,Egocentric Polar Latent Register,0,2 Hz,0,1,0.01
+C8_PRED_FC1,Predictor FC1 (19->32),608,2 Hz,29184,38,0.19
+C9_PRED_FC2,Predictor FC2 (32->32),1024,2 Hz,49152,64,0.32
+C10_DELTA_HEAD,Delta Latent Head (32->16),512,2 Hz,24576,32,0.16
+C11_COL_HEAD,Collision Barrier Head (32->1),32,2 Hz,1536,8,0.04
+C12_POLICY_FC1,Policy FC1 (32->32),1024,10 Hz,10240,64,0.32
+C13_POLICY_FC2,Policy FC2 (32->32),1024,10 Hz,10240,64,0.32
+C14_ACTION_HEAD,Mecanum Action Head (32->3),96,10 Hz,960,32,0.16

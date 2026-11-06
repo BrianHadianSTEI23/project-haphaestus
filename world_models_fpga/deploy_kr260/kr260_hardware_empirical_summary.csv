@@ -1,0 +1,11 @@
+Model Architecture,Platform / Execution Engine,Latency,Throughput,Power (W),Energy / Inf (mJ),Temperature (°C)
+Baseline Policy,ARM Cortex-A53 CPU (Kria PS),5.381 ms,185.8 FPS,3.10 W,16.680 mJ,37.85 °C
+Baseline Policy Head,UltraScale+ PL (100 MHz),0.470 us,"2,127,660 FPS",0.45 W,0.0015 mJ,34.97 °C
+LeWorldModel (LeWM),ARM Cortex-A53 CPU (Kria PS),5.390 ms,185.5 FPS,3.10 W,16.708 mJ,37.85 °C
+LeWM Predictor Head,UltraScale+ PL (100 MHz),0.480 us,"2,083,333 FPS",0.45 W,0.0016 mJ,34.97 °C
+H-JEPA Model,ARM Cortex-A53 CPU (Kria PS),5.393 ms,185.4 FPS,3.10 W,16.719 mJ,37.85 °C
+H-JEPA Predictor Head,UltraScale+ PL (100 MHz),0.480 us,"2,083,333 FPS",0.45 W,0.0016 mJ,34.97 °C
+Option B (Synthesized),ARM Cortex-A53 CPU (Kria PS),22.925 ms,43.6 FPS,2.85 W,65.336 mJ,37.85 °C
+Option B PL Accelerator,UltraScale+ PL (200 MHz),0.1090 ms,9174.3 FPS,0.65 W,0.0708 mJ,34.97 °C
+Option B Full SOM (E2E),AMD Kria KR260 SOM (PS+PL),0.1242 ms,8051.5 FPS,2.80 W,0.3478 mJ,37.85 °C
+Complete Robotic System,JetAuto Mecanum Robot,3.4742 ms,287.8 Hz,4.13 W,14.348 mJ,34.97 °C

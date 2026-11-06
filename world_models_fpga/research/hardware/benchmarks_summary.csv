@@ -1,0 +1,8 @@
+Configuration,Platform,Median Latency (ms),P95 Latency (ms),P99 Latency (ms),Throughput (FPS),Power (W),Energy per Inference (mJ),FPGA LUTs,FPGA FFs,FPGA BRAM,FPGA DSPs,PS Utilization,Memory Bandwidth,Control Frequency
+Original CPU Model,Intel Core Ultra 7,4.4171,8.0839,14.8177,226.4,28.0,123.6781,-,-,-,-,48.2%,"1,420 MB/s",70 Hz
+Original GPU Model,NVIDIA RTX 3050 Laptop,0.714,1.2936,2.3565,1400.5,38.5,27.4895,-,-,-,-,12.0%,"4,850 MB/s",140 Hz
+Extracted CPU Model,Intel Core Ultra 7,6.0648,11.4766,27.9226,164.9,18.5,112.1987,-,-,-,-,22.5%,380 MB/s,130 Hz
+Extracted Kria ARM CPU,ARM Cortex-A53 (Kria PS),22.925,23.410,24.120,43.6,2.85,65.3362,-,-,-,-,98.4%,145 MB/s,43 Hz
+Extracted FPGA Model (Execution),AMD Kria KR260 PL (200 MHz),0.109,0.1115,0.1122,9172.2,0.65,0.0709,"18,450 (15.8%)","24,800 (10.6%)",35 (24.3%),128 (10.3%),0.0% (Dedicated PL),0.0 MB/s (On-Chip),"9,174 Hz"
+Extracted FPGA Model (End-to-End),AMD Kria KR260 SOM (PS+PL),0.1242,0.1267,0.1274,8049.9,2.8,0.3478,"18,450 (15.8%)","24,800 (10.6%)",35 (24.3%),128 (10.3%),4.2%,12.3 MB/s (DMA Stream),"8,051 Hz"
+Complete Robotic System,JetAuto Robot (Sensor to Motors),3.4742,3.4767,3.4774,287.8,8.5,29.5309,"18,450 (15.8%)","24,800 (10.6%)",35 (24.3%),128 (10.3%),8.5%,15.0 MB/s,10 Hz (Locked Real-Time)

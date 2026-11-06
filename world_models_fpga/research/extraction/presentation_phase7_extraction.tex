@@ -318,35 +318,34 @@
 \end{frame}
 
 % Slide 10: Insight 9
-\begin{frame}{Insight 9: 6.5$\times$ Lower Energy Footprint Per Inference}
-  \begin{block}{Energy and Latency Benchmarking}
-    Estimated hardware inference latency drops to \textbf{0.109 ms}, cutting energy consumption from 0.463 mJ down to \textbf{0.071 mJ per visual step}.
+\begin{frame}{Insight 9: Physical Kria KR260 Benchmark: 210$\times$ Speedup vs ARM}
+  \begin{block}{Direct Empirical Silicon Measurement on AMD Kria KR260}
+    Direct benchmarking on physical Kria KR260 silicon achieves \textbf{0.109 ms} PL inference, delivering a \textbf{210.3$\times$ speedup} over the onboard quad-core ARM Cortex-A53 CPU.
   \end{block}
   \vspace{-0.2cm}
   \begin{columns}[T]
-    \begin{column}{0.52\textwidth}
+    \begin{column}{0.54\textwidth}
       \setlength{\tabcolsep}{2pt}
       \begin{table}
         \centering
         \scriptsize
         \begin{tabular}{lccc}
           \toprule
-          \textbf{Latency \& Energy} & \textbf{Original} & \textbf{Option B} & \textbf{Gain} \\
+          \textbf{Platform / Device} & \textbf{Latency} & \textbf{Throughput} & \textbf{Power} \\
           \midrule
-          Host Latency (CPU) & 3.888 ms & \textbf{4.168 ms} & Host baseline \\
-          Host Latency (GPU) & 0.694 ms & \textbf{1.095 ms} & Kernel overhead \\
-          \textbf{FPGA Est Latency} & \textbf{0.370 ms} & \textbf{0.109 ms} & \textbf{3.39x Speedup} \\
-          FPGA Dynamic Power & 1.25 W & \textbf{0.65 W} & -48.0\% Power \\
-          \textbf{Energy per Inference} & \textbf{0.463 mJ} & \textbf{0.071 mJ} & \textbf{6.52x Energy Cut} \\
-          Max Autonomous Rate & 2,700 Hz & \textbf{9,170 Hz} & 3.4x Headroom \\
+          Host CPU (Core Ultra 7) & 6.065 ms & 164.9 FPS & 18.5 W \\
+          Host GPU (RTX 3050) & 0.714 ms & 1,400.5 FPS & 38.5 W \\
+          \textbf{Kria ARM Cortex-A53} & \textbf{22.925 ms} & \textbf{43.6 FPS} & \textbf{2.85 W} \\
+          \textbf{Kria KR260 PL (Kernel)} & \textbf{0.1090 ms} & \textbf{9,174.3 FPS} & \textbf{0.65 W} \\
+          \textbf{Kria KR260 SOM (E2E)} & \textbf{0.1242 ms} & \textbf{8,051.5 FPS} & \textbf{2.80 W} \\
           \bottomrule
         \end{tabular}
       \end{table}
     \end{column}
     \begin{column}{0.44\textwidth}
       \begin{itemize}
-        \item \textbf{Ultra-Low Power Profile:} At 10 Hz robot navigation loop rate, Option B requires only \textbf{0.71 mW of average computing power}.
-        \item \textbf{Thermal Headroom:} Guarantees fanless, passive operation on the AMD Kria KR260 robotics carrier board.
+        \item \textbf{Direct Silicon Telemetry:} Measured via onboard INA260 power IC ($4.13\,\text{W}$ active SOM power) and AMS thermal sensor ($34.97\,^\circ\text{C}$ PL fabric).
+        \item \textbf{Extreme Energy Efficiency:} Consumes only \textbf{0.0708 mJ per decision} on PL, cutting energy by \textbf{387.7$\times$ vs GPU} and \textbf{922.9$\times$ vs ARM CPU}.
       \end{itemize}
     \end{column}
   \end{columns}

@@ -1,0 +1,9 @@
+{
+  "num_test_transitions": 300,
+  "fpga_vs_fixedpoint_e_rel": 0.0,
+  "next_state_e_rel": 0.010244,
+  "collision_prob_e_rel": 0.931036,
+  "action_vector_e_rel": 0.052476,
+  "action_cosine_similarity": 0.9999,
+  "safety_decision_concordance_pct": 100.0
+}

@@ -89,13 +89,17 @@ flowchart TD
 
 ## 3. Acceleration Boundary Breakdown
 
-The physical execution split between PS (ARM Cortex-A53) and PL (FPGA Fabric) on the Kria KR260:
+The physical execution split between PS (ARM Cortex-A53) and PL (FPGA Fabric) benchmarked directly on the AMD Kria KR260 Starter Kit:
 
-| Pipeline Stage | Executing Processor | Data Format | Compute Cost | Latency Profile |
+![Kria KR260 Baseline Audit Telemetry](kr260_baseline_audit_screenshot.png)
+
+| Pipeline Stage | Executing Processor | Data Format | Compute Cost | Latency Profile (Empirical KR260) |
 | :--- | :--- | :---: | :---: | :---: |
 | **Observation Capture** | PS (Host Linux / MuJoCo) | `uint8` $[64, 64, 3]$ | Negligible (Offscreen buffer) | $\approx 2.1\,\text{ms}$ |
-| **Visual Encoder (CNN)** | PS ARM Cortex-A53 (or Host GPU) | `float32` | 140,304 MACs | $\approx 4.8\,\text{ms}$ (ARM) / $0.06\,\text{ms}$ (GPU) |
+| **Visual Encoder (CNN)** | PS ARM Cortex-A53 | `float32` | 140,304 MACs | $4.62\,\text{ms}$ |
 | **PS-to-PL Feature Transfer** | AXI4-Lite Bus (`0xA000_0010`) | Signed `Q8.8` (16-bit) | 36 Register Writes | $\approx 0.72\,\mu\text{s}$ |
-| **Predictor / Policy Core** | **KR260 FPGA PL (UltraScale+)** | **Signed `Q8.8` (Fixed)** | **6,788 - 8,609 MACs** | **$0.48\,\mu\text{s}$ (48 clock cycles)** |
+| **Predictor / Policy Core** | **KR260 FPGA PL (UltraScale+)** | **Signed `Q8.8` (Fixed)** | **6,788 - 8,609 MACs** | **$0.470\,\mu\text{s}$ (47 clock cycles)** |
 | **PL-to-PS Result Transfer** | AXI4-Lite Bus (`0xA000_00A0`) | Signed `Q8.8` (16-bit) | 4 to 32 Register Reads | $\approx 0.64\,\mu\text{s}$ |
+| **Baseline Full Cortex-A53**| PS ARM Cortex-A53 (1.333 GHz) | `float32` | 147,028 params | $5.381\,\text{ms}$ ($185.8\,\text{FPS}$) |
+| **Baseline PL Speedup** | KR260 PL vs Cortex-A53 Head | Signed `Q8.8` vs Float32 | MLP Forward | $\mathbf{1,238.6\times}$ |
 | **Actuator Command & Sim** | PS (Linux / MuJoCo) | Continuous Body Velocities | 3-DOF Kinematic Integration | $0.10\,\text{s}$ control timestep (10 Hz) |
