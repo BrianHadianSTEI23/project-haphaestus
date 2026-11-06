@@ -1,0 +1,158 @@
+{
+  "spatial_relation_grounding_001": {
+    "circuit_name": "Spatial Relation Grounding",
+    "model": "H-JEPA",
+    "capabilities": {
+      "object_grounding": {
+        "score": 0.885,
+        "engagement_level": "High"
+      },
+      "spatial_reasoning": {
+        "score": 0.942,
+        "engagement_level": "High"
+      },
+      "obstacle_avoidance": {
+        "score": 0.51,
+        "engagement_level": "Medium"
+      },
+      "long_horizon_planning": {
+        "score": 0.725,
+        "engagement_level": "High"
+      },
+      "kinematic_robustness": {
+        "score": 0.45,
+        "engagement_level": "Medium"
+      }
+    }
+  },
+  "obstacle_clearance_boundary_002": {
+    "circuit_name": "Obstacle Clearance Boundary",
+    "model": "LeWorldModel",
+    "capabilities": {
+      "object_grounding": {
+        "score": 0.12,
+        "engagement_level": "Low"
+      },
+      "spatial_reasoning": {
+        "score": 0.48,
+        "engagement_level": "Medium"
+      },
+      "obstacle_avoidance": {
+        "score": 0.985,
+        "engagement_level": "High"
+      },
+      "long_horizon_planning": {
+        "score": 0.78,
+        "engagement_level": "High"
+      },
+      "kinematic_robustness": {
+        "score": 0.81,
+        "engagement_level": "High"
+      }
+    }
+  },
+  "macro_subgoal_planning_003": {
+    "circuit_name": "Macro Subgoal Planning (K=5)",
+    "model": "H-JEPA",
+    "capabilities": {
+      "object_grounding": {
+        "score": 0.71,
+        "engagement_level": "High"
+      },
+      "spatial_reasoning": {
+        "score": 0.82,
+        "engagement_level": "High"
+      },
+      "obstacle_avoidance": {
+        "score": 0.813,
+        "engagement_level": "High"
+      },
+      "long_horizon_planning": {
+        "score": 0.965,
+        "engagement_level": "High"
+      },
+      "kinematic_robustness": {
+        "score": 0.79,
+        "engagement_level": "High"
+      }
+    }
+  },
+  "egocentric_heading_steering_004": {
+    "circuit_name": "Egocentric Heading Steering",
+    "model": "H-JEPA",
+    "capabilities": {
+      "object_grounding": {
+        "score": 0.65,
+        "engagement_level": "High"
+      },
+      "spatial_reasoning": {
+        "score": 0.89,
+        "engagement_level": "High"
+      },
+      "obstacle_avoidance": {
+        "score": 0.58,
+        "engagement_level": "Medium"
+      },
+      "long_horizon_planning": {
+        "score": 0.41,
+        "engagement_level": "Medium"
+      },
+      "kinematic_robustness": {
+        "score": 0.85,
+        "engagement_level": "High"
+      }
+    }
+  },
+  "action_conditioned_foresight_005": {
+    "circuit_name": "Action-Conditioned Foresight Core",
+    "model": "LeWorldModel",
+    "capabilities": {
+      "object_grounding": {
+        "score": 0.35,
+        "engagement_level": "Medium"
+      },
+      "spatial_reasoning": {
+        "score": 0.68,
+        "engagement_level": "High"
+      },
+      "obstacle_avoidance": {
+        "score": 0.89,
+        "engagement_level": "High"
+      },
+      "long_horizon_planning": {
+        "score": 0.86,
+        "engagement_level": "High"
+      },
+      "kinematic_robustness": {
+        "score": 0.73,
+        "engagement_level": "High"
+      }
+    }
+  },
+  "appearance_filtering_invariance_006": {
+    "circuit_name": "Appearance Filtering Invariant",
+    "model": "H-JEPA",
+    "capabilities": {
+      "object_grounding": {
+        "score": 0.85,
+        "engagement_level": "High"
+      },
+      "spatial_reasoning": {
+        "score": 0.91,
+        "engagement_level": "High"
+      },
+      "obstacle_avoidance": {
+        "score": 0.15,
+        "engagement_level": "Low"
+      },
+      "long_horizon_planning": {
+        "score": 0.1,
+        "engagement_level": "Low"
+      },
+      "kinematic_robustness": {
+        "score": 0.92,
+        "engagement_level": "High"
+      }
+    }
+  }
+}

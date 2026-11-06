@@ -1,0 +1,6 @@
+Invariant Principle,Physical Meaning,Baseline Score,LeWorldModel Score,H-JEPA Score
+Spatial Invariance,Equivariance under body translation and yaw rotation,0.085,0.742,0.815
+Appearance Invariance,"Consistency under color, texture, and shading mutations",1.000,0.000,0.936
+Action Linearity Invariance,Predictable scaling of latent displacement with action intensity,0.120,0.468,0.545
+Temporal Invariance,Preservation of planning foresight across time horizons (K=1 to K=5),0.000,0.785,0.942
+Embodiment Invariance,Independence of spatial intent from wheel drive friction gains,0.210,0.820,0.885

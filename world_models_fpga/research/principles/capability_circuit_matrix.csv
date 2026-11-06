@@ -1,0 +1,7 @@
+Circuit Mechanism,Host Model,Object Grounding,Spatial Reasoning,Obstacle Avoidance,Long-Horizon Planning,Kinematic Robustness
+Spatial Relation Grounding,H-JEPA,0.885 (High),0.942 (High),0.510 (Medium),0.725 (High),0.450 (Medium)
+Obstacle Clearance Boundary,LeWorldModel,0.120 (Low),0.480 (Medium),0.985 (High),0.780 (High),0.810 (High)
+Macro Subgoal Planning (K=5),H-JEPA,0.710 (High),0.820 (High),0.813 (High),0.965 (High),0.790 (High)
+Egocentric Heading Steering,H-JEPA,0.650 (High),0.890 (High),0.580 (Medium),0.410 (Medium),0.850 (High)
+Action-Conditioned Foresight Core,LeWorldModel,0.350 (Medium),0.680 (High),0.890 (High),0.860 (High),0.730 (High)
+Appearance Filtering Invariant,H-JEPA,0.850 (High),0.910 (High),0.150 (Low),0.100 (Low),0.920 (High)

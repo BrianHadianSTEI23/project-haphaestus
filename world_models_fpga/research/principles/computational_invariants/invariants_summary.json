@@ -1,0 +1,32 @@
+{
+  "Spatial Invariance": {
+    "Baseline": 0.085,
+    "LeWorldModel": 0.742,
+    "H-JEPA": 0.815,
+    "Desc": "Equivariance under body translation and yaw rotation"
+  },
+  "Appearance Invariance": {
+    "Baseline": 0.9999993443489075,
+    "LeWorldModel": 0.0,
+    "H-JEPA": 0.9357253909111023,
+    "Desc": "Consistency under color, texture, and shading mutations"
+  },
+  "Action Linearity Invariance": {
+    "Baseline": 0.12,
+    "LeWorldModel": 0.4684326946735382,
+    "H-JEPA": 0.5451241135597229,
+    "Desc": "Predictable scaling of latent displacement with action intensity"
+  },
+  "Temporal Invariance": {
+    "Baseline": 0.0,
+    "LeWorldModel": 0.785,
+    "H-JEPA": 0.942,
+    "Desc": "Preservation of planning foresight across time horizons (K=1 to K=5)"
+  },
+  "Embodiment Invariance": {
+    "Baseline": 0.21,
+    "LeWorldModel": 0.82,
+    "H-JEPA": 0.885,
+    "Desc": "Independence of spatial intent from wheel drive friction gains"
+  }
+}
