@@ -1,0 +1,4 @@
+Model,Canonical Success (%),Permuted Success (%),Permuted Gap (%),Orientation Gap (%)
+Baseline Policy,10.0,0.0,10.0,10.0
+LeWorldModel (LeWM),25.0,0.0,25.0,-5.0
+H-JEPA Hierarchical,25.0,0.0,25.0,0.0

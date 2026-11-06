@@ -1,0 +1,4 @@
+Model,Recovery Rate (%),Collision Rate (%),Goal Localization Error (m),Path Efficiency
+Baseline Policy,10.0,0.0,0.645,1.000
+LeWorldModel (LeWM),25.0,0.0,0.567,1.000
+H-JEPA Hierarchical,15.0,0.0,0.578,1.000

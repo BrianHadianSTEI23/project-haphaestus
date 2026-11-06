@@ -1,0 +1,19 @@
+Model,Capability,Success Rate (%),Collision Rate (%),Path Efficiency,Goal Error (m),Mean Latency (us),P99 Latency (us)
+Baseline Policy,object_grounding,26.7,20.0,1.000,0.535,3593.3,37047.2
+Baseline Policy,spatial_reasoning,6.7,26.7,0.997,0.904,1565.5,2351.5
+Baseline Policy,obstacle_avoidance,0.0,100.0,1.000,1.494,2214.2,2676.0
+Baseline Policy,action_prediction,0.0,0.0,1.000,0.269,2016.4,2541.5
+Baseline Policy,temporal_planning,0.0,100.0,1.000,2.467,2213.0,2767.3
+Baseline Policy,generalization,0.0,20.0,1.000,1.020,2032.1,2660.9
+LeWorldModel (LeWM),object_grounding,53.3,13.3,1.000,0.497,4494.7,7788.6
+LeWorldModel (LeWM),spatial_reasoning,26.7,13.3,0.993,0.781,4357.1,7269.8
+LeWorldModel (LeWM),obstacle_avoidance,0.0,100.0,1.000,1.372,5050.8,6497.0
+LeWorldModel (LeWM),action_prediction,100.0,0.0,1.000,0.209,3538.0,5507.2
+LeWorldModel (LeWM),temporal_planning,0.0,100.0,0.927,2.476,2635.9,3565.5
+LeWorldModel (LeWM),generalization,0.0,26.7,1.000,1.008,2519.2,3364.8
+H-JEPA Hierarchical,object_grounding,53.3,13.3,1.000,0.534,2433.8,3213.7
+H-JEPA Hierarchical,spatial_reasoning,26.7,13.3,0.993,0.804,2499.4,3473.8
+H-JEPA Hierarchical,obstacle_avoidance,0.0,100.0,1.000,1.379,2810.4,4186.5
+H-JEPA Hierarchical,action_prediction,100.0,0.0,1.000,0.207,2951.7,3836.9
+H-JEPA Hierarchical,temporal_planning,0.0,100.0,0.912,2.477,2742.0,3608.2
+H-JEPA Hierarchical,generalization,0.0,46.7,1.000,0.960,2702.2,3688.7

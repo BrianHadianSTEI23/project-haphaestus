@@ -1,0 +1,19 @@
+{
+  "dataset": "held_out_test_benchmark.npz",
+  "total_transitions": 2885,
+  "total_macro_sequences": 2405,
+  "lewm": {
+    "latent_mse": 0.08478765189647675,
+    "latent_cosine_similarity": 0.9551910161972046,
+    "collision_prediction_accuracy": 83.29289555549622
+  },
+  "hjepa_micro_k1": {
+    "latent_mse": 0.044607434421777725,
+    "latent_cosine_similarity": 0.9751184582710266
+  },
+  "hjepa_macro_k5": {
+    "latent_mse": 0.41986164450645447,
+    "latent_cosine_similarity": 0.7725601196289062,
+    "macro_collision_accuracy": 81.2889814376831
+  }
+}
