@@ -1,0 +1,7 @@
+Dataset Split,Model,Dynamics MSE,Collision Acc (%),Grounding Align,Action Tracking MSE,Kinematic Robustness
+Independent Validation Suite,Original H-JEPA (Teacher/Target),0.21519,92.0%,0.1003,0.26152,0.9917
+Independent Validation Suite,Option A: Weight-Preserving,0.1969,92.0%,0.1003,0.26456,0.9921
+Independent Validation Suite,Option B: Reconstructed Compact,0.01656,99.8%,0.0268,0.16431,0.9767
+Held-Out Test Benchmark,Original H-JEPA (Teacher/Target),0.20183,87.8%,0.1174,0.25434,0.9918
+Held-Out Test Benchmark,Option A: Weight-Preserving,0.19254,87.2%,0.1174,0.25733,0.9921
+Held-Out Test Benchmark,Option B: Reconstructed Compact,0.01027,99.8%,0.1437,0.1574,0.978

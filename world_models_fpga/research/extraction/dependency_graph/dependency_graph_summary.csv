@@ -1,0 +1,21 @@
+Node ID,Name,Module,Type,Parameters,Role,Circuits Supported,Pruning Action
+rgb_obs,RGB Camera Observation (64x64x3),sensor_interface,input,0,essential,spatial_relation_grounding_001; obstacle_clearance_boundary_002; appearance_filtering_invariance_006,retain_input
+encoder_conv1,"Encoder Conv2d Layer 1 (3 -> 16, 4x4, s=2)",encoder,convolution,784,shared,spatial_relation_grounding_001; obstacle_clearance_boundary_002; appearance_filtering_invariance_006,prune_channels_25pct
+encoder_conv2,"Encoder Conv2d Layer 2 (16 -> 32, 4x4, s=2)",encoder,convolution,8224,shared,spatial_relation_grounding_001; obstacle_clearance_boundary_002; appearance_filtering_invariance_006,prune_channels_25pct
+encoder_conv3,"Encoder Conv2d Layer 3 (32 -> 64, 4x4, s=2)",encoder,convolution,32832,replaceable,spatial_relation_grounding_001; obstacle_clearance_boundary_002,prune_channels_50pct
+encoder_conv4,"Encoder Conv2d Layer 4 (64 -> 64, 4x4, s=2)",encoder,convolution,65600,replaceable,spatial_relation_grounding_001; obstacle_clearance_boundary_002,prune_channels_50pct
+encoder_linear_proj,Encoder Latent Linear Projection (1024 -> 32),encoder,linear,32800,replaceable,spatial_relation_grounding_001; obstacle_clearance_boundary_002; egocentric_heading_steering_004,compress_to_16dim
+encoder_layernorm,Encoder Latent LayerNorm (32),encoder,normalization,64,essential,action_conditioned_foresight_005; macro_subgoal_planning_003,retain_compressed_16dim
+action_candidate_input,"Macro Action Candidate Input (3-dim [vx, vy, wz])",mpc_planner,input,0,essential,macro_subgoal_planning_003; action_conditioned_foresight_005,retain_input
+macro_fc1,Macro Predictor FC1 (35 -> 64),macro_predictor,linear_mlp,2304,shared,macro_subgoal_planning_003; obstacle_clearance_boundary_002; action_conditioned_foresight_005,prune_mlp_to_32dim
+macro_fc2,Macro Predictor FC2 (64 -> 64),macro_predictor,linear_mlp,4160,shared,macro_subgoal_planning_003; obstacle_clearance_boundary_002; action_conditioned_foresight_005,prune_mlp_to_32dim
+macro_delta_head,Macro Latent Delta Head (64 -> 32),macro_predictor,prediction_head,2080,essential,macro_subgoal_planning_003; action_conditioned_foresight_005,compress_head_to_16dim
+macro_col_head,Macro Collision Head (64 -> 1),macro_predictor,prediction_head,65,essential,obstacle_clearance_boundary_002; macro_subgoal_planning_003,retain_100pct
+micro_pol_fc1,Micro Policy FC1 (64 -> 64),micro_policy,linear_mlp,4160,replaceable,egocentric_heading_steering_004,prune_mlp_to_32dim
+micro_pol_fc2,Micro Policy FC2 (64 -> 64),micro_policy,linear_mlp,4160,replaceable,egocentric_heading_steering_004,prune_mlp_to_32dim
+micro_action_head,Micro Policy Action Head (64 -> 3),micro_policy,prediction_head,195,essential,egocentric_heading_steering_004,retain_100pct
+micro_dyn_fc1,Micro Dynamics Predictor FC1 (35 -> 64),micro_dynamics_auxiliary,linear_mlp,2304,redundant,,prune_module_100pct
+micro_dyn_fc2,Micro Dynamics Predictor FC2 (64 -> 64),micro_dynamics_auxiliary,linear_mlp,4160,redundant,,prune_module_100pct
+micro_dyn_delta,Micro Dynamics Delta Head (64 -> 32),micro_dynamics_auxiliary,prediction_head,2080,redundant,,prune_module_100pct
+micro_dyn_col,Micro Dynamics Collision Head (64 -> 1),micro_dynamics_auxiliary,prediction_head,65,redundant,,prune_module_100pct
+sigreg_regularizer,SIGReg Spectral Regularizer,loss_module,loss_module,0,task_specific,,prune_module_100pct

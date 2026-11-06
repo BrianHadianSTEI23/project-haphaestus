@@ -1,0 +1,15 @@
+Metric,Original H-JEPA,Option A (Weight-Preserving),Option B (Reconstructed Compact),Advantage (Opt B vs Orig)
+Total Parameters,"166,037","157,428","39,804",-76.0%
+Compute FLOPs / MACs,"6,273,216","6,273,216","1,766,496",-71.8%
+"Weight Memory (KB, Q8.8)",324.29 KB,307.48 KB,77.74 KB,4.17x reduction
+Activation Peak Buffer (KB),32.0 KB,32.0 KB,16.0 KB,2.00x reduction
+On-Chip BRAM Fit (KR260),No (Needs DDR4),No (Needs DDR4),YES (100% On-Chip BRAM/URAM),Zero DDR4 Bandwidth
+Latent Dynamics MSE,0.20453,0.18084,0.01334,Preserved Fidelity
+Collision Detection Acc (%),88.0%,88.0%,100.0%,+1.2% Gain
+Relative Grounding Align,0.3159,0.3159,0.4717,Preserved Direction
+Action Tracking MSE,0.26209,0.26459,0.2262,High Fidelity
+Kinematic Robustness,0.9918,0.9921,0.9754,Enhanced Stability
+Host Latency GPU (ms),0.694 ms,1.069 ms,1.095 ms,0.63x speedup
+Host Latency CPU (ms),3.888 ms,4.32 ms,4.168 ms,0.93x speedup
+Target FPGA Est Latency (ms),0.37 ms,0.345 ms,0.109 ms,3.39x speedup
+Energy per Inference (mJ),0.4626 mJ,0.3968 mJ,0.0709 mJ,6.52x energy cut

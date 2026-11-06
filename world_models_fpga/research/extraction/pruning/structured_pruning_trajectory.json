@@ -1,0 +1,94 @@
+{
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Stage 0: Unpruned Original Model",
+      "description": "Full uncompressed H-JEPA reference model with all training heads.",
+      "active_params": 166037,
+      "param_reduction_pct": 0.0,
+      "capabilities": {
+        "grounding": 0.48509378475632425,
+        "spatial_reasoning": 0.10859490839993201,
+        "obstacle_avoidance": 0.8132242756300723,
+        "planning": 0.5668870806694031,
+        "robustness": 0.9848241633735597,
+        "mean_retention": 0.5917248425658583
+      }
+    },
+    {
+      "stage": 1,
+      "name": "Stage 1: Redundant Module Pruning",
+      "description": "Pruned 1-step micro dynamics predictor (training auxiliary only).",
+      "active_params": 157428,
+      "param_reduction_pct": 5.184988888018937,
+      "capabilities": {
+        "grounding": 0.48509378475632425,
+        "spatial_reasoning": 0.10859490839993201,
+        "obstacle_avoidance": 0.8132242756300723,
+        "planning": 0.5668870806694031,
+        "robustness": 0.9843834219500422,
+        "mean_retention": 0.5916366942811548
+      }
+    },
+    {
+      "stage": 2,
+      "name": "Stage 2: Redundant Feature Group Pruning",
+      "description": "Pruned non-causal color dimension (dim 14) and 15 redundant latent channels (16-dim core).",
+      "active_params": 141028,
+      "param_reduction_pct": 15.062305389762521,
+      "capabilities": {
+        "grounding": 0.43520489380648325,
+        "spatial_reasoning": 0.03805221407096667,
+        "obstacle_avoidance": 0.236006503551831,
+        "planning": 0.7522850632667542,
+        "robustness": 0.9849027143791318,
+        "mean_retention": 0.48929027781503337
+      }
+    },
+    {
+      "stage": 3,
+      "name": "Stage 3: Redundant Channel Pruning",
+      "description": "Pruned 50% channels in Conv3 (64->32) and Conv4 (64->32).",
+      "active_params": 91812,
+      "param_reduction_pct": 44.703891301336455,
+      "capabilities": {
+        "grounding": 0.4649700132714856,
+        "spatial_reasoning": 0.01837751584255577,
+        "obstacle_avoidance": 0.26183485186632593,
+        "planning": 0.7495832443237305,
+        "robustness": 0.985358745791018,
+        "mean_retention": 0.4960248742190231
+      }
+    },
+    {
+      "stage": 4,
+      "name": "Stage 4: MLP Dimension Pruning",
+      "description": "Pruned Macro and Micro hidden layers from 64 to 32 units.",
+      "active_params": 83268,
+      "param_reduction_pct": 49.84973228858628,
+      "capabilities": {
+        "grounding": 0.4649700132714856,
+        "spatial_reasoning": 0.01837751584255577,
+        "obstacle_avoidance": 0.09087830540863878,
+        "planning": 0.7105503678321838,
+        "robustness": 0.9914822017308325,
+        "mean_retention": 0.4552516808171393
+      }
+    },
+    {
+      "stage": 5,
+      "name": "Stage 5: Circuit-Level Fine Pruning",
+      "description": "Sparse thresholding isolating verified causal circuit pathways.",
+      "active_params": 42784,
+      "param_reduction_pct": 74.23224943837819,
+      "capabilities": {
+        "grounding": 0.5777535920324259,
+        "spatial_reasoning": 0.017078961442600623,
+        "obstacle_avoidance": 0.17893357043275682,
+        "planning": 0.7033330202102661,
+        "robustness": 0.9917051463853568,
+        "mean_retention": 0.49376085810068127
+      }
+    }
+  ]
+}

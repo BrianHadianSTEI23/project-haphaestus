@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "author": "Brian A. Hadian",
+    "project": "Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA",
+    "phase": "Phase 7 - Independent Validation & Generalization Proof"
+  },
+  "independent_validation_suite": {
+    "original": {
+      "name": "Original H-JEPA (Teacher/Target)",
+      "samples_evaluated": 500,
+      "dynamics_mse": 0.21519,
+      "collision_accuracy_pct": 92.0,
+      "grounding_alignment": 0.1003,
+      "action_tracking_mse": 0.26152,
+      "robustness_score": 0.9917
+    },
+    "weight_preserving": {
+      "name": "Option A: Weight-Preserving",
+      "samples_evaluated": 500,
+      "dynamics_mse": 0.1969,
+      "collision_accuracy_pct": 92.0,
+      "grounding_alignment": 0.1003,
+      "action_tracking_mse": 0.26456,
+      "robustness_score": 0.9921
+    },
+    "reconstructed_compact": {
+      "name": "Option B: Reconstructed Compact",
+      "samples_evaluated": 500,
+      "dynamics_mse": 0.01656,
+      "collision_accuracy_pct": 99.8,
+      "grounding_alignment": 0.0268,
+      "action_tracking_mse": 0.16431,
+      "robustness_score": 0.9767
+    }
+  },
+  "held_out_test_benchmark": {
+    "original": {
+      "name": "Original H-JEPA (Teacher/Target)",
+      "samples_evaluated": 500,
+      "dynamics_mse": 0.20183,
+      "collision_accuracy_pct": 87.8,
+      "grounding_alignment": 0.1174,
+      "action_tracking_mse": 0.25434,
+      "robustness_score": 0.9918
+    },
+    "weight_preserving": {
+      "name": "Option A: Weight-Preserving",
+      "samples_evaluated": 500,
+      "dynamics_mse": 0.19254,
+      "collision_accuracy_pct": 87.2,
+      "grounding_alignment": 0.1174,
+      "action_tracking_mse": 0.25733,
+      "robustness_score": 0.9921
+    },
+    "reconstructed_compact": {
+      "name": "Option B: Reconstructed Compact",
+      "samples_evaluated": 500,
+      "dynamics_mse": 0.01027,
+      "collision_accuracy_pct": 99.8,
+      "grounding_alignment": 0.1437,
+      "action_tracking_mse": 0.1574,
+      "robustness_score": 0.978
+    }
+  }
+}

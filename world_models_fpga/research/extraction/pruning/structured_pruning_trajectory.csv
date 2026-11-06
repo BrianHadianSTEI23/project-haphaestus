@@ -1,0 +1,7 @@
+Stage,Name,Active Parameters,Reduction (%),Grounding,Spatial Reasoning,Avoidance,Planning,Robustness,Mean Retention
+0,Stage 0: Unpruned Original Model,166037,0.0%,0.4851,0.1086,0.8132,0.5669,0.9848,0.5917
+1,Stage 1: Redundant Module Pruning,157428,5.2%,0.4851,0.1086,0.8132,0.5669,0.9844,0.5916
+2,Stage 2: Redundant Feature Group Pruning,141028,15.1%,0.4352,0.0381,0.2360,0.7523,0.9849,0.4893
+3,Stage 3: Redundant Channel Pruning,91812,44.7%,0.4650,0.0184,0.2618,0.7496,0.9854,0.4960
+4,Stage 4: MLP Dimension Pruning,83268,49.8%,0.4650,0.0184,0.0909,0.7106,0.9915,0.4553
+5,Stage 5: Circuit-Level Fine Pruning,42784,74.2%,0.5778,0.0171,0.1789,0.7033,0.9917,0.4938

@@ -1,0 +1,47 @@
+digraph CircuitDependencyGraph {
+  rankdir=LR;
+  node [shape=box, style=filled, fontname="Helvetica", fontsize=10];
+  edge [fontname="Helvetica", fontsize=8];
+
+  "rgb_obs" [label="RGB Camera Observation (64x64x3)\n[ESSENTIAL: 0 params]", fillcolor="#98FB98"];
+  "encoder_conv1" [label="Encoder Conv2d Layer 1 (3 -> 16, 4x4, s=2)\n[SHARED: 784 params]", fillcolor="#87CEEB"];
+  "encoder_conv2" [label="Encoder Conv2d Layer 2 (16 -> 32, 4x4, s=2)\n[SHARED: 8,224 params]", fillcolor="#87CEEB"];
+  "encoder_conv3" [label="Encoder Conv2d Layer 3 (32 -> 64, 4x4, s=2)\n[REPLACEABLE: 32,832 params]", fillcolor="#FFD700"];
+  "encoder_conv4" [label="Encoder Conv2d Layer 4 (64 -> 64, 4x4, s=2)\n[REPLACEABLE: 65,600 params]", fillcolor="#FFD700"];
+  "encoder_linear_proj" [label="Encoder Latent Linear Projection (1024 -> 32)\n[REPLACEABLE: 32,800 params]", fillcolor="#FFD700"];
+  "encoder_layernorm" [label="Encoder Latent LayerNorm (32)\n[ESSENTIAL: 64 params]", fillcolor="#98FB98"];
+  "action_candidate_input" [label="Macro Action Candidate Input (3-dim [vx, vy, wz])\n[ESSENTIAL: 0 params]", fillcolor="#98FB98"];
+  "macro_fc1" [label="Macro Predictor FC1 (35 -> 64)\n[SHARED: 2,304 params]", fillcolor="#87CEEB"];
+  "macro_fc2" [label="Macro Predictor FC2 (64 -> 64)\n[SHARED: 4,160 params]", fillcolor="#87CEEB"];
+  "macro_delta_head" [label="Macro Latent Delta Head (64 -> 32)\n[ESSENTIAL: 2,080 params]", fillcolor="#98FB98"];
+  "macro_col_head" [label="Macro Collision Head (64 -> 1)\n[ESSENTIAL: 65 params]", fillcolor="#98FB98"];
+  "micro_pol_fc1" [label="Micro Policy FC1 (64 -> 64)\n[REPLACEABLE: 4,160 params]", fillcolor="#FFD700"];
+  "micro_pol_fc2" [label="Micro Policy FC2 (64 -> 64)\n[REPLACEABLE: 4,160 params]", fillcolor="#FFD700"];
+  "micro_action_head" [label="Micro Policy Action Head (64 -> 3)\n[ESSENTIAL: 195 params]", fillcolor="#98FB98"];
+  "micro_dyn_fc1" [label="Micro Dynamics Predictor FC1 (35 -> 64)\n[REDUNDANT: 2,304 params]", fillcolor="#FFB6C1"];
+  "micro_dyn_fc2" [label="Micro Dynamics Predictor FC2 (64 -> 64)\n[REDUNDANT: 4,160 params]", fillcolor="#FFB6C1"];
+  "micro_dyn_delta" [label="Micro Dynamics Delta Head (64 -> 32)\n[REDUNDANT: 2,080 params]", fillcolor="#FFB6C1"];
+  "micro_dyn_col" [label="Micro Dynamics Collision Head (64 -> 1)\n[REDUNDANT: 65 params]", fillcolor="#FFB6C1"];
+  "sigreg_regularizer" [label="SIGReg Spectral Regularizer\n[TASK_SPECIFIC: 0 params]", fillcolor="#DDA0DD"];
+
+  "rgb_obs" -> "encoder_conv1" [style="solid, color=black", label="feedforward"];
+  "encoder_conv1" -> "encoder_conv2" [style="solid, color=black", label="feedforward"];
+  "encoder_conv2" -> "encoder_conv3" [style="solid, color=black", label="feedforward"];
+  "encoder_conv3" -> "encoder_conv4" [style="solid, color=black", label="feedforward"];
+  "encoder_conv4" -> "encoder_linear_proj" [style="solid, color=black", label="feedforward"];
+  "encoder_linear_proj" -> "encoder_layernorm" [style="solid, color=black", label="feedforward"];
+  "encoder_layernorm" -> "macro_fc1" [style="solid, color=black", label="feedforward"];
+  "action_candidate_input" -> "macro_fc1" [style="solid, color=black", label="feedforward"];
+  "macro_fc1" -> "macro_fc2" [style="solid, color=black", label="feedforward"];
+  "macro_fc2" -> "macro_delta_head" [style="solid, color=black", label="feedforward"];
+  "macro_fc2" -> "macro_col_head" [style="solid, color=black", label="feedforward"];
+  "encoder_layernorm" -> "micro_pol_fc1" [style="solid, color=black", label="feedforward"];
+  "macro_delta_head" -> "micro_pol_fc1" [style="solid, color=black", label="subgoal_conditioning"];
+  "micro_pol_fc1" -> "micro_pol_fc2" [style="solid, color=black", label="feedforward"];
+  "micro_pol_fc2" -> "micro_action_head" [style="solid, color=black", label="feedforward"];
+  "encoder_layernorm" -> "micro_dyn_fc1" [style="dashed, color=red", label="training_auxiliary"];
+  "micro_dyn_fc1" -> "micro_dyn_fc2" [style="dashed, color=red", label="training_auxiliary"];
+  "micro_dyn_fc2" -> "micro_dyn_delta" [style="dashed, color=red", label="training_auxiliary"];
+  "micro_dyn_fc2" -> "micro_dyn_col" [style="dashed, color=red", label="training_auxiliary"];
+  "encoder_layernorm" -> "sigreg_regularizer" [style="dashed, color=red", label="training_loss"];
+}
