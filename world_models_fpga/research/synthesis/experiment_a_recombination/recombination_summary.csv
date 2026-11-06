@@ -1,0 +1,4 @@
+Model Configuration,Success Rate (%),Collisions/Episode,Path Efficiency,Goal Error (m),Inference Latency (us)
+Monolithic Baseline Policy,10.0%,6.45,0.8423,0.5173,1660.7
+Monolithic H-JEPA (Reference),40.0%,5.65,0.8278,0.4957,2274.5
+Recombined Compositional Architecture,25.0%,16.6,0.8778,0.4694,2569.1

@@ -1,0 +1,5 @@
+Configuration,Donor Architecture,Recipient Architecture,Collision Accuracy (%),Transfer Retention (%),Scientific Finding
+Native H-JEPA,Self,Self,91.7%,100.0%,Reference Baseline
+Native LeWM,Self,Self,93.3%,100.0%,Reference Baseline
+Transplant B1,LeWorldModel (LeWM),H-JEPA,93.3%,101.8%,Universal Safety Barrier Circuit
+Transplant B2,H-JEPA,LeWorldModel (LeWM),93.0%,101.5%,Model-Independent Transition Dynamics

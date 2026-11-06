@@ -1,0 +1,88 @@
+{
+  "Task_C1_2Stages": {
+    "task_name": "Task C1: Behind Yellow Cylinder -> Left of Red Box",
+    "num_stages": 2,
+    "models": {
+      "baseline": {
+        "model_name": "Monolithic Baseline Policy",
+        "full_success_pct": 0.0,
+        "all_stages_reached_pct": 0.0,
+        "stage_completion_pcts": [
+          0.0,
+          0.0
+        ],
+        "avg_collisions": 48.0,
+        "path_efficiency": 1.0
+      },
+      "compositional_synthesized": {
+        "model_name": "Reconstructed Compositional Architecture",
+        "full_success_pct": 0.0,
+        "all_stages_reached_pct": 0.0,
+        "stage_completion_pcts": [
+          0.0,
+          0.0
+        ],
+        "avg_collisions": 40.0,
+        "path_efficiency": 1.0
+      }
+    }
+  },
+  "Task_C2_2Stages": {
+    "task_name": "Task C2: Right of Obstacle -> Behind Green Cylinder",
+    "num_stages": 2,
+    "models": {
+      "baseline": {
+        "model_name": "Monolithic Baseline Policy",
+        "full_success_pct": 0.0,
+        "all_stages_reached_pct": 0.0,
+        "stage_completion_pcts": [
+          100.0,
+          0.0
+        ],
+        "avg_collisions": 4.0,
+        "path_efficiency": 1.0
+      },
+      "compositional_synthesized": {
+        "model_name": "Reconstructed Compositional Architecture",
+        "full_success_pct": 0.0,
+        "all_stages_reached_pct": 100.0,
+        "stage_completion_pcts": [
+          100.0,
+          100.0
+        ],
+        "avg_collisions": 1.0,
+        "path_efficiency": 1.0
+      }
+    }
+  },
+  "Task_C3_3Stages": {
+    "task_name": "Task C3: Front of Cyan Box -> Right of Blue Cyl -> Behind Yellow Cyl",
+    "num_stages": 3,
+    "models": {
+      "baseline": {
+        "model_name": "Monolithic Baseline Policy",
+        "full_success_pct": 0.0,
+        "all_stages_reached_pct": 0.0,
+        "stage_completion_pcts": [
+          100.0,
+          100.0,
+          0.0
+        ],
+        "avg_collisions": 39.0,
+        "path_efficiency": 1.0
+      },
+      "compositional_synthesized": {
+        "model_name": "Reconstructed Compositional Architecture",
+        "full_success_pct": 0.0,
+        "all_stages_reached_pct": 0.0,
+        "stage_completion_pcts": [
+          100.0,
+          0.0,
+          0.0
+        ],
+        "avg_collisions": 37.2,
+        "path_efficiency": 1.0
+      }
+    }
+  }
+}

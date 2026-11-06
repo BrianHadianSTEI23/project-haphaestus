@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "author": "Brian A. Hadian",
+    "project": "Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA",
+    "phase": "Phase 8 - Reconstruct and Test the Intelligence Architecture",
+    "architecture_name": "Compositional Action-Conditioned World Model (CACWM)",
+    "target_hardware": "AMD Kria KR260 Starter Kit (Xilinx Zynq UltraScale+ MPSoC)"
+  },
+  "candidate_architecture": {
+    "tier_1_perception_and_semantic_grounding": {
+      "question": "What is present, and what is the objective?",
+      "module": "Compact Streaming CNN Encoder",
+      "parameters": 35336,
+      "arithmetic": "Signed Q8.8 fixed-point",
+      "output": "16-dimensional geometric body-frame representation",
+      "invariance_properties": [
+        "Color and surface texture invariant (P4)",
+        "Egocentric polar rotational equivariant (P3)"
+      ]
+    },
+    "tier_2_structured_world_representation": {
+      "question": "What are the spatial relationships, obstacles, and object states?",
+      "module": "Egocentric Polar Latent Register",
+      "state_dim": 16,
+      "memory_footprint_bytes": 32,
+      "features": [
+        "Target relative distance and bearing (dims 0..7)",
+        "Obstacle boundary clearance contours (dims 8..15)"
+      ]
+    },
+    "tier_3_predictive_dynamics": {
+      "question": "What happens if I perform this candidate action?",
+      "module": "Action-Conditioned Residual Transition Predictor",
+      "parameters": 2224,
+      "horizon": "Macro stride K=5 steps (0.5 s lookahead at 10 Hz)",
+      "equation": "S_{t+K} = S_t + T_macro(S_t, A_macro) (P1)"
+    },
+    "tier_4_hierarchical_decision_mechanism": {
+      "question": "What should I accomplish next?",
+      "module": "Anticipatory Safety Barrier Evaluator",
+      "parameters": 33,
+      "equation": "B(S_t, A_macro) = sigma(W_col * T_macro(S_t, A_macro)) >= tau_safe (P5)",
+      "optimization": "ArgMin ||T_macro(S, A) - G||_2 + lambda * B(S, A)"
+    },
+    "tier_5_action_selection_and_feedback": {
+      "question": "How do I execute, observe, evaluate, and correct?",
+      "module": "Closed-Loop Micro Steering Policy",
+      "parameters": 2211,
+      "equation": "a_t = pi_micro(s_t, S^*_{t+K}) (P3)",
+      "actuation": "Holonomic 3-DOF Mecanum wheel velocities [vx, vy, wz]"
+    }
+  },
+  "total_synthesized_parameters": 39804,
+  "on_chip_weight_storage_kb": 77.74,
+  "external_dram_bandwidth": "0.0 MB/s (100% on-chip BRAM residency)"
+}

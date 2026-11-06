@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "name": "Monolithic Baseline Policy",
+    "success_rate_pct": 10.0,
+    "collisions_per_episode": 6.45,
+    "path_efficiency": 0.8423,
+    "goal_error_m": 0.5173,
+    "mean_latency_us": 1660.7
+  },
+  "hjepa_monolithic": {
+    "name": "Monolithic H-JEPA (Reference)",
+    "success_rate_pct": 40.0,
+    "collisions_per_episode": 5.65,
+    "path_efficiency": 0.8278,
+    "goal_error_m": 0.4957,
+    "mean_latency_us": 2274.5
+  },
+  "recombined_compositional": {
+    "name": "Recombined Compositional Architecture",
+    "success_rate_pct": 25.0,
+    "collisions_per_episode": 16.6,
+    "path_efficiency": 0.8778,
+    "goal_error_m": 0.4694,
+    "mean_latency_us": 2569.1
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "experiment": "Phase 8 - Experiment B: Cross-Model Circuit Transfer",
+    "author": "Brian A. Hadian",
+    "dataset": "independent_validation_suite.npz",
+    "samples_evaluated": 300
+  },
+  "latent_cka_alignment": 0.5376,
+  "native_hjepa": {
+    "name": "Native H-JEPA",
+    "collision_acc_pct": 91.67,
+    "dynamics_mse": 0.23308
+  },
+  "native_lewm": {
+    "name": "Native LeWorldModel (LeWM)",
+    "collision_acc_pct": 93.33
+  },
+  "transplant_b1_lewm_col_to_hjepa": {
+    "name": "Transplant B1: LeWM Collision Barrier Head -> H-JEPA",
+    "collision_acc_pct": 93.33,
+    "transfer_retention_pct": 101.82,
+    "functional_status": "Successful (Preserves >90% barrier fidelity)"
+  },
+  "transplant_b2_hjepa_macro_to_lewm": {
+    "name": "Transplant B2: H-JEPA Macro Predictor -> LeWM Latents",
+    "collision_acc_pct": 93.0,
+    "dynamics_mse": 0.2822,
+    "transfer_retention_pct": 101.45,
+    "functional_status": "Successful (Universal Latent Transition Dynamics)"
+  }
+}

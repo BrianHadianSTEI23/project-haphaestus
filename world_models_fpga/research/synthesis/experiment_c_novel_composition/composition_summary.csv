@@ -1,0 +1,7 @@
+Task,Stages,Model,Full Success (%),All Stages Reached (%),Stage 1 (%),Stage 2 (%),Stage 3 (%),Avg Collisions,Path Efficiency
+Task C1: Behind Yellow Cylinder -> Left of Red Box,2,Monolithic Baseline Policy,0.0%,0.0%,0.0%,0.0%,-,48.0,1.0
+Task C1: Behind Yellow Cylinder -> Left of Red Box,2,Reconstructed Compositional Architecture,0.0%,0.0%,0.0%,0.0%,-,40.0,1.0
+Task C2: Right of Obstacle -> Behind Green Cylinder,2,Monolithic Baseline Policy,0.0%,0.0%,100.0%,0.0%,-,4.0,1.0
+Task C2: Right of Obstacle -> Behind Green Cylinder,2,Reconstructed Compositional Architecture,0.0%,100.0%,100.0%,100.0%,-,1.0,1.0
+Task C3: Front of Cyan Box -> Right of Blue Cyl -> Behind Yellow Cyl,3,Monolithic Baseline Policy,0.0%,0.0%,100.0%,100.0%,0.0%,39.0,1.0
+Task C3: Front of Cyan Box -> Right of Blue Cyl -> Behind Yellow Cyl,3,Reconstructed Compositional Architecture,0.0%,0.0%,100.0%,0.0%,0.0%,37.2,1.0
