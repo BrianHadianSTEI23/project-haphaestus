@@ -1,0 +1,128 @@
+{
+  "baseline_z": {
+    "robot_position": {
+      "r2_score": 0.25199266532285014,
+      "rmse": 0.7067574328469666,
+      "weights_norm": 10.032134211169934
+    },
+    "robot_orientation": {
+      "r2_score": 0.051177913517432616,
+      "rmse": 0.6493170725677551,
+      "weights_norm": 5.335840294952066
+    },
+    "object_position": {
+      "r2_score": 0.02095357173435708,
+      "rmse": 0.5617766220876814,
+      "weights_norm": 2.789463418476433
+    },
+    "relative_object_vector": {
+      "r2_score": 0.15094406561105095,
+      "rmse": 1.2273540437213142,
+      "weights_norm": 14.17907999994003
+    },
+    "obstacle_clearance": {
+      "r2_score": 0.32562122126174287,
+      "rmse": 0.30312586482447634,
+      "weights_norm": 2.834937422268235
+    },
+    "goal_direction": {
+      "r2_score": 0.012765977907639225,
+      "rmse": 1.7046576485130402,
+      "weights_norm": 10.514103829558264
+    },
+    "future_position": {
+      "r2_score": 0.25238099264326636,
+      "rmse": 0.7065980259129774,
+      "weights_norm": 10.010096849304642
+    },
+    "action_identity": {
+      "r2_score": 0.047353188565344685,
+      "rmse": 0.4162485275493369,
+      "weights_norm": 1.799421531655056
+    }
+  },
+  "lewm_s": {
+    "robot_position": {
+      "r2_score": 0.272623092395651,
+      "rmse": 0.6971896028222995,
+      "weights_norm": 2.7574627514767776
+    },
+    "robot_orientation": {
+      "r2_score": 0.09332849608674154,
+      "rmse": 0.6059591860513434,
+      "weights_norm": 2.701031947598973
+    },
+    "object_position": {
+      "r2_score": 0.0,
+      "rmse": 0.603063548878735,
+      "weights_norm": 1.294806774916659
+    },
+    "relative_object_vector": {
+      "r2_score": 0.37875218007567424,
+      "rmse": 1.0388440962335317,
+      "weights_norm": 4.659721114447545
+    },
+    "obstacle_clearance": {
+      "r2_score": 0.6473467414556124,
+      "rmse": 0.2192022450302107,
+      "weights_norm": 0.6892032212803476
+    },
+    "goal_direction": {
+      "r2_score": 0.2362453957730437,
+      "rmse": 1.4993534914240552,
+      "weights_norm": 4.307771490811564
+    },
+    "future_position": {
+      "r2_score": 0.2696101303151338,
+      "rmse": 0.6985635020461316,
+      "weights_norm": 2.697899363861055
+    },
+    "action_identity": {
+      "r2_score": 0.15277527257921777,
+      "rmse": 0.38964087314049706,
+      "weights_norm": 1.1575026318595751
+    }
+  },
+  "hjepa_s": {
+    "robot_position": {
+      "r2_score": 0.35156101296199777,
+      "rmse": 0.6583902202380645,
+      "weights_norm": 7.294746886844696
+    },
+    "robot_orientation": {
+      "r2_score": 0.0923106832698834,
+      "rmse": 0.6092427129025221,
+      "weights_norm": 5.297738344013925
+    },
+    "object_position": {
+      "r2_score": 0.0,
+      "rmse": 0.5707334929145234,
+      "weights_norm": 3.159070220866074
+    },
+    "relative_object_vector": {
+      "r2_score": 0.4261525417172274,
+      "rmse": 0.9963080144599505,
+      "weights_norm": 10.923497661633771
+    },
+    "obstacle_clearance": {
+      "r2_score": 0.716145876285966,
+      "rmse": 0.19666118475402944,
+      "weights_norm": 1.5899887561068509
+    },
+    "goal_direction": {
+      "r2_score": 0.21049490618686573,
+      "rmse": 1.5244198063796905,
+      "weights_norm": 7.99809805831924
+    },
+    "future_position": {
+      "r2_score": 0.3460922560268969,
+      "rmse": 0.6611562259283134,
+      "weights_norm": 7.096152224620428
+    },
+    "action_identity": {
+      "r2_score": 0.1482349299448046,
+      "rmse": 0.38977748788376393,
+      "weights_norm": 2.14517474059955
+    }
+  }
+}

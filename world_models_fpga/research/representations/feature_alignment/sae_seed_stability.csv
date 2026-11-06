@@ -1,0 +1,10 @@
+Model,Dict Dim,Mean Max Cosine,Peak Cosine,Reproducible Fraction,Reproducible Count,Active Count
+baseline_z,64,0.5237,0.9385,25.0%,2,8
+baseline_z,128,0.5714,0.9885,21.4%,3,14
+baseline_z,256,0.5597,0.9781,14.3%,3,21
+lewm_s,64,0.5711,0.7887,0.0%,0,64
+lewm_s,128,0.5429,0.7964,0.0%,0,128
+lewm_s,256,0.5323,0.8555,0.4%,1,256
+hjepa_s,64,0.6082,0.8848,4.7%,3,64
+hjepa_s,128,0.5570,0.8821,0.8%,1,128
+hjepa_s,256,0.5452,0.9644,0.4%,1,255

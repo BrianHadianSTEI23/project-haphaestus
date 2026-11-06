@@ -1,0 +1,89 @@
+{
+  "baseline_z": {
+    "d64": {
+      "mean_max_cosine": 0.523668646812439,
+      "max_cosine": 0.9385035037994385,
+      "min_cosine": 0.282991886138916,
+      "reproducible_fraction": 0.25,
+      "reproducible_count": 2,
+      "active_features_1": 8,
+      "active_features_2": 11
+    },
+    "d128": {
+      "mean_max_cosine": 0.5713691115379333,
+      "max_cosine": 0.9885165691375732,
+      "min_cosine": 0.2674758732318878,
+      "reproducible_fraction": 0.21428571428571427,
+      "reproducible_count": 3,
+      "active_features_1": 14,
+      "active_features_2": 16
+    },
+    "d256": {
+      "mean_max_cosine": 0.5597328543663025,
+      "max_cosine": 0.9780666828155518,
+      "min_cosine": 0.2719123363494873,
+      "reproducible_fraction": 0.14285714285714285,
+      "reproducible_count": 3,
+      "active_features_1": 21,
+      "active_features_2": 32
+    }
+  },
+  "lewm_s": {
+    "d64": {
+      "mean_max_cosine": 0.5711041688919067,
+      "max_cosine": 0.7886627912521362,
+      "min_cosine": 0.35589462518692017,
+      "reproducible_fraction": 0.0,
+      "reproducible_count": 0,
+      "active_features_1": 64,
+      "active_features_2": 64
+    },
+    "d128": {
+      "mean_max_cosine": 0.5428910255432129,
+      "max_cosine": 0.7964383363723755,
+      "min_cosine": 0.37464243173599243,
+      "reproducible_fraction": 0.0,
+      "reproducible_count": 0,
+      "active_features_1": 128,
+      "active_features_2": 128
+    },
+    "d256": {
+      "mean_max_cosine": 0.5323489308357239,
+      "max_cosine": 0.8555206060409546,
+      "min_cosine": 0.38883739709854126,
+      "reproducible_fraction": 0.00390625,
+      "reproducible_count": 1,
+      "active_features_1": 256,
+      "active_features_2": 256
+    }
+  },
+  "hjepa_s": {
+    "d64": {
+      "mean_max_cosine": 0.6081879138946533,
+      "max_cosine": 0.8847962617874146,
+      "min_cosine": 0.383581280708313,
+      "reproducible_fraction": 0.046875,
+      "reproducible_count": 3,
+      "active_features_1": 64,
+      "active_features_2": 64
+    },
+    "d128": {
+      "mean_max_cosine": 0.5570266246795654,
+      "max_cosine": 0.8821070194244385,
+      "min_cosine": 0.36008018255233765,
+      "reproducible_fraction": 0.0078125,
+      "reproducible_count": 1,
+      "active_features_1": 128,
+      "active_features_2": 128
+    },
+    "d256": {
+      "mean_max_cosine": 0.5452046394348145,
+      "max_cosine": 0.9644193053245544,
+      "min_cosine": 0.40468406677246094,
+      "reproducible_fraction": 0.00392156862745098,
+      "reproducible_count": 1,
+      "active_features_1": 255,
+      "active_features_2": 254
+    }
+  }
+}

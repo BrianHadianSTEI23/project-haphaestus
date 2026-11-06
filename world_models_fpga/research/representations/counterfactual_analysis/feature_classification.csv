@@ -1,0 +1,97 @@
+Model,Dimension,Dominant Category,Experiment Type,Sensitivity,Is Selective
+baseline_z,0,Visual Appearance / Color,E2_color_shift,2.7384,True
+baseline_z,1,Visual Appearance / Color,E2_color_shift,2.7797,True
+baseline_z,2,Visual Appearance / Color,E2_color_shift,3.0977,True
+baseline_z,3,Visual Appearance / Color,E2_color_shift,2.8705,True
+baseline_z,4,Visual Appearance / Color,E2_color_shift,2.9940,True
+baseline_z,5,Visual Appearance / Color,E2_color_shift,2.8503,True
+baseline_z,6,Visual Appearance / Color,E2_color_shift,2.3452,True
+baseline_z,7,Visual Appearance / Color,E2_color_shift,3.2501,True
+baseline_z,8,Visual Appearance / Color,E2_color_shift,2.5641,True
+baseline_z,9,Visual Appearance / Color,E2_color_shift,2.7856,True
+baseline_z,10,Egocentric Heading,E3_robot_rotation,2.7153,True
+baseline_z,11,Visual Appearance / Color,E2_color_shift,2.5775,True
+baseline_z,12,Visual Appearance / Color,E2_color_shift,2.5258,True
+baseline_z,13,Global Position,E4_robot_start_pos,2.8042,True
+baseline_z,14,Visual Appearance / Color,E2_color_shift,2.2701,True
+baseline_z,15,Visual Appearance / Color,E2_color_shift,2.8962,True
+baseline_z,16,Egocentric Heading,E3_robot_rotation,3.3564,True
+baseline_z,17,Visual Appearance / Color,E2_color_shift,2.4791,True
+baseline_z,18,Visual Appearance / Color,E2_color_shift,2.6608,True
+baseline_z,19,Visual Appearance / Color,E2_color_shift,2.1732,True
+baseline_z,20,Global Position,E4_robot_start_pos,2.7680,True
+baseline_z,21,Visual Appearance / Color,E2_color_shift,2.7921,True
+baseline_z,22,Visual Appearance / Color,E2_color_shift,3.0325,True
+baseline_z,23,Global Position,E4_robot_start_pos,2.3351,True
+baseline_z,24,Geometry / Target Location,E1_position_shift,2.7061,True
+baseline_z,25,Egocentric Heading,E3_robot_rotation,3.4724,True
+baseline_z,26,Global Position,E4_robot_start_pos,2.2209,True
+baseline_z,27,Visual Appearance / Color,E2_color_shift,2.6718,True
+baseline_z,28,Visual Appearance / Color,E2_color_shift,2.7617,True
+baseline_z,29,Visual Appearance / Color,E2_color_shift,3.1328,True
+baseline_z,30,Visual Appearance / Color,E2_color_shift,2.7594,True
+baseline_z,31,Global Position,E4_robot_start_pos,2.2152,True
+lewm_s,0,Visual Appearance / Color,E2_color_shift,3.6074,True
+lewm_s,1,Egocentric Heading,E3_robot_rotation,3.6030,True
+lewm_s,2,Visual Appearance / Color,E2_color_shift,3.5595,True
+lewm_s,3,Egocentric Heading,E3_robot_rotation,3.6771,True
+lewm_s,4,Visual Appearance / Color,E2_color_shift,3.5002,True
+lewm_s,5,Geometry / Target Location,E1_position_shift,2.9951,True
+lewm_s,6,Geometry / Target Location,E1_position_shift,2.6735,True
+lewm_s,7,Egocentric Heading,E3_robot_rotation,3.0091,True
+lewm_s,8,Egocentric Heading,E3_robot_rotation,2.8386,True
+lewm_s,9,Geometry / Target Location,E1_position_shift,3.0765,True
+lewm_s,10,Egocentric Heading,E3_robot_rotation,2.7546,True
+lewm_s,11,Egocentric Heading,E3_robot_rotation,2.9863,True
+lewm_s,12,Global Position,E4_robot_start_pos,2.5236,True
+lewm_s,13,Visual Appearance / Color,E2_color_shift,3.5676,True
+lewm_s,14,Geometry / Target Location,E1_position_shift,3.0498,True
+lewm_s,15,Egocentric Heading,E3_robot_rotation,3.3610,True
+lewm_s,16,Global Position,E4_robot_start_pos,2.5618,True
+lewm_s,17,Visual Appearance / Color,E2_color_shift,2.6856,True
+lewm_s,18,Global Position,E4_robot_start_pos,2.6055,True
+lewm_s,19,Visual Appearance / Color,E2_color_shift,3.3571,True
+lewm_s,20,Egocentric Heading,E3_robot_rotation,2.9917,True
+lewm_s,21,Egocentric Heading,E3_robot_rotation,3.3863,True
+lewm_s,22,Visual Appearance / Color,E2_color_shift,2.6709,True
+lewm_s,23,Geometry / Target Location,E1_position_shift,3.4150,True
+lewm_s,24,Visual Appearance / Color,E2_color_shift,3.4236,True
+lewm_s,25,Geometry / Target Location,E1_position_shift,2.8222,True
+lewm_s,26,Geometry / Target Location,E1_position_shift,2.8350,True
+lewm_s,27,Visual Appearance / Color,E2_color_shift,2.9734,True
+lewm_s,28,Geometry / Target Location,E1_position_shift,3.0927,True
+lewm_s,29,Egocentric Heading,E3_robot_rotation,2.6647,True
+lewm_s,30,Geometry / Target Location,E1_position_shift,3.0592,True
+lewm_s,31,Geometry / Target Location,E1_position_shift,3.0234,True
+hjepa_s,0,Egocentric Heading,E3_robot_rotation,2.9007,True
+hjepa_s,1,Geometry / Target Location,E1_position_shift,2.5965,True
+hjepa_s,2,Geometry / Target Location,E1_position_shift,3.1336,True
+hjepa_s,3,Geometry / Target Location,E1_position_shift,3.0879,True
+hjepa_s,4,Global Position,E4_robot_start_pos,3.8510,True
+hjepa_s,5,Geometry / Target Location,E1_position_shift,2.7869,True
+hjepa_s,6,Global Position,E4_robot_start_pos,3.7456,True
+hjepa_s,7,Global Position,E4_robot_start_pos,3.1309,True
+hjepa_s,8,Visual Appearance / Color,E2_color_shift,2.8299,True
+hjepa_s,9,Egocentric Heading,E3_robot_rotation,2.7679,True
+hjepa_s,10,Global Position,E4_robot_start_pos,3.5019,True
+hjepa_s,11,Global Position,E4_robot_start_pos,3.6511,True
+hjepa_s,12,Geometry / Target Location,E1_position_shift,3.0444,True
+hjepa_s,13,Geometry / Target Location,E1_position_shift,3.5086,True
+hjepa_s,14,Geometry / Target Location,E1_position_shift,3.3115,True
+hjepa_s,15,Global Position,E4_robot_start_pos,3.2535,True
+hjepa_s,16,Egocentric Heading,E3_robot_rotation,3.6395,True
+hjepa_s,17,Global Position,E4_robot_start_pos,3.1386,True
+hjepa_s,18,Geometry / Target Location,E1_position_shift,3.0491,True
+hjepa_s,19,Egocentric Heading,E3_robot_rotation,2.7961,True
+hjepa_s,20,Egocentric Heading,E3_robot_rotation,3.3341,True
+hjepa_s,21,Global Position,E4_robot_start_pos,3.6034,True
+hjepa_s,22,Egocentric Heading,E3_robot_rotation,3.2837,True
+hjepa_s,23,Egocentric Heading,E3_robot_rotation,3.1606,True
+hjepa_s,24,Egocentric Heading,E3_robot_rotation,3.3284,True
+hjepa_s,25,Geometry / Target Location,E1_position_shift,2.7098,True
+hjepa_s,26,Geometry / Target Location,E1_position_shift,3.4039,True
+hjepa_s,27,Global Position,E4_robot_start_pos,3.4615,True
+hjepa_s,28,Geometry / Target Location,E1_position_shift,3.2049,True
+hjepa_s,29,Global Position,E4_robot_start_pos,3.2671,True
+hjepa_s,30,Global Position,E4_robot_start_pos,3.3385,True
+hjepa_s,31,Geometry / Target Location,E1_position_shift,3.1730,True

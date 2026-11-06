@@ -1,0 +1,351 @@
+{
+  "baseline": {
+    "baseline.conv1": {
+      "layer_name": "baseline.conv1",
+      "shape": [
+        1000,
+        16,
+        32,
+        32
+      ],
+      "total_elements": 16384000,
+      "mean": -0.19012600183486938,
+      "std": 0.3203681409358978,
+      "min": -1.388938546180725,
+      "max": 0.8854807615280151,
+      "peak_abs": 1.388938546180725,
+      "int_bits_req": 2,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 5.096435546875e-05,
+      "q8_8_safe": true
+    },
+    "baseline.conv2": {
+      "layer_name": "baseline.conv2",
+      "shape": [
+        1000,
+        32,
+        16,
+        16
+      ],
+      "total_elements": 8192000,
+      "mean": -0.031241416931152344,
+      "std": 0.0638955682516098,
+      "min": -0.49991804361343384,
+      "max": 0.21588894724845886,
+      "peak_abs": 0.49991804361343384,
+      "int_bits_req": 0,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.00012548828125,
+      "q8_8_safe": true
+    },
+    "baseline.conv3": {
+      "layer_name": "baseline.conv3",
+      "shape": [
+        1000,
+        64,
+        8,
+        8
+      ],
+      "total_elements": 4096000,
+      "mean": 0.003260226221755147,
+      "std": 0.05504956096410751,
+      "min": -0.13789087533950806,
+      "max": 0.14979435503482819,
+      "peak_abs": 0.14979435503482819,
+      "int_bits_req": -1,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.000109619140625,
+      "q8_8_safe": true
+    },
+    "baseline.conv4": {
+      "layer_name": "baseline.conv4",
+      "shape": [
+        1000,
+        64,
+        4,
+        4
+      ],
+      "total_elements": 1024000,
+      "mean": 0.049633659422397614,
+      "std": 0.14568839967250824,
+      "min": -0.2244282215833664,
+      "max": 0.5692803859710693,
+      "peak_abs": 0.5692803859710693,
+      "int_bits_req": 1,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 2.05078125e-05,
+      "q8_8_safe": true
+    },
+    "baseline.visual_latent_z": {
+      "layer_name": "baseline.visual_latent_z",
+      "shape": [
+        1000,
+        32
+      ],
+      "total_elements": 32000,
+      "mean": -0.13756896555423737,
+      "std": 1.3133649826049805,
+      "min": -3.3547556400299072,
+      "max": 2.202697992324829,
+      "peak_abs": 3.3547556400299072,
+      "int_bits_req": 3,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.0,
+      "q8_8_safe": true
+    },
+    "baseline.policy_fc1": {
+      "layer_name": "baseline.policy_fc1",
+      "shape": [
+        1000,
+        64
+      ],
+      "total_elements": 64000,
+      "mean": 0.3538939356803894,
+      "std": 1.160889983177185,
+      "min": -1.5409260988235474,
+      "max": 3.680497646331787,
+      "peak_abs": 3.680497646331787,
+      "int_bits_req": 3,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.0,
+      "q8_8_safe": true
+    },
+    "baseline.policy_fc2": {
+      "layer_name": "baseline.policy_fc2",
+      "shape": [
+        1000,
+        64
+      ],
+      "total_elements": 64000,
+      "mean": 0.36987602710723877,
+      "std": 1.0235744714736938,
+      "min": -1.5141788721084595,
+      "max": 2.7471556663513184,
+      "peak_abs": 2.7471556663513184,
+      "int_bits_req": 3,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.0,
+      "q8_8_safe": true
+    },
+    "baseline.action_head": {
+      "layer_name": "baseline.action_head",
+      "shape": [
+        1000,
+        3
+      ],
+      "total_elements": 3000,
+      "mean": 0.3146238923072815,
+      "std": 0.42817142605781555,
+      "min": 0.004788383841514587,
+      "max": 0.9256213307380676,
+      "peak_abs": 0.9256213307380676,
+      "int_bits_req": 1,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.0,
+      "q8_8_safe": true
+    },
+    "baseline.col_head": {
+      "layer_name": "baseline.col_head",
+      "shape": [
+        1000,
+        1
+      ],
+      "total_elements": 1000,
+      "mean": -9.53577709197998,
+      "std": 0.11275661736726761,
+      "min": -9.83557415008545,
+      "max": -9.329610824584961,
+      "peak_abs": 9.83557415008545,
+      "int_bits_req": 5,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.0,
+      "q8_8_safe": true
+    }
+  },
+  "lewm": {
+    "lewm.conv1": {
+      "layer_name": "lewm.conv1",
+      "shape": [
+        1000,
+        16,
+        32,
+        32
+      ],
+      "total_elements": 16384000,
+      "mean": -0.16376981139183044,
+      "std": 0.3510352373123169,
+      "min": -1.2747849225997925,
+      "max": 0.9423046112060547,
+      "peak_abs": 1.2747849225997925,
+      "int_bits_req": 2,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 3.3935546875e-05,
+      "q8_8_safe": true
+    },
+    "lewm.conv2": {
+      "layer_name": "lewm.conv2",
+      "shape": [
+        1000,
+        32,
+        16,
+        16
+      ],
+      "total_elements": 8192000,
+      "mean": -0.08537080138921738,
+      "std": 0.1991318315267563,
+      "min": -1.5969542264938354,
+      "max": 1.4018234014511108,
+      "peak_abs": 1.5969542264938354,
+      "int_bits_req": 2,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 5.0537109375e-05,
+      "q8_8_safe": true
+    },
+    "lewm.conv3": {
+      "layer_name": "lewm.conv3",
+      "shape": [
+        1000,
+        64,
+        8,
+        8
+      ],
+      "total_elements": 4096000,
+      "mean": -0.19029000401496887,
+      "std": 0.3081032633781433,
+      "min": -5.788440227508545,
+      "max": 2.147749900817871,
+      "peak_abs": 5.788440227508545,
+      "int_bits_req": 4,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 2.63671875e-05,
+      "q8_8_safe": true
+    },
+    "lewm.conv4": {
+      "layer_name": "lewm.conv4",
+      "shape": [
+        1000,
+        64,
+        4,
+        4
+      ],
+      "total_elements": 1024000,
+      "mean": -0.23723044991493225,
+      "std": 0.2693400979042053,
+      "min": -5.582775115966797,
+      "max": 1.890234112739563,
+      "peak_abs": 5.582775115966797,
+      "int_bits_req": 4,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 9.765625e-06,
+      "q8_8_safe": true
+    },
+    "lewm.flatten": {
+      "layer_name": "lewm.flatten",
+      "shape": [
+        1000,
+        1024
+      ],
+      "total_elements": 1024000,
+      "mean": 0.013300865888595581,
+      "std": 0.07658582925796509,
+      "min": 0.0,
+      "max": 1.890234112739563,
+      "peak_abs": 1.890234112739563,
+      "int_bits_req": 2,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.923197265625,
+      "q8_8_safe": true
+    },
+    "lewm.latent_state_s": {
+      "layer_name": "lewm.latent_state_s",
+      "shape": [
+        1000,
+        32
+      ],
+      "total_elements": 32000,
+      "mean": -0.010313821956515312,
+      "std": 0.9870724081993103,
+      "min": -4.198002338409424,
+      "max": 3.481017827987671,
+      "peak_abs": 4.198002338409424,
+      "int_bits_req": 4,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.0,
+      "q8_8_safe": true
+    }
+  },
+  "hjepa": {
+    "hjepa.conv1": {
+      "layer_name": "hjepa.conv1",
+      "shape": [
+        1000,
+        16,
+        32,
+        32
+      ],
+      "total_elements": 16384000,
+      "mean": -0.16262592375278473,
+      "std": 0.3659837245941162,
+      "min": -1.968404769897461,
+      "max": 1.3836746215820312,
+      "peak_abs": 1.968404769897461,
+      "int_bits_req": 2,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 1.361083984375e-05,
+      "q8_8_safe": true
+    },
+    "hjepa.conv3": {
+      "layer_name": "hjepa.conv3",
+      "shape": [
+        1000,
+        64,
+        8,
+        8
+      ],
+      "total_elements": 4096000,
+      "mean": -0.2682904005050659,
+      "std": 0.5976382493972778,
+      "min": -4.983562469482422,
+      "max": 4.482183456420898,
+      "peak_abs": 4.983562469482422,
+      "int_bits_req": 4,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 7.8125e-06,
+      "q8_8_safe": true
+    },
+    "hjepa.flatten": {
+      "layer_name": "hjepa.flatten",
+      "shape": [
+        1000,
+        1024
+      ],
+      "total_elements": 1024000,
+      "mean": 0.16179640591144562,
+      "std": 0.5441570281982422,
+      "min": 0.0,
+      "max": 10.751290321350098,
+      "peak_abs": 10.751290321350098,
+      "int_bits_req": 5,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 0.84111328125,
+      "q8_8_safe": true
+    },
+    "hjepa.shared_latent_s": {
+      "layer_name": "hjepa.shared_latent_s",
+      "shape": [
+        1000,
+        32
+      ],
+      "total_elements": 32000,
+      "mean": 0.007351447828114033,
+      "std": 0.9588906764984131,
+      "min": -2.922161340713501,
+      "max": 3.364656448364258,
+      "peak_abs": 3.364656448364258,
+      "int_bits_req": 3,
+      "q8_8_overflow_rate": 0.0,
+      "zero_sparsity": 9.375e-05,
+      "q8_8_safe": true
+    }
+  }
+}

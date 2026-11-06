@@ -1,0 +1,680 @@
+{
+  "baseline_z": [
+    {
+      "dim": 0,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.7383718490600586,
+      "is_selective": true
+    },
+    {
+      "dim": 1,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.7797274589538574,
+      "is_selective": true
+    },
+    {
+      "dim": 2,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.0976946353912354,
+      "is_selective": true
+    },
+    {
+      "dim": 3,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.870509386062622,
+      "is_selective": true
+    },
+    {
+      "dim": 4,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.994041681289673,
+      "is_selective": true
+    },
+    {
+      "dim": 5,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.850287437438965,
+      "is_selective": true
+    },
+    {
+      "dim": 6,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.3452260494232178,
+      "is_selective": true
+    },
+    {
+      "dim": 7,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.2501447200775146,
+      "is_selective": true
+    },
+    {
+      "dim": 8,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.564051866531372,
+      "is_selective": true
+    },
+    {
+      "dim": 9,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.78562593460083,
+      "is_selective": true
+    },
+    {
+      "dim": 10,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.7153005599975586,
+      "is_selective": true
+    },
+    {
+      "dim": 11,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.5774567127227783,
+      "is_selective": true
+    },
+    {
+      "dim": 12,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.5258138179779053,
+      "is_selective": true
+    },
+    {
+      "dim": 13,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.804248094558716,
+      "is_selective": true
+    },
+    {
+      "dim": 14,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.2700612545013428,
+      "is_selective": true
+    },
+    {
+      "dim": 15,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.896167278289795,
+      "is_selective": true
+    },
+    {
+      "dim": 16,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.3564043045043945,
+      "is_selective": true
+    },
+    {
+      "dim": 17,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.4791452884674072,
+      "is_selective": true
+    },
+    {
+      "dim": 18,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.6607935428619385,
+      "is_selective": true
+    },
+    {
+      "dim": 19,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.1732091903686523,
+      "is_selective": true
+    },
+    {
+      "dim": 20,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.7679738998413086,
+      "is_selective": true
+    },
+    {
+      "dim": 21,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.792102336883545,
+      "is_selective": true
+    },
+    {
+      "dim": 22,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.032456398010254,
+      "is_selective": true
+    },
+    {
+      "dim": 23,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.335094451904297,
+      "is_selective": true
+    },
+    {
+      "dim": 24,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.706092596054077,
+      "is_selective": true
+    },
+    {
+      "dim": 25,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.4724395275115967,
+      "is_selective": true
+    },
+    {
+      "dim": 26,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.2208750247955322,
+      "is_selective": true
+    },
+    {
+      "dim": 27,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.671787738800049,
+      "is_selective": true
+    },
+    {
+      "dim": 28,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.7617077827453613,
+      "is_selective": true
+    },
+    {
+      "dim": 29,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.1328301429748535,
+      "is_selective": true
+    },
+    {
+      "dim": 30,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.759364604949951,
+      "is_selective": true
+    },
+    {
+      "dim": 31,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.215209722518921,
+      "is_selective": true
+    }
+  ],
+  "lewm_s": [
+    {
+      "dim": 0,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.6073529720306396,
+      "is_selective": true
+    },
+    {
+      "dim": 1,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.603006601333618,
+      "is_selective": true
+    },
+    {
+      "dim": 2,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.5594613552093506,
+      "is_selective": true
+    },
+    {
+      "dim": 3,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.6770803928375244,
+      "is_selective": true
+    },
+    {
+      "dim": 4,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.500190496444702,
+      "is_selective": true
+    },
+    {
+      "dim": 5,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.995074987411499,
+      "is_selective": true
+    },
+    {
+      "dim": 6,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.67354679107666,
+      "is_selective": true
+    },
+    {
+      "dim": 7,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.0090601444244385,
+      "is_selective": true
+    },
+    {
+      "dim": 8,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.838561773300171,
+      "is_selective": true
+    },
+    {
+      "dim": 9,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.076460838317871,
+      "is_selective": true
+    },
+    {
+      "dim": 10,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.754638910293579,
+      "is_selective": true
+    },
+    {
+      "dim": 11,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.9862563610076904,
+      "is_selective": true
+    },
+    {
+      "dim": 12,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.5236024856567383,
+      "is_selective": true
+    },
+    {
+      "dim": 13,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.567626714706421,
+      "is_selective": true
+    },
+    {
+      "dim": 14,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.0498435497283936,
+      "is_selective": true
+    },
+    {
+      "dim": 15,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.3609795570373535,
+      "is_selective": true
+    },
+    {
+      "dim": 16,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.561767816543579,
+      "is_selective": true
+    },
+    {
+      "dim": 17,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.6855924129486084,
+      "is_selective": true
+    },
+    {
+      "dim": 18,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.605473041534424,
+      "is_selective": true
+    },
+    {
+      "dim": 19,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.357090950012207,
+      "is_selective": true
+    },
+    {
+      "dim": 20,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.991684675216675,
+      "is_selective": true
+    },
+    {
+      "dim": 21,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.3862922191619873,
+      "is_selective": true
+    },
+    {
+      "dim": 22,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.67086124420166,
+      "is_selective": true
+    },
+    {
+      "dim": 23,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.4150445461273193,
+      "is_selective": true
+    },
+    {
+      "dim": 24,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.423616647720337,
+      "is_selective": true
+    },
+    {
+      "dim": 25,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.8221826553344727,
+      "is_selective": true
+    },
+    {
+      "dim": 26,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.83498477935791,
+      "is_selective": true
+    },
+    {
+      "dim": 27,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.9734368324279785,
+      "is_selective": true
+    },
+    {
+      "dim": 28,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.092656135559082,
+      "is_selective": true
+    },
+    {
+      "dim": 29,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.6646883487701416,
+      "is_selective": true
+    },
+    {
+      "dim": 30,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.0592339038848877,
+      "is_selective": true
+    },
+    {
+      "dim": 31,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.0234177112579346,
+      "is_selective": true
+    }
+  ],
+  "hjepa_s": [
+    {
+      "dim": 0,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.9006567001342773,
+      "is_selective": true
+    },
+    {
+      "dim": 1,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.596512794494629,
+      "is_selective": true
+    },
+    {
+      "dim": 2,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.133552312850952,
+      "is_selective": true
+    },
+    {
+      "dim": 3,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.0878801345825195,
+      "is_selective": true
+    },
+    {
+      "dim": 4,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.8510031700134277,
+      "is_selective": true
+    },
+    {
+      "dim": 5,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.7868566513061523,
+      "is_selective": true
+    },
+    {
+      "dim": 6,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.745590925216675,
+      "is_selective": true
+    },
+    {
+      "dim": 7,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.1309256553649902,
+      "is_selective": true
+    },
+    {
+      "dim": 8,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.829887628555298,
+      "is_selective": true
+    },
+    {
+      "dim": 9,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.767894983291626,
+      "is_selective": true
+    },
+    {
+      "dim": 10,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.5019371509552,
+      "is_selective": true
+    },
+    {
+      "dim": 11,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.651125192642212,
+      "is_selective": true
+    },
+    {
+      "dim": 12,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.044429063796997,
+      "is_selective": true
+    },
+    {
+      "dim": 13,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.5085601806640625,
+      "is_selective": true
+    },
+    {
+      "dim": 14,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.311455011367798,
+      "is_selective": true
+    },
+    {
+      "dim": 15,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.2534966468811035,
+      "is_selective": true
+    },
+    {
+      "dim": 16,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.6394705772399902,
+      "is_selective": true
+    },
+    {
+      "dim": 17,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.1386382579803467,
+      "is_selective": true
+    },
+    {
+      "dim": 18,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.0491461753845215,
+      "is_selective": true
+    },
+    {
+      "dim": 19,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.796081304550171,
+      "is_selective": true
+    },
+    {
+      "dim": 20,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.3341293334960938,
+      "is_selective": true
+    },
+    {
+      "dim": 21,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.6034417152404785,
+      "is_selective": true
+    },
+    {
+      "dim": 22,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.2836530208587646,
+      "is_selective": true
+    },
+    {
+      "dim": 23,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.160578966140747,
+      "is_selective": true
+    },
+    {
+      "dim": 24,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 3.328415632247925,
+      "is_selective": true
+    },
+    {
+      "dim": 25,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.7097551822662354,
+      "is_selective": true
+    },
+    {
+      "dim": 26,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.4038994312286377,
+      "is_selective": true
+    },
+    {
+      "dim": 27,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.4614813327789307,
+      "is_selective": true
+    },
+    {
+      "dim": 28,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.204871892929077,
+      "is_selective": true
+    },
+    {
+      "dim": 29,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.267096757888794,
+      "is_selective": true
+    },
+    {
+      "dim": 30,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 3.338508367538452,
+      "is_selective": true
+    },
+    {
+      "dim": 31,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 3.1730148792266846,
+      "is_selective": true
+    }
+  ]
+}
