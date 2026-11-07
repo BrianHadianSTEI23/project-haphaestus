@@ -17,13 +17,19 @@ echo "======================================================================"
 
 source "${VENV_PATH}/bin/activate"
 
-PORT=8080
-echo "[1/3] Starting Interactive 3D Simulation Web Dashboard on http://localhost:${PORT}"
-echo "      - Real-time 3D MuJoCo Arena Perspective (30 FPS Stream)"
-echo "      - Onboard Astra Camera Feed with Target Centroid & Bounding Box HUD"
-echo "      - Text Command Input: e.g. 'go behind the yellow cylinder'"
-echo "      - Model Selector: Baseline vs. LeWorldModel (LeWM) vs. H-JEPA"
+# Ensure headless EGL rendering if display server is absent
+export MUJOCO_GL="${MUJOCO_GL:-egl}"
+
+PORT="${PORT:-8080}"
+echo "[1/2] Starting Interactive Mechanistic Studio & 3D Simulation Web Dashboard on http://localhost:${PORT}"
+echo "      - Interactive JavaScript Neural Architecture Engine: Live neuron firing & synapse pulses"
+echo "      - Interactive 3D Linear Space Design: 3D Orbit, Pan, Zoom, Safety Barrier Hyperplane B(s,a)=0.5"
+echo "      - Full Cross-Model Suite: Baseline vs. LeWM vs. H-JEPA vs. Option A vs. Option B (KR260 FPGA) vs. Novel Composition"
+echo "      - Deep Weight & Data Transformation Inspection: Hover on neurons to view weights and linear output vectors"
+echo "      - Live MuJoCo 3D Arena & Onboard Astra RGB-D Camera HUD"
+echo "      - Natural Language Command Dispatching: Live steering and waypoint routing"
 echo "----------------------------------------------------------------------"
+echo "Author: Brian A. Hadian"
 echo "Press Ctrl+C to terminate the dashboard."
 
 python3 "${SCRIPT_DIR}/sim_app_3d/sim_app_3d.py" --port ${PORT}
