@@ -1,17 +1,55 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
+  "manifest_generated_at": "2026-11-07T16:14:31.648335+00:00",
+  "total_records": 9,
+  "independently_executed_evaluations": [],
+  "legacy_unverified_evaluations": [
+    "architecture_reconstruction",
+    "behavior",
+    "compositionality",
+    "generalization",
+    "hardware_equivalence",
+    "necessity",
+    "prediction",
+    "sufficiency",
+    "transfer"
+  ],
+  "missing_evaluations": [],
+  "rejected_records": [],
+  "conclusion": "INCOMPLETE PROVENANCE: 0/9 categories independently executed. 9 categories are legacy unverified. 0 categories missing. Systematic re-execution required.",
   "records": [
     {
+      "record_id": "REC-ARCHITECTURE_RECONSTRUCTION-001",
       "evaluation": "architecture_reconstruction",
-      "config": {
-        "source_artifact": "research/extraction/comparison/three_model_comparison.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/extraction/comparison/three_model_comparison.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/extraction/comparison/three_model_comparison.json",
+      "result_artifact_sha256": "a24254e6ac7572b77f55f93eeb6aa0d07871c912cfb03850f50206cfeb5b9ffd",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/extraction/comparison/three_model_comparison.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "open_loop_comparison": {
           "Original_HJEPA": {
@@ -71,19 +109,40 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/architecture_reconstruction_record.json",
-      "record_sha256": "bfcac6448903ca64dbd6c263c1563ef512e101e928af4b2fdff16350c46f67ae"
+      "record_sha256": "c0e0f16792aa0c3df40dab789e6abe8ce7e6559445a7109f1b6455d9cd36589d"
     },
     {
+      "record_id": "REC-BEHAVIOR-001",
       "evaluation": "behavior",
-      "config": {
-        "source_artifact": "research/benchmarks/results/behavioral_eval_results.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/benchmarks/results/behavioral_eval_results.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/benchmarks/results/behavioral_eval_results.json",
+      "result_artifact_sha256": "4d46d0d76e5b85591f284a6ff61c230a20b727dc57d8e0c3559fcb870064a3e0",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/benchmarks/results/behavioral_eval_results.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "Oracle": {
           "capabilities": {
@@ -1043,19 +1102,40 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/behavior_record.json",
-      "record_sha256": "3f60d88ab3dae81e12b1d98ddfd2462bcedbafe7a6f812e6f67a6ad91359a19c"
+      "record_sha256": "8948ee760fba094f39a7c981eaa8fed792e8fade66b2f351cf13bd4f10a73a63"
     },
     {
+      "record_id": "REC-COMPOSITIONALITY-001",
       "evaluation": "compositionality",
-      "config": {
-        "source_artifact": "research/synthesis/experiment_c_novel_composition/novel_composition_results.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/synthesis/experiment_c_novel_composition/novel_composition_results.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/synthesis/experiment_c_novel_composition/novel_composition_results.json",
+      "result_artifact_sha256": "8e3a507e7cfc348accdc236cdf72d321a818a70049683619a308ae4d10ebc934",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/synthesis/experiment_c_novel_composition/novel_composition_results.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "episodes_per_task": 10,
         "tasks": {
@@ -1258,19 +1338,40 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/compositionality_record.json",
-      "record_sha256": "07966ac484f0583206b7819c489ca0dee3a812daada6b4a31e1e8ad2178a1e11"
+      "record_sha256": "26201561c3b9a7a3e24a216b257ccc803eb06381a184ff88bc02ed8595ac5e7f"
     },
     {
+      "record_id": "REC-GENERALIZATION-001",
       "evaluation": "generalization",
-      "config": {
-        "source_artifact": "research/benchmarks/results/generalization_eval_results.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/benchmarks/results/generalization_eval_results.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/benchmarks/results/generalization_eval_results.json",
+      "result_artifact_sha256": "9b83830232564865ddd277d69b08a15e9d7ab86e16478f21e172a46a8a0bd074",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/benchmarks/results/generalization_eval_results.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "Oracle": {
           "counterfactuals": {
@@ -5869,19 +5970,40 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/generalization_record.json",
-      "record_sha256": "9e1deb87f72dfa98551abd4a466d2509dfb41ed52ed891c25cee5be81b5a28c4"
+      "record_sha256": "fb95135d23c94a24e9cd81efd37f20808b14e83e91b75c345e2f15391e7d01c5"
     },
     {
+      "record_id": "REC-HARDWARE_EQUIVALENCE-001",
       "evaluation": "hardware_equivalence",
-      "config": {
-        "source_artifact": "research/hardware/hardware_equivalence_results.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/hardware/hardware_equivalence_results.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/hardware/hardware_equivalence_results.json",
+      "result_artifact_sha256": "fb509073c8f9123a1572a8423cb2fb2145ef16a25034f68b727c688ad57afbd9",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/hardware/hardware_equivalence_results.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "num_test_transitions": 300,
         "fpga_vs_fixedpoint_e_rel": 0.0,
@@ -5916,19 +6038,40 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/hardware_equivalence_record.json",
-      "record_sha256": "b77bed4705b54ad41d90b94c6ce9547d3eddedf963e940a93e60317ef3ba7207"
+      "record_sha256": "a99705e8f15381902eb215b86b412cab9886714489a88096141423d9759c2b75"
     },
     {
+      "record_id": "REC-NECESSITY-001",
       "evaluation": "necessity",
-      "config": {
-        "source_artifact": "research/circuits/results/circuit_registry.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/circuits/results/circuit_registry.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/circuits/results/circuit_registry.json",
+      "result_artifact_sha256": "bb8e05a4ad7f54a02f04b8e3911e29ae0a7f246e9b6391676037523b43851eff",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/circuits/results/circuit_registry.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "total_discovered_circuits": 5,
         "verified_circuits": 4,
@@ -6118,19 +6261,40 @@
         ]
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/necessity_record.json",
-      "record_sha256": "a2bb8fa21ac8378c1038eceab2c650054348608e0bf8329a4a7ff5930f810443"
+      "record_sha256": "6ecd9f4dd2fdb785a92a00d8da84eb20b1cf7dcae9eeeb41574f3932ccd9cb76"
     },
     {
+      "record_id": "REC-PREDICTION-001",
       "evaluation": "prediction",
-      "config": {
-        "source_artifact": "research/benchmarks/behavioral/latent_prediction_audit.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/benchmarks/behavioral/latent_prediction_audit.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/benchmarks/behavioral/latent_prediction_audit.json",
+      "result_artifact_sha256": "e47da7b835780231bb0aa4e80ff43bd51b40b1a4c0398c7d94abfbfb45aa23b7",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/benchmarks/behavioral/latent_prediction_audit.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "dataset": "held_out_test_benchmark.npz",
         "total_transitions": 3122,
@@ -6153,19 +6317,40 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/prediction_record.json",
-      "record_sha256": "80d3b4dd53123624eaab987c966d0c2825f744680cea6e406bd2d83dea530684"
+      "record_sha256": "969e4d96a228c6f8679564be9bcd7e9d0f37e9710c410deb6a97d36d3f1bfeff"
     },
     {
+      "record_id": "REC-SUFFICIENCY-001",
       "evaluation": "sufficiency",
-      "config": {
-        "source_artifact": "research/circuits/results/circuit_registry.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/circuits/results/circuit_registry.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/circuits/results/circuit_registry.json",
+      "result_artifact_sha256": "bb8e05a4ad7f54a02f04b8e3911e29ae0a7f246e9b6391676037523b43851eff",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/circuits/results/circuit_registry.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "total_discovered_circuits": 5,
         "verified_circuits": 4,
@@ -6355,19 +6540,40 @@
         ]
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/sufficiency_record.json",
-      "record_sha256": "c1f797cb31fce5c19fd50e84b097ebd09897768b04004f1ff3542653ed723d14"
+      "record_sha256": "d4398c44f7369cff7b2ca58aadd18f2bad0bdf756fa79985ac310b10ddf2cba6"
     },
     {
+      "record_id": "REC-TRANSFER-001",
       "evaluation": "transfer",
-      "config": {
-        "source_artifact": "research/synthesis/experiment_b_cross_transfer/cross_transfer_results.json",
-        "validation_summary_attached": true
+      "provenance_status": "LEGACY_UNVERIFIED",
+      "command_executed": "UNKNOWN_HISTORICAL_RUN",
+      "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+      "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+      "dataset_sha256": "missing",
+      "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+      "checkpoint_sha256": "missing",
+      "random_seed": 42,
+      "configuration": {
+        "source_artifact": "research/synthesis/experiment_b_cross_transfer/cross_transfer_results.json"
       },
-      "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-      "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-      "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+      "environment": {
+        "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "python_version": "3.13.16",
+        "torch_version": "2.14.1+cu126",
+        "cuda_available": true,
+        "cuda_version": "12.6",
+        "cpu_count": 16,
+        "mujoco_version": "3.17.0"
+      },
+      "result_artifact_path": "research/synthesis/experiment_b_cross_transfer/cross_transfer_results.json",
+      "result_artifact_sha256": "fc5e55d0906411153275a17945bdb8331eb10b22fb1c73f5a717d49c864557f6",
+      "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+      "config": {
+        "source_artifact": "research/synthesis/experiment_b_cross_transfer/cross_transfer_results.json"
+      },
+      "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
       "seed": 42,
-      "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
       "results": {
         "alignment_method": "Orthogonal Procrustes SVD fit strictly on train_benchmark.npz, evaluated on held_out_test_benchmark.npz",
         "train_alignment_cosine_h2l": 0.7497861385345459,
@@ -6403,20 +6609,7 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/transfer_record.json",
-      "record_sha256": "04abd2bbabad4b38d7c303011d5b6412f78516e6935b6b13cd4f8abe60ec6a33"
+      "record_sha256": "c15cc42945519437fb95caa29906e51fb7b8ed7b885b2017ebae3aeda309863f"
     }
-  ],
-  "executed_evaluations": [
-    "architecture_reconstruction",
-    "behavior",
-    "compositionality",
-    "generalization",
-    "hardware_equivalence",
-    "necessity",
-    "prediction",
-    "sufficiency",
-    "transfer"
-  ],
-  "missing_evaluations": [],
-  "conclusion": "All 9 required evaluation categories independently executed and provenance-verified."
+  ]
 }

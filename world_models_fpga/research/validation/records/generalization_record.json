@@ -1,14 +1,35 @@
 {
+  "record_id": "REC-GENERALIZATION-001",
   "evaluation": "generalization",
-  "config": {
-    "source_artifact": "research/benchmarks/results/generalization_eval_results.json",
-    "validation_summary_attached": true
+  "provenance_status": "LEGACY_UNVERIFIED",
+  "command_executed": "UNKNOWN_HISTORICAL_RUN",
+  "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
+  "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+  "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
+  "dataset_sha256": "missing",
+  "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
+  "checkpoint_sha256": "missing",
+  "random_seed": 42,
+  "configuration": {
+    "source_artifact": "research/benchmarks/results/generalization_eval_results.json"
   },
-  "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
-  "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
-  "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+  "environment": {
+    "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "cuda_available": true,
+    "cuda_version": "12.6",
+    "cpu_count": 16,
+    "mujoco_version": "3.17.0"
+  },
+  "result_artifact_path": "research/benchmarks/results/generalization_eval_results.json",
+  "result_artifact_sha256": "9b83830232564865ddd277d69b08a15e9d7ab86e16478f21e172a46a8a0bd074",
+  "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+  "config": {
+    "source_artifact": "research/benchmarks/results/generalization_eval_results.json"
+  },
+  "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
   "seed": 42,
-  "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
   "results": {
     "Oracle": {
       "counterfactuals": {

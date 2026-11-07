@@ -17,9 +17,11 @@ _hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
 from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 
 import argparse
+import datetime
 import hashlib
 import json
 import os
+import platform
 import subprocess
 import sys
 from pathlib import Path
@@ -42,7 +44,25 @@ from research.extraction.extracted_model.reconstructed_compact.model_reconstruct
 )
 
 
-REQUIRED = {"config", "git_commit", "dataset_sha256", "checkpoint_sha256", "seed", "environment", "results"}
+REQUIRED_CORE_FIELDS = {
+    "record_id",
+    "evaluation",
+    "provenance_status",
+    "command_executed",
+    "execution_timestamp",
+    "source_git_commit",
+    "dataset_path",
+    "dataset_sha256",
+    "checkpoint_path",
+    "checkpoint_sha256",
+    "random_seed",
+    "configuration",
+    "environment",
+    "result_artifact_path",
+    "result_artifact_sha256",
+    "results",
+}
+
 REQUIRED_EVALUATIONS = {
     "behavior",
     "prediction",
@@ -54,6 +74,8 @@ REQUIRED_EVALUATIONS = {
     "architecture_reconstruction",
     "hardware_equivalence",
 }
+
+VALID_STATUSES = {"INDEPENDENTLY_EXECUTED", "REUSED_VERIFIED", "LEGACY_UNVERIFIED", "REJECTED"}
 
 
 def _digest(path: Path) -> str:
@@ -73,31 +95,104 @@ def _git_sha() -> str:
         return "unavailable"
 
 
+def get_system_environment() -> dict:
+    env = {
+        "os_platform": platform.platform(),
+        "python_version": sys.version.split()[0],
+        "torch_version": torch.__version__,
+        "cuda_available": torch.cuda.is_available(),
+        "cuda_version": torch.version.cuda if torch.cuda.is_available() else "none",
+        "cpu_count": os.cpu_count(),
+    }
+    try:
+        import mujoco
+        env["mujoco_version"] = mujoco.__version__
+    except Exception:
+        env["mujoco_version"] = "unknown"
+    return env
+
+
 def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
     records = []
+    independently_executed = []
+    legacy_unverified = []
+    rejected_records = []
+
     for path in sorted(Path(records_dir).glob("*.json")):
-        item = json.loads(path.read_text())
-        missing = REQUIRED - set(item)
+        try:
+            item = json.loads(path.read_text())
+        except Exception as e:
+            rejected_records.append({"file": str(path), "reason": f"Corrupt JSON: {e}"})
+            continue
+
+        # Check required fields
+        missing = REQUIRED_CORE_FIELDS - set(item)
         if missing:
-            raise ValueError(f"{path}: missing provenance fields {sorted(missing)}")
+            # Check legacy format compatibility
+            legacy_missing = {"config", "git_commit", "dataset_sha256", "checkpoint_sha256", "seed", "environment", "results"} - set(item)
+            if legacy_missing:
+                rejected_records.append({"file": str(path), "reason": f"Missing core fields: {sorted(missing)}"})
+                continue
+            # Upgrade legacy record on the fly with warning
+            item["provenance_status"] = item.get("provenance_status", "LEGACY_UNVERIFIED")
+            item["record_id"] = item.get("record_id", f"LEGACY-{item.get('evaluation', 'UNKNOWN')}")
+            item["command_executed"] = item.get("command_executed", "UNKNOWN_LEGACY_INVOCATION")
+            item["execution_timestamp"] = item.get("execution_timestamp", "UNKNOWN_PRE_AUDIT")
+            item["source_git_commit"] = item.get("source_git_commit", item.get("git_commit", "UNKNOWN"))
+            item["dataset_path"] = item.get("dataset_path", "UNKNOWN")
+            item["checkpoint_path"] = item.get("checkpoint_path", "UNKNOWN")
+            item["random_seed"] = item.get("random_seed", item.get("seed", 42))
+            item["configuration"] = item.get("configuration", item.get("config", {}))
+            item["result_artifact_path"] = item.get("result_artifact_path", "UNKNOWN")
+            item["result_artifact_sha256"] = item.get("result_artifact_sha256", "UNKNOWN")
+
         item["record_path"] = str(path)
         item["record_sha256"] = _digest(path)
         records.append(item)
-    observed = {record.get("evaluation") for record in records}
+
+        status = item.get("provenance_status")
+        eval_name = item.get("evaluation")
+        if status == "INDEPENDENTLY_EXECUTED":
+            independently_executed.append(eval_name)
+        elif status == "LEGACY_UNVERIFIED":
+            legacy_unverified.append(eval_name)
+        else:
+            rejected_records.append({"file": str(path), "reason": f"Invalid or rejected status: {status}"})
+
+    observed_evals = {r.get("evaluation") for r in records if r.get("evaluation")}
+    missing_evals = sorted(REQUIRED_EVALUATIONS - observed_evals)
+
+    is_fully_executed = (
+        len(missing_evals) == 0
+        and len(legacy_unverified) == 0
+        and len(rejected_records) == 0
+        and len(set(independently_executed)) == len(REQUIRED_EVALUATIONS)
+    )
+
+    if is_fully_executed:
+        conclusion = "All 9 required evaluation categories independently executed and provenance-verified."
+    else:
+        conclusion = (
+            f"INCOMPLETE PROVENANCE: {len(set(independently_executed))}/9 categories independently executed. "
+            f"{len(set(legacy_unverified))} categories are legacy unverified. "
+            f"{len(missing_evals)} categories missing. Systematic re-execution required."
+        )
+
     manifest = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
+        "manifest_generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "total_records": len(records),
+        "independently_executed_evaluations": sorted(set(independently_executed)),
+        "legacy_unverified_evaluations": sorted(set(legacy_unverified)),
+        "missing_evaluations": missing_evals,
+        "rejected_records": rejected_records,
+        "conclusion": conclusion,
         "records": records,
-        "executed_evaluations": sorted(value for value in observed if value),
-        "missing_evaluations": sorted(REQUIRED_EVALUATIONS - observed),
-        "conclusion": (
-            "NO SCIENTIFIC CONCLUSION: required independently executed evidence is incomplete"
-            if REQUIRED_EVALUATIONS - observed
-            else "All 9 required evaluation categories independently executed and provenance-verified."
-        ),
     }
     destination = Path(output)
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(manifest, indent=2) + "\n")
+    return manifest
     return manifest
 
 
@@ -221,12 +316,7 @@ def run_physical_perturbations_and_rollouts(base_dir: Path, device: torch.device
 
 def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: dict) -> None:
     records_dir.mkdir(parents=True, exist_ok=True)
-    git_sha = _git_sha()
-    ds_sha = _digest(_ACTIVE_SPLITS_DIR / "independent_validation_suite.npz")
-    ckpt_dir = _ACTIVE_CKPT_DIR
-    if not (ckpt_dir / "hjepa_best.pt").exists():
-        ckpt_dir = _ACTIVE_CKPT_DIR
-    ckpt_sha = _digest(ckpt_dir / "hjepa_best.pt")
+    sys_env = get_system_environment()
 
     candidate_mapping = [
         ("behavior", [
@@ -275,14 +365,58 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
         if src_path is None:
             continue
         res_data = json.loads(src_path.read_text())
+        art_sha = _digest(src_path)
+
+        # Inspect if raw artifact has genuine embedded provenance metadata
+        meta = res_data.get("execution_metadata", {})
+        if meta and meta.get("command_executed") and meta.get("git_commit") and meta.get("dataset_sha256"):
+            status = "INDEPENDENTLY_EXECUTED"
+            cmd_exec = meta.get("command_executed")
+            ts = meta.get("execution_timestamp", datetime.datetime.now(datetime.timezone.utc).isoformat())
+            src_commit = meta.get("git_commit")
+            ds_path = meta.get("dataset_path", "unknown")
+            ds_sha = meta.get("dataset_sha256", "unknown")
+            ckpt_path = meta.get("checkpoint_path", "unknown")
+            ckpt_sha = meta.get("checkpoint_sha256", "unknown")
+            seed = int(meta.get("random_seed", 42))
+            cfg = meta.get("configuration", {})
+            env = meta.get("environment", sys_env)
+            notes = "Independently executed with verified embedded execution metadata."
+        else:
+            status = "LEGACY_UNVERIFIED"
+            cmd_exec = "UNKNOWN_HISTORICAL_RUN"
+            ts = "UNKNOWN_HISTORICAL_TIMESTAMP"
+            src_commit = "UNVERIFIED_PRE_AUDIT_COMMIT"
+            ds_path = "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz"
+            ds_sha = _digest(base_dir / ds_path)
+            ckpt_path = "world_models_fpga/checkpoints_v3/hjepa_best.pt"
+            ckpt_sha = _digest(base_dir / ckpt_path)
+            seed = 42
+            cfg = {"source_artifact": str(src_path.relative_to(base_dir))}
+            env = sys_env
+            notes = "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol."
+
         record = {
+            "record_id": f"REC-{eval_name.upper()}-001",
             "evaluation": eval_name,
-            "config": {"source_artifact": str(src_path.relative_to(base_dir)), "validation_summary_attached": True},
-            "git_commit": git_sha,
+            "provenance_status": status,
+            "command_executed": cmd_exec,
+            "execution_timestamp": ts,
+            "source_git_commit": src_commit,
+            "dataset_path": ds_path,
             "dataset_sha256": ds_sha,
+            "checkpoint_path": ckpt_path,
             "checkpoint_sha256": ckpt_sha,
-            "seed": 42,
-            "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
+            "random_seed": seed,
+            "configuration": cfg,
+            "environment": env,
+            "result_artifact_path": str(src_path.relative_to(base_dir)),
+            "result_artifact_sha256": art_sha,
+            "provenance_notes": notes,
+            # Legacy compatibility fields
+            "config": cfg,
+            "git_commit": src_commit,
+            "seed": seed,
             "results": res_data,
         }
         (records_dir / f"{eval_name}_record.json").write_text(json.dumps(record, indent=2) + "\n")
@@ -311,4 +445,10 @@ if __name__ == "__main__":
         populate_provenance_records(base_dir, records_dir, val_summary)
 
     manifest = build_manifest(records_dir, args.output)
-    print(json.dumps({"executed_evaluations": manifest["executed_evaluations"], "missing_evaluations": manifest["missing_evaluations"], "conclusion": manifest["conclusion"]}, indent=2))
+    print(json.dumps({
+        "independently_executed_evaluations": manifest["independently_executed_evaluations"],
+        "legacy_unverified_evaluations": manifest["legacy_unverified_evaluations"],
+        "missing_evaluations": manifest["missing_evaluations"],
+        "rejected_records": manifest["rejected_records"],
+        "conclusion": manifest["conclusion"]
+    }, indent=2))
