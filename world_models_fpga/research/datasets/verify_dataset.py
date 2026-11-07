@@ -64,25 +64,52 @@ def validate_split(npz_path: str | Path, metadata_path: str | Path) -> dict:
         assert episode["episode_id"] not in episode_ids, "duplicate episode id"
         episode_ids.add(episode["episode_id"])
         assert episode.get("label_provenance"), "label provenance absent"
+        assert episode.get("config_sha256"), "config_sha256 absent"
         assert episode.get("environment_parameters", {}).get("physical_geometries") is not None
+
+    if metadata.get("split_name") == "counterfactual_suite":
+        # Verify that pairs within each experiment_type are genuinely distinct (not duplicate copies)
+        by_exp_e0_hashes: dict[str, set[str]] = {}
+        for episode in metadata["episodes"]:
+            if not episode.get("is_counterfactual", False):
+                exp = episode.get("experiment_type", "")
+                by_exp_e0_hashes.setdefault(exp, set()).add(episode["config_sha256"])
+        for exp, hashes in by_exp_e0_hashes.items():
+            assert len(hashes) >= 20, f"Duplicate counterfactual pairs detected in {exp}: only {len(hashes)} unique E0 configs"
+
     return {"npz": str(npz_path), "episodes": len(starts), "transitions": n, "sha256": metadata["npz_sha256"], "status": "VALID"}
 
 
 def verify_all_splits(splits_dir: str | Path) -> list[dict]:
     root = Path(splits_dir)
     results = []
-    for split in ("train_benchmark", "val_benchmark", "held_out_test_benchmark", "counterfactual_suite", "disambiguation_suite"):
+    for split in (
+        "train_benchmark",
+        "val_benchmark",
+        "held_out_test_benchmark",
+        "counterfactual_suite",
+        "disambiguation_suite",
+        "independent_validation_suite",
+    ):
         npz_path, metadata_path = root / f"{split}.npz", root / f"{split}_metadata.json"
         if npz_path.exists() or metadata_path.exists():
             assert npz_path.exists() and metadata_path.exists(), f"incomplete split {split}"
             results.append(validate_split(npz_path, metadata_path))
     ids_by_split = []
+    seeds_by_base_split = []
     for result in results:
-        with Path(result["npz"]).with_name(Path(result["npz"]).stem + "_metadata.json").open() as file:
-            ids_by_split.append((Path(result["npz"]).stem, {e["episode_id"] for e in json.load(file)["episodes"]}))
+        stem = Path(result["npz"]).stem
+        with Path(result["npz"]).with_name(stem + "_metadata.json").open() as file:
+            episodes = json.load(file)["episodes"]
+            ids_by_split.append((stem, {e["episode_id"] for e in episodes}))
+            if stem in ("train_benchmark", "val_benchmark", "held_out_test_benchmark", "independent_validation_suite"):
+                seeds_by_base_split.append((stem, {int(e["generation_seed"]) for e in episodes}))
     for i, (left_name, left_ids) in enumerate(ids_by_split):
         for right_name, right_ids in ids_by_split[i + 1:]:
             assert not left_ids & right_ids, f"episode leakage between {left_name} and {right_name}"
+    for i, (left_name, left_seeds) in enumerate(seeds_by_base_split):
+        for right_name, right_seeds in seeds_by_base_split[i + 1:]:
+            assert not left_seeds & right_seeds, f"seed leakage between {left_name} and {right_name}"
     return results
 
 

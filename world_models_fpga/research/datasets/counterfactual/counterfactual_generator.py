@@ -31,14 +31,25 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
     base_obs = copy.deepcopy(CANONICAL_OBSTACLES)
 
     target_key = "yellow_cylinder"
-    target_pos = base_obs[target_key]["pos"][:2]
+    target_pos = base_obs[target_key]["pos"][:2].copy()
     relation = "behind"
     instruction = "go behind the yellow cylinder"
+
+    # Pair-specific deterministic initial pose perturbation (pair_id == 0 is exact origin reference)
+    if pair_id == 0:
+        rx, ry, yaw_jitter = 0.0, 0.0, 0.0
+    else:
+        rx = float(rng.uniform(-0.22, 0.22))
+        ry = float(rng.uniform(-0.22, 0.22))
+        yaw_jitter = float(rng.uniform(-0.15, 0.15))
+
+    base_heading = float(np.arctan2(target_pos[1] - ry, target_pos[0] - rx) + yaw_jitter)
 
     # Base specification (E0)
     e0_spec = {
         "counterfactual_id": f"{experiment_type}_pair_{pair_id:03d}_E0",
         "experiment_type": experiment_type,
+        "pair_id": int(pair_id),
         "capability": "spatial_reasoning",
         "difficulty": "counterfactual",
         "is_counterfactual": False,
@@ -47,7 +58,7 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
         "semantic_relation": relation,
         "target_key": target_key,
         "obstacles": copy.deepcopy(base_obs),
-        "initial_pose": np.array([0.0, 0.0, float(np.arctan2(target_pos[1], target_pos[0]))], dtype=np.float32),
+        "initial_pose": np.array([rx, ry, base_heading], dtype=np.float32),
         "camera_config": "front_cam",
         "camera_pitch_offset": 0.0,
         "generation_seed": generation_seed,
@@ -56,8 +67,8 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
     }
     # Waypoints for E0
     g_pose = get_waypoint_for_relation(base_obs[target_key]["pos"], relation, e0_spec["initial_pose"])
-    c_vec = base_obs[target_key]["pos"][:2]
-    rad = c_vec / np.linalg.norm(c_vec)
+    c_vec = base_obs[target_key]["pos"][:2] - e0_spec["initial_pose"][:2]
+    rad = c_vec / (np.linalg.norm(c_vec) + 1e-8)
     tan = np.array([-rad[1], rad[0]], dtype=np.float32)
     flank = base_obs[target_key]["pos"][:2] + tan * 0.70
     e0_spec["waypoints"] = [np.array([flank[0], flank[1], g_pose[2]], dtype=np.float32), g_pose]
@@ -78,8 +89,8 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
         ei_spec["intervention"] = {"name": "target_position", "parameters": {"position": new_pos.tolist()}}
         # Recompute waypoints with mutated position
         g_pose_mut = get_waypoint_for_relation(new_pos, relation, ei_spec["initial_pose"])
-        c_vec_mut = new_pos[:2]
-        rad_mut = c_vec_mut / np.linalg.norm(c_vec_mut)
+        c_vec_mut = new_pos[:2] - ei_spec["initial_pose"][:2]
+        rad_mut = c_vec_mut / (np.linalg.norm(c_vec_mut) + 1e-8)
         tan_mut = np.array([-rad_mut[1], rad_mut[0]], dtype=np.float32)
         flank_mut = new_pos[:2] + tan_mut * 0.70
         ei_spec["waypoints"] = [np.array([flank_mut[0], flank_mut[1], g_pose_mut[2]], dtype=np.float32), g_pose_mut]
@@ -108,7 +119,7 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
     # -------------------------------------------------------------
     elif experiment_type == "E4_robot_position":
         ei_spec["expected_invariant"] = "object_relative_goal_invariant_to_start_pose"
-        ei_spec["initial_pose"] = np.array([1.0, 1.0, -2.35], dtype=np.float32)
+        ei_spec["initial_pose"] = np.array([1.0 + 0.5 * rx, 1.0 + 0.5 * ry, -2.35 + yaw_jitter], dtype=np.float32)
         ei_spec["intervention"] = {"name": "robot_initial_pose", "parameters": {"pose": ei_spec["initial_pose"].tolist()}}
 
     # -------------------------------------------------------------
@@ -118,17 +129,19 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
         ei_spec["expected_invariant"] = "goal_identity_invariant_under_path_detour"
         # obs_inserted is a reserved collidable MuJoCo geometry in amr_arena.xml.
         # The generator moves it into the arena via JetAutoEnv.apply_task_spec.
+        mid_xy = 0.5 * (e0_spec["initial_pose"][:2] + target_pos[:2])
+        obs_pos = np.array([float(mid_xy[0]), float(mid_xy[1]), 0.35], dtype=np.float32)
         ei_spec["obstacles"]["inserted_obstacle"] = {
             "geom_name": "obs_inserted",
-            "pos": np.array([-0.6, -0.45, 0.35], dtype=np.float32),
+            "pos": obs_pos,
             "radius": 0.22,
             "shape": "cylinder",
             "color": "magenta",
             "rgba": np.array([0.8, 0.1, 0.8, 1.0], dtype=np.float32)
         }
-        ei_spec["intervention"] = {"name": "inserted_collidable_obstacle", "parameters": {"geom_name": "obs_inserted", "position": [-0.6, -0.45, 0.35], "shape": "cylinder"}}
+        ei_spec["intervention"] = {"name": "inserted_collidable_obstacle", "parameters": {"geom_name": "obs_inserted", "position": obs_pos.tolist(), "shape": "cylinder"}}
         # Add extra avoidance detour waypoint
-        detour = np.array([-0.3, -0.9, e0_spec["waypoints"][0][2]], dtype=np.float32)
+        detour = np.array([float(mid_xy[0] + 0.3), float(mid_xy[1] - 0.45), e0_spec["waypoints"][0][2]], dtype=np.float32)
         ei_spec["waypoints"] = [detour] + e0_spec["waypoints"]
 
     # -------------------------------------------------------------

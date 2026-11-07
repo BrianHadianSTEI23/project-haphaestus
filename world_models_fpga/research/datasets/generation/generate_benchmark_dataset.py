@@ -345,6 +345,37 @@ class BenchmarkDatasetGenerator:
         print(f"Disambiguation generation finished in {t1 - t0:.2f} s ({len(all_disambig_episodes)} episodes).")
         self._save_split("disambiguation_suite", all_disambig_episodes, output_dir)
 
+    def generate_independent_validation_suite(self, episodes_per_cap=10, output_dir=None):
+        """
+        Generates an independent physical validation suite with disjoint seeds (seed_idx >= 9000)
+        across all 6 capabilities and 5 difficulty tiers (60 episodes total).
+        """
+        if output_dir is None:
+            output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../splits"))
+        os.makedirs(output_dir, exist_ok=True)
+
+        print(f"\n=======================================================")
+        print(f"  PHASE 1: INDEPENDENT VALIDATION SUITE GENERATION")
+        print(f"  Episodes per capability: {episodes_per_cap} | Seed offset: 9000")
+        print(f"=======================================================")
+
+        indep_episodes = []
+        ep_counter = 0
+        t0 = time.time()
+
+        for cap_idx, capability in enumerate(CAPABILITIES):
+            for i in range(episodes_per_cap):
+                diff = DIFFICULTY_TIERS[i % len(DIFFICULTY_TIERS)]
+                spec = generate_task_specification(capability, diff, seed_idx=9000 + ep_counter)
+                spec["episode_id"] = f"indep_{capability}_{diff}_{ep_counter:04d}"
+                transitions = self.run_episode(spec)
+                indep_episodes.append((spec, transitions))
+                ep_counter += 1
+
+        t1 = time.time()
+        print(f"Independent validation generation finished in {t1 - t0:.2f} s ({len(indep_episodes)} episodes).")
+        self._save_split("independent_validation_suite", indep_episodes, output_dir)
+
     def _save_split(self, split_name, episodes_data, output_dir):
         """Compacts and saves transitions into compressed .npz and .json metadata."""
         print(f"  Saving {split_name} ({len(episodes_data)} episodes)...")
@@ -373,6 +404,24 @@ class BenchmarkDatasetGenerator:
                 continue
 
             physical_geometries = spec.get("_physical_geometry_records", {})
+            env_params = {
+                "frame_skip": self.env.frame_skip,
+                "control_dt_seconds": self.env.model.opt.timestep * self.env.frame_skip,
+                "velocity_limits": [self.env.vx_limit, self.env.vy_limit, self.env.wz_limit],
+                "camera_pitch_offset_degrees": float(spec.get("camera_pitch_offset", 0.0)),
+                "front_camera_quaternion": spec.get("_physical_camera_quat", []),
+                "physical_geometries": physical_geometries,
+            }
+            config_payload = json.dumps(
+                {
+                    "initial_pose": np.asarray(spec.get("initial_pose", [0.0, 0.0, 0.0]), dtype=np.float32).round(5).tolist(),
+                    "intervention": spec.get("intervention", {"name": "none", "parameters": {}}),
+                    "environment_parameters": env_params,
+                },
+                sort_keys=True,
+                default=lambda value: value.tolist() if isinstance(value, np.ndarray) else str(value),
+            )
+            config_sha256 = hashlib.sha256(config_payload.encode("utf-8")).hexdigest()
             ep_meta = {
                 "episode_id": spec.get("episode_id", f"ep_{ep_idx}"),
                 "start_index": curr_idx,
@@ -383,19 +432,16 @@ class BenchmarkDatasetGenerator:
                 "semantic_relation": spec.get("semantic_relation", "none"),
                 "is_counterfactual": spec.get("is_counterfactual", False),
                 "counterfactual_id": spec.get("counterfactual_id", ""),
+                "experiment_type": spec.get("experiment_type", ""),
+                "pair_id": int(spec.get("pair_id", -1)),
+                "pair_role": spec.get("pair_role", ""),
                 "expected_invariant": spec.get("expected_invariant", ""),
                 "target_key": spec.get("target_key", ""),
                 "episode_success": bool(trans[0]["episode_success"]),
                 "generation_seed": int(trans[0]["episode_seed"]),
+                "config_sha256": config_sha256,
                 "intervention": spec.get("intervention", {"name": "none", "parameters": {}}),
-                "environment_parameters": {
-                    "frame_skip": self.env.frame_skip,
-                    "control_dt_seconds": self.env.model.opt.timestep * self.env.frame_skip,
-                    "velocity_limits": [self.env.vx_limit, self.env.vy_limit, self.env.wz_limit],
-                    "camera_pitch_offset_degrees": float(spec.get("camera_pitch_offset", 0.0)),
-                    "front_camera_quaternion": spec.get("_physical_camera_quat", []),
-                    "physical_geometries": physical_geometries,
-                },
+                "environment_parameters": env_params,
                 "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
             }
             metadata_records.append(ep_meta)
@@ -486,5 +532,7 @@ if __name__ == "__main__":
         print("Skipping counterfactual suite generation (--skip_cf specified).")
     # 3. Disambiguation suites
     gen.generate_disambiguation_suite(repeats_per_probe=args.disambig_repeats, output_dir=args.output_dir)
+    # 4. Independent validation suite (seed_idx >= 9000)
+    gen.generate_independent_validation_suite(episodes_per_cap=10, output_dir=args.output_dir)
     gen.close()
     print("\n[ALL BENCHMARK DATASETS SUCCESSFULLY GENERATED AND VERIFIED]\n")

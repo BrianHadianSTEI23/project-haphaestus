@@ -177,41 +177,45 @@ def generate_task_specification(capability, difficulty, seed_idx, canonical_obst
         task_spec["instruction"] = f"{verb} the {target_obj['label']}"
 
         t_pos = target_obj["pos"][:2]
+        pos_jitter = rng.uniform(-0.12, 0.12, size=2).astype(np.float32)
+        yaw_jitter = float(rng.uniform(-0.10, 0.10))
 
         if difficulty == "easy":
             # Start facing target from 1.2m away
             angle = float(np.arctan2(t_pos[1], t_pos[0]))
-            start_pos = t_pos - np.array([np.cos(angle), np.sin(angle)]) * 1.2
-            start_yaw = angle
+            start_pos = t_pos - np.array([np.cos(angle), np.sin(angle)], dtype=np.float32) * 1.2 + pos_jitter
+            start_yaw = float(np.arctan2(t_pos[1] - start_pos[1], t_pos[0] - start_pos[0])) + yaw_jitter
             task_spec["initial_pose"] = np.array([start_pos[0], start_pos[1], start_yaw], dtype=np.float32)
 
         elif difficulty == "difficult":
             # Start facing away (180 deg) from 2.2m away
             angle = float(np.arctan2(t_pos[1], t_pos[0])) + 0.3
-            start_pos = t_pos - np.array([np.cos(angle), np.sin(angle)]) * 2.2
-            start_yaw = angle + np.pi # Facing away
+            start_pos = t_pos - np.array([np.cos(angle), np.sin(angle)], dtype=np.float32) * 2.2 + pos_jitter
+            start_yaw = angle + np.pi + yaw_jitter  # Facing away
             task_spec["initial_pose"] = np.array([start_pos[0], start_pos[1], start_yaw], dtype=np.float32)
 
         elif difficulty == "counterfactual":
-            # Color swap: target label is yellow cylinder, but yellow cylinder is colored blue!
+            # Color swap: target label is mutated in RGBA to test appearance invariance
             task_spec["instruction"] = f"reach the {target_obj['label']}"
-            start_pos = np.array([0.0, 0.0], dtype=np.float32)
-            start_yaw = float(np.arctan2(t_pos[1], t_pos[0]))
+            obstacles[target_key]["rgba"] = np.array([0.15, 0.35, 0.85, 1.0], dtype=np.float32)
+            obstacles[target_key]["color"] = "mutated_blue"
+            start_pos = pos_jitter.copy()
+            start_yaw = float(np.arctan2(t_pos[1] - start_pos[1], t_pos[0] - start_pos[0])) + yaw_jitter
             task_spec["initial_pose"] = np.array([start_pos[0], start_pos[1], start_yaw], dtype=np.float32)
             task_spec["expected_invariants"].append("spatial_relation_invariant_to_color")
 
         elif difficulty == "ood":
-            # Perturbed position: landmark moved by 0.5m into central zone
-            shift = rng.uniform(-0.4, 0.4, size=2)
+            # Perturbed position: landmark moved by up to 0.4m
+            shift = rng.uniform(-0.4, 0.4, size=2).astype(np.float32)
             obstacles[target_key]["pos"][:2] += shift
             t_pos = obstacles[target_key]["pos"][:2]
-            start_pos = np.array([0.0, 0.0], dtype=np.float32)
-            start_yaw = float(np.arctan2(t_pos[1], t_pos[0]))
+            start_pos = pos_jitter.copy()
+            start_yaw = float(np.arctan2(t_pos[1] - start_pos[1], t_pos[0] - start_pos[0])) + yaw_jitter
             task_spec["initial_pose"] = np.array([start_pos[0], start_pos[1], start_yaw], dtype=np.float32)
 
         elif difficulty == "failure":
             # Trapped against wall (dist = 0.15m from arena boundary), facing wall
-            task_spec["initial_pose"] = np.array([2.35, 0.0, 0.0], dtype=np.float32)
+            task_spec["initial_pose"] = np.array([2.35, float(pos_jitter[1]), yaw_jitter], dtype=np.float32)
             task_spec["is_failure_example"] = True
 
         goal_pose = get_waypoint_for_relation(obstacles[target_key]["pos"], "approach", task_spec["initial_pose"])
@@ -228,26 +232,28 @@ def generate_task_specification(capability, difficulty, seed_idx, canonical_obst
         task_spec["instruction"] = f"go {rel_str} the {target_obj['label']}"
 
         t_pos = target_obj["pos"][:2]
+        pos_jitter = rng.uniform(-0.12, 0.12, size=2).astype(np.float32)
+        yaw_jitter = float(rng.uniform(-0.10, 0.10))
 
         if difficulty == "easy":
-            task_spec["initial_pose"] = np.array([0.0, 0.0, float(np.arctan2(t_pos[1], t_pos[0]))], dtype=np.float32)
+            task_spec["initial_pose"] = np.array([pos_jitter[0], pos_jitter[1], float(np.arctan2(t_pos[1] - pos_jitter[1], t_pos[0] - pos_jitter[0])) + yaw_jitter], dtype=np.float32)
         elif difficulty == "difficult":
             # Start on opposite side of target, forcing full detour
             radial = t_pos / np.linalg.norm(t_pos)
-            opposite_pos = t_pos + radial * 0.8
-            task_spec["initial_pose"] = np.array([opposite_pos[0], opposite_pos[1], float(np.arctan2(-radial[1], -radial[0]))], dtype=np.float32)
+            opposite_pos = t_pos + radial * 0.8 + pos_jitter * 0.5
+            task_spec["initial_pose"] = np.array([opposite_pos[0], opposite_pos[1], float(np.arctan2(-radial[1], -radial[0])) + yaw_jitter], dtype=np.float32)
         elif difficulty == "counterfactual":
             # Rotate initial heading by 90 deg
-            task_spec["initial_pose"] = np.array([0.0, 0.0, float(np.arctan2(t_pos[1], t_pos[0]) + np.pi/2)], dtype=np.float32)
+            task_spec["initial_pose"] = np.array([pos_jitter[0], pos_jitter[1], float(np.arctan2(t_pos[1] - pos_jitter[1], t_pos[0] - pos_jitter[0]) + np.pi/2) + yaw_jitter], dtype=np.float32)
             task_spec["expected_invariants"].append("allocentric_spatial_relation_invariant_to_robot_heading")
         elif difficulty == "ood":
             # Shift landmark position
-            shift = rng.uniform(-0.35, 0.35, size=2)
+            shift = rng.uniform(-0.35, 0.35, size=2).astype(np.float32)
             obstacles[target_key]["pos"][:2] += shift
-            task_spec["initial_pose"] = np.array([0.0, 0.0, 0.0], dtype=np.float32)
+            task_spec["initial_pose"] = np.array([pos_jitter[0], pos_jitter[1], yaw_jitter], dtype=np.float32)
         elif difficulty == "failure":
             # Waypoint falls near corner wall
-            task_spec["initial_pose"] = np.array([-2.2, -2.2, 0.0], dtype=np.float32)
+            task_spec["initial_pose"] = np.array([-2.2, -2.2 + float(pos_jitter[1]), yaw_jitter], dtype=np.float32)
             task_spec["is_failure_example"] = True
 
         goal_pose = get_waypoint_for_relation(obstacles[target_key]["pos"], rel, task_spec["initial_pose"])
@@ -269,30 +275,71 @@ def generate_task_specification(capability, difficulty, seed_idx, canonical_obst
         task_spec["semantic_relation"] = "approach"
         task_spec["instruction"] = f"navigate around obstacle to {target_obj['label']}"
         t_pos = target_obj["pos"][:2]
+        pos_jitter = rng.uniform(-0.10, 0.10, size=2).astype(np.float32)
 
         # Robot starts opposite to target with arena center obstacle in line of sight
-        start_pos = -t_pos * 0.9
-        task_spec["initial_pose"] = np.array([start_pos[0], start_pos[1], float(np.arctan2(t_pos[1], t_pos[0]))], dtype=np.float32)
+        start_pos = -t_pos * 0.9 + pos_jitter
+        los_vec = t_pos - start_pos
+        los_dir = los_vec / (np.linalg.norm(los_vec) + 1e-6)
+        ortho_dir = np.array([-los_dir[1], los_dir[0]], dtype=np.float32)
+        mid_los = (start_pos + t_pos) * 0.5
+        task_spec["initial_pose"] = np.array([start_pos[0], start_pos[1], float(np.arctan2(los_vec[1], los_vec[0]))], dtype=np.float32)
 
         if difficulty == "easy":
-            # Obstacle slightly offset from central line
-            pass
-        elif difficulty == "difficult":
-            # Intermediate obstacle centered exactly between robot and goal
-            pass
-        elif difficulty == "counterfactual":
-            task_spec["expected_invariants"].append("goal_reached_despite_intermediate_obstacle")
+            # Obstacle slightly offset from central line of sight
+            obs_xy = mid_los + ortho_dir * 0.18
+            obstacles["inserted_obstacle"] = {
+                "geom_name": "obs_inserted",
+                "pos": np.array([float(obs_xy[0]), float(obs_xy[1]), 0.35], dtype=np.float32),
+                "radius": 0.22,
+                "height": 0.35,
+                "shape": "cylinder",
+                "color": "magenta",
+                "rgba": np.array([0.8, 0.1, 0.8, 1.0], dtype=np.float32),
+            }
+        elif difficulty in ("difficult", "counterfactual", "failure"):
+            # Intermediate obstacle centered directly between robot and goal
+            obstacles["inserted_obstacle"] = {
+                "geom_name": "obs_inserted",
+                "pos": np.array([float(mid_los[0]), float(mid_los[1]), 0.35], dtype=np.float32),
+                "radius": 0.22,
+                "height": 0.35,
+                "shape": "cylinder",
+                "color": "magenta",
+                "rgba": np.array([0.8, 0.1, 0.8, 1.0], dtype=np.float32),
+            }
+            if difficulty == "counterfactual":
+                task_spec["expected_invariants"].append("goal_reached_despite_intermediate_obstacle")
+            elif difficulty == "failure":
+                task_spec["is_failure_example"] = True
         elif difficulty == "ood":
             # Two obstacles creating narrow corridor
-            pass
-        elif difficulty == "failure":
-            # Deliberate collision path / baseline un-steered straight line
-            task_spec["is_failure_example"] = True
+            obs1_xy = mid_los + ortho_dir * 0.38
+            obs2_xy = mid_los - ortho_dir * 0.38
+            obstacles["inserted_obstacle"] = {
+                "geom_name": "obs_inserted",
+                "pos": np.array([float(obs1_xy[0]), float(obs1_xy[1]), 0.35], dtype=np.float32),
+                "radius": 0.22,
+                "height": 0.35,
+                "shape": "cylinder",
+                "color": "magenta",
+                "rgba": np.array([0.8, 0.1, 0.8, 1.0], dtype=np.float32),
+            }
+            obstacles["slit_barrier"] = {
+                "geom_name": "obs_barrier",
+                "pos": np.array([float(obs2_xy[0]), float(obs2_xy[1]), 0.35], dtype=np.float32),
+                "size": np.array([0.15, 0.22, 0.35], dtype=np.float32),
+                "radius": 0.22,
+                "height": 0.35,
+                "shape": "box",
+                "color": "dark_gray",
+                "rgba": np.array([0.3, 0.3, 0.3, 1.0], dtype=np.float32),
+            }
 
         goal_pose = get_waypoint_for_relation(obstacles[target_key]["pos"], "approach", task_spec["initial_pose"])
         # Intermediate detour waypoint around center
-        mid_point = (start_pos + t_pos) * 0.5 + np.array([-0.6, 0.6], dtype=np.float32)
-        mid_pose = np.array([mid_point[0], mid_point[1], float(np.arctan2(t_pos[1], t_pos[0]))], dtype=np.float32)
+        mid_point = mid_los - ortho_dir * 0.65
+        mid_pose = np.array([mid_point[0], mid_point[1], float(np.arctan2(t_pos[1] - mid_point[1], t_pos[0] - mid_point[0]))], dtype=np.float32)
         task_spec["waypoints"] = [mid_pose, goal_pose]
 
     # -------------------------------------------------------------
@@ -311,9 +358,11 @@ def generate_task_specification(capability, difficulty, seed_idx, canonical_obst
             ("arc_turn", [0.6, 0.0, 0.6])
         ]
         mode_name, act_vec = action_modes[seed_idx % len(action_modes)]
+        pos_jitter = rng.uniform(-0.18, 0.18, size=2).astype(np.float32)
+        yaw_jitter = float(rng.uniform(-0.25, 0.25))
         task_spec["instruction"] = f"execute {mode_name}"
         task_spec["action_probe_vector"] = np.array(act_vec, dtype=np.float32)
-        task_spec["initial_pose"] = np.array([0.0, 0.0, 0.0], dtype=np.float32)
+        task_spec["initial_pose"] = np.array([pos_jitter[0], pos_jitter[1], yaw_jitter], dtype=np.float32)
         task_spec["waypoints"] = [np.array([1.0, 0.0, 0.0], dtype=np.float32)]
 
     # -------------------------------------------------------------
@@ -322,7 +371,9 @@ def generate_task_specification(capability, difficulty, seed_idx, canonical_obst
     elif capability == "temporal_planning":
         task_spec["semantic_relation"] = "multi_waypoint"
         task_spec["instruction"] = f"circumnavigate arena to {target_obj['label']}"
-        task_spec["initial_pose"] = np.array([-1.5, 1.5, -0.78], dtype=np.float32)
+        pos_jitter = rng.uniform(-0.12, 0.12, size=2).astype(np.float32)
+        yaw_jitter = float(rng.uniform(-0.12, 0.12))
+        task_spec["initial_pose"] = np.array([-1.5 + pos_jitter[0], 1.5 + pos_jitter[1], -0.78 + yaw_jitter], dtype=np.float32)
 
         # Multi-stage sequential waypoints across arena quadrants
         wp1 = np.array([0.0, 1.0, -1.57], dtype=np.float32)
