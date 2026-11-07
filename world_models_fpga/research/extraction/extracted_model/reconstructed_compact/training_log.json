@@ -1,0 +1,337 @@
+{
+  "architecture": "ReconstructedCompactModel",
+  "total_parameters": {
+    "encoder": 35336,
+    "macro": 2257,
+    "micro": 2211,
+    "total": 39804
+  },
+  "latent_dim": 16,
+  "hidden_dim": 32,
+  "epochs": 12,
+  "regimes": {
+    "distilled_compact": {
+      "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_compact_best.pt",
+      "final_metrics": {
+        "epoch": 12,
+        "train_loss": 0.242605030679932,
+        "val_action_mse": 0.1547796295583248,
+        "val_dynamics_mse": 0.24387093842029572
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 1.0559036777569697,
+          "val_action_mse": 0.20052602797746658,
+          "val_dynamics_mse": 0.2852824741601944
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.4609360216328731,
+          "val_action_mse": 0.18415064126253128,
+          "val_dynamics_mse": 0.2126518452167511
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.37892378522799564,
+          "val_action_mse": 0.17578738063573837,
+          "val_dynamics_mse": 0.2409959976375103
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.33426114472632223,
+          "val_action_mse": 0.16797787129878997,
+          "val_dynamics_mse": 0.24057415157556533
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.30825521825597835,
+          "val_action_mse": 0.15353704616427422,
+          "val_dynamics_mse": 0.22331845819950102
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.29054508100335413,
+          "val_action_mse": 0.16125539183616638,
+          "val_dynamics_mse": 0.23510305732488632
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.2778030556554978,
+          "val_action_mse": 0.15958121851086615,
+          "val_dynamics_mse": 0.23914484217762946
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.26673753860478217,
+          "val_action_mse": 0.17777992844581603,
+          "val_dynamics_mse": 0.24961706787347793
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.26100291540989506,
+          "val_action_mse": 0.1521851100027561,
+          "val_dynamics_mse": 0.24204330369830132
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.25318063251101053,
+          "val_action_mse": 0.1570966573059559,
+          "val_dynamics_mse": 0.24685464471578597
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.24565296376553866,
+          "val_action_mse": 0.15593325167894365,
+          "val_dynamics_mse": 0.24554298773407937
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.242605030679932,
+          "val_action_mse": 0.1547796295583248,
+          "val_dynamics_mse": 0.24387093842029572
+        }
+      ]
+    },
+    "supervised_compact_no_teacher": {
+      "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_supervised_only.pt",
+      "final_metrics": {
+        "epoch": 12,
+        "train_loss": 0.1257051662183725,
+        "val_action_mse": 0.14207982003688813,
+        "val_dynamics_mse": 0.03635529384016991
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.323889147490263,
+          "val_action_mse": 0.22763922929763794,
+          "val_dynamics_mse": 0.0033098797919228675
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.24681630157507384,
+          "val_action_mse": 0.21312913686037063,
+          "val_dynamics_mse": 0.021105601582676173
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.21759266363313565,
+          "val_action_mse": 0.20566321462392806,
+          "val_dynamics_mse": 0.033393743578344584
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.1943358022433061,
+          "val_action_mse": 0.17749928295612336,
+          "val_dynamics_mse": 0.03178581673651934
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.17291669089060563,
+          "val_action_mse": 0.17903967946767807,
+          "val_dynamics_mse": 0.02992759544402361
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.1562506052880333,
+          "val_action_mse": 0.17282121419906615,
+          "val_dynamics_mse": 0.025565930102020504
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.15006824195958102,
+          "val_action_mse": 0.14647504538297654,
+          "val_dynamics_mse": 0.028842271454632282
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.14052599432090154,
+          "val_action_mse": 0.20201239377260208,
+          "val_dynamics_mse": 0.035138412676751614
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.13987371440117174,
+          "val_action_mse": 0.14879530638456345,
+          "val_dynamics_mse": 0.031398831233382225
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.1322904244924967,
+          "val_action_mse": 0.13983130514621733,
+          "val_dynamics_mse": 0.03821885962039232
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.12759304483636066,
+          "val_action_mse": 0.14733308121562005,
+          "val_dynamics_mse": 0.03641803435981274
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.1257051662183725,
+          "val_action_mse": 0.14207982003688813,
+          "val_dynamics_mse": 0.03635529384016991
+        }
+      ]
+    },
+    "bc_only_compact": {
+      "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_bc_only.pt",
+      "final_metrics": {
+        "epoch": 12,
+        "train_loss": 0.0713050331060703,
+        "val_action_mse": 0.15278251841664314,
+        "val_dynamics_mse": 1.9558691120147704
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.28033356153621125,
+          "val_action_mse": 0.20135107517242432,
+          "val_dynamics_mse": 0.9331167650222778
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.17712400739009565,
+          "val_action_mse": 0.16697832584381103,
+          "val_dynamics_mse": 1.0196134734153748
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.14152182337756342,
+          "val_action_mse": 0.20045355170965196,
+          "val_dynamics_mse": 1.0894220161437989
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.1255258610472083,
+          "val_action_mse": 0.16754595965147018,
+          "val_dynamics_mse": 1.2348534202575683
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.11413385246235591,
+          "val_action_mse": 0.16480220928788186,
+          "val_dynamics_mse": 1.3188497519493103
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.10380192323086354,
+          "val_action_mse": 0.16746208995580672,
+          "val_dynamics_mse": 1.5532696294784545
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.09593851892994,
+          "val_action_mse": 0.1539809735119343,
+          "val_dynamics_mse": 1.6444154500961303
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.08701022388413548,
+          "val_action_mse": 0.16285066038370133,
+          "val_dynamics_mse": 1.7580379581451415
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.08328066809246173,
+          "val_action_mse": 0.1711665654182434,
+          "val_dynamics_mse": 1.765835223197937
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.07848326385451052,
+          "val_action_mse": 0.1649097190797329,
+          "val_dynamics_mse": 1.8912515354156494
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.07325837041179721,
+          "val_action_mse": 0.16092656314373016,
+          "val_dynamics_mse": 1.8015311336517335
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.0713050331060703,
+          "val_action_mse": 0.15278251841664314,
+          "val_dynamics_mse": 1.9558691120147704
+        }
+      ]
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.0559036777569697,
+      "val_action_mse": 0.20052602797746658,
+      "val_dynamics_mse": 0.2852824741601944
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.4609360216328731,
+      "val_action_mse": 0.18415064126253128,
+      "val_dynamics_mse": 0.2126518452167511
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.37892378522799564,
+      "val_action_mse": 0.17578738063573837,
+      "val_dynamics_mse": 0.2409959976375103
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.33426114472632223,
+      "val_action_mse": 0.16797787129878997,
+      "val_dynamics_mse": 0.24057415157556533
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.30825521825597835,
+      "val_action_mse": 0.15353704616427422,
+      "val_dynamics_mse": 0.22331845819950102
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.29054508100335413,
+      "val_action_mse": 0.16125539183616638,
+      "val_dynamics_mse": 0.23510305732488632
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.2778030556554978,
+      "val_action_mse": 0.15958121851086615,
+      "val_dynamics_mse": 0.23914484217762946
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.26673753860478217,
+      "val_action_mse": 0.17777992844581603,
+      "val_dynamics_mse": 0.24961706787347793
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.26100291540989506,
+      "val_action_mse": 0.1521851100027561,
+      "val_dynamics_mse": 0.24204330369830132
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.25318063251101053,
+      "val_action_mse": 0.1570966573059559,
+      "val_dynamics_mse": 0.24685464471578597
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.24565296376553866,
+      "val_action_mse": 0.15593325167894365,
+      "val_dynamics_mse": 0.24554298773407937
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.242605030679932,
+      "val_action_mse": 0.1547796295583248,
+      "val_dynamics_mse": 0.24387093842029572
+    }
+  ]
+}

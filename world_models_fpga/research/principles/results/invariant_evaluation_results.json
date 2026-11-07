@@ -1,0 +1,225 @@
+{
+  "Baseline": {
+    "transformation_invariance": {
+      "E1_position_shift": {
+        "invariance_score": 0.2964878695506435,
+        "cosine_invariance": 0.5669323205947876,
+        "normalized_l2_drift": 2.3728192708713456,
+        "equivariance_score": 0.5114350615390787,
+        "equivariance_heldout_cosine": 0.9121912121772766
+      },
+      "E2_color_shift": {
+        "invariance_score": 0.43840249343427046,
+        "cosine_invariance": 0.8660846948623657,
+        "normalized_l2_drift": 1.2810089243936513,
+        "equivariance_score": 0.7725044627248143,
+        "equivariance_heldout_cosine": 0.9898474812507629
+      },
+      "E3_robot_rotation": {
+        "invariance_score": 0.31240295629738235,
+        "cosine_invariance": 0.6246855854988098,
+        "normalized_l2_drift": 2.2009940362026565,
+        "equivariance_score": 0.40311767876406196,
+        "equivariance_heldout_cosine": 0.8225964903831482
+      },
+      "E4_robot_position": {
+        "invariance_score": 0.3175234039266092,
+        "cosine_invariance": 0.6314773559570312,
+        "normalized_l2_drift": 2.1493741489088314,
+        "equivariance_score": 0.6642386917758355,
+        "equivariance_heldout_cosine": 0.977355420589447
+      },
+      "E5_intermediate_obstacle": {
+        "invariance_score": 0.1856244994017406,
+        "cosine_invariance": 0.21097666025161743,
+        "normalized_l2_drift": 4.387219915598183,
+        "equivariance_score": 0.41559578084926,
+        "equivariance_heldout_cosine": 0.9316340684890747
+      },
+      "E6_shape_mutation": {
+        "invariance_score": 0.5873718674911945,
+        "cosine_invariance": 0.9689843654632568,
+        "normalized_l2_drift": 0.7024989710032228,
+        "equivariance_score": 0.7138711067570135,
+        "equivariance_heldout_cosine": 0.9848106503486633
+      },
+      "E7_camera_viewpoint": {
+        "invariance_score": 0.43182253884483784,
+        "cosine_invariance": 0.8507897257804871,
+        "normalized_l2_drift": 1.315766107704997,
+        "equivariance_score": 0.6537265009058615,
+        "equivariance_heldout_cosine": 0.9727404713630676
+      }
+    },
+    "embodiment_stability": {
+      "nominal_success_rate": 0.6,
+      "camera_pitch_10deg": 0.6,
+      "action_magnitude_scaling_0.7x": 0.6,
+      "surface_friction_perturbation": 0.6
+    },
+    "horizon_generalization": {
+      "horizon_K1": 0.9708701968193054,
+      "horizon_K3": 0.919536292552948,
+      "horizon_K5": 0.883857250213623,
+      "horizon_K8": 0.8178269863128662
+    }
+  },
+  "LeWM": {
+    "transformation_invariance": {
+      "E1_position_shift": {
+        "invariance_score": 0.2695464634102092,
+        "cosine_invariance": 0.1897204965353012,
+        "normalized_l2_drift": 2.7099355240960823,
+        "equivariance_score": 0.4095284724928659,
+        "equivariance_heldout_cosine": 0.6992042660713196,
+        "dynamics_residual_invariance": 0.3232874675897516,
+        "dynamics_residual_equivariance": 0.47171747543274045
+      },
+      "E2_color_shift": {
+        "invariance_score": 0.2672251993019603,
+        "cosine_invariance": 0.19782599806785583,
+        "normalized_l2_drift": 2.7421620513790526,
+        "equivariance_score": 0.6833294901550725,
+        "equivariance_heldout_cosine": 0.9640930891036987,
+        "dynamics_residual_invariance": 0.39067374282607,
+        "dynamics_residual_equivariance": 0.549067843581726
+      },
+      "E3_robot_rotation": {
+        "invariance_score": 0.2804961310022327,
+        "cosine_invariance": 0.2636374831199646,
+        "normalized_l2_drift": 2.565111562954286,
+        "equivariance_score": 0.40018423933175795,
+        "equivariance_heldout_cosine": 0.7185395956039429,
+        "dynamics_residual_invariance": 0.34691337794554056,
+        "dynamics_residual_equivariance": 0.46718036817360026
+      },
+      "E4_robot_position": {
+        "invariance_score": 0.26383934804761083,
+        "cosine_invariance": 0.16129130125045776,
+        "normalized_l2_drift": 2.7901852297616583,
+        "equivariance_score": 0.7492827876837396,
+        "equivariance_heldout_cosine": 0.984769880771637,
+        "dynamics_residual_invariance": 0.3645389404686499,
+        "dynamics_residual_equivariance": 0.7375848660102918
+      },
+      "E5_intermediate_obstacle": {
+        "invariance_score": 0.24020043630109697,
+        "cosine_invariance": -0.04539094492793083,
+        "normalized_l2_drift": 3.1631897735043086,
+        "equivariance_score": 0.5129487548258204,
+        "equivariance_heldout_cosine": 0.8765588998794556,
+        "dynamics_residual_invariance": 0.3313472479664756,
+        "dynamics_residual_equivariance": 0.5794644611219133
+      },
+      "E6_shape_mutation": {
+        "invariance_score": 0.6676629057915611,
+        "cosine_invariance": 0.9715826511383057,
+        "normalized_l2_drift": 0.49776180663269,
+        "equivariance_score": 0.7729260709900675,
+        "equivariance_heldout_cosine": 0.9817578792572021,
+        "dynamics_residual_invariance": 0.6647405543933091,
+        "dynamics_residual_equivariance": 0.6851362488621962
+      },
+      "E7_camera_viewpoint": {
+        "invariance_score": 0.42162537486736157,
+        "cosine_invariance": 0.7923651337623596,
+        "normalized_l2_drift": 1.3717737584332736,
+        "equivariance_score": 0.7426643747375011,
+        "equivariance_heldout_cosine": 0.9798665046691895,
+        "dynamics_residual_invariance": 0.38347140796928153,
+        "dynamics_residual_equivariance": 0.564234137101312
+      }
+    },
+    "embodiment_stability": {
+      "nominal_success_rate": 0.4,
+      "camera_pitch_10deg": 0.8,
+      "action_magnitude_scaling_0.7x": 0.4,
+      "surface_friction_perturbation": 0.4
+    },
+    "horizon_generalization": {
+      "horizon_K1": 0.9778105020523071,
+      "horizon_K3": 0.901957094669342,
+      "horizon_K5": 0.8249808549880981,
+      "horizon_K8": 0.6905853152275085
+    }
+  },
+  "H-JEPA": {
+    "transformation_invariance": {
+      "E1_position_shift": {
+        "invariance_score": 0.2542907561820043,
+        "cosine_invariance": 0.11168728023767471,
+        "normalized_l2_drift": 2.932506297178443,
+        "equivariance_score": 0.4262093448720591,
+        "equivariance_heldout_cosine": 0.7347159385681152,
+        "macro_subgoal_invariance": 0.2871403758540659,
+        "macro_subgoal_equivariance": 0.5032268100147235
+      },
+      "E2_color_shift": {
+        "invariance_score": 0.27615523113900736,
+        "cosine_invariance": 0.3282473683357239,
+        "normalized_l2_drift": 2.621151755393086,
+        "equivariance_score": 0.7780692749607249,
+        "equivariance_heldout_cosine": 0.9877678155899048,
+        "macro_subgoal_invariance": 0.37768506123477086,
+        "macro_subgoal_equivariance": 0.6849059742182372
+      },
+      "E3_robot_rotation": {
+        "invariance_score": 0.2747470279468319,
+        "cosine_invariance": 0.26457878947257996,
+        "normalized_l2_drift": 2.6397118013357233,
+        "equivariance_score": 0.4699862840959776,
+        "equivariance_heldout_cosine": 0.8200657367706299,
+        "macro_subgoal_invariance": 0.35102464244103093,
+        "macro_subgoal_equivariance": 0.5025641766071115
+      },
+      "E4_robot_position": {
+        "invariance_score": 0.23974850104092257,
+        "cosine_invariance": -0.016299420967698097,
+        "normalized_l2_drift": 3.1710375483403355,
+        "equivariance_score": 0.7140772014901408,
+        "equivariance_heldout_cosine": 0.9768512845039368,
+        "macro_subgoal_invariance": 0.2713473868900204,
+        "macro_subgoal_equivariance": 0.7149840108714355
+      },
+      "E5_intermediate_obstacle": {
+        "invariance_score": 0.21668199235315622,
+        "cosine_invariance": -0.21878384053707123,
+        "normalized_l2_drift": 3.615058174147501,
+        "equivariance_score": 0.43731065516096823,
+        "equivariance_heldout_cosine": 0.8145384788513184,
+        "macro_subgoal_invariance": 0.281729811808346,
+        "macro_subgoal_equivariance": 0.44630494219232314
+      },
+      "E6_shape_mutation": {
+        "invariance_score": 0.6166708241240818,
+        "cosine_invariance": 0.9599391222000122,
+        "normalized_l2_drift": 0.6216106890096486,
+        "equivariance_score": 0.8047239860324124,
+        "equivariance_heldout_cosine": 0.9896341562271118,
+        "macro_subgoal_invariance": 0.6367557211758884,
+        "macro_subgoal_equivariance": 0.7216735383997688
+      },
+      "E7_camera_viewpoint": {
+        "invariance_score": 0.4549662260261036,
+        "cosine_invariance": 0.8505504131317139,
+        "normalized_l2_drift": 1.1979653495040425,
+        "equivariance_score": 0.7319547628375161,
+        "equivariance_heldout_cosine": 0.9774332642555237,
+        "macro_subgoal_invariance": 0.45793455237914915,
+        "macro_subgoal_equivariance": 0.6025701907835423
+      }
+    },
+    "embodiment_stability": {
+      "nominal_success_rate": 0.6,
+      "camera_pitch_10deg": 0.8,
+      "action_magnitude_scaling_0.7x": 0.6,
+      "surface_friction_perturbation": 0.6
+    },
+    "horizon_generalization": {
+      "horizon_K1": 0.9857954382896423,
+      "horizon_K3": 0.93204265832901,
+      "horizon_K5": 0.899868905544281,
+      "horizon_K8": 0.7936592698097229
+    }
+  }
+}

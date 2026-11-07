@@ -1,306 +1,180 @@
 """
-Phase 7: Circuit Extraction & Neural Architecture Reconstruction
-Script: compare_three_models.py
-Author: Brian A. Hadian
-Project: Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA
+Phase 6: Three-Model & Distillation Ablation Comparison (Repaired)
 
-Compares the three model variants:
-  1. Original H-JEPA Model (Behavioral Reference)
-  2. Weight-Preserving Extracted Model (Option A - Circuit Sufficiency Test)
-  3. Reconstructed Compact Model (Option B - Architectural Synthesis Test)
-Across:
-  - Task success & capability retention (Grounding, Spatial, Avoidance, Planning, Robustness)
-  - Generalization (OOD counterfactuals & transfer tasks)
-  - Prediction accuracy (Latent dynamics MSE & collision AUROC)
-  - Parameter count & parameter reduction (%)
-  - MAC operations (FLOPs)
-  - Memory requirements (Weights KB + Activation Buffers KB)
-  - Inference Latency (Intel CPU, RTX 3050 GPU, and AMD Kria KR260 FPGA estimated)
-  - Energy per inference (mJ)
+Evaluates:
+  1. Original Full H-JEPA
+  2. Weight-Preserving Pruned H-JEPA (Option A)
+  3. Reconstructed Compact Model — Teacher-Distilled (Option B, 39,804 params)
+  4. Reconstructed Compact Model — Supervised Only (No Teacher Ablation)
+  5. Reconstructed Compact Model — Behavior Cloning Only (No Latent Dynamics Ablation)
+Reports structural parameters, active non-zero parameters, open-loop held-out test metrics,
+and closed-loop MuJoCo behavioral navigation performance.
 """
 
+from __future__ import annotations
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[3]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
+
+import json
 import os
 import sys
 import time
-import json
-import csv
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 import numpy as np
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../")))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
-
 from models.h_jepa import HJEPAModel
-from research.extraction.extracted_model.weight_preserving.model_weight_preserving import WeightPreservingExtractedHJEPA
-from research.extraction.extracted_model.reconstructed_compact.model_reconstructed_compact import ReconstructedCompactModel
+from research.benchmarks.evaluator import BenchmarkEvaluator
+from research.benchmarks.model_wrappers import BaseAgentWrapper, HJEPAAgent
+from research.datasets.generation.capability_tasks import generate_task_specification
+from research.extraction.extracted_model.reconstructed_compact.model_reconstructed_compact import (
+    ReconstructedCompactModel,
+)
+from research.extraction.extracted_model.weight_preserving.model_weight_preserving import (
+    WeightPreservingExtractedHJEPA,
+)
 
-def compute_macs_and_memory(model_type):
-    if model_type == "original":
-        # Conv1: 3 * 16 * 4 * 4 * 32 * 32 = 786,432
-        # Conv2: 16 * 32 * 4 * 4 * 16 * 16 = 2,097,152
-        # Conv3: 32 * 64 * 4 * 4 * 8 * 8 = 2,097,152
-        # Conv4: 64 * 64 * 4 * 4 * 4 * 4 = 1,048,576
-        # Linear: 1024 * 32 = 32,768
-        # Macro (24 candidates): 24 * (35*64 + 64*64 + 64*33) = 202,752
-        # Micro: 64*64 + 64*64 + 64*3 = 8,384
-        macs = 786432 + 2097152 + 2097152 + 1048576 + 32768 + 202752 + 8384 # 6.273 MMACs
-        params = 166037
-        weight_kb = (params * 2) / 1024.0 # Q8.8 signed (16-bit)
-        act_kb = (16 * 32 * 32 * 2) / 1024.0 # Conv1 output buffer
-        return macs, params, weight_kb, act_kb
-    elif model_type == "weight_preserving":
-        macs = 786432 + 2097152 + 2097152 + 1048576 + 32768 + 202752 + 8384
-        params = 157428 # Micro dynamics pruned
-        weight_kb = (params * 2) / 1024.0
-        act_kb = (16 * 32 * 32 * 2) / 1024.0
-        return macs, params, weight_kb, act_kb
-    elif model_type == "reconstructed_compact":
-        # Conv1: 3 * 8 * 4 * 4 * 32 * 32 = 393,216
-        # Conv2: 8 * 16 * 4 * 4 * 16 * 16 = 524,288
-        # Conv3: 16 * 32 * 4 * 4 * 8 * 8 = 524,288
-        # Conv4: 32 * 32 * 4 * 4 * 4 * 4 = 262,144
-        # Linear: 512 * 16 = 8,192
-        # Macro (24 candidates): 24 * (19*32 + 32*32 + 32*17) = 52,224
-        # Micro: 32*32 + 32*32 + 32*3 = 2,144
-        macs = 393216 + 524288 + 524288 + 262144 + 8192 + 52224 + 2144 # 1.766 MMACs
-        params = 39804
-        weight_kb = (params * 2) / 1024.0 # 77.74 KB
-        act_kb = (8 * 32 * 32 * 2) / 1024.0 # 16.0 KB
-        return macs, params, weight_kb, act_kb
 
-def measure_latency(forward_fn, dummy_input, device, runs=100):
-    # Warmup
-    for _ in range(15):
-        _ = forward_fn(dummy_input)
-    if device == "cuda":
-        torch.cuda.synchronize()
+class CompactAgentWrapper(BaseAgentWrapper):
+    def __init__(self, name: str, ckpt_path: str, device: str = "cpu"):
+        super().__init__(name=name, track="structured", ablation_mode="compact_distilled", device=device)
+        self.model = ReconstructedCompactModel(latent_dim=16, stride_k=5, hidden_dim=32).to(device)
+        if os.path.exists(ckpt_path):
+            self.model.load_state_dict(torch.load(ckpt_path, map_location=device, weights_only=False))
+        self.model.eval()
 
-    times = []
-    for _ in range(runs):
-        t0 = time.perf_counter()
-        _ = forward_fn(dummy_input)
-        if device == "cuda":
-            torch.cuda.synchronize()
-        t1 = time.perf_counter()
-        times.append((t1 - t0) * 1e3) # ms
+    def act(self, obs_rgb, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=None):
+        return self.model.act(obs_rgb, goal_vec_body=goal_vec_body, device=self.device)
 
-    return float(np.mean(times)), float(np.median(times)), float(np.percentile(times, 95))
 
-def run_tri_model_comparison():
+def compare_three_models():
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "hjepa_best.pt")) else legacy_ckpt
+
+    v2_splits = str(_ACTIVE_SPLITS_DIR)
+    legacy_splits = str(_ACTIVE_SPLITS_DIR)
+    splits_dir = v2_splits if os.path.exists(os.path.join(v2_splits, "held_out_test_benchmark.npz")) else legacy_splits
+
     out_dir = os.path.abspath(os.path.dirname(__file__))
     os.makedirs(out_dir, exist_ok=True)
 
-    base_dir = os.path.abspath(os.path.join(out_dir, "../../../"))
-    ckpt_orig = os.path.join(base_dir, "checkpoints/hjepa_best.pt")
-    ckpt_optA = os.path.join(out_dir, "../extracted_model/weight_preserving/model_weights_preserved.pt")
-    ckpt_optB = os.path.join(out_dir, "../extracted_model/reconstructed_compact/model_reconstructed_compact.pt")
+    hjepa_ckpt = os.path.join(ckpt_dir, "hjepa_best.pt")
+    wp_ckpt = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../extracted_model/weight_preserving/weight_preserving_best.pt")
+    )
+    rc_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../extracted_model/reconstructed_compact"))
+    rc_distill_ckpt = os.path.join(rc_dir, "reconstructed_compact_best.pt")
+    rc_sup_ckpt = os.path.join(rc_dir, "reconstructed_supervised_only.pt")
+    rc_bc_ckpt = os.path.join(rc_dir, "reconstructed_bc_only.pt")
 
-    val_npz = os.path.join(base_dir, "research/datasets/splits/val_benchmark.npz")
-    val_data = np.load(val_npz)
-    obs = val_data["rgb"][:250]
-    poses = val_data["robot_pose"][:250]
-    actions = val_data["actions"][:250]
-    next_obs = val_data["next_rgb"][:250]
-    obj_pos = val_data["object_positions"][:250]
-    cols = val_data["collisions"][:250]
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    imgs = torch.from_numpy(obs).permute(0, 3, 1, 2).float().to(device) / 255.0
-    next_imgs = torch.from_numpy(next_obs).permute(0, 3, 1, 2).float().to(device) / 255.0
-    acts = torch.from_numpy(actions).float().to(device)
-    cols_t = torch.from_numpy(cols).float().to(device)
-
-    print("\n=======================================================")
-    print("  PHASE 7: TRI-MODEL SCIENTIFIC BENCHMARK & COMPARISON")
-    print("=======================================================\n")
-
-    # 1. Load Original Model
     orig_model = HJEPAModel(stride_k=5).to(device)
-    orig_model.load_state_dict(torch.load(ckpt_orig, map_location=device))
+    orig_model.load_state_dict(torch.load(hjepa_ckpt, map_location=device, weights_only=False), strict=False)
     orig_model.eval()
 
-    # 2. Load Option A Weight-Preserving
-    optA_model = WeightPreservingExtractedHJEPA().to(device)
-    optA_model.load_state_dict(torch.load(ckpt_optA, map_location=device))
-    optA_model.eval()
+    wp_model = WeightPreservingExtractedHJEPA(stride_k=5).to(device)
+    if os.path.exists(wp_ckpt):
+        wp_model.load_from_original_checkpoint(hjepa_ckpt, device=device)
+        wp_model.load_state_dict(torch.load(wp_ckpt, map_location=device, weights_only=False), strict=False)
+    else:
+        wp_model.load_from_original_checkpoint(hjepa_ckpt, device=device)
+    wp_model.eval()
 
-    # 3. Load Option B Reconstructed Compact
-    optB_model = ReconstructedCompactModel(latent_dim=16, stride_k=5, hidden_dim=32).to(device)
-    optB_model.load_state_dict(torch.load(ckpt_optB, map_location=device))
-    optB_model.eval()
+    rc_model = ReconstructedCompactModel(latent_dim=16, stride_k=5, hidden_dim=32).to(device)
+    if os.path.exists(rc_distill_ckpt):
+        rc_model.load_state_dict(torch.load(rc_distill_ckpt, map_location=device, weights_only=False))
+    rc_model.eval()
 
-    models = {
-        "original": {"name": "Original H-JEPA (Reference)", "model": orig_model},
-        "weight_preserving": {"name": "Option A: Weight-Preserving Extracted", "model": optA_model},
-        "reconstructed_compact": {"name": "Option B: Reconstructed Compact", "model": optB_model}
-    }
+    te_d = np.load(os.path.join(splits_dir, "held_out_test_benchmark.npz"))
+    imgs = torch.from_numpy(te_d["rgb"][:512]).permute(0, 3, 1, 2).float().to(device) / 255.0
+    acts = torch.from_numpy(te_d["actions"][:512]).float().to(device)
+    cols = torch.from_numpy(te_d["collisions"][:512].astype(np.float32)).to(device)
 
-    results = {}
-
-    for m_id, m_info in models.items():
-        m = m_info["model"]
-        name = m_info["name"]
-        print(f"Benchmarking {name}...")
-
-        macs, params, weight_kb, act_kb = compute_macs_and_memory(m_id)
-
+    def _eval_open_loop(mdl, is_compact=False):
+        t0 = time.perf_counter()
         with torch.no_grad():
-            # Perception & Dynamics
-            z_curr = m.encode(imgs)
-            z_next_gt = m.encode(next_imgs)
-            if m_id == "original":
-                z_pred_next, col_logits = m.macro_predictor(z_curr, acts)
-                pred_act = m.micro_predictor.select_action(z_curr, z_pred_next)
+            if is_compact:
+                s = mdl.encode(imgs)
+                S_mac, c_log = mdl.forward_macro(s, acts)
+                p_act = mdl.select_action(s, S_mac)
             else:
-                z_pred_next, col_logits = m.forward_macro(z_curr, acts)
-                pred_act = m.select_action(z_curr, z_pred_next)
-
-            # Prediction MSE
-            pred_mse = float(F.mse_loss(z_pred_next, z_next_gt).item())
-
-            # Collision Accuracy
-            col_probs = torch.sigmoid(col_logits).squeeze(-1).cpu().numpy()
-            gt_col = (cols > 0).astype(np.float32)
-            col_acc = float(np.mean((col_probs > 0.5) == gt_col))
-
-            # Grounding & Spatial
-            t_pos = obj_pos[:, 0, :2]
-            r_pos = poses[:, :2]
-            r_th = poses[:, 2]
-            dx_b = np.cos(r_th) * (t_pos[:, 0] - r_pos[:, 0]) + np.sin(r_th) * (t_pos[:, 1] - r_pos[:, 1])
-            dy_b = -np.sin(r_th) * (t_pos[:, 0] - r_pos[:, 0]) + np.cos(r_th) * (t_pos[:, 1] - r_pos[:, 1])
-            gt_ang = np.arctan2(dy_b, dx_b)
-
-            z_np = z_curr.cpu().numpy()
-            corr_grounding = float(np.abs(np.corrcoef(z_np[:, 0], gt_ang)[0, 1]))
-            if np.isnan(corr_grounding): corr_grounding = 0.0
-
-            # Action MSE
-            act_mse = float(F.mse_loss(pred_act, acts).item())
-
-            # Robustness to noise
-            z_noisy = z_curr + torch.randn_like(z_curr) * 0.1
-            if m_id == "original":
-                noisy_act = m.micro_predictor.select_action(z_noisy, z_pred_next)
-            else:
-                noisy_act = m.select_action(z_noisy, z_pred_next)
-            robustness = float(1.0 - torch.norm(pred_act - noisy_act, dim=-1).mean().item() * 0.8)
-
-            # Latency benchmarking
-            def fwd_fn(inp):
-                with torch.no_grad():
-                    z = m.encode(inp)
-                    cand_a = torch.zeros((len(inp), 3), device=device)
-                    if m_id == "original":
-                        _ = m.macro_predictor(z, cand_a)
-                    else:
-                        _ = m.forward_macro(z, cand_a)
-                return z
-
-            single_img = imgs[:1]
-            lat_mean_gpu, _, _ = measure_latency(fwd_fn, single_img, device="cuda", runs=100)
-
-            # Move to CPU for CPU latency
-            m_cpu = m.cpu()
-            single_img_cpu = single_img.cpu()
-            def fwd_fn_cpu(inp):
-                with torch.no_grad():
-                    z = m_cpu.encode(inp)
-                    cand_a = torch.zeros((len(inp), 3), device="cpu")
-                    if m_id == "original":
-                        _ = m_cpu.macro_predictor(z, cand_a)
-                    else:
-                        _ = m_cpu.forward_macro(z, cand_a)
-                return z
-            lat_mean_cpu, _, _ = measure_latency(fwd_fn_cpu, single_img_cpu, device="cpu", runs=50)
-            m.to(device)
-
-            # Estimated FPGA Latency on AMD Kria KR260 (200 MHz Clock, parallel DSPs)
-            # Cycles approx = MACs / (available DSPs * utilization)
-            # KR260 has 1,248 DSP slices. Using 128 parallel MAC units at 200 MHz:
-            if m_id == "reconstructed_compact":
-                fpga_cycles = macs / 128.0 + 8000 # Streaming latency
-                fpga_lat_ms = (fpga_cycles / 200e6) * 1e3 # ms
-                fpga_power_w = 0.65 # Compact model consumes lower switching power
-            elif m_id == "weight_preserving":
-                fpga_cycles = macs / 128.0 + 20000
-                fpga_lat_ms = (fpga_cycles / 200e6) * 1e3
-                fpga_power_w = 1.15
-            else:
-                fpga_cycles = macs / 128.0 + 25000
-                fpga_lat_ms = (fpga_cycles / 200e6) * 1e3
-                fpga_power_w = 1.25
-
-            energy_mJ = fpga_power_w * fpga_lat_ms
-
-        results[m_id] = {
-            "name": name,
-            "params": params,
-            "param_reduction_pct": float((1.0 - params / 166037) * 100.0),
-            "macs": macs,
-            "mac_reduction_pct": float((1.0 - macs / 6273440) * 100.0),
-            "weight_memory_kb": round(weight_kb, 2),
-            "activation_buffer_kb": round(act_kb, 2),
-            "total_on_chip_kb": round(weight_kb + act_kb, 2),
-            "dynamics_mse": round(pred_mse, 5),
-            "collision_accuracy_pct": round(col_acc * 100.0, 2),
-            "grounding_alignment": round(corr_grounding, 4),
-            "action_tracking_mse": round(act_mse, 5),
-            "robustness_score": round(robustness, 4),
-            "latency_gpu_ms": round(lat_mean_gpu, 3),
-            "latency_cpu_ms": round(lat_mean_cpu, 3),
-            "latency_fpga_est_ms": round(fpga_lat_ms, 3),
-            "energy_per_inference_mJ": round(energy_mJ, 4)
+                s = mdl.encode(imgs)
+                S_mac, c_log = mdl.macro_predictor(s, acts)
+                p_act = mdl.micro_predictor.select_action(s, S_mac)
+        dt_ms = (time.perf_counter() - t0) * 1000.0 / len(imgs)
+        act_mse = float(F.mse_loss(p_act, acts).item())
+        act_cos = float(F.cosine_similarity(p_act, acts, dim=-1).mean().item())
+        col_acc = float(((torch.sigmoid(c_log).squeeze(-1) > 0.5).float() == cols).float().mean().item()) * 100.0
+        struct_p = sum(p.numel() for p in mdl.parameters())
+        nz_p = sum(int((p.detach().abs() > 1e-8).sum().item()) for p in mdl.parameters())
+        return {
+            "structural_parameters": struct_p,
+            "active_nonzero_parameters": nz_p,
+            "action_mse": act_mse,
+            "action_cosine_similarity": act_cos,
+            "collision_accuracy_pct": col_acc,
+            "latency_ms_per_frame": dt_ms,
         }
 
-    # Save JSON
-    json_path = os.path.join(out_dir, "tri_model_comparison.json")
-    with open(json_path, "w") as f:
-        json.dump(results, f, indent=2)
-    print(f"\n[Saved JSON] {json_path}")
+    open_orig = _eval_open_loop(orig_model, is_compact=False)
+    open_wp = _eval_open_loop(wp_model, is_compact=False)
+    open_rc = _eval_open_loop(rc_model, is_compact=True)
 
-    # Save CSV
-    csv_path = os.path.join(out_dir, "tri_model_comparison.csv")
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        headers = [
-            "Metric", "Original H-JEPA", "Option A (Weight-Preserving)", "Option B (Reconstructed Compact)", "Advantage (Opt B vs Orig)"
-        ]
-        writer.writerow(headers)
+    # Closed-loop MuJoCo comparison across Original, Distilled Compact, Supervised-Only Compact, and BC-Only Compact
+    evaluator = BenchmarkEvaluator()
+    eval_specs = (
+        [generate_task_specification("object_grounding", "easy", seed_idx=5400 + i) for i in range(5)]
+        + [generate_task_specification("spatial_reasoning", "easy", seed_idx=5500 + i) for i in range(5)]
+        + [generate_task_specification("obstacle_avoidance", "difficult", seed_idx=5600 + i) for i in range(5)]
+    )
 
-        rows = [
-            ("Total Parameters", f"{results['original']['params']:,}", f"{results['weight_preserving']['params']:,}", f"{results['reconstructed_compact']['params']:,}", f"-{results['reconstructed_compact']['param_reduction_pct']:.1f}%"),
-            ("Compute FLOPs / MACs", f"{results['original']['macs']:,}", f"{results['weight_preserving']['macs']:,}", f"{results['reconstructed_compact']['macs']:,}", f"-{results['reconstructed_compact']['mac_reduction_pct']:.1f}%"),
-            ("Weight Memory (KB, Q8.8)", f"{results['original']['weight_memory_kb']} KB", f"{results['weight_preserving']['weight_memory_kb']} KB", f"{results['reconstructed_compact']['weight_memory_kb']} KB", f"{results['original']['weight_memory_kb']/results['reconstructed_compact']['weight_memory_kb']:.2f}x reduction"),
-            ("Activation Peak Buffer (KB)", f"{results['original']['activation_buffer_kb']} KB", f"{results['weight_preserving']['activation_buffer_kb']} KB", f"{results['reconstructed_compact']['activation_buffer_kb']} KB", f"{results['original']['activation_buffer_kb']/results['reconstructed_compact']['activation_buffer_kb']:.2f}x reduction"),
-            ("On-Chip BRAM Fit (KR260)", "No (Needs DDR4)", "No (Needs DDR4)", "YES (100% On-Chip BRAM/URAM)", "Zero DDR4 Bandwidth"),
-            ("Latent Dynamics MSE", f"{results['original']['dynamics_mse']}", f"{results['weight_preserving']['dynamics_mse']}", f"{results['reconstructed_compact']['dynamics_mse']}", "Preserved Fidelity"),
-            ("Collision Detection Acc (%)", f"{results['original']['collision_accuracy_pct']}%", f"{results['weight_preserving']['collision_accuracy_pct']}%", f"{results['reconstructed_compact']['collision_accuracy_pct']}%", "+1.2% Gain"),
-            ("Relative Grounding Align", f"{results['original']['grounding_alignment']}", f"{results['weight_preserving']['grounding_alignment']}", f"{results['reconstructed_compact']['grounding_alignment']}", "Preserved Direction"),
-            ("Action Tracking MSE", f"{results['original']['action_tracking_mse']}", f"{results['weight_preserving']['action_tracking_mse']}", f"{results['reconstructed_compact']['action_tracking_mse']}", "High Fidelity"),
-            ("Kinematic Robustness", f"{results['original']['robustness_score']}", f"{results['weight_preserving']['robustness_score']}", f"{results['reconstructed_compact']['robustness_score']}", "Enhanced Stability"),
-            ("Host Latency GPU (ms)", f"{results['original']['latency_gpu_ms']} ms", f"{results['weight_preserving']['latency_gpu_ms']} ms", f"{results['reconstructed_compact']['latency_gpu_ms']} ms", f"{results['original']['latency_gpu_ms']/results['reconstructed_compact']['latency_gpu_ms']:.2f}x speedup"),
-            ("Host Latency CPU (ms)", f"{results['original']['latency_cpu_ms']} ms", f"{results['weight_preserving']['latency_cpu_ms']} ms", f"{results['reconstructed_compact']['latency_cpu_ms']} ms", f"{results['original']['latency_cpu_ms']/results['reconstructed_compact']['latency_cpu_ms']:.2f}x speedup"),
-            ("Target FPGA Est Latency (ms)", f"{results['original']['latency_fpga_est_ms']} ms", f"{results['weight_preserving']['latency_fpga_est_ms']} ms", f"{results['reconstructed_compact']['latency_fpga_est_ms']} ms", f"{results['original']['latency_fpga_est_ms']/results['reconstructed_compact']['latency_fpga_est_ms']:.2f}x speedup"),
-            ("Energy per Inference (mJ)", f"{results['original']['energy_per_inference_mJ']} mJ", f"{results['weight_preserving']['energy_per_inference_mJ']} mJ", f"{results['reconstructed_compact']['energy_per_inference_mJ']} mJ", f"{results['original']['energy_per_inference_mJ']/results['reconstructed_compact']['energy_per_inference_mJ']:.2f}x energy cut")
-        ]
+    closed_loop_agents = {
+        "Original_HJEPA": HJEPAAgent(hjepa_ckpt, device=device, track="structured"),
+        "Reconstructed_Distilled_16D": CompactAgentWrapper("Reconstructed_Distilled_16D", rc_distill_ckpt, device=device),
+        "Reconstructed_Supervised_NoTeacher_16D": CompactAgentWrapper("Reconstructed_Supervised_NoTeacher_16D", rc_sup_ckpt, device=device),
+        "Reconstructed_BC_Only_16D": CompactAgentWrapper("Reconstructed_BC_Only_16D", rc_bc_ckpt, device=device),
+    }
 
-        for r in rows:
-            writer.writerow(r)
+    closed_loop_results = {}
+    for ag_name, ag in closed_loop_agents.items():
+        recs = [evaluator.evaluate_episode(ag, sp) for sp in eval_specs]
+        closed_loop_results[ag_name] = {
+            "success_rate": float(np.mean([1.0 if r["success"] else 0.0 for r in recs])),
+            "goal_reached_rate": float(np.mean([1.0 if r["goal_reached"] else 0.0 for r in recs])),
+            "collision_rate": float(np.mean([0.0 if r["collision_free"] else 1.0 for r in recs])),
+            "path_efficiency": float(np.mean([r["path_efficiency"] for r in recs])),
+            "mean_goal_error_m": float(np.mean([r["final_goal_error"] for r in recs])),
+        }
+        print(
+            f"  [Closed-Loop | {ag_name:38s}] Success: {closed_loop_results[ag_name]['success_rate']*100:5.1f}% | "
+            f"Col: {closed_loop_results[ag_name]['collision_rate']*100:5.1f}% | "
+            f"GoalErr: {closed_loop_results[ag_name]['mean_goal_error_m']:.3f}m"
+        )
 
-    print(f"[Saved CSV]  {csv_path}")
+    evaluator.close()
 
-    # Generate Markdown Table for Report
-    md_path = os.path.join(out_dir, "tri_model_comparison_table.md")
-    with open(md_path, "w") as f:
-        f.write("# Tri-Model Empirical Comparison Table\n\n")
-        f.write("| Scientific Metric | Original H-JEPA (Reference) | Option A (Weight-Preserving) | Option B (Reconstructed Compact) | Architectural Advantage |\n")
-        f.write("| :--- | :---: | :---: | :---: | :---: |\n")
-        for r in rows:
-            f.write(f"| **{r[0]}** | {r[1]} | {r[2]} | **{r[3]}** | {r[4]} |\n")
-    print(f"[Saved MD]   {md_path}")
+    comparison = {
+        "open_loop_comparison": {
+            "Original_HJEPA": open_orig,
+            "Weight_Preserving_Pruned": open_wp,
+            "Reconstructed_Compact_16D": open_rc,
+        },
+        "closed_loop_and_distillation_ablations": closed_loop_results,
+    }
+
+    out_path = os.path.join(out_dir, "three_model_comparison.json")
+    with open(out_path, "w") as f:
+        json.dump(comparison, f, indent=2)
+    print(f"\n[SAVED THREE-MODEL COMPARISON TO {out_path}]")
+    return comparison
+
 
 if __name__ == "__main__":
-    run_tri_model_comparison()
+    compare_three_models()

@@ -11,6 +11,10 @@ recombined pipeline not trained end-to-end in this configuration.
 Evaluates in closed-loop MuJoCo simulation against monolithic models.
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[3]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -33,7 +37,7 @@ def run_experiment_a():
     out_dir = os.path.abspath(os.path.dirname(__file__))
     os.makedirs(out_dir, exist_ok=True)
 
-    ckpt_dir = os.path.abspath(os.path.join(out_dir, "../../../checkpoints"))
+    ckpt_dir = str(_ACTIVE_CKPT_DIR)
     optB_ckpt = os.path.abspath(os.path.join(out_dir, "../../extraction/extracted_model/reconstructed_compact/model_reconstructed_compact.pt"))
 
     device = "cuda" if torch.cuda.is_available() else "cpu"

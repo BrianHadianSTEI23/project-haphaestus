@@ -1,217 +1,284 @@
 """
-Phase 8: Architecture Synthesis & Compositional Intelligence
-Script: run_novel_composition.py
-Author: Brian A. Hadian
-Project: Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA
+Phase 6: Experiment C — Novel Compositional Multi-Stage Navigation (Repaired)
 
-Experiment C: Novel Task Composition.
-Tests whether the reconstructed compositional architecture can execute multi-stage
-sequential language instructions without having been trained on that exact combination:
-  - Task C1: "Go behind yellow cylinder, then move left of red box." (2 Stages)
-  - Task C2: "Move right of obstacle, then go behind green cylinder." (2 Stages)
-  - Task C3: "Move in front of cyan box, then right of blue cylinder, then behind yellow cylinder." (3 Stages)
-Evaluates closed-loop execution in MuJoCo simulation against Baseline Policy.
+Fixes:
+  1. Uses exact `CANONICAL_OBSTACLES` positions and real MuJoCo geometries (`obs_inserted`,
+     `obs_barrier`) via `JetAutoEnv.apply_task_spec` (eliminating fictional obstacle coordinates).
+  2. Evaluates 10 seeded episodes per task across 4 multi-stage compositional tasks (40 episodes per model)
+     comparing:
+       - Track A (`Oracle_Planner`)
+       - Track B (`H-JEPA`, `LeWM`, `Reconstructed_Compact_16D`, `Reactive_Baseline`)
+       - Track C (`H-JEPA_Observation_Only`)
 """
 
+from __future__ import annotations
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[3]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
+
+import copy
+import json
 import os
 import sys
-import json
-import csv
-import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 import numpy as np
 import torch
-import mujoco
-
-os.environ["MUJOCO_GL"] = "egl"
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../")))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
 
 from env.amr_env import JetAutoEnv
-from research.benchmarks.model_wrappers import BaselineAgent
-from research.synthesis.compositional_architecture.compositional_agent import CompositionalNavigationAgent
+from research.benchmarks.model_wrappers import (
+    BaselineAgent,
+    HJEPAAgent,
+    LeWMAgent,
+    OracleAgent,
+    compute_body_frame_goal_vec,
+)
 from research.datasets.generation.capability_tasks import CANONICAL_OBSTACLES, get_waypoint_for_relation
+from research.synthesis.compositional_architecture.compositional_agent import CompositionalSpatialAgent
 
-def evaluate_multi_stage_episode(env, agent, waypoints, max_steps_per_stage=60):
-    """
-    Executes a multi-stage sequential episode in MuJoCo.
-    Transitions to the next stage when the robot is within 0.28m of current waypoint.
-    """
-    obs, info = env.reset(options={"initial_pos": (-1.2, -1.2, 0.0)})
-    num_stages = len(waypoints)
-    current_stage = 0
-    stage_completions = [False] * num_stages
-    total_collisions = 0
-    trajectory = [env.get_robot_pose()[:2].copy()]
 
-    # If agent supports explicit subgoal queue
-    if hasattr(agent, "set_subgoal_sequence"):
-        agent.set_subgoal_sequence(waypoints)
-
-    total_steps = max_steps_per_stage * num_stages
-
-    for t in range(total_steps):
-        curr_pose = env.get_robot_pose()
-        target_wp = waypoints[current_stage]
-
-        dist_to_wp = np.linalg.norm(target_wp[:2] - curr_pose[:2])
-        if dist_to_wp < 0.28:
-            stage_completions[current_stage] = True
-            if current_stage < num_stages - 1:
-                current_stage += 1
-            else:
-                # All stages completed!
-                break
-
-        action = agent.select_action(obs, curr_pose, target_wp)
-        obs, reward, term, trunc, step_info = env.step(action)
-        if step_info["collision"]:
-            total_collisions += 1
-
-        new_pose = env.get_robot_pose()
-        trajectory.append(new_pose[:2].copy())
-
-    # Full success: all stages reached and no collisions
-    all_stages_done = all(stage_completions)
-    task_success = all_stages_done and (total_collisions == 0)
-
-    # Path length
-    actual_path_len = sum(np.linalg.norm(trajectory[i+1] - trajectory[i]) for i in range(len(trajectory)-1))
-    geodesic = sum(np.linalg.norm(waypoints[i][:2] - (trajectory[0] if i==0 else waypoints[i-1][:2])) for i in range(num_stages))
-    efficiency = float(geodesic / (actual_path_len + 1e-6)) if actual_path_len > 0.1 else 1.0
-
-    return {
-        "task_success": task_success,
-        "all_stages_done": all_stages_done,
-        "stages_completed": sum(stage_completions),
-        "stage_completion_rates": stage_completions,
-        "collisions": total_collisions,
-        "path_efficiency": min(1.0, max(0.0, efficiency)),
-        "steps": len(trajectory) - 1
+def build_compositional_tasks(episodes_per_task: int = 10) -> dict[str, list[dict]]:
+    tasks: dict[str, list[dict]] = {
+        "T1_dual_landmark_slalom": [],
+        "T2_relational_detour_behind_blocked": [],
+        "T3_three_stage_sequential_patrol": [],
+        "T4_narrow_corridor_traversal": [],
     }
 
-def run_experiment_c():
+    for i in range(episodes_per_task):
+        rng = np.random.default_rng(9500 + i)
+        j_xy = rng.uniform(-0.10, 0.10, size=2).astype(np.float32)
+        j_th = float(rng.uniform(-0.10, 0.10))
+
+        # T1: Approach Blue Cylinder (-1.2, 1.4), then Go Behind Red Box (1.2, 1.0) via flank
+        obs1 = copy.deepcopy(CANONICAL_OBSTACLES)
+        init1 = np.array([0.0 + j_xy[0], -0.4 + j_xy[1], 1.57 + j_th], dtype=np.float32)
+        wp1_a = get_waypoint_for_relation(obs1["blue_cylinder"]["pos"], "approach", init1)
+        wp1_flank = np.array([0.85, 1.65, 0.0], dtype=np.float32)
+        wp1_b = get_waypoint_for_relation(obs1["red_box"]["pos"], "behind", wp1_flank)
+        tasks["T1_dual_landmark_slalom"].append(
+            {
+                "task_id": f"T1_ep{i:02d}",
+                "target_key": "red_box",
+                "semantic_relation": "behind",
+                "instruction": "approach blue cylinder then go behind red box",
+                "initial_pose": init1,
+                "obstacles": obs1,
+                "waypoints": [wp1_a, wp1_flank, wp1_b],
+                "max_steps": 135,
+            }
+        )
+
+        # T2: Go Behind Yellow Cylinder (-1.4, -1.0) with Inserted Obstacle blocking direct path
+        obs2 = copy.deepcopy(CANONICAL_OBSTACLES)
+        init2 = np.array([0.0 + j_xy[0], 0.0 + j_xy[1], -2.50 + j_th], dtype=np.float32)
+        mid2 = 0.5 * (init2[:2] + obs2["yellow_cylinder"]["pos"][:2])
+        obs2["inserted_obstacle"] = {
+            "geom_name": "obs_inserted",
+            "pos": np.array([float(mid2[0]), float(mid2[1]), 0.35], dtype=np.float32),
+            "radius": 0.22,
+            "height": 0.35,
+            "shape": "cylinder",
+            "rgba": np.array([0.8, 0.1, 0.8, 1.0], dtype=np.float32),
+        }
+        wp2_detour = np.array([float(mid2[0] + 0.45), float(mid2[1] - 0.65), -2.50], dtype=np.float32)
+        wp2_goal = get_waypoint_for_relation(obs2["yellow_cylinder"]["pos"], "behind", wp2_detour)
+        tasks["T2_relational_detour_behind_blocked"].append(
+            {
+                "task_id": f"T2_ep{i:02d}",
+                "target_key": "yellow_cylinder",
+                "semantic_relation": "behind",
+                "instruction": "detour around magenta obstacle and go behind yellow cylinder",
+                "initial_pose": init2,
+                "obstacles": obs2,
+                "waypoints": [wp2_detour, wp2_goal],
+                "max_steps": 110,
+            }
+        )
+
+        # T3: Three-Stage Patrol: Green Cylinder (1.2, -1.2) -> Red Box (1.2, 1.0) -> Purple Box (0.0, 1.7)
+        obs3 = copy.deepcopy(CANONICAL_OBSTACLES)
+        init3 = np.array([0.0 + j_xy[0], -0.2 + j_xy[1], -0.75 + j_th], dtype=np.float32)
+        wp3_1 = get_waypoint_for_relation(obs3["green_cylinder"]["pos"], "approach", init3)
+        wp3_2 = get_waypoint_for_relation(obs3["red_box"]["pos"], "approach", wp3_1)
+        wp3_3 = get_waypoint_for_relation(obs3["purple_box"]["pos"], "in_front", wp3_2)
+        tasks["T3_three_stage_sequential_patrol"].append(
+            {
+                "task_id": f"T3_ep{i:02d}",
+                "target_key": "purple_box",
+                "semantic_relation": "in_front",
+                "instruction": "patrol green cylinder, red box, and stop in front of purple box",
+                "initial_pose": init3,
+                "obstacles": obs3,
+                "waypoints": [wp3_1, wp3_2, wp3_3],
+                "max_steps": 140,
+            }
+        )
+
+        # T4: Narrow Corridor Traversal between obs_inserted and obs_barrier to reach Red Box
+        obs4 = copy.deepcopy(CANONICAL_OBSTACLES)
+        init4 = np.array([-0.5 + j_xy[0], -0.4 + j_xy[1], 0.65 + j_th], dtype=np.float32)
+        obs4["inserted_obstacle"] = {
+            "geom_name": "obs_inserted",
+            "pos": np.array([0.05, 0.78, 0.35], dtype=np.float32),
+            "radius": 0.20,
+            "height": 0.35,
+            "shape": "cylinder",
+            "rgba": np.array([0.8, 0.1, 0.8, 1.0], dtype=np.float32),
+        }
+        obs4["slit_barrier"] = {
+            "geom_name": "obs_barrier",
+            "pos": np.array([0.65, -0.18, 0.35], dtype=np.float32),
+            "size": np.array([0.12, 0.22, 0.35], dtype=np.float32),
+            "radius": 0.22,
+            "height": 0.35,
+            "shape": "box",
+            "rgba": np.array([0.3, 0.3, 0.3, 1.0], dtype=np.float32),
+        }
+        wp4_gate = np.array([0.35, 0.30, 0.65], dtype=np.float32)
+        wp4_goal = get_waypoint_for_relation(obs4["red_box"]["pos"], "approach", wp4_gate)
+        tasks["T4_narrow_corridor_traversal"].append(
+            {
+                "task_id": f"T4_ep{i:02d}",
+                "target_key": "red_box",
+                "semantic_relation": "approach",
+                "instruction": "traverse narrow corridor to approach red box",
+                "initial_pose": init4,
+                "obstacles": obs4,
+                "waypoints": [wp4_gate, wp4_goal],
+                "max_steps": 95,
+            }
+        )
+
+    return tasks
+
+
+def _run_episode_for_agent(env: JetAutoEnv, agent_type: str, agent_obj, spec: dict) -> dict:
+    env.apply_task_spec(spec)
+    if hasattr(agent_obj, "reset"):
+        agent_obj.reset()
+    init_p = spec["initial_pose"]
+    obs, _ = env.reset(options={"initial_pos": (float(init_p[0]), float(init_p[1]), float(init_p[2]))})
+
+    wps = spec["waypoints"]
+    wp_idx = 0
+    collisions = 0
+    max_steps = spec.get("max_steps", 65)
+
+    for _ in range(max_steps):
+        pose = env.get_robot_pose()
+        target_wp = wps[wp_idx]
+        if float(np.linalg.norm(target_wp[:2] - pose[:2])) < 0.28:
+            if wp_idx < len(wps) - 1:
+                wp_idx += 1
+                target_wp = wps[wp_idx]
+            else:
+                break
+
+        if agent_type == "oracle":
+            act, _ = agent_obj.act(obs, robot_pose=pose, target_pose=target_wp, task_spec=spec)
+        elif agent_type == "compact":
+            act, _ = agent_obj.select_action(obs, pose, target_wp)
+        elif agent_type == "track_c":
+            pub = {
+                "target_key": spec.get("target_key", ""),
+                "semantic_relation": spec.get("semantic_relation", "approach"),
+                "instruction": spec.get("instruction", ""),
+            }
+            act, _ = agent_obj.act(obs, robot_pose=None, target_pose=None, task_spec=pub, goal_vec_body=None)
+        else:
+            g_body = compute_body_frame_goal_vec(pose, target_wp)
+            act, _ = agent_obj.act(obs, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=g_body)
+
+        obs, _, _, _, info = env.step(act)
+        if info["collision"]:
+            collisions += 1
+
+    final_pose = env.get_robot_pose()
+    final_err = float(np.linalg.norm(wps[-1][:2] - final_pose[:2]))
+    reached_all = (wp_idx == len(wps) - 1) and (final_err < 0.30)
+    success = bool(reached_all and collisions == 0)
+    stages_completed = wp_idx + (1 if final_err < 0.30 else 0)
+    env.restore_physical_baseline()
+    return {
+        "success": success,
+        "reached_final": reached_all,
+        "stage_completion_rate": float(stages_completed / len(wps)),
+        "collisions": collisions,
+        "collision_free": collisions == 0,
+        "final_error_m": final_err,
+    }
+
+
+def run_novel_composition(episodes_per_task: int = 10):
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "hjepa_best.pt")) else legacy_ckpt
+
+    compact_ckpt = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "../../extraction/extracted_model/reconstructed_compact/reconstructed_compact_best.pt",
+        )
+    )
     out_dir = os.path.abspath(os.path.dirname(__file__))
     os.makedirs(out_dir, exist_ok=True)
 
-    base_dir = os.path.abspath(os.path.join(out_dir, "../../../"))
-    ckpt_baseline = os.path.join(base_dir, "checkpoints/baseline_best.pt")
-    ckpt_optB = os.path.abspath(os.path.join(out_dir, "../../extraction/extracted_model/reconstructed_compact/model_reconstructed_compact.pt"))
+    agents = {
+        "Oracle_TrackA": ("oracle", OracleAgent()),
+        "H-JEPA_TrackB": ("track_b", HJEPAAgent(os.path.join(ckpt_dir, "hjepa_best.pt"), device=device, track="structured")),
+        "LeWM_TrackB": ("track_b", LeWMAgent(os.path.join(ckpt_dir, "lewm_best.pt"), device=device, track="structured")),
+        "Reconstructed_Compact_16D_TrackB": ("compact", CompositionalSpatialAgent(compact_ckpt, device=device)),
+        "Reactive_Baseline_TrackB": ("track_b", BaselineAgent(os.path.join(ckpt_dir, "baseline_best.pt"), device=device, track="structured")),
+        "H-JEPA_TrackC_VisualOnly": ("track_c", HJEPAAgent(os.path.join(ckpt_dir, "hjepa_best.pt"), device=device, track="observation")),
+    }
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    print("\n=======================================================")
-    print("  PHASE 8 - EXPERIMENT C: NOVEL TASK COMPOSITION")
-    print("=======================================================\n")
-
+    tasks = build_compositional_tasks(episodes_per_task=episodes_per_task)
     env = JetAutoEnv()
 
-    # Define Compositional Tasks
-    # 1. Yellow cylinder at (0.8, 0.8), Red box at (-0.8, 0.8), Green cyl at (0.0, 1.2), Cyan box at (-0.8, -0.8)
-    wp_yellow_behind = get_waypoint_for_relation(np.array([0.8, 0.8, 0.2]), "behind", np.array([-1.2, -1.2, 0.0]), clearance=0.55)
-    wp_red_left = get_waypoint_for_relation(np.array([-0.8, 0.8, 0.2]), "left_of", wp_yellow_behind, clearance=0.55)
+    results = {"episodes_per_task": episodes_per_task, "tasks": {}, "summary_by_agent": {}}
+    per_agent_records = {k: [] for k in agents}
 
-    wp_green_behind = get_waypoint_for_relation(np.array([0.0, 1.0, 0.2]), "behind", np.array([-1.2, -1.2, 0.0]), clearance=0.55)
-    wp_obs_right = np.array([0.4, 0.2, 0.0], dtype=np.float32)
-
-    wp_cyan_front = get_waypoint_for_relation(np.array([-0.6, -0.6, 0.2]), "in_front", np.array([-1.2, -1.2, 0.0]), clearance=0.50)
-    wp_blue_right = get_waypoint_for_relation(np.array([0.6, -0.6, 0.2]), "right_of", wp_cyan_front, clearance=0.50)
-
-    compositional_suites = {
-        "Task_C1_2Stages": {
-            "name": "Task C1: Behind Yellow Cylinder -> Left of Red Box",
-            "waypoints": [wp_yellow_behind, wp_red_left],
-            "num_stages": 2
-        },
-        "Task_C2_2Stages": {
-            "name": "Task C2: Right of Obstacle -> Behind Green Cylinder",
-            "waypoints": [wp_obs_right, wp_green_behind],
-            "num_stages": 2
-        },
-        "Task_C3_3Stages": {
-            "name": "Task C3: Front of Cyan Box -> Right of Blue Cyl -> Behind Yellow Cyl",
-            "waypoints": [wp_cyan_front, wp_blue_right, wp_yellow_behind],
-            "num_stages": 3
-        }
-    }
-
-    models = {
-        "baseline": {
-            "name": "Monolithic Baseline Policy",
-            "agent": BaselineAgent(ckpt_baseline, device=device)
-        },
-        "compositional_synthesized": {
-            "name": "Reconstructed Compositional Architecture",
-            "agent": CompositionalNavigationAgent(compact_ckpt=ckpt_optB, device=device)
-        }
-    }
-
-    episodes_per_task = 10
-    results = {}
-
-    for t_key, t_info in compositional_suites.items():
-        t_name = t_info["name"]
-        wps = t_info["waypoints"]
-        n_stg = t_info["num_stages"]
-        print(f"\n--- Testing on {t_name} ({episodes_per_task} runs each) ---")
-        results[t_key] = {"task_name": t_name, "num_stages": n_stg, "models": {}}
-
-        for m_key, m_info in models.items():
-            agent = m_info["agent"]
-            m_name = m_info["name"]
-
-            full_success = 0
-            all_stages_reached = 0
-            stage_reach_counts = [0] * n_stg
-            total_cols = 0
-            path_effs = []
-
-            for ep in range(episodes_per_task):
-                res = evaluate_multi_stage_episode(env, agent, wps, max_steps_per_stage=60)
-                if res["task_success"]: full_success += 1
-                if res["all_stages_done"]: all_stages_reached += 1
-                for s_idx, done in enumerate(res["stage_completion_rates"]):
-                    if done: stage_reach_counts[s_idx] += 1
-                total_cols += res["collisions"]
-                path_effs.append(res["path_efficiency"])
-
-            succ_rate = (full_success / episodes_per_task) * 100.0
-            reach_rate = (all_stages_reached / episodes_per_task) * 100.0
-            stg_rates = [(c / episodes_per_task) * 100.0 for c in stage_reach_counts]
-            avg_cols = total_cols / episodes_per_task
-            avg_eff = float(np.mean(path_effs))
-
-            print(f"[{m_name}] Success (No Col): {succ_rate:.1f}% | All Waypoints Reached: {reach_rate:.1f}% | Stages: {stg_rates} | Avg Cols: {avg_cols:.1f} | Path Eff: {avg_eff:.3f}")
-
-            results[t_key]["models"][m_key] = {
-                "model_name": m_name,
-                "full_success_pct": round(succ_rate, 2),
-                "all_stages_reached_pct": round(reach_rate, 2),
-                "stage_completion_pcts": [round(s, 1) for s in stg_rates],
-                "avg_collisions": round(avg_cols, 2),
-                "path_efficiency": round(avg_eff, 4)
+    for t_name, specs in tasks.items():
+        print(f"\n--- Compositional Task: {t_name} ({len(specs)} episodes) ---")
+        results["tasks"][t_name] = {}
+        for ag_name, (ag_type, ag_obj) in agents.items():
+            ep_recs = [_run_episode_for_agent(env, ag_type, ag_obj, sp) for sp in specs]
+            per_agent_records[ag_name].extend(ep_recs)
+            t_summ = {
+                "success_rate": float(np.mean([1.0 if r["success"] else 0.0 for r in ep_recs])),
+                "stage_completion_rate": float(np.mean([r["stage_completion_rate"] for r in ep_recs])),
+                "collision_rate": float(np.mean([0.0 if r["collision_free"] else 1.0 for r in ep_recs])),
+                "mean_final_error_m": float(np.mean([r["final_error_m"] for r in ep_recs])),
             }
+            results["tasks"][t_name][ag_name] = t_summ
+            print(
+                f"  [{ag_name:34s}] Success: {t_summ['success_rate']*100:5.1f}% | "
+                f"StageComp: {t_summ['stage_completion_rate']*100:5.1f}% | "
+                f"Col: {t_summ['collision_rate']*100:5.1f}% | Err: {t_summ['mean_final_error_m']:.3f}m"
+            )
 
-    # Save JSON
-    json_path = os.path.join(out_dir, "composition_results.json")
-    with open(json_path, "w") as f:
+    env.close()
+
+    for ag_name, recs in per_agent_records.items():
+        results["summary_by_agent"][ag_name] = {
+            "total_episodes": len(recs),
+            "overall_success_rate": float(np.mean([1.0 if r["success"] else 0.0 for r in recs])),
+            "overall_stage_completion_rate": float(np.mean([r["stage_completion_rate"] for r in recs])),
+            "overall_collision_rate": float(np.mean([0.0 if r["collision_free"] else 1.0 for r in recs])),
+            "overall_mean_final_error_m": float(np.mean([r["final_error_m"] for r in recs])),
+        }
+
+    out_path = os.path.join(out_dir, "novel_composition_results.json")
+    with open(out_path, "w") as f:
         json.dump(results, f, indent=2)
-    print(f"\n[Saved JSON] {json_path}")
+    print(f"\n[SAVED NOVEL COMPOSITION RESULTS TO {out_path}]")
+    return results
 
-    # Save CSV
-    csv_path = os.path.join(out_dir, "composition_summary.csv")
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["Task", "Stages", "Model", "Full Success (%)", "All Stages Reached (%)", "Stage 1 (%)", "Stage 2 (%)", "Stage 3 (%)", "Avg Collisions", "Path Efficiency"])
-        for t_key, t_val in results.items():
-            for m_key in ["baseline", "compositional_synthesized"]:
-                m = t_val["models"][m_key]
-                stg = m["stage_completion_pcts"]
-                s1 = f"{stg[0]:.1f}%" if len(stg) > 0 else "-"
-                s2 = f"{stg[1]:.1f}%" if len(stg) > 1 else "-"
-                s3 = f"{stg[2]:.1f}%" if len(stg) > 2 else "-"
-                writer.writerow([t_val["task_name"], t_val["num_stages"], m["model_name"], f"{m['full_success_pct']:.1f}%", f"{m['all_stages_reached_pct']:.1f}%", s1, s2, s3, m["avg_collisions"], m["path_efficiency"]])
-    print(f"[Saved CSV]  {csv_path}")
 
 if __name__ == "__main__":
-    run_experiment_c()
+    run_novel_composition(episodes_per_task=10)

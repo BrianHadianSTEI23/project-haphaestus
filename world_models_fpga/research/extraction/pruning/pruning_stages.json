@@ -1,0 +1,59 @@
+{
+  "stages": [
+    {
+      "stage": 0,
+      "name": "Original_Full_HJEPAModel",
+      "structural_parameters": 191907,
+      "active_nonzero_parameters": 191907,
+      "structural_reduction_pct": 0.0,
+      "active_nonzero_reduction_pct": 0.0,
+      "retention": 1.0,
+      "cosine_similarity": 1.0,
+      "action_mse": 0.0
+    },
+    {
+      "stage": 1,
+      "name": "Stage1_Dead_Branch_Eliminated",
+      "structural_parameters": 158196,
+      "active_nonzero_parameters": 158196,
+      "structural_reduction_pct": 17.57,
+      "active_nonzero_reduction_pct": 17.57,
+      "retention": 0.9878211580216885,
+      "cosine_similarity": 0.9614512920379639,
+      "action_mse": 0.012178841978311539
+    },
+    {
+      "stage": 2,
+      "name": "Stage2_Conv4_Channel_Masking_25pct",
+      "structural_parameters": 158196,
+      "active_nonzero_parameters": 141796,
+      "structural_reduction_pct": 17.57,
+      "active_nonzero_reduction_pct": 26.11,
+      "retention": 0.987821158953011,
+      "cosine_similarity": 0.9614512920379639,
+      "action_mse": 0.012178841046988964
+    },
+    {
+      "stage": 3,
+      "name": "Stage3_Latent_Subspace_Masking_24dim",
+      "structural_parameters": 158196,
+      "active_nonzero_parameters": 133596,
+      "structural_reduction_pct": 17.57,
+      "active_nonzero_reduction_pct": 30.39,
+      "retention": 0.940455861389637,
+      "cosine_similarity": 0.8727408647537231,
+      "action_mse": 0.05954413861036301
+    },
+    {
+      "stage": 4,
+      "name": "Stage4_Magnitude_Sparsified_Model",
+      "structural_parameters": 158196,
+      "active_nonzero_parameters": 91735,
+      "structural_reduction_pct": 17.57,
+      "active_nonzero_reduction_pct": 52.2,
+      "retention": 0.9338142052292824,
+      "cosine_similarity": 0.8567510843276978,
+      "action_mse": 0.06618579477071762
+    }
+  ]
+}

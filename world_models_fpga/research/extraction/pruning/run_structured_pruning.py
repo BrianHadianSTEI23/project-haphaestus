@@ -1,318 +1,210 @@
 """
-Phase 7: Circuit Extraction & Neural Architecture Reconstruction
-Script: run_structured_pruning.py
-Author: Brian A. Hadian
-Project: Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA
+Phase 6: Structured Channel & Subspace Pruning Pipeline (Repaired)
 
-Executes progressive structured pruning according to research_direction.md:
-  1. Remove entire redundant modules (micro dynamics predictor)
-  2. Remove redundant feature groups (non-causal appearance latent dims)
-  3. Remove redundant channels (Conv1-4 channel reduction)
-  4. Remove unnecessary MLP dimensions (Macro/Micro 64 -> 32)
-  5. Individual circuit-level fine pruning
-Reevaluates all 5 capabilities at every stage.
+Fixes:
+  1. Eliminates the synthetic `int(p4 - pruned_fine * 0.3)` parameter estimate.
+  2. Explicitly separates:
+       - `structural_parameters`: dense tensor allocation in PyTorch modules
+       - `active_nonzero_parameters`: exact count of unmasked weights (|w| > 1e-8)
+       - `structural_compression_ratio` vs `active_nonzero_compression_ratio`
+  3. Uses `<CKPT_DIR>/hjepa_best.pt` and `<SPLITS_DIR>/val_benchmark.npz` (see research/datasets/dataset_config.py).
 """
 
-import os
-import sys
+from __future__ import annotations
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[3]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
+
 import copy
 import json
-import csv
+import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
-
 from models.h_jepa import HJEPAModel
+from research.extraction.extracted_model.weight_preserving.model_weight_preserving import (
+    WeightPreservingExtractedModel,
+)
 
-def evaluate_capabilities(model, obs_batch, poses_batch, actions_batch, obj_pos_batch, col_batch, device):
-    """
-    Evaluates 5 core capabilities:
-      1. Object Grounding: Directional alignment of latent projection with landmark
-      2. Spatial Reasoning: Body-frame relative vector angular precision
-      3. Obstacle Avoidance: Latent collision head AUROC & clearance ranking
-      4. Long-Horizon Planning: Macro subgoal foresight consistency over K=5 steps
-      5. Kinematic Robustness: Action smoothness & recovery under perturbation
-    """
+
+def evaluate_retention(model, orig_model, val_imgs, val_acts, device="cpu"):
     model.eval()
-    N = len(obs_batch)
-    imgs = torch.from_numpy(obs_batch).permute(0, 3, 1, 2).float().to(device) / 255.0
-    cand_act = torch.tensor([[0.7, 0.0, 0.0]], device=device).repeat(N, 1)
-
+    orig_model.eval()
     with torch.no_grad():
-        # Encode
-        latents = model.encode(imgs)
-        # Macro prediction
-        next_S, col_logits = model.macro_predictor(latents, cand_act)
-        col_probs = torch.sigmoid(col_logits).squeeze(-1).cpu().numpy()
+        s_orig = orig_model.encode(val_imgs)
+        S_macro_orig, _ = orig_model.macro_predictor(s_orig, val_acts)
+        act_orig = orig_model.micro_predictor.select_action(s_orig, S_macro_orig)
 
-    # 1. Object Grounding: check correlation of primary geometric dims with relative target position
-    # Landmark is object 0
-    t_pos = obj_pos_batch[:, 0, :2]
-    r_pos = poses_batch[:, :2]
-    r_th = poses_batch[:, 2]
-    dx = t_pos[:, 0] - r_pos[:, 0]
-    dy = t_pos[:, 1] - r_pos[:, 1]
-    # body-frame
-    dx_b = np.cos(r_th) * dx + np.sin(r_th) * dy
-    dy_b = -np.sin(r_th) * dx + np.cos(r_th) * dy
-    gt_ang = np.arctan2(dy_b, dx_b)
+        if hasattr(model, "micro_policy"):
+            s_curr = model.encode(val_imgs)
+            S_macro, _ = model.forward_macro(s_curr, val_acts)
+            act_curr = model.select_action(s_curr, S_macro)
+        else:
+            s_curr = model.encode(val_imgs)
+            S_macro, _ = model.macro_predictor(s_curr, val_acts)
+            act_curr = model.micro_predictor.select_action(s_curr, S_macro)
 
-    lat_np = latents.cpu().numpy()
-    # Check linear correlation between latent geometry and gt_ang
-    corr_grounding = np.corrcoef(lat_np[:, 0], gt_ang)[0, 1]
-    if np.isnan(corr_grounding):
-        corr_grounding = 0.0
-    grounding_score = float(np.clip(np.abs(corr_grounding) * 1.5, 0.0, 1.0))
+        cos_sim = float(F.cosine_similarity(act_curr, act_orig, dim=-1).mean().item())
+        mse_diff = float(F.mse_loss(act_curr, act_orig).item())
+        retention = float(np.clip(1.0 - mse_diff, 0.0, 1.0))
+    return {"retention": retention, "cosine_similarity": cos_sim, "action_mse": mse_diff}
 
-    # 2. Spatial Reasoning: behind-cylinder alignment check
-    target_behind_ang = gt_ang + np.pi
-    target_behind_ang = (target_behind_ang + np.pi) % (2 * np.pi) - np.pi
-    corr_spatial = np.corrcoef(lat_np[:, 1], target_behind_ang)[0, 1]
-    if np.isnan(corr_spatial):
-        corr_spatial = 0.0
-    spatial_score = float(np.clip(np.abs(corr_spatial) * 1.4, 0.0, 1.0))
 
-    # 3. Obstacle Avoidance: collision prediction accuracy
-    gt_col = (col_batch > 0).astype(np.float32)
-    # Area under precision / ranking
-    col_corr = np.corrcoef(col_probs, gt_col)[0, 1]
-    if np.isnan(col_corr):
-        col_corr = 0.0
-    avoidance_score = float(np.clip(col_corr * 1.3 + 0.35, 0.0, 1.0))
+def count_nonzero_params(model: nn.Module) -> tuple[int, int]:
+    structural = sum(p.numel() for p in model.parameters())
+    nonzero = sum(int((p.detach().abs() > 1e-8).sum().item()) for p in model.parameters())
+    return structural, nonzero
 
-    # 4. Long-Horizon Planning: macro step consistency
-    delta_S = (next_S - latents).cpu().numpy()
-    pred_step_norm = np.linalg.norm(delta_S, axis=1)
-    # Norm should be smooth and consistent across forward action
-    planning_score = float(np.clip(1.0 - np.std(pred_step_norm) / (np.mean(pred_step_norm) + 1e-5), 0.0, 1.0))
 
-    # 5. Kinematic Robustness: micro policy stability
-    with torch.no_grad():
-        micro_act = model.micro_predictor.select_action(latents, next_S)
-        # Perturbed state
-        noise_latents = latents + torch.randn_like(latents) * 0.1
-        noisy_micro_act = model.micro_predictor.select_action(noise_latents, next_S)
-    act_diff = torch.norm(micro_act - noisy_micro_act, dim=-1).mean().item()
-    robustness_score = float(np.clip(1.0 - act_diff * 1.5, 0.0, 1.0))
+def run_pruning_pipeline():
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "hjepa_best.pt")) else legacy_ckpt
 
-    retention = (grounding_score + spatial_score + avoidance_score + planning_score + robustness_score) / 5.0
-    return {
-        "grounding": grounding_score,
-        "spatial_reasoning": spatial_score,
-        "obstacle_avoidance": avoidance_score,
-        "planning": planning_score,
-        "robustness": robustness_score,
-        "mean_retention": retention
-    }
+    v2_splits = str(_ACTIVE_SPLITS_DIR)
+    legacy_splits = str(_ACTIVE_SPLITS_DIR)
+    splits_dir = v2_splits if os.path.exists(os.path.join(v2_splits, "val_benchmark.npz")) else legacy_splits
 
-def count_active_params(model):
-    total = 0
-    for name, p in model.named_parameters():
-        if "micro_predictor.dyn" in name and getattr(model, "_module_pruned", False):
-            continue
-        total += p.numel()
-    return total
-
-def run_pruning_trajectory():
     out_dir = os.path.abspath(os.path.dirname(__file__))
     os.makedirs(out_dir, exist_ok=True)
 
-    ckpt_path = os.path.abspath(os.path.join(out_dir, "../../../checkpoints/hjepa_best.pt"))
-    val_npz = os.path.abspath(os.path.join(out_dir, "../../datasets/splits/val_benchmark.npz"))
+    orig_model = HJEPAModel(stride_k=5).to(device)
+    orig_model.load_state_dict(
+        torch.load(os.path.join(ckpt_dir, "hjepa_best.pt"), map_location=device, weights_only=False),
+        strict=False,
+    )
+    orig_model.eval()
 
-    val_data = np.load(val_npz)
-    obs = val_data["rgb"][:200]
-    poses = val_data["robot_pose"][:200]
-    actions = val_data["actions"][:200]
-    obj_pos = val_data["object_positions"][:200]
-    cols = val_data["collisions"][:200]
+    val_data = np.load(os.path.join(splits_dir, "val_benchmark.npz"))
+    val_imgs = torch.from_numpy(val_data["rgb"][:512]).permute(0, 3, 1, 2).float().to(device) / 255.0
+    val_acts = torch.from_numpy(val_data["actions"][:512]).float().to(device)
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    print("\n=======================================================")
-    print("  PHASE 7: PROGRESSIVE STRUCTURED PRUNING TRAJECTORY")
-    print("=======================================================\n")
-
-    # Baseline Model
-    model = HJEPAModel(stride_k=5).to(device)
-    model.load_state_dict(torch.load(ckpt_path, map_location=device))
-    model.eval()
-
+    orig_struct, orig_nz = count_nonzero_params(orig_model)
     stages = []
 
-    # Stage 0: Unpruned Original Reference
-    p0 = count_active_params(model)
-    caps0 = evaluate_capabilities(model, obs, poses, actions, obj_pos, cols, device)
-    stages.append({
-        "stage": 0,
-        "name": "Stage 0: Unpruned Original Model",
-        "description": "Full uncompressed H-JEPA reference model with all training heads.",
-        "active_params": p0,
-        "param_reduction_pct": 0.0,
-        "capabilities": caps0
-    })
-    print(f"Stage 0 [Unpruned]:     {p0:,} params | Retention: {caps0['mean_retention']:.4f}")
+    stages.append(
+        {
+            "stage": 0,
+            "name": "Original_Full_HJEPAModel",
+            "structural_parameters": orig_struct,
+            "active_nonzero_parameters": orig_nz,
+            "structural_reduction_pct": 0.0,
+            "active_nonzero_reduction_pct": 0.0,
+            "retention": 1.0,
+            "cosine_similarity": 1.0,
+            "action_mse": 0.0,
+        }
+    )
 
-    # Stage 1: Redundant Module Pruning (Micro Dynamics Predictor removed)
-    model._module_pruned = True
-    # Zero out / discard micro_dyn
-    for p in model.micro_predictor.dyn_fc1.parameters(): p.data.zero_()
-    for p in model.micro_predictor.dyn_fc2.parameters(): p.data.zero_()
-    for p in model.micro_predictor.delta_head.parameters(): p.data.zero_()
-    for p in model.micro_predictor.col_head.parameters(): p.data.zero_()
+    # Stage 1: Remove Micro Dynamics Prediction Branch (WeightPreservingExtractedModel)
+    wp_model = WeightPreservingExtractedModel(stride_k=5).to(device)
+    wp_model.load_from_full_hjepa(os.path.join(ckpt_dir, "hjepa_best.pt"), device=device)
+    s1_struct, s1_nz = count_nonzero_params(wp_model)
+    m1 = evaluate_retention(wp_model, orig_model, val_imgs, val_acts, device)
+    stages.append(
+        {
+            "stage": 1,
+            "name": "Stage1_Dead_Branch_Eliminated",
+            "structural_parameters": s1_struct,
+            "active_nonzero_parameters": s1_nz,
+            "structural_reduction_pct": round((1.0 - s1_struct / orig_struct) * 100, 2),
+            "active_nonzero_reduction_pct": round((1.0 - s1_nz / orig_nz) * 100, 2),
+            **m1,
+        }
+    )
 
-    p1 = p0 - (2304 + 4160 + 2080 + 65) # 8,609 params pruned
-    caps1 = evaluate_capabilities(model, obs, poses, actions, obj_pos, cols, device)
-    stages.append({
-        "stage": 1,
-        "name": "Stage 1: Redundant Module Pruning",
-        "description": "Pruned 1-step micro dynamics predictor (training auxiliary only).",
-        "active_params": p1,
-        "param_reduction_pct": (1.0 - p1 / p0) * 100.0,
-        "capabilities": caps1
-    })
-    print(f"Stage 1 [Module Pruned]: {p1:,} params (-{(1.0 - p1/p0)*100:.1f}%) | Retention: {caps1['mean_retention']:.4f}")
-
-    # Stage 2: Redundant Feature Group Pruning (Prune appearance dim 14 + 15 redundant latent dims)
-    # Mask out non-geometry/heading latent dimensions
-    # Keep top 16 geometry/heading dims
-    keep_dims = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16] # Dim 14 is color
-    mask_latent = torch.zeros(32, device=device)
-    mask_latent[keep_dims] = 1.0
-
-    orig_encode = model.encode
-    def masked_encode(x):
-        return orig_encode(x) * mask_latent
-    model.encode = masked_encode
-
-    # In linear projection, zero out pruned weights
+    # Stage 2: Low-Saliency Conv4 Filter Masking (25% lowest L1-norm filters zeroed)
+    wp_s2 = copy.deepcopy(wp_model)
     with torch.no_grad():
-        for d in range(32):
-            if d not in keep_dims:
-                model.encoder[9].weight.data[d].zero_()
-                model.encoder[9].bias.data[d].zero_()
-    
-    p2 = p1 - (16 * 1024 + 16) # Effectively pruned half of the projection head
-    caps2 = evaluate_capabilities(model, obs, poses, actions, obj_pos, cols, device)
-    stages.append({
-        "stage": 2,
-        "name": "Stage 2: Redundant Feature Group Pruning",
-        "description": "Pruned non-causal color dimension (dim 14) and 15 redundant latent channels (16-dim core).",
-        "active_params": p2,
-        "param_reduction_pct": (1.0 - p2 / p0) * 100.0,
-        "capabilities": caps2
-    })
-    print(f"Stage 2 [Feature Group]: {p2:,} params (-{(1.0 - p2/p0)*100:.1f}%) | Retention: {caps2['mean_retention']:.4f}")
+        conv4 = wp_s2.encoder[6]
+        l1_norms = conv4.weight.abs().mean(dim=(1, 2, 3))
+        k_prune = int(0.25 * conv4.out_channels)
+        prune_idx = torch.argsort(l1_norms)[:k_prune]
+        conv4.weight[prune_idx] = 0.0
+        conv4.bias[prune_idx] = 0.0
+    s2_struct, s2_nz = count_nonzero_params(wp_s2)
+    m2 = evaluate_retention(wp_s2, orig_model, val_imgs, val_acts, device)
+    stages.append(
+        {
+            "stage": 2,
+            "name": "Stage2_Conv4_Channel_Masking_25pct",
+            "structural_parameters": s2_struct,
+            "active_nonzero_parameters": s2_nz,
+            "structural_reduction_pct": round((1.0 - s2_struct / orig_struct) * 100, 2),
+            "active_nonzero_reduction_pct": round((1.0 - s2_nz / orig_nz) * 100, 2),
+            **m2,
+        }
+    )
 
-    # Stage 3: Redundant Channel Pruning (Prune Conv channels: Conv3 64->32, Conv4 64->32)
+    # Stage 3: Non-Selective Latent Bottleneck Masking (8 lowest-variance latent dims zeroed)
+    wp_s3 = copy.deepcopy(wp_s2)
     with torch.no_grad():
-        # Mask out 50% least active channels in Conv3 and Conv4
-        c3_norms = torch.norm(model.encoder[4].weight.data.view(64, -1), dim=1)
-        c3_top = torch.topk(c3_norms, 32).indices
-        c3_mask = torch.zeros(64, device=device)
-        c3_mask[c3_top] = 1.0
+        fc_enc = wp_s3.encoder[9]
+        row_norms = fc_enc.weight.abs().mean(dim=1)
+        low_lat_idx = torch.argsort(row_norms)[:8]
+        fc_enc.weight[low_lat_idx] = 0.0
+        fc_enc.bias[low_lat_idx] = 0.0
+    s3_struct, s3_nz = count_nonzero_params(wp_s3)
+    m3 = evaluate_retention(wp_s3, orig_model, val_imgs, val_acts, device)
+    stages.append(
+        {
+            "stage": 3,
+            "name": "Stage3_Latent_Subspace_Masking_24dim",
+            "structural_parameters": s3_struct,
+            "active_nonzero_parameters": s3_nz,
+            "structural_reduction_pct": round((1.0 - s3_struct / orig_struct) * 100, 2),
+            "active_nonzero_reduction_pct": round((1.0 - s3_nz / orig_nz) * 100, 2),
+            **m3,
+        }
+    )
 
-        c4_norms = torch.norm(model.encoder[6].weight.data.view(64, -1), dim=1)
-        c4_top = torch.topk(c4_norms, 32).indices
-        c4_mask = torch.zeros(64, device=device)
-        c4_mask[c4_top] = 1.0
-
-        for idx in range(64):
-            if idx not in c3_top:
-                model.encoder[4].weight.data[idx].zero_()
-                model.encoder[4].bias.data[idx].zero_()
-            if idx not in c4_top:
-                model.encoder[6].weight.data[idx].zero_()
-                model.encoder[6].bias.data[idx].zero_()
-
-    # Param reduction from pruning 32 filters in Conv3 and Conv4
-    p3 = p2 - (32 * 32 * 16 + 32 + 32 * 64 * 16 + 32)
-    caps3 = evaluate_capabilities(model, obs, poses, actions, obj_pos, cols, device)
-    stages.append({
-        "stage": 3,
-        "name": "Stage 3: Redundant Channel Pruning",
-        "description": "Pruned 50% channels in Conv3 (64->32) and Conv4 (64->32).",
-        "active_params": p3,
-        "param_reduction_pct": (1.0 - p3 / p0) * 100.0,
-        "capabilities": caps3
-    })
-    print(f"Stage 3 [Channel Pruned]:{p3:,} params (-{(1.0 - p3/p0)*100:.1f}%) | Retention: {caps3['mean_retention']:.4f}")
-
-    # Stage 4: MLP Dimension Pruning (Macro and Micro MLP 64 -> 32)
+    # Stage 4: Magnitude Threshold Sparsification (|w| < 0.015 zeroed)
+    wp_s4 = copy.deepcopy(wp_s3)
     with torch.no_grad():
-        # Prune 32 hidden units in macro_predictor fc1 & fc2
-        for h in range(32, 64):
-            model.macro_predictor.fc1.weight.data[h].zero_()
-            model.macro_predictor.fc1.bias.data[h].zero_()
-            model.macro_predictor.fc2.weight.data[h].zero_()
-            model.macro_predictor.fc2.bias.data[h].zero_()
-            model.macro_predictor.fc2.weight.data[:, h].zero_()
-            model.macro_predictor.delta_head.weight.data[:, h].zero_()
-            model.macro_predictor.col_head.weight.data[:, h].zero_()
+        for p in wp_s4.parameters():
+            if p.dim() >= 2:
+                p.mul_((p.abs() >= 0.015).float())
+    s4_struct, s4_nz = count_nonzero_params(wp_s4)
+    m4 = evaluate_retention(wp_s4, orig_model, val_imgs, val_acts, device)
+    stages.append(
+        {
+            "stage": 4,
+            "name": "Stage4_Magnitude_Sparsified_Model",
+            "structural_parameters": s4_struct,
+            "active_nonzero_parameters": s4_nz,
+            "structural_reduction_pct": round((1.0 - s4_struct / orig_struct) * 100, 2),
+            "active_nonzero_reduction_pct": round((1.0 - s4_nz / orig_nz) * 100, 2),
+            **m4,
+        }
+    )
 
-            # Micro policy
-            model.micro_predictor.pol_fc1.weight.data[h].zero_()
-            model.micro_predictor.pol_fc1.bias.data[h].zero_()
-            model.micro_predictor.pol_fc2.weight.data[h].zero_()
-            model.micro_predictor.pol_fc2.bias.data[h].zero_()
-            model.micro_predictor.pol_fc2.weight.data[:, h].zero_()
-            model.micro_predictor.action_head.weight.data[:, h].zero_()
+    save_wp_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../extracted_model/weight_preserving/weight_preserving_best.pt")
+    )
+    os.makedirs(os.path.dirname(save_wp_path), exist_ok=True)
+    torch.save(wp_s4.state_dict(), save_wp_path)
 
-    p4 = p3 - (32 * 35 + 32 + 32 * 64 + 32 + 32 * 32 + 32 * 1 + 32 * 64 + 32 + 32 * 64 + 32 + 32 * 3)
-    caps4 = evaluate_capabilities(model, obs, poses, actions, obj_pos, cols, device)
-    stages.append({
-        "stage": 4,
-        "name": "Stage 4: MLP Dimension Pruning",
-        "description": "Pruned Macro and Micro hidden layers from 64 to 32 units.",
-        "active_params": p4,
-        "param_reduction_pct": (1.0 - p4 / p0) * 100.0,
-        "capabilities": caps4
-    })
-    print(f"Stage 4 [MLP Pruned]:    {p4:,} params (-{(1.0 - p4/p0)*100:.1f}%) | Retention: {caps4['mean_retention']:.4f}")
-
-    # Stage 5: Circuit-Level Fine Pruning (Magnitude thresholding < 0.04 on remaining weights)
-    pruned_fine = 0
-    with torch.no_grad():
-        for p in model.parameters():
-            mask = torch.abs(p.data) < 0.04
-            p.data[mask] = 0.0
-            pruned_fine += mask.sum().item()
-
-    p5 = int(p4 - pruned_fine * 0.3)
-    caps5 = evaluate_capabilities(model, obs, poses, actions, obj_pos, cols, device)
-    stages.append({
-        "stage": 5,
-        "name": "Stage 5: Circuit-Level Fine Pruning",
-        "description": "Sparse thresholding isolating verified causal circuit pathways.",
-        "active_params": p5,
-        "param_reduction_pct": (1.0 - p5 / p0) * 100.0,
-        "capabilities": caps5
-    })
-    print(f"Stage 5 [Circuit Fine]:  {p5:,} params (-{(1.0 - p5/p0)*100:.1f}%) | Retention: {caps5['mean_retention']:.4f}")
-
-    # Export JSON
-    json_path = os.path.join(out_dir, "structured_pruning_trajectory.json")
-    with open(json_path, "w") as f:
+    with open(os.path.join(out_dir, "pruning_stages.json"), "w") as f:
         json.dump({"stages": stages}, f, indent=2)
-    print(f"\n[Saved JSON] {json_path}")
 
-    # Export CSV
-    csv_path = os.path.join(out_dir, "structured_pruning_trajectory.csv")
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["Stage", "Name", "Active Parameters", "Reduction (%)", "Grounding", "Spatial Reasoning", "Avoidance", "Planning", "Robustness", "Mean Retention"])
-        for s in stages:
-            c = s["capabilities"]
-            writer.writerow([
-                s["stage"], s["name"], s["active_params"], f"{s['param_reduction_pct']:.1f}%",
-                f"{c['grounding']:.4f}", f"{c['spatial_reasoning']:.4f}", f"{c['obstacle_avoidance']:.4f}",
-                f"{c['planning']:.4f}", f"{c['robustness']:.4f}", f"{c['mean_retention']:.4f}"
-            ])
-    print(f"[Saved CSV]  {csv_path}")
+    print("Structured Pruning Results (Structural vs Active Non-Zero Parameters):")
+    for st in stages:
+        print(
+            f"  Stage {st['stage']}: {st['name']:<38} | Struct: {st['structural_parameters']:7,d} | "
+            f"NonZero: {st['active_nonzero_parameters']:7,d} (-{st['active_nonzero_reduction_pct']:4.1f}%) | "
+            f"CosSim: {st['cosine_similarity']:.4f}"
+        )
+    return stages
+
 
 if __name__ == "__main__":
-    run_pruning_trajectory()
+    run_pruning_pipeline()
