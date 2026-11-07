@@ -1,0 +1,200 @@
+{
+  "evaluation": "necessity",
+  "config": {
+    "source_artifact": "research/circuits/results/circuit_registry.json",
+    "validation_summary_attached": true
+  },
+  "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
+  "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
+  "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+  "seed": 42,
+  "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
+  "results": {
+    "total_discovered_circuits": 5,
+    "verified_circuits": 4,
+    "methodology": "Train-split top-8 subspace discovery evaluated on held_out_test_benchmark and independent_validation_suite against matched k=8 random subspace controls (zero hardcoded constants).",
+    "circuits": [
+      {
+        "circuit_id": "C1_target_grounding",
+        "name": "Target Grounding & Relative Goal Subspace",
+        "models_present": [
+          "Baseline",
+          "LeWM",
+          "H-JEPA"
+        ],
+        "participating_layers": [
+          "encoder.conv2",
+          "encoder.conv3",
+          "encoder.fc",
+          "policy_head"
+        ],
+        "latent_dimensions": [
+          11,
+          29,
+          9,
+          22,
+          20,
+          8,
+          18,
+          17
+        ],
+        "necessity_score": 0.5834314227104187,
+        "necessity_ci95": 0.021465702655336677,
+        "necessity_random8_control": 0.6517347097396851,
+        "sufficiency_score": 0.16112621128559113,
+        "sufficiency_ci95": 0.011380366938578539,
+        "sufficiency_random8_control": 0.14536313712596893,
+        "independent_suite_sufficiency": 0.18640515208244324,
+        "cross_context_generalization": 1.0,
+        "selectivity_over_random_necessity": -0.06830328702926636,
+        "selectivity_over_random_sufficiency": 0.015763074159622192,
+        "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
+        "interpretation_notes": "Distributed visual-goal subspace; visual encoder carries low isolated necessity when explicit body-frame goal_vec is provided in Track B, but becomes necessary in Track C."
+      },
+      {
+        "circuit_id": "C2_egocentric_transformation",
+        "name": "Egocentric Body-Frame Displacement Subspace",
+        "models_present": [
+          "LeWM",
+          "H-JEPA"
+        ],
+        "participating_layers": [
+          "encoder.fc",
+          "micro_predictor.dyn_fc1",
+          "micro_ego_head"
+        ],
+        "latent_dimensions": [
+          19,
+          16,
+          27,
+          25,
+          14,
+          30,
+          21,
+          22
+        ],
+        "necessity_score": 0.7600591778755188,
+        "necessity_ci95": 0.02292087364514206,
+        "necessity_random8_control": 0.8780032396316528,
+        "sufficiency_score": 0.1258159726858139,
+        "sufficiency_ci95": 0.012036853095103757,
+        "sufficiency_random8_control": 0.14079180359840393,
+        "independent_suite_sufficiency": 0.11748673766851425,
+        "cross_context_generalization": 0.9337982702871971,
+        "selectivity_over_random_necessity": -0.11794406175613403,
+        "selectivity_over_random_sufficiency": -0.014975830912590027,
+        "verification_status": "FALSIFIED_NON_SELECTIVE",
+        "interpretation_notes": "Encodes 1-step body-frame ego-motion from visual latent transitions."
+      },
+      {
+        "circuit_id": "C3_obstacle_collision_detection",
+        "name": "Obstacle Proximity & Collision Risk Subspace",
+        "models_present": [
+          "LeWM",
+          "H-JEPA"
+        ],
+        "participating_layers": [
+          "encoder.conv3",
+          "encoder.conv4",
+          "pred_fc1",
+          "col_fc",
+          "state_col_head"
+        ],
+        "latent_dimensions": [
+          1,
+          28,
+          13,
+          20,
+          2,
+          11,
+          22,
+          29
+        ],
+        "necessity_score": 0.11333350092172623,
+        "necessity_ci95": 0.012683901813825692,
+        "necessity_random8_control": 0.14164111018180847,
+        "sufficiency_score": 0.523790180683136,
+        "sufficiency_ci95": 0.02039118308956053,
+        "sufficiency_random8_control": 0.4310831129550934,
+        "independent_suite_sufficiency": 0.501448392868042,
+        "cross_context_generalization": 0.9573459208686282,
+        "selectivity_over_random_necessity": -0.028307609260082245,
+        "selectivity_over_random_sufficiency": 0.0927070677280426,
+        "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
+        "interpretation_notes": "Predicts impending collision risk from visual latent state and candidate action."
+      },
+      {
+        "circuit_id": "C4_action_conditioned_transition",
+        "name": "Action-Conditioned Residual Transition Circuit",
+        "models_present": [
+          "LeWM",
+          "H-JEPA"
+        ],
+        "participating_layers": [
+          "pred_fc1",
+          "pred_fc2",
+          "pred_delta",
+          "micro_predictor.dyn_fc1",
+          "micro_predictor.delta_head"
+        ],
+        "latent_dimensions": [
+          3,
+          30,
+          22,
+          11,
+          28,
+          4,
+          24,
+          25
+        ],
+        "necessity_score": 0.6311917901039124,
+        "necessity_ci95": 0.012340839910937802,
+        "necessity_random8_control": 0.5733380913734436,
+        "sufficiency_score": 0.1330443173646927,
+        "sufficiency_ci95": 0.00850471387905439,
+        "sufficiency_random8_control": 0.1144033819437027,
+        "independent_suite_sufficiency": 0.1641906201839447,
+        "cross_context_generalization": 1.0,
+        "selectivity_over_random_necessity": 0.05785369873046875,
+        "selectivity_over_random_sufficiency": 0.01864093542098999,
+        "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
+        "interpretation_notes": "Action-conditioned residual state predictor delta_s = f(s_t, a_t); absent in reactive Baseline."
+      },
+      {
+        "circuit_id": "C5_hierarchical_subgoal_decomposition",
+        "name": "Hierarchical Macro-to-Micro Subgoal Coupling Circuit",
+        "models_present": [
+          "H-JEPA"
+        ],
+        "participating_layers": [
+          "macro_predictor.fc1",
+          "macro_predictor.delta_head",
+          "micro_predictor.pol_fc1",
+          "micro_predictor.action_head"
+        ],
+        "latent_dimensions": [
+          11,
+          29,
+          9,
+          22,
+          20,
+          8,
+          18,
+          17
+        ],
+        "necessity_score": 0.7065370678901672,
+        "necessity_ci95": 0.02271479456625742,
+        "necessity_random8_control": 0.6961607933044434,
+        "sufficiency_score": 0.12493737787008286,
+        "sufficiency_ci95": 0.010903522259830307,
+        "sufficiency_random8_control": 0.1983138769865036,
+        "independent_suite_sufficiency": 0.10694671422243118,
+        "cross_context_generalization": 0.8560025514033166,
+        "selectivity_over_random_necessity": 0.010376274585723877,
+        "selectivity_over_random_sufficiency": -0.07337649911642075,
+        "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
+        "interpretation_notes": "Couples K=5 macro subgoal prediction S_{t+K} to 1-step micro action selection."
+      }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "evaluation": "hardware_equivalence",
+  "config": {
+    "source_artifact": "research/hardware/hardware_equivalence_results.json",
+    "validation_summary_attached": true
+  },
+  "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
+  "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
+  "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+  "seed": 42,
+  "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
+  "results": {
+    "num_test_transitions": 300,
+    "fpga_vs_fixedpoint_e_rel": 0.0,
+    "next_state_e_rel": 0.009685,
+    "collision_prob_e_rel": 0.847952,
+    "action_vector_e_rel": 0.052327,
+    "action_cosine_similarity": 0.9995,
+    "safety_decision_concordance_pct": 100.0,
+    "rtl_simulation": {
+      "passed": true,
+      "measured_single_pass_cycles": 4327,
+      "macro_core_cycles": 2179,
+      "micro_policy_cycles": 2145,
+      "fsm_overhead_cycles": 3,
+      "mpc24_plus_micro_cycles": 54467,
+      "single_pass_latency_us_at_200mhz": 21.635,
+      "mpc24_plus_micro_latency_ms_at_200mhz": 0.2723,
+      "simulator_stdout_tail": [
+        "  MATCH Action[0]: 0x0075 (Float: 0.4570)",
+        "  MATCH Action[1]: 0x0004 (Float: 0.0156)",
+        "  MATCH Action[2]: 0x0031 (Float: 0.1914)",
+        "",
+        "--- TESTING AXI4-STREAM DMA PACKET INGRESS (35 WORDS + TLAST) ---",
+        "[Time 24193000 ns] *** AXI4-STREAM INTERRUPT DETECTED! ***",
+        "",
+        "=======================================================",
+        "  [PASSED] 100% BIT-ACCURATE HARDWARE EQUIVALENCE!   ",
+        "  Total Verified Outputs: 20 / 20 words (AXI-Lite & AXI-Stream)",
+        "  Numerical Relative Error E_rel = 0.000000           ",
+        "======================================================="
+      ]
+    }
+  }
+}

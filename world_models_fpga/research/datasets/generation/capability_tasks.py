@@ -277,8 +277,8 @@ def generate_task_specification(capability, difficulty, seed_idx, canonical_obst
         t_pos = target_obj["pos"][:2]
         pos_jitter = rng.uniform(-0.10, 0.10, size=2).astype(np.float32)
 
-        # Robot starts opposite to target with arena center obstacle in line of sight
-        start_pos = -t_pos * 0.9 + pos_jitter
+        # Robot starts in opposite quadrant (clear of perimeter landmarks) with obstacle in line of sight
+        start_pos = -t_pos * 0.35 + pos_jitter
         los_vec = t_pos - start_pos
         los_dir = los_vec / (np.linalg.norm(los_vec) + 1e-6)
         ortho_dir = np.array([-los_dir[1], los_dir[0]], dtype=np.float32)

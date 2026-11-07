@@ -1,0 +1,33 @@
+{
+  "evaluation": "prediction",
+  "config": {
+    "source_artifact": "research/benchmarks/behavioral/latent_prediction_audit.json",
+    "validation_summary_attached": true
+  },
+  "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
+  "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
+  "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+  "seed": 42,
+  "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
+  "results": {
+    "dataset": "held_out_test_benchmark.npz",
+    "total_transitions": 3122,
+    "total_macro_sequences": 2642,
+    "lewm": {
+      "latent_mse": 0.049880702048540115,
+      "latent_cosine_similarity": 0.9712644219398499,
+      "collision_prediction_accuracy": 99.26329255104065,
+      "rollout_k5_mse": 0.3564346432685852,
+      "rollout_k5_cosine_similarity": 0.7862309217453003
+    },
+    "hjepa_micro_k1": {
+      "latent_mse": 0.02843872457742691,
+      "latent_cosine_similarity": 0.9810230135917664
+    },
+    "hjepa_macro_k5": {
+      "latent_mse": 0.19095513224601746,
+      "latent_cosine_similarity": 0.8647109866142273,
+      "macro_collision_accuracy": 99.8864471912384
+    }
+  }
+}

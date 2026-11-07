@@ -5,7 +5,7 @@
   "generator_seed": 42,
   "total_episodes": 408,
   "total_transitions": 12816,
-  "npz_sha256": "1367770f470c51458292bd44fe100105a8d54a64e5644b792d0639e907eb60a3",
+  "npz_sha256": "9f195783dd76adf6ca7b70b2c249eaea6df6d0fc68ecbfb9f197f8a30ed6ed93",
   "label_provenance": "privileged MuJoCo simulator state and deterministic geometric planner",
   "episodes": [
     {
@@ -168,7 +168,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0001",
@@ -330,7 +331,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0002",
@@ -492,7 +494,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0003",
@@ -654,7 +657,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0006",
@@ -816,7 +820,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0007",
@@ -978,7 +983,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0008",
@@ -1140,7 +1146,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0009",
@@ -1302,7 +1309,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_counterfactual_0012",
@@ -1464,7 +1472,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0013",
@@ -1626,7 +1635,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0014",
@@ -1788,7 +1798,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0015",
@@ -1950,7 +1961,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0018",
@@ -2112,7 +2124,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0019",
@@ -2274,7 +2287,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0020",
@@ -2436,7 +2450,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0021",
@@ -2598,7 +2613,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0024",
@@ -2760,7 +2776,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0025",
@@ -2922,7 +2939,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0026",
@@ -3084,7 +3102,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0027",
@@ -3246,7 +3265,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_easy_0030",
@@ -3408,7 +3428,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0031",
@@ -3570,7 +3591,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0032",
@@ -3732,7 +3754,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0033",
@@ -3894,7 +3917,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0036",
@@ -4056,7 +4080,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0037",
@@ -4218,7 +4243,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0038",
@@ -4380,7 +4406,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0039",
@@ -4542,7 +4569,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_counterfactual_0042",
@@ -4704,7 +4732,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0043",
@@ -4866,7 +4895,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0044",
@@ -5028,7 +5058,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0045",
@@ -5190,7 +5221,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0048",
@@ -5352,7 +5384,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0049",
@@ -5514,7 +5547,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0050",
@@ -5676,7 +5710,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0051",
@@ -5838,7 +5873,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0054",
@@ -6000,7 +6036,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0055",
@@ -6162,7 +6199,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0056",
@@ -6324,7 +6362,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0057",
@@ -6486,7 +6525,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_easy_0060",
@@ -6648,7 +6688,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0061",
@@ -6810,7 +6851,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0062",
@@ -6972,7 +7014,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0063",
@@ -7134,7 +7177,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0066",
@@ -7296,7 +7340,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0067",
@@ -7458,7 +7503,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0068",
@@ -7620,7 +7666,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0069",
@@ -7782,7 +7829,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_counterfactual_0072",
@@ -7944,7 +7992,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0073",
@@ -8106,7 +8155,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0074",
@@ -8268,7 +8318,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0075",
@@ -8430,7 +8481,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0078",
@@ -8592,7 +8644,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0079",
@@ -8754,7 +8807,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0080",
@@ -8916,7 +8970,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0081",
@@ -9078,7 +9133,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0084",
@@ -9240,7 +9296,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "object_grounding_easy_0085",
@@ -9402,7 +9459,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0086",
@@ -9564,7 +9622,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0087",
@@ -9726,7 +9785,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_easy_0090",
@@ -9888,7 +9948,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0091",
@@ -10050,7 +10111,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0092",
@@ -10212,7 +10274,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0093",
@@ -10374,7 +10437,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_difficult_0096",
@@ -10536,7 +10600,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_counterfactual_0097",
@@ -10698,7 +10763,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_ood_0098",
@@ -10860,7 +10926,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "object_grounding_failure_0099",
@@ -11022,7 +11089,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "spatial_reasoning_easy_0100",
@@ -11184,7 +11252,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0101",
@@ -11346,7 +11415,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0102",
@@ -11508,7 +11578,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0103",
@@ -11670,7 +11741,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0106",
@@ -11832,7 +11904,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0107",
@@ -11994,7 +12067,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0108",
@@ -12156,7 +12230,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0109",
@@ -12173,7 +12248,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1109,
       "config_sha256": "4b5fa70ebd31b31899edf006786e32d8def92abbe42254f3e156acad08c63d9b",
       "intervention": {
@@ -12318,7 +12393,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0112",
@@ -12480,7 +12556,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0113",
@@ -12642,7 +12719,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0114",
@@ -12659,7 +12737,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1114,
       "config_sha256": "5e0321be648aa0ae69da90e2d5dda1af628664be4cc712183b5a238d2a7dd8a4",
       "intervention": {
@@ -12804,7 +12882,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0115",
@@ -12966,7 +13045,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0118",
@@ -13128,7 +13208,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0119",
@@ -13145,7 +13226,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "green_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1119,
       "config_sha256": "adf7e86ec7cd0c46155cd229b622e76521df6e110bc74040205cadbe9da43faa",
       "intervention": {
@@ -13290,7 +13371,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0120",
@@ -13452,7 +13534,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0121",
@@ -13614,7 +13697,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "spatial_reasoning_failure_0124",
@@ -13631,7 +13715,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "blue_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1124,
       "config_sha256": "0b5285a9e3ff32df538a90008b9faec54f7ac07d52607b407d17fef806d2f103",
       "intervention": {
@@ -13776,7 +13860,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0125",
@@ -13938,7 +14023,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0126",
@@ -14100,7 +14186,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0127",
@@ -14262,7 +14349,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0130",
@@ -14424,7 +14512,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0131",
@@ -14586,7 +14675,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0132",
@@ -14748,7 +14838,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0133",
@@ -14910,7 +15001,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0136",
@@ -15072,7 +15164,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0137",
@@ -15234,7 +15327,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0138",
@@ -15396,7 +15490,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0139",
@@ -15413,7 +15508,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1139,
       "config_sha256": "d43a4c6f8e1e40841b51505cfa175fa56200f6519b08740711363a987c26b395",
       "intervention": {
@@ -15558,7 +15653,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0142",
@@ -15720,7 +15816,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0143",
@@ -15882,7 +15979,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0144",
@@ -15899,7 +15997,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1144,
       "config_sha256": "376b927095add8746cd3d568d55961c1fced9af366de758a6078804e5e91de37",
       "intervention": {
@@ -16044,7 +16142,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0145",
@@ -16206,7 +16305,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0148",
@@ -16368,7 +16468,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0149",
@@ -16385,7 +16486,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "green_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1149,
       "config_sha256": "379a50e69abc7059aba5d9065a441e874679b71726cdb65966f1cc157973bc83",
       "intervention": {
@@ -16530,7 +16631,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0150",
@@ -16692,7 +16794,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0151",
@@ -16854,7 +16957,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "spatial_reasoning_failure_0154",
@@ -16871,7 +16975,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "blue_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1154,
       "config_sha256": "e1e859ee1460b8611071101bdc4c80aef43f9b3f1563a94bf2c175bd2321ae6f",
       "intervention": {
@@ -17016,7 +17120,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0155",
@@ -17178,7 +17283,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0156",
@@ -17340,7 +17446,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0157",
@@ -17502,7 +17609,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0160",
@@ -17664,7 +17772,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0161",
@@ -17826,7 +17935,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0162",
@@ -17988,7 +18098,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0163",
@@ -18150,7 +18261,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0166",
@@ -18312,7 +18424,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0167",
@@ -18474,7 +18587,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0168",
@@ -18636,7 +18750,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0169",
@@ -18653,7 +18768,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1169,
       "config_sha256": "e6414ab99bd8b35878225ca50cfb0c022666c05dd6c666168320c6ac5e1f5177",
       "intervention": {
@@ -18798,7 +18913,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0172",
@@ -18960,7 +19076,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0173",
@@ -19122,7 +19239,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0174",
@@ -19139,7 +19257,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1174,
       "config_sha256": "90d9cd6e2dab19bd0bec0ae97d9f8d4d276e4435f4609d7153e81d0ce3582758",
       "intervention": {
@@ -19284,7 +19402,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0175",
@@ -19446,7 +19565,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0178",
@@ -19608,7 +19728,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0179",
@@ -19625,7 +19746,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "green_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1179,
       "config_sha256": "8ed32a44234b815f6cd6ea7bd1f7aa699b819f83a01bb3f2a605d1285d4517b8",
       "intervention": {
@@ -19770,7 +19891,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0180",
@@ -19932,7 +20054,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0181",
@@ -20094,7 +20217,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "spatial_reasoning_failure_0184",
@@ -20111,7 +20235,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "blue_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1184,
       "config_sha256": "2f4b65d0d50343caaa4681c61fef3d2e90166be0d0f626de79dcfbd9f611c296",
       "intervention": {
@@ -20256,7 +20380,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0185",
@@ -20418,7 +20543,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0186",
@@ -20580,7 +20706,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0187",
@@ -20742,7 +20869,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_easy_0190",
@@ -20904,7 +21032,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0191",
@@ -21066,7 +21195,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0192",
@@ -21228,7 +21358,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0193",
@@ -21390,7 +21521,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_difficult_0196",
@@ -21552,7 +21684,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_counterfactual_0197",
@@ -21714,7 +21847,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_ood_0198",
@@ -21876,7 +22010,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "spatial_reasoning_failure_0199",
@@ -21893,7 +22028,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1199,
       "config_sha256": "d8b0b883af4696f37e420e61d3b88b62639d98c38d6e43bf418e953e792b1cbd",
       "intervention": {
@@ -22038,7 +22173,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "obstacle_avoidance_easy_0200",
@@ -22220,7 +22356,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0201",
@@ -22402,7 +22539,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0202",
@@ -22584,7 +22722,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 18
     },
     {
       "episode_id": "obstacle_avoidance_ood_0203",
@@ -22786,7 +22925,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0206",
@@ -22968,7 +23108,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0207",
@@ -23150,7 +23291,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_ood_0208",
@@ -23352,7 +23494,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 3
     },
     {
       "episode_id": "obstacle_avoidance_failure_0209",
@@ -23534,7 +23677,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0212",
@@ -23716,7 +23860,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_ood_0213",
@@ -23918,7 +24063,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_failure_0214",
@@ -24100,7 +24246,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_easy_0215",
@@ -24282,7 +24429,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_ood_0218",
@@ -24484,7 +24632,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_failure_0219",
@@ -24666,7 +24815,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_easy_0220",
@@ -24848,7 +24998,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0221",
@@ -25030,7 +25181,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 5
     },
     {
       "episode_id": "obstacle_avoidance_failure_0224",
@@ -25212,7 +25364,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "obstacle_avoidance_easy_0225",
@@ -25394,7 +25547,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0226",
@@ -25576,7 +25730,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 4
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0227",
@@ -25758,7 +25913,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_easy_0230",
@@ -25940,7 +26096,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0231",
@@ -26122,7 +26279,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 3
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0232",
@@ -26304,7 +26462,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_ood_0233",
@@ -26506,7 +26665,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0236",
@@ -26688,7 +26848,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0237",
@@ -26870,7 +27031,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_ood_0238",
@@ -27072,7 +27234,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_failure_0239",
@@ -27254,7 +27417,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0242",
@@ -27436,7 +27600,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_ood_0243",
@@ -27638,7 +27803,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_failure_0244",
@@ -27820,7 +27986,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_easy_0245",
@@ -28002,7 +28169,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_ood_0248",
@@ -28204,7 +28372,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_failure_0249",
@@ -28386,7 +28555,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "obstacle_avoidance_easy_0250",
@@ -28568,7 +28738,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0251",
@@ -28750,7 +28921,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_failure_0254",
@@ -28932,7 +29104,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "obstacle_avoidance_easy_0255",
@@ -29114,7 +29287,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0256",
@@ -29296,7 +29470,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 17
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0257",
@@ -29478,7 +29653,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_easy_0260",
@@ -29660,7 +29836,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0261",
@@ -29842,7 +30019,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0262",
@@ -30024,7 +30202,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_ood_0263",
@@ -30226,7 +30405,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0266",
@@ -30408,7 +30588,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0267",
@@ -30590,7 +30771,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_ood_0268",
@@ -30792,7 +30974,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_failure_0269",
@@ -30974,7 +31157,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0272",
@@ -31156,7 +31340,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_ood_0273",
@@ -31358,7 +31543,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_failure_0274",
@@ -31540,7 +31726,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 3
     },
     {
       "episode_id": "obstacle_avoidance_easy_0275",
@@ -31722,7 +31909,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_ood_0278",
@@ -31924,7 +32112,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_failure_0279",
@@ -32106,7 +32295,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_easy_0280",
@@ -32288,7 +32478,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0281",
@@ -32470,7 +32661,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_failure_0284",
@@ -32652,7 +32844,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "obstacle_avoidance_easy_0285",
@@ -32834,7 +33027,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0286",
@@ -33016,7 +33210,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 24
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0287",
@@ -33198,7 +33393,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 11
     },
     {
       "episode_id": "obstacle_avoidance_easy_0290",
@@ -33380,7 +33576,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0291",
@@ -33562,7 +33759,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0292",
@@ -33744,7 +33942,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_ood_0293",
@@ -33946,7 +34145,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 3
     },
     {
       "episode_id": "obstacle_avoidance_difficult_0296",
@@ -34128,7 +34328,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 35
     },
     {
       "episode_id": "obstacle_avoidance_counterfactual_0297",
@@ -34310,7 +34511,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "obstacle_avoidance_ood_0298",
@@ -34512,7 +34714,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 11
     },
     {
       "episode_id": "obstacle_avoidance_failure_0299",
@@ -34694,7 +34897,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "action_prediction_easy_0300",
@@ -34711,7 +34915,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1300,
       "config_sha256": "f915a70137b3f5ccb73d00375dd25a634b332866f6b63f0ea039430c109442fa",
       "intervention": {
@@ -34856,7 +35060,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0301",
@@ -34873,7 +35078,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1301,
       "config_sha256": "e65a79e7296105579fb4bab4bfb0c1a78c05f94cd01f2994413a78c34723cefa",
       "intervention": {
@@ -35018,7 +35223,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0302",
@@ -35035,7 +35241,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1302,
       "config_sha256": "44279fcee69ac9b2045e086af524c3f59e2acba4da3daf6c3d3b5b3995f0c8ae",
       "intervention": {
@@ -35180,7 +35386,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 7
     },
     {
       "episode_id": "action_prediction_ood_0303",
@@ -35197,7 +35404,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1303,
       "config_sha256": "ae8862831fc6585a0ca573c30de52cd7294bc7489b883090e6260d4ba0adf334",
       "intervention": {
@@ -35342,7 +35549,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0306",
@@ -35359,7 +35567,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1306,
       "config_sha256": "fd9b93699bdeca70adca2559d57209080baadc8c3f76420371755abe75d852e5",
       "intervention": {
@@ -35504,7 +35712,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0307",
@@ -35521,7 +35730,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1307,
       "config_sha256": "1d47a1aaa85bbf649faec9638132b9363a3d7493c55d790d2977643963e29632",
       "intervention": {
@@ -35666,7 +35875,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0308",
@@ -35683,7 +35893,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1308,
       "config_sha256": "039332d03bb0e00fd8d91634866d3ce8a1f8f5e7434fea436edda50a04090927",
       "intervention": {
@@ -35828,7 +36038,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0309",
@@ -35845,7 +36056,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1309,
       "config_sha256": "95c8b2df35cbef0bd206d0b6545bfe7ca0c50c0d3b80c267cc80c212132c7e5d",
       "intervention": {
@@ -35990,7 +36201,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0312",
@@ -36152,7 +36364,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0313",
@@ -36169,7 +36382,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1313,
       "config_sha256": "1a095ed5d7d668b7295519551c8ef70f3900d4046ca528f3636d3b2d0ffc7bfb",
       "intervention": {
@@ -36314,7 +36527,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0314",
@@ -36331,7 +36545,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1314,
       "config_sha256": "0aab0312fa601e1717eed4c6fca3edd00b4e42eacb456f2f81aadb6ffe7a1961",
       "intervention": {
@@ -36476,7 +36690,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0315",
@@ -36493,7 +36708,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1315,
       "config_sha256": "7e398dc649e3428c0f1edf58b20978f52cf7aab35cad3b2719c832d44f0c7eed",
       "intervention": {
@@ -36638,7 +36853,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0318",
@@ -36655,7 +36871,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1318,
       "config_sha256": "d66ba87758bf0d6f8ddf974eae498a025dfe1f31e9f17356963ffb5859e4a256",
       "intervention": {
@@ -36800,7 +37016,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 4
     },
     {
       "episode_id": "action_prediction_failure_0319",
@@ -36817,7 +37034,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1319,
       "config_sha256": "9221d7f6f7287e74e6913e983ac4858945646ace9cc4d1cf3f25d7da288f46ca",
       "intervention": {
@@ -36962,7 +37179,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0320",
@@ -37124,7 +37342,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0321",
@@ -37141,7 +37360,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1321,
       "config_sha256": "7eac08c155cbeae9c034ce4067f19339938c7320373e9d83a95420f69888cded",
       "intervention": {
@@ -37286,7 +37505,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0324",
@@ -37303,7 +37523,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1324,
       "config_sha256": "ad78192f734795fa56da60da1708549336a82f18103277e296d9ba6e7743e21d",
       "intervention": {
@@ -37448,7 +37668,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0325",
@@ -37465,7 +37686,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1325,
       "config_sha256": "9fc3a11c6bab2b07ef5a685d4461ead4f554c7adda49e8dd8351d69e21e08799",
       "intervention": {
@@ -37610,7 +37831,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0326",
@@ -37627,7 +37849,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1326,
       "config_sha256": "b5accebd740c5b1cf5324600fcd087cf1c70c963b0a53e214eccb8b53d7dd483",
       "intervention": {
@@ -37772,7 +37994,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 10
     },
     {
       "episode_id": "action_prediction_counterfactual_0327",
@@ -37789,7 +38012,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1327,
       "config_sha256": "172acf24c1daef416823175cbc1039ec25f581d1e4c36fa8ae762a30ce703ae6",
       "intervention": {
@@ -37934,7 +38157,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0330",
@@ -37951,7 +38175,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1330,
       "config_sha256": "fb0b4a8902fcb247e9378fddd8bea76534ecf22ecffd67ceb6662b01c4e22f34",
       "intervention": {
@@ -38096,7 +38320,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0331",
@@ -38113,7 +38338,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1331,
       "config_sha256": "d61654a1bb8fc5dc93e4d9416f8bbd25c544046ba185b37bb77d4f7d84ce9bf0",
       "intervention": {
@@ -38258,7 +38483,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0332",
@@ -38275,7 +38501,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1332,
       "config_sha256": "877d31d37e12c72a94e64d3a0fb5ea96614993926d131417bc984db6c80a3e06",
       "intervention": {
@@ -38420,7 +38646,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0333",
@@ -38437,7 +38664,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1333,
       "config_sha256": "0fc498205f7b8ac939a449e1092c00cdb1c40744e4c1c817d3f9875235a39d90",
       "intervention": {
@@ -38582,7 +38809,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0336",
@@ -38744,7 +38972,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0337",
@@ -38761,7 +38990,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1337,
       "config_sha256": "8dec48864b00e9862d083a5bf89eb0c7f9a84613c013643c51db660c50b8bed2",
       "intervention": {
@@ -38906,7 +39135,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0338",
@@ -38923,7 +39153,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1338,
       "config_sha256": "4d6fd88cf1d6ca6b7e934e118b4393b6cc6c83acd6f314dda3d5d50a6ff1f90c",
       "intervention": {
@@ -39068,7 +39298,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0339",
@@ -39085,7 +39316,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1339,
       "config_sha256": "d39d0167a97e4f9979af4d6b2e6116a0513380aec0b3ca46296e1dc57e09fd6c",
       "intervention": {
@@ -39230,7 +39461,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0342",
@@ -39247,7 +39479,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1342,
       "config_sha256": "c5fa715bb84130135a4141a2950d784b630f201071f98b94895820976823b4db",
       "intervention": {
@@ -39392,7 +39624,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 7
     },
     {
       "episode_id": "action_prediction_ood_0343",
@@ -39409,7 +39642,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1343,
       "config_sha256": "6e9a5c9584518596aad400974cf65bb239740bb35835c30f3726b96fc0e672f1",
       "intervention": {
@@ -39554,7 +39787,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0344",
@@ -39716,7 +39950,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0345",
@@ -39733,7 +39968,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1345,
       "config_sha256": "8e16da9ff54fd06b3a068cb35a32c5b64bea5049a044b2258e65ab972b17681c",
       "intervention": {
@@ -39878,7 +40113,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0348",
@@ -39895,7 +40131,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1348,
       "config_sha256": "e1c53e5fb2a5dae044fa33d6df37e7c67f08bca1ec17e133546dceac4acd52fe",
       "intervention": {
@@ -40040,7 +40276,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0349",
@@ -40057,7 +40294,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1349,
       "config_sha256": "235aa6ba549f8e677e67732570d1dc7980ef985249682072d6e543132e641192",
       "intervention": {
@@ -40202,7 +40439,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0350",
@@ -40364,7 +40602,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0351",
@@ -40381,7 +40620,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1351,
       "config_sha256": "6235ce0ede372003ffd4a4538cd3213e939309e988f636bf70f24754a5e83c74",
       "intervention": {
@@ -40526,7 +40765,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0354",
@@ -40543,7 +40783,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1354,
       "config_sha256": "751294aebc5b4bafce48ef7a0a61d32625ada6e9a0c5b40142f2630e33148c2f",
       "intervention": {
@@ -40688,7 +40928,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0355",
@@ -40705,7 +40946,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1355,
       "config_sha256": "84082c11f0f0e79d47399f3e891a314691561325c1c7fba7e52d84e69d68ca6f",
       "intervention": {
@@ -40850,7 +41091,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0356",
@@ -40867,7 +41109,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1356,
       "config_sha256": "73287a90945ec60a6019845a82745b291d0b950e68077ca91c1563e573584179",
       "intervention": {
@@ -41012,7 +41254,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0357",
@@ -41029,7 +41272,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1357,
       "config_sha256": "4c075810f96afca9de1127a7df960532b182b58c8328901da5179c1d2b6d70c3",
       "intervention": {
@@ -41174,7 +41417,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0360",
@@ -41336,7 +41580,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0361",
@@ -41353,7 +41598,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1361,
       "config_sha256": "2a85bf4b93c54fc5fb82a29970e5273249bfdbf267d2fef98c46729fffcba9d7",
       "intervention": {
@@ -41498,7 +41743,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0362",
@@ -41515,7 +41761,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1362,
       "config_sha256": "ec03ae5319f89055470fd44bf82b3c5b53639596b3b283398729c5f0531a1e57",
       "intervention": {
@@ -41660,7 +41906,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0363",
@@ -41677,7 +41924,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1363,
       "config_sha256": "54d4b47219ecf608017beae80f02deaff84962bb63d4c546f6094335bd32877e",
       "intervention": {
@@ -41822,7 +42069,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0366",
@@ -41839,7 +42087,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1366,
       "config_sha256": "ed3fe9e302417d678181be2ec1f2aba0f7f4b1e7eea06870549a5270d647d1b7",
       "intervention": {
@@ -41984,7 +42232,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 4
     },
     {
       "episode_id": "action_prediction_counterfactual_0367",
@@ -42001,7 +42250,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1367,
       "config_sha256": "bdebc804a018d2d8aa94f84d597c16d1ac79f189fee1b011d427f8114d927165",
       "intervention": {
@@ -42146,7 +42395,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0368",
@@ -42308,7 +42558,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0369",
@@ -42325,7 +42576,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1369,
       "config_sha256": "23a023cb040f51f93992f1d25308021bd9b34f1b55ab880adff228312869344f",
       "intervention": {
@@ -42470,7 +42721,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0372",
@@ -42487,7 +42739,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1372,
       "config_sha256": "c91faa0ce87090220b7b50e3a48855c129e7b1d2f15edff3179e2bc242c10ad1",
       "intervention": {
@@ -42632,7 +42884,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0373",
@@ -42649,7 +42902,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1373,
       "config_sha256": "e413d77b97a8d5b94a86b8569170d8ae1f249ac5399c9b29e72174e4db119087",
       "intervention": {
@@ -42794,7 +43047,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0374",
@@ -42956,7 +43210,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 3
     },
     {
       "episode_id": "action_prediction_easy_0375",
@@ -42973,7 +43228,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1375,
       "config_sha256": "22888db2687333610652aae07e8735ed7c9b63ce38c12122974b766ae1438b4b",
       "intervention": {
@@ -43118,7 +43373,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0378",
@@ -43135,7 +43391,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1378,
       "config_sha256": "e1c5709f2a05c70d7d75b6ca07bb77b6865bb793cb793c0a57c596e6ea12604e",
       "intervention": {
@@ -43280,7 +43536,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0379",
@@ -43297,7 +43554,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1379,
       "config_sha256": "79ba3a813d165898663f03b2ff0486536124118b797c48d9f314ce52c313ae1e",
       "intervention": {
@@ -43442,7 +43699,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0380",
@@ -43459,7 +43717,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1380,
       "config_sha256": "140c889bb92d3bd9fdb80858ebfd55aadb14d3a4f94f6659ab9e1b96fdce3b78",
       "intervention": {
@@ -43604,7 +43862,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0381",
@@ -43621,7 +43880,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1381,
       "config_sha256": "37bbcd8dd593cfe719e0e994afc0af843a35f9fdcaba9cb9a2b2e501f37b6113",
       "intervention": {
@@ -43766,7 +44025,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0384",
@@ -43928,7 +44188,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0385",
@@ -43945,7 +44206,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1385,
       "config_sha256": "3c0fe92d87a7e9b094c83994ef18aa931d0c378b50f3cd942706fd4bc8a58803",
       "intervention": {
@@ -44090,7 +44351,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0386",
@@ -44107,7 +44369,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1386,
       "config_sha256": "d3ff54b73f81edfefae955ecd972bdc738d4a360e63faf2906278ae6d3810718",
       "intervention": {
@@ -44252,7 +44514,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0387",
@@ -44269,7 +44532,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1387,
       "config_sha256": "4032ac0e8b645d54fda38f23dee80a30fc33035a03fd090351d925e8db7da23d",
       "intervention": {
@@ -44414,7 +44677,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_easy_0390",
@@ -44431,7 +44695,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1390,
       "config_sha256": "0ea3acb786bd545089fceaf74bb901226da85ed62cadeadf6428d176cf843829",
       "intervention": {
@@ -44576,7 +44840,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 9
     },
     {
       "episode_id": "action_prediction_difficult_0391",
@@ -44593,7 +44858,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1391,
       "config_sha256": "003014f6a41274d4034d54ce4819f58c1729561060a37b467b86c03a56fc21a5",
       "intervention": {
@@ -44738,7 +45003,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0392",
@@ -44900,7 +45166,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0393",
@@ -44917,7 +45184,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1393,
       "config_sha256": "29cb4ec6c8dc918710a2ec9fdcc2c94c6a506a7003c46c336df8f176fa77c1f4",
       "intervention": {
@@ -45062,7 +45329,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_difficult_0396",
@@ -45079,7 +45347,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "purple_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1396,
       "config_sha256": "e6da3b36f96c99f2049d70149f4d1c24bd9da92eaa8480a487c8e589b0a5fa67",
       "intervention": {
@@ -45224,7 +45492,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_counterfactual_0397",
@@ -45241,7 +45510,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "cyan_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1397,
       "config_sha256": "262011811744c65fb85f46fa6e87fcb2eb844796b4f2824302522dc0ef8de32f",
       "intervention": {
@@ -45386,7 +45655,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_ood_0398",
@@ -45403,7 +45673,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1398,
       "config_sha256": "89dfb337e0b567672db0410ee2f81c635ffc5dfd100783ed683e44b8dbc3d649",
       "intervention": {
@@ -45548,7 +45818,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "action_prediction_failure_0399",
@@ -45565,7 +45836,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1399,
       "config_sha256": "9f197dad4e00ec1fa4aa7f765fc8bdfe541c1779e2585ca38da512ba85397c70",
       "intervention": {
@@ -45710,7 +45981,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_easy_0400",
@@ -45872,7 +46144,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0401",
@@ -46034,7 +46307,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0402",
@@ -46196,7 +46470,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0403",
@@ -46358,7 +46633,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0406",
@@ -46520,7 +46796,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0407",
@@ -46682,7 +46959,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0408",
@@ -46844,7 +47122,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0409",
@@ -47006,7 +47285,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 5
     },
     {
       "episode_id": "temporal_planning_counterfactual_0412",
@@ -47168,7 +47448,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0413",
@@ -47330,7 +47611,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0414",
@@ -47492,7 +47774,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 7
     },
     {
       "episode_id": "temporal_planning_easy_0415",
@@ -47654,7 +47937,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0418",
@@ -47816,7 +48100,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0419",
@@ -47978,7 +48263,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 7
     },
     {
       "episode_id": "temporal_planning_easy_0420",
@@ -48140,7 +48426,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0421",
@@ -48302,7 +48589,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0424",
@@ -48464,7 +48752,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 4
     },
     {
       "episode_id": "temporal_planning_easy_0425",
@@ -48626,7 +48915,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0426",
@@ -48788,7 +49078,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0427",
@@ -48950,7 +49241,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_easy_0430",
@@ -49112,7 +49404,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0431",
@@ -49274,7 +49567,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0432",
@@ -49436,7 +49730,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0433",
@@ -49598,7 +49893,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0436",
@@ -49760,7 +50056,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0437",
@@ -49922,7 +50219,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0438",
@@ -50084,7 +50382,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0439",
@@ -50246,7 +50545,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 4
     },
     {
       "episode_id": "temporal_planning_counterfactual_0442",
@@ -50408,7 +50708,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0443",
@@ -50570,7 +50871,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0444",
@@ -50732,7 +51034,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 5
     },
     {
       "episode_id": "temporal_planning_easy_0445",
@@ -50894,7 +51197,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0448",
@@ -51056,7 +51360,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0449",
@@ -51218,7 +51523,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 3
     },
     {
       "episode_id": "temporal_planning_easy_0450",
@@ -51380,7 +51686,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0451",
@@ -51542,7 +51849,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0454",
@@ -51704,7 +52012,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 4
     },
     {
       "episode_id": "temporal_planning_easy_0455",
@@ -51866,7 +52175,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0456",
@@ -52028,7 +52338,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0457",
@@ -52190,7 +52501,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_easy_0460",
@@ -52352,7 +52664,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0461",
@@ -52514,7 +52827,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0462",
@@ -52676,7 +52990,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0463",
@@ -52838,7 +53153,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0466",
@@ -53000,7 +53316,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0467",
@@ -53162,7 +53479,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0468",
@@ -53324,7 +53642,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0469",
@@ -53486,7 +53805,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 2
     },
     {
       "episode_id": "temporal_planning_counterfactual_0472",
@@ -53648,7 +53968,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0473",
@@ -53810,7 +54131,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0474",
@@ -53972,7 +54294,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 3
     },
     {
       "episode_id": "temporal_planning_easy_0475",
@@ -54134,7 +54457,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0478",
@@ -54296,7 +54620,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0479",
@@ -54458,7 +54783,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 6
     },
     {
       "episode_id": "temporal_planning_easy_0480",
@@ -54620,7 +54946,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0481",
@@ -54782,7 +55109,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0484",
@@ -54944,7 +55272,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 8
     },
     {
       "episode_id": "temporal_planning_easy_0485",
@@ -55106,7 +55435,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0486",
@@ -55268,7 +55598,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0487",
@@ -55430,7 +55761,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_easy_0490",
@@ -55592,7 +55924,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0491",
@@ -55754,7 +56087,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0492",
@@ -55916,7 +56250,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0493",
@@ -56078,7 +56413,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_difficult_0496",
@@ -56240,7 +56576,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_counterfactual_0497",
@@ -56402,7 +56739,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_ood_0498",
@@ -56564,7 +56902,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "temporal_planning_failure_0499",
@@ -56726,7 +57065,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 7
     },
     {
       "episode_id": "generalization_easy_0500",
@@ -56888,7 +57228,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0501",
@@ -57050,7 +57391,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0502",
@@ -57212,7 +57554,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0503",
@@ -57374,7 +57717,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0506",
@@ -57536,7 +57880,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0507",
@@ -57698,7 +58043,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0508",
@@ -57860,7 +58206,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0509",
@@ -57877,7 +58224,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "green_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1509,
       "config_sha256": "ae0df45824a91b0daca00c9b6814441f4defd092527896343fbff75885217ae7",
       "intervention": {
@@ -58022,7 +58369,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0512",
@@ -58184,7 +58532,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0513",
@@ -58346,7 +58695,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0514",
@@ -58363,7 +58713,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "blue_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1514,
       "config_sha256": "6b995efe25fa587876c2e976dfccaa354675b64f39bb4c7f88700058f332f6b6",
       "intervention": {
@@ -58508,7 +58858,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0515",
@@ -58670,7 +59021,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0518",
@@ -58832,7 +59184,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0519",
@@ -58849,7 +59202,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1519,
       "config_sha256": "cf4ce7b0fb204fced2af555dfa314935a855f788c2d02dce5de1d0e249841dfe",
       "intervention": {
@@ -58994,7 +59347,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0520",
@@ -59156,7 +59510,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0521",
@@ -59318,7 +59673,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0524",
@@ -59335,7 +59691,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1524,
       "config_sha256": "966c7eaa9a83eb1ef5165bba3b1f6b04e447e6e3b7a82552728ffd87e9d042e1",
       "intervention": {
@@ -59480,7 +59836,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0525",
@@ -59642,7 +59999,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0526",
@@ -59804,7 +60162,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0527",
@@ -59966,7 +60325,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0530",
@@ -60128,7 +60488,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0531",
@@ -60290,7 +60651,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0532",
@@ -60452,7 +60814,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0533",
@@ -60614,7 +60977,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0536",
@@ -60776,7 +61140,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0537",
@@ -60938,7 +61303,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0538",
@@ -61100,7 +61466,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0539",
@@ -61117,7 +61484,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "green_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1539,
       "config_sha256": "65155bbb0549c469c471c71e0633fca551da723aeed00f32bcbb51161df23e15",
       "intervention": {
@@ -61262,7 +61629,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0542",
@@ -61424,7 +61792,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0543",
@@ -61586,7 +61955,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0544",
@@ -61603,7 +61973,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "blue_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1544,
       "config_sha256": "09dfe58277362d4ca0a3a94bfd91466e39f85a3c16041a402e98744640c56f31",
       "intervention": {
@@ -61748,7 +62118,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0545",
@@ -61910,7 +62281,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0548",
@@ -62072,7 +62444,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0549",
@@ -62089,7 +62462,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1549,
       "config_sha256": "ff8f1f83b7c5872bd394c74ab0b5983e92a850faded84111826763ccd69fde27",
       "intervention": {
@@ -62234,7 +62607,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0550",
@@ -62396,7 +62770,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0551",
@@ -62558,7 +62933,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0554",
@@ -62575,7 +62951,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1554,
       "config_sha256": "cd121c901d9814362c379c5acaf1bd26551c434ee54f4261e4986ec7beb599dc",
       "intervention": {
@@ -62720,7 +63096,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0555",
@@ -62882,7 +63259,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0556",
@@ -63044,7 +63422,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0557",
@@ -63206,7 +63585,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0560",
@@ -63368,7 +63748,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0561",
@@ -63530,7 +63911,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0562",
@@ -63692,7 +64074,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0563",
@@ -63854,7 +64237,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0566",
@@ -64016,7 +64400,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0567",
@@ -64178,7 +64563,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0568",
@@ -64340,7 +64726,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0569",
@@ -64357,7 +64744,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "green_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1569,
       "config_sha256": "e44145f3789b4c7cc9f1b1eb6d9843da8e5c22402a31612ecbe7c00694b0f5a0",
       "intervention": {
@@ -64502,7 +64889,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0572",
@@ -64664,7 +65052,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0573",
@@ -64826,7 +65215,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0574",
@@ -64843,7 +65233,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "blue_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1574,
       "config_sha256": "a32a9bff931b1d36d63d67be0e07a77cb0642e74a8e1a567f566ef8c40e07ba5",
       "intervention": {
@@ -64988,7 +65378,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0575",
@@ -65150,7 +65541,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0578",
@@ -65312,7 +65704,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0579",
@@ -65329,7 +65722,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "red_box",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1579,
       "config_sha256": "3a808a9f3eb48608527ef3b249f5c2c81948db9080f15eb27526a88f60be5516",
       "intervention": {
@@ -65474,7 +65867,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0580",
@@ -65636,7 +66030,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0581",
@@ -65798,7 +66193,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0584",
@@ -65815,7 +66211,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "yellow_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1584,
       "config_sha256": "fe16b6dcc03271b3c6a319121bf15dcf8e9db4c19039cd4146ef944ce0d044c3",
       "intervention": {
@@ -65960,7 +66356,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0585",
@@ -66122,7 +66519,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0586",
@@ -66284,7 +66682,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0587",
@@ -66446,7 +66845,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_easy_0590",
@@ -66608,7 +67008,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0591",
@@ -66770,7 +67171,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0592",
@@ -66932,7 +67334,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0593",
@@ -67094,7 +67497,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_difficult_0596",
@@ -67256,7 +67660,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_counterfactual_0597",
@@ -67418,7 +67823,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_ood_0598",
@@ -67580,7 +67986,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "generalization_failure_0599",
@@ -67597,7 +68004,7 @@
       "pair_role": "",
       "expected_invariant": "",
       "target_key": "green_cylinder",
-      "episode_success": false,
+      "episode_success": true,
       "generation_seed": 1599,
       "config_sha256": "295d5a9346bfd51c7b783bc20e0e7b73a339be8badeccf2d108aaba65b652950",
       "intervention": {
@@ -67742,7 +68149,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     }
   ]
 }

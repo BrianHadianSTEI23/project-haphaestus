@@ -119,7 +119,7 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
     # -------------------------------------------------------------
     elif experiment_type == "E4_robot_position":
         ei_spec["expected_invariant"] = "object_relative_goal_invariant_to_start_pose"
-        ei_spec["initial_pose"] = np.array([1.0 + 0.5 * rx, 1.0 + 0.5 * ry, -2.35 + yaw_jitter], dtype=np.float32)
+        ei_spec["initial_pose"] = np.array([0.55 + 0.5 * rx, 0.55 + 0.5 * ry, -2.35 + yaw_jitter], dtype=np.float32)
         ei_spec["intervention"] = {"name": "robot_initial_pose", "parameters": {"pose": ei_spec["initial_pose"].tolist()}}
 
     # -------------------------------------------------------------

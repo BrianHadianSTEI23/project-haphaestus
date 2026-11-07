@@ -11,6 +11,10 @@ Verifies Phase 3 Acceptance Criteria:
   5. Trace Serialization: Diagnostic (.npz), Selected (.npz), and Statistical (.json) export verified
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -28,7 +32,7 @@ from research.instrumentation.trace_export import TraceCollector
 
 def verify_instrumentation():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
+    ckpt_dir = str(_ACTIVE_CKPT_DIR)
     traces_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "traces"))
     os.makedirs(traces_dir, exist_ok=True)
 

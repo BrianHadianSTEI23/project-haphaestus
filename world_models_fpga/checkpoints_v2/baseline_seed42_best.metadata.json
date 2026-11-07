@@ -2,9 +2,9 @@
   "selection": "minimum validation loss",
   "seed": 42,
   "parameter_count": 155608,
-  "best_epoch": 12,
-  "validation_loss": 0.7045353531837464,
-  "sha256": "050834b75c652bdb97f75ed2a0828779acd4f5137c7d145ce6146e44a3594df0",
+  "best_epoch": 10,
+  "validation_loss": 0.7313551738858223,
+  "sha256": "a0c8f1a27ea23605dc66d6945751d0445fa2205c8feff8b5649af06ec3584b21",
   "training_config": {
     "train_npz": "world_models_fpga/research/datasets/splits_v2/train_benchmark.npz",
     "train_metadata": "world_models_fpga/research/datasets/splits_v2/train_benchmark_metadata.json",
@@ -19,21 +19,21 @@
     "learning_rate": 0.001,
     "weight_decay": 0.0001,
     "device": "cuda",
-    "git_commit": "31e607db61676a594d3acc33e894dc45ed81893e",
+    "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
     "torch": "2.14.1+cu126",
     "python": "3.13.16",
     "train_dataset": {
       "npz": "world_models_fpga/research/datasets/splits_v2/train_benchmark.npz",
       "episodes": 408,
       "transitions": 12816,
-      "sha256": "1367770f470c51458292bd44fe100105a8d54a64e5644b792d0639e907eb60a3",
+      "sha256": "9f195783dd76adf6ca7b70b2c249eaea6df6d0fc68ecbfb9f197f8a30ed6ed93",
       "status": "VALID"
     },
     "val_dataset": {
       "npz": "world_models_fpga/research/datasets/splits_v2/val_benchmark.npz",
       "episodes": 96,
       "transitions": 2934,
-      "sha256": "b17b033de6fd4afc80412e05197c04cec8c6fdf0d5834dc00ab758144a556dc4",
+      "sha256": "77f2d82df64b2afe3957be3603531a42f44a546d6ae918ee3185d9aaf93de517",
       "status": "VALID"
     }
   }

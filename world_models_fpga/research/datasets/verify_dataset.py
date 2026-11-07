@@ -9,6 +9,13 @@ from pathlib import Path
 
 import numpy as np
 
+try:
+    from research.datasets.dataset_config import DATASET_VERSION, SPLITS_DIR, generator_code_sha256
+except ImportError:  # executed as a script from repository root
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from research.datasets.dataset_config import DATASET_VERSION, SPLITS_DIR, generator_code_sha256
+
 
 REQUIRED_ARRAYS = {
     "rgb", "next_rgb", "robot_pose", "robot_velocity", "object_positions",
@@ -26,7 +33,7 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def validate_split(npz_path: str | Path, metadata_path: str | Path) -> dict:
+def validate_split(npz_path: str | Path, metadata_path: str | Path, require_current_code: bool = True) -> dict:
     """Validate one generated split and return machine-readable measurements.
 
     Raises ``AssertionError`` for invalid data, preventing a training run from
@@ -35,11 +42,16 @@ def validate_split(npz_path: str | Path, metadata_path: str | Path) -> dict:
     npz_path, metadata_path = Path(npz_path), Path(metadata_path)
     with metadata_path.open() as file:
         metadata = json.load(file)
-    assert metadata.get("dataset_version") == "2.0.0-physical-counterfactuals", "legacy/unversioned split is not valid for repaired experiments"
+    assert metadata.get("dataset_version") == DATASET_VERSION, (
+        f"split version {metadata.get('dataset_version')!r} != active {DATASET_VERSION!r}; legacy splits are not valid for repaired experiments")
+    if require_current_code:
+        assert metadata.get("generator_code_sha256") == generator_code_sha256(), (
+            "STALE DATASET: simulator/task-generation source changed after this split was generated; regenerate it")
     assert metadata.get("npz_sha256") == _sha256(npz_path), "NPZ checksum does not match metadata"
-    data = np.load(npz_path, allow_pickle=False)
-    missing = REQUIRED_ARRAYS - set(data.files)
+    raw_npz = np.load(npz_path, allow_pickle=False)
+    missing = REQUIRED_ARRAYS - set(raw_npz.files)
     assert not missing, f"missing required arrays: {sorted(missing)}"
+    data = {k: raw_npz[k] for k in REQUIRED_ARRAYS}
     n = len(data["rgb"])
     assert n > 0
     assert data["rgb"].shape == (n, 64, 64, 3) and data["rgb"].dtype == np.uint8
@@ -50,17 +62,21 @@ def validate_split(npz_path: str | Path, metadata_path: str | Path) -> dict:
     assert data["object_positions"].shape == (n, 6, 3)
     assert np.isfinite(data["object_positions"]).all()
     assert np.all(np.abs(data["actions"]) <= 1.00001), "action labels exceed normalized limits"
+    col_rate = float(np.mean(data["collisions"]))
+    assert 0.0 <= col_rate < 0.50, f"degenerate collision rate ({col_rate:.4f}); check _check_collision()"
     starts = np.flatnonzero(data["episode_starts"])
+    ep_starts_arr = data["episode_starts"]
+    trans_ep_idx_arr = data["transition_episode_indices"]
     assert len(starts) == metadata["total_episodes"] == len(metadata["episodes"])
     assert len(starts) and starts[0] == 0
-    assert np.array_equal(np.unique(data["transition_episode_indices"]), np.arange(len(starts)))
+    assert np.array_equal(np.unique(trans_ep_idx_arr), np.arange(len(starts)))
     episode_ids = set()
     for episode_index, (start, episode) in enumerate(zip(starts, metadata["episodes"])):
         length = int(episode["length"])
         assert int(episode["start_index"]) == int(start)
         assert length > 0 and start + length <= n
-        assert not data["episode_starts"][start + 1:start + length].any(), "episode boundary inside episode"
-        assert np.all(data["transition_episode_indices"][start:start + length] == episode_index)
+        assert not ep_starts_arr[start + 1:start + length].any(), "episode boundary inside episode"
+        assert np.all(trans_ep_idx_arr[start:start + length] == episode_index)
         assert episode["episode_id"] not in episode_ids, "duplicate episode id"
         episode_ids.add(episode["episode_id"])
         assert episode.get("label_provenance"), "label provenance absent"
@@ -80,7 +96,7 @@ def validate_split(npz_path: str | Path, metadata_path: str | Path) -> dict:
     return {"npz": str(npz_path), "episodes": len(starts), "transitions": n, "sha256": metadata["npz_sha256"], "status": "VALID"}
 
 
-def verify_all_splits(splits_dir: str | Path) -> list[dict]:
+def verify_all_splits(splits_dir: str | Path = SPLITS_DIR, require_current_code: bool = True) -> list[dict]:
     root = Path(splits_dir)
     results = []
     for split in (
@@ -94,7 +110,7 @@ def verify_all_splits(splits_dir: str | Path) -> list[dict]:
         npz_path, metadata_path = root / f"{split}.npz", root / f"{split}_metadata.json"
         if npz_path.exists() or metadata_path.exists():
             assert npz_path.exists() and metadata_path.exists(), f"incomplete split {split}"
-            results.append(validate_split(npz_path, metadata_path))
+            results.append(validate_split(npz_path, metadata_path, require_current_code))
     ids_by_split = []
     seeds_by_base_split = []
     for result in results:
@@ -115,7 +131,8 @@ def verify_all_splits(splits_dir: str | Path) -> list[dict]:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("splits_dir", nargs="?", default=Path(__file__).with_name("splits"))
+    parser.add_argument("splits_dir", nargs="?", default=SPLITS_DIR)
+    parser.add_argument("--allow-stale-code", action="store_true", help="audit only: skip generator-code hash check")
     args = parser.parse_args()
-    for result in verify_all_splits(args.splits_dir):
+    for result in verify_all_splits(args.splits_dir, require_current_code=not args.allow_stale_code):
         print(json.dumps(result, sort_keys=True))

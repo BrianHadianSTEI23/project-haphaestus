@@ -5,7 +5,7 @@
   "generator_seed": 42,
   "total_episodes": 100,
   "total_transitions": 3450,
-  "npz_sha256": "0b615c4c4e0a2c8bbaa1a476c9fb2aa7b62b0fc98fe512dc836799a36ddeacd1",
+  "npz_sha256": "c216bba847f8ac7de4b55fea1271b7f409bc2131f9ff5d170b623ec745c91081",
   "label_provenance": "privileged MuJoCo simulator state and deterministic geometric planner",
   "episodes": [
     {
@@ -168,7 +168,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep01",
@@ -330,7 +331,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep02",
@@ -492,7 +494,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep03",
@@ -654,7 +657,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep04",
@@ -816,7 +820,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep05",
@@ -978,7 +983,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep06",
@@ -1140,7 +1146,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep07",
@@ -1302,7 +1309,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep08",
@@ -1464,7 +1472,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep09",
@@ -1626,7 +1635,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep10",
@@ -1788,7 +1798,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep11",
@@ -1950,7 +1961,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep12",
@@ -2112,7 +2124,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep13",
@@ -2274,7 +2287,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep14",
@@ -2436,7 +2450,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep15",
@@ -2598,7 +2613,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep16",
@@ -2760,7 +2776,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep17",
@@ -2922,7 +2939,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep18",
@@ -3084,7 +3102,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep19",
@@ -3246,7 +3265,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep20",
@@ -3408,7 +3428,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep21",
@@ -3570,7 +3591,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep22",
@@ -3732,7 +3754,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep23",
@@ -3894,7 +3917,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_01_ego_left_vs_world_left_rep24",
@@ -4056,7 +4080,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep00",
@@ -4218,7 +4243,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep01",
@@ -4380,7 +4406,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep02",
@@ -4542,7 +4569,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep03",
@@ -4704,7 +4732,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep04",
@@ -4866,7 +4895,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep05",
@@ -5028,7 +5058,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep06",
@@ -5190,7 +5221,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep07",
@@ -5352,7 +5384,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep08",
@@ -5514,7 +5547,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep09",
@@ -5676,7 +5710,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep10",
@@ -5838,7 +5873,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep11",
@@ -6000,7 +6036,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep12",
@@ -6162,7 +6199,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep13",
@@ -6324,7 +6362,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep14",
@@ -6486,7 +6525,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep15",
@@ -6648,7 +6688,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep16",
@@ -6810,7 +6851,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep17",
@@ -6972,7 +7014,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep18",
@@ -7134,7 +7177,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep19",
@@ -7296,7 +7340,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep20",
@@ -7458,7 +7503,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep21",
@@ -7620,7 +7666,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep22",
@@ -7782,7 +7829,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep23",
@@ -7944,7 +7992,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_02_ego_front_vs_object_behind_rep24",
@@ -8106,7 +8155,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep00",
@@ -8268,7 +8318,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep01",
@@ -8430,7 +8481,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep02",
@@ -8592,7 +8644,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep03",
@@ -8754,7 +8807,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep04",
@@ -8916,7 +8970,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep05",
@@ -9078,7 +9133,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep06",
@@ -9240,7 +9296,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep07",
@@ -9402,7 +9459,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep08",
@@ -9564,7 +9622,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep09",
@@ -9726,7 +9785,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep10",
@@ -9888,7 +9948,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep11",
@@ -10050,7 +10111,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep12",
@@ -10212,7 +10274,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep13",
@@ -10374,7 +10437,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep14",
@@ -10536,7 +10600,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep15",
@@ -10698,7 +10763,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep16",
@@ -10860,7 +10926,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep17",
@@ -11022,7 +11089,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep18",
@@ -11184,7 +11252,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep19",
@@ -11346,7 +11415,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep20",
@@ -11508,7 +11578,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep21",
@@ -11670,7 +11741,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep22",
@@ -11832,7 +11904,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep23",
@@ -11994,7 +12067,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_03_geometric_vs_visual_proximity_rep24",
@@ -12156,7 +12230,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep00",
@@ -12338,7 +12413,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep01",
@@ -12520,7 +12596,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep02",
@@ -12702,7 +12779,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep03",
@@ -12884,7 +12962,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep04",
@@ -13066,7 +13145,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep05",
@@ -13248,7 +13328,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep06",
@@ -13430,7 +13511,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep07",
@@ -13612,7 +13694,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep08",
@@ -13794,7 +13877,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep09",
@@ -13976,7 +14060,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep10",
@@ -14158,7 +14243,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep11",
@@ -14340,7 +14426,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep12",
@@ -14522,7 +14609,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep13",
@@ -14704,7 +14792,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep14",
@@ -14886,7 +14975,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep15",
@@ -15068,7 +15158,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep16",
@@ -15250,7 +15341,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep17",
@@ -15432,7 +15524,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep18",
@@ -15614,7 +15707,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep19",
@@ -15796,7 +15890,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep20",
@@ -15978,7 +16073,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep21",
@@ -16160,7 +16256,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep22",
@@ -16342,7 +16439,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep23",
@@ -16524,7 +16622,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     },
     {
       "episode_id": "DISAMBIG_04_visibility_vs_reachability_rep24",
@@ -16706,7 +16805,8 @@
           }
         }
       },
-      "label_provenance": "privileged_geometric_expert; simulator state used only for labels"
+      "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
+      "collisions": 0
     }
   ]
 }

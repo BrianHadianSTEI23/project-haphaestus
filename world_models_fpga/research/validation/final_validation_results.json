@@ -1,279 +1,131 @@
 {
-  "test1_necessity": {
-    "C1_spatial_geometry_grounding": {
-      "necessity_score": 0.0907185859978199,
-      "verdict": "NECESSARY (Score > 0.85)",
-      "interpretation": "Relative goal coordinates are irreplaceable for target approach."
+  "physical_perturbations": {
+    "nominal": {
+      "Baseline": {
+        "episodes": 10,
+        "success_rate_pct": 80.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2681
+      },
+      "LeWM": {
+        "episodes": 10,
+        "success_rate_pct": 70.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2667
+      },
+      "H-JEPA": {
+        "episodes": 10,
+        "success_rate_pct": 100.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2308
+      }
     },
-    "C2_obstacle_safety_barrier": {
-      "necessity_score": 0.793617457151413,
-      "verdict": "NECESSARY (Score > 0.80)",
-      "interpretation": "Hyperplane separation is strictly required to avert collisions."
+    "friction_scaling_0.4x": {
+      "Baseline": {
+        "episodes": 10,
+        "success_rate_pct": 80.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2681
+      },
+      "LeWM": {
+        "episodes": 10,
+        "success_rate_pct": 70.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2667
+      },
+      "H-JEPA": {
+        "episodes": 10,
+        "success_rate_pct": 100.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2308
+      }
     },
-    "C3_macro_subgoal_planner": {
-      "necessity_score": 0.11494921147823334,
-      "verdict": "NECESSARY (Score > 0.75)",
-      "interpretation": "Multi-step forward foresight prevents horizon collapse."
+    "multi_obstacle_clutter": {
+      "Baseline": {
+        "episodes": 10,
+        "success_rate_pct": 0.0,
+        "collision_rate_pct": 70.0,
+        "mean_final_goal_dist_m": 0.8691
+      },
+      "LeWM": {
+        "episodes": 10,
+        "success_rate_pct": 0.0,
+        "collision_rate_pct": 70.0,
+        "mean_final_goal_dist_m": 0.4028
+      },
+      "H-JEPA": {
+        "episodes": 10,
+        "success_rate_pct": 30.0,
+        "collision_rate_pct": 50.0,
+        "mean_final_goal_dist_m": 0.3026
+      }
     },
-    "C4_heading_alignment": {
-      "necessity_score": 0.027190817520022392,
-      "verdict": "NECESSARY (Score > 0.80)",
-      "interpretation": "Orientation channels align body-frame velocities with goal."
+    "camera_pitch_offset_8deg": {
+      "Baseline": {
+        "episodes": 10,
+        "success_rate_pct": 50.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2972
+      },
+      "LeWM": {
+        "episodes": 10,
+        "success_rate_pct": 80.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2544
+      },
+      "H-JEPA": {
+        "episodes": 10,
+        "success_rate_pct": 100.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2304
+      }
     },
-    "C5_dynamics_foresight_core": {
-      "necessity_score": 0.041771071031689644,
-      "verdict": "NECESSARY (Score > 0.70)",
-      "interpretation": "Residual transitions Delta S determine future trajectory."
-    },
-    "C6_appearance_filter": {
-      "necessity_score": 0.017104079015552998,
-      "verdict": "NON-NECESSARY / DISCARDABLE (Score < 0.05)",
-      "interpretation": "Color/texture is an invariant filter, safely pruned."
+    "extended_arena_distance": {
+      "Baseline": {
+        "episodes": 10,
+        "success_rate_pct": 10.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.897
+      },
+      "LeWM": {
+        "episodes": 10,
+        "success_rate_pct": 0.0,
+        "collision_rate_pct": 30.0,
+        "mean_final_goal_dist_m": 0.8568
+      },
+      "H-JEPA": {
+        "episodes": 10,
+        "success_rate_pct": 100.0,
+        "collision_rate_pct": 0.0,
+        "mean_final_goal_dist_m": 0.2363
+      }
     }
   },
-  "test2_sufficiency": {
-    "teacher_hjepa": {
-      "parameters": 166037,
-      "dynamics_mse": 0.21518808603286743,
-      "collision_acc": 0.9200000166893005,
-      "action_mse": 0.2615218758583069,
-      "action_cosine_sim": 0.6148070096969604,
-      "sufficiency_score": 1.0
+  "multi_horizon_rollout_mse": {
+    "LeWM": {
+      "k_1": 0.030564,
+      "k_3": 0.129938,
+      "k_5": 0.242177,
+      "k_10": 0.5344
     },
-    "option_a_weight_preserving": {
-      "parameters": 157428,
-      "dynamics_mse": 0.21518808603286743,
-      "collision_acc": 0.9200000166893005,
-      "action_mse": 0.2615218758583069,
-      "action_cosine_sim": 0.6148070096969604,
-      "sufficiency_score": 1.0,
-      "verdict": "SUFFICIENT (Preserves 100% capability without retraining)"
+    "H-JEPA": {
+      "k_1": 0.016913,
+      "k_3": 0.072204,
+      "k_5": 0.134171,
+      "k_10": 0.267166
     },
-    "option_b_reconstructed_compact": {
-      "parameters": 39804,
-      "dynamics_mse": 0.01656230166554451,
-      "collision_acc": 0.9980000257492065,
-      "action_mse": 0.16430503129959106,
-      "action_cosine_sim": 0.8003860116004944,
-      "sufficiency_score": 1.301849196538937,
-      "dynamics_error_reduction": 12.992643799052118,
-      "verdict": "HIGHLY SUFFICIENT (Exceeds teacher fidelity with 76% fewer params)"
+    "Compact": {
+      "k_1": 0.130272,
+      "k_3": 0.351642,
+      "k_5": 0.600654,
+      "k_10": 1.313703
     }
   },
-  "test3_generalization": {
-    "G1_visual_lighting_shift": {
-      "perturbation": "Brightness +30% & Gaussian Noise (sigma=0.05)",
-      "baseline_retention": 0.939314573789961,
-      "option_b_retention": 0.9970255987954945,
-      "relative_gain": "+28.4% Robustness vs Baseline Policy"
-    },
-    "G2_dense_obstacle_clutter": {
-      "perturbation": "High-Density Collision Boundaries",
-      "barrier_activation_rate": 0.07200000435113907,
-      "retention": "100.0% Anticipatory Safety Triggering"
-    },
-    "G3_ood_distance_scaling": {
-      "perturbation": "Expanded Distal Arena Horizons (||d|| > 2.5m)",
-      "option_b_directional_fidelity": 0.7939569354057312,
-      "status": "Polar Coordinate Invariance Maintained"
-    },
-    "G4_friction_kinematic_perturbation": {
-      "perturbation": "Friction Variation (mu=0.4 to 1.2, 20% velocity noise)",
-      "option_b_action_stability": 0.8003146648406982,
-      "status": "Closed-Loop Kinematic Re-alignment Stable"
-    }
-  },
-  "test4_compositionality": {
-    "Task_C1_Sequential_Two_Stage": {
-      "instruction": "Go behind yellow cylinder, then move left of red box",
-      "baseline_success_rate": 0.0,
-      "baseline_avg_collisions": 48.0,
-      "compositional_success_rate": 20.0,
-      "compositional_avg_collisions": 40.0,
-      "intermediate_stage_reachability": [
-        100.0,
-        20.0
-      ],
-      "collision_reduction": "1.2x Lower Collisions"
-    },
-    "Task_C2_Detour_Avoidance": {
-      "instruction": "Move right of obstacle, then go behind green cylinder",
-      "baseline_success_rate": 0.0,
-      "baseline_avg_collisions": 4.0,
-      "compositional_success_rate": 100.0,
-      "compositional_avg_collisions": 1.0,
-      "intermediate_stage_reachability": [
-        100.0,
-        100.0
-      ],
-      "collision_reduction": "4.0x Lower Collisions"
-    },
-    "Task_C3_Three_Stage_Compound": {
-      "instruction": "Move in front of cyan box, then right of blue cylinder, then behind yellow cylinder",
-      "baseline_success_rate": 0.0,
-      "baseline_avg_collisions": 39.0,
-      "compositional_success_rate": 0.0,
-      "compositional_avg_collisions": 37.2,
-      "intermediate_stage_reachability": [
-        100.0,
-        0.0,
-        0.0
-      ],
-      "collision_reduction": "1.05x Lower Collisions"
-    },
-    "path_efficiency_eta": {
-      "baseline_monolithic": 0.842,
-      "reconstructed_compositional": 0.878,
-      "gain": "+4.3% Geodesic Efficiency"
-    }
-  },
-  "test5_predictive_validity": {
-    "H1_horizon_scaling": {
-      "hypothesis": "Cumulative multi-step drift is strictly bounded and linear: D(H) = epsilon * H",
-      "slope_epsilon": 0.1112735764998378,
-      "intercept": -0.01017017761866287,
-      "r_squared": 0.9984377649813779,
-      "empirical_drifts": [
-        0.1128,
-        0.2213,
-        0.3265,
-        0.4309,
-        0.5358
-      ],
-      "predicted_drifts": [
-        0.1011,
-        0.2124,
-        0.3237,
-        0.4349,
-        0.5462
-      ],
-      "verdict": "CONFIRMED (R^2 = 0.9995 > 0.98, Zero Exponential Divergence)"
-    },
-    "H2_safety_margin_tradeoff": {
-      "hypothesis": "Barrier penalty lambda_col creates monotonic Pareto frontier between collision rate and detour length",
-      "spearman_correlation": -0.9088487451959155,
-      "lambda_sweep": [
-        0.0,
-        1.0,
-        2.5,
-        4.5,
-        8.0
-      ],
-      "collision_rates": [
-        4.2,
-        2.8,
-        1.6,
-        1.0,
-        0.4
-      ],
-      "path_lengths_m": [
-        3.82,
-        3.95,
-        4.12,
-        4.35,
-        4.68
-      ],
-      "verdict": "CONFIRMED (Strictly Monotonic, rho = -0.998)"
-    },
-    "H3_so16_orthogonal_invariance": {
-      "hypothesis": "Downstream policy actions invariant to orthogonal rotation Q in SO(16)",
-      "relative_action_error": 2.1964937957363873e-07,
-      "tolerance_ceiling": 1e-06,
-      "verdict": "CONFIRMED (Exact Equivariance, Rel Err = 4.30e-7 < 1e-6)"
-    },
-    "H4_hardware_cycle_determinism": {
-      "hypothesis": "Hardware execution cycles on Kria KR260 analytically predictable from DSP pipelining",
-      "analytical_prediction_cycles": 21780,
-      "measured_physical_cycles": 21800,
-      "relative_cycle_error_percent": 0.09174311926605505,
-      "verdict": "CONFIRMED (Predictive Error = 0.092% < 0.1%)"
-    }
-  },
-  "test6_silicon_validation": {
-    "hardware_platform": "AMD Kria KR260 Starter Kit (XCK26-SFVC784-2LV-C)",
-    "processor_clock_ghz": 1.333,
-    "fpga_pl_clock_mhz": 200.0,
-    "sensor_readings": {
-      "board_voltage_v": 5.03,
-      "board_current_ma": 806.0,
-      "active_board_power_w": 4.13,
-      "temp_ps_lpd_c": 35.66,
-      "temp_ps_fpd_c": 37.85,
-      "temp_pl_fabric_c": 34.97,
-      "thermal_headroom_c": 65.03
-    },
-    "performance_metrics": {
-      "arm_cortex_a53_latency_ms": 22.925,
-      "arm_cortex_a53_throughput_fps": 43.6,
-      "arm_cortex_a53_power_w": 2.85,
-      "arm_cortex_a53_energy_mj": 65.34,
-      "fpga_pl_kernel_latency_ms": 0.109,
-      "fpga_pl_kernel_throughput_fps": 9174.3,
-      "fpga_pl_dynamic_power_w": 0.65,
-      "fpga_pl_energy_mj": 0.0708,
-      "fpga_speedup_vs_arm_cpu": 210.3,
-      "fpga_energy_reduction_vs_arm_cpu": 922.9,
-      "fpga_speedup_vs_rtx3050_gpu": 6.55,
-      "fpga_energy_reduction_vs_rtx3050_gpu": 387.7,
-      "fpga_som_e2e_latency_ms": 0.1242,
-      "fpga_som_e2e_throughput_fps": 8051.5,
-      "fpga_som_power_w": 2.8,
-      "fpga_som_energy_mj": 0.3478,
-      "closed_loop_robot_control_ms": 3.4742,
-      "closed_loop_robot_control_hz": 287.8,
-      "closed_loop_timing_headroom_vs_10hz": "28.8x"
-    },
-    "bit_exact_rtl_verification": {
-      "output_dimensions_tested": 20,
-      "relative_error_norm": 0.0,
-      "barrier_decision_agreement": "100.00%",
-      "action_cosine_similarity": 0.9999
-    }
-  },
-  "claims_evaluation": {
-    "claim_1_mechanistic_discovery": {
-      "statement": "We identified and causally validated the computational circuits responsible for specific language-grounded navigation capabilities.",
-      "status": "PROVEN & ACCEPTED",
-      "evidence": [
-        "Identified 5 functional circuits across 20 computational nodes.",
-        "Causal activation patching confirmed >85% necessity scores for heading, barrier, and macro dynamics.",
-        "Disproved that color visual features are necessary for navigation (non-causal channel 14 masking improves dynamics MSE to 0.1808).",
-        "Attribution graphs and invariant metrics validate directional causality."
-      ]
-    },
-    "claim_2_architectural_discovery": {
-      "statement": "We derived a reduced architecture from these mechanisms that preserves the required capabilities while reducing computational requirements.",
-      "status": "PROVEN & ACCEPTED",
-      "evidence": [
-        "Synthesized Option B compact architecture with 39,804 parameters (76.0% reduction from 166,037).",
-        "Workload reduced from 6.27 MMACs to 1.77 MMACs (-71.8%).",
-        "Weight memory reduced from 324.29 KB to 77.74 KB (4.17x compression), fitting 100% inside on-chip BRAM (35 tiles, zero external DDR4 access).",
-        "Empirically validated on novel independent validation suite: 13.0x lower dynamics MSE (0.0166 vs 0.2152) and 99.8% collision accuracy.",
-        "Hardware acceleration verified on AMD Kria KR260: 0.109 ms latency, 210.3x speedup vs ARM CPU, 387.7x lower energy vs GPU."
-      ]
-    },
-    "claim_3_computational_principle": {
-      "statement": "We identified a reusable computational principle that explains a family of intelligent behaviors and supports the construction of alternative architectures.",
-      "status": "PROVEN & ACCEPTED",
-      "evidence": [
-        "Cross-model circuit transplantation between LeWorldModel and H-JEPA achieved >100% functional retention (101.8% for collision barrier, 101.5% for macro dynamics).",
-        "Obstacle safety boundaries proven to form a universal linear hyperplane invariant to internal latent coordinate parameterization.",
-        "Principle of Hierarchical Macro-Subgoal Abstraction successfully composed multi-stage sequential navigation tasks (100% success on Task C2 detour with 4x fewer collisions).",
-        "Predictive validity confirmed: horizontal error scaling (R^2 > 0.98), safety Pareto trade-offs, and SO(16) rotational equivariance analytically verified."
-      ]
-    },
-    "demonstrated_findings_vs_unresolved_hypotheses": {
-      "demonstrated_findings": [
-        "Causal circuits for heading, safety, and macro-planning are modular and separable.",
-        "76% parameter compression with 100% on-chip BRAM fit yields superior generalization over oversized baselines.",
-        "Fixed-point signed Q8.8 arithmetic maps bit-accurately into FPGA DSP48E2 slices without numerical divergence.",
-        "Physical AMD Kria KR260 SOM delivers sub-0.15 ms end-to-end inference at 4.13 W total power."
-      ],
-      "unresolved_hypotheses_and_open_questions": [
-        "Active Wall Recovery Behavior: In extremely confined corridors (Task C1/C3), static barrier functions cause wall friction (37-40 collisions); dynamic reverse-maneuver circuits are required.",
-        "SLAM / Global Loop Closure Integration: Latent polar representation is egocentric; scale to kilometer-scale environments requires integration with hardware-accelerated spatial pose-graph SLAM.",
-        "Autonomous Quantization-Aware Retraining: Option B was trained in FP32 and PTQ quantized to Q8.8; full QAT may permit scaling to 8-bit fixed-point (Q4.4) for further 2x throughput."
-      ]
-    }
+  "rollout_vs_goal_distance_correlation": {
+    "pearson_r": 0.4527,
+    "pearson_p_value": 3.995941542643411e-18,
+    "spearman_rho": 0.5349,
+    "spearman_p_value": 6.89014375974841e-26,
+    "n_samples": 331
   }
 }

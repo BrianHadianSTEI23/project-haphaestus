@@ -1,0 +1,213 @@
+{
+  "evaluation": "compositionality",
+  "config": {
+    "source_artifact": "research/synthesis/experiment_c_novel_composition/novel_composition_results.json",
+    "validation_summary_attached": true
+  },
+  "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
+  "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
+  "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+  "seed": 42,
+  "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
+  "results": {
+    "episodes_per_task": 10,
+    "tasks": {
+      "T1_dual_landmark_slalom": {
+        "Oracle_TrackA": {
+          "success_rate": 0.2,
+          "stage_completion_rate": 0.7333333333333334,
+          "collision_rate": 0.0,
+          "mean_final_error_m": 0.31838773787021635
+        },
+        "H-JEPA_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.8,
+          "collision_rate": 1.0,
+          "mean_final_error_m": 0.8073946624994278
+        },
+        "LeWM_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.06666666666666667,
+          "collision_rate": 0.1,
+          "mean_final_error_m": 1.9130637288093566
+        },
+        "Reconstructed_Compact_16D_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.0,
+          "collision_rate": 0.8,
+          "mean_final_error_m": 2.36754424571991
+        },
+        "Reactive_Baseline_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.06666666666666667,
+          "collision_rate": 0.1,
+          "mean_final_error_m": 2.087334156036377
+        },
+        "H-JEPA_TrackC_VisualOnly": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.0,
+          "collision_rate": 1.0,
+          "mean_final_error_m": 3.6921400308609007
+        }
+      },
+      "T2_relational_detour_behind_blocked": {
+        "Oracle_TrackA": {
+          "success_rate": 1.0,
+          "stage_completion_rate": 1.0,
+          "collision_rate": 0.0,
+          "mean_final_error_m": 0.273940247297287
+        },
+        "H-JEPA_TrackB": {
+          "success_rate": 0.5,
+          "stage_completion_rate": 0.9,
+          "collision_rate": 0.5,
+          "mean_final_error_m": 0.3588578075170517
+        },
+        "LeWM_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.0,
+          "collision_rate": 1.0,
+          "mean_final_error_m": 1.6575071334838867
+        },
+        "Reconstructed_Compact_16D_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.0,
+          "collision_rate": 1.0,
+          "mean_final_error_m": 1.7163853764533996
+        },
+        "Reactive_Baseline_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.65,
+          "collision_rate": 1.0,
+          "mean_final_error_m": 0.6461122408509254
+        },
+        "H-JEPA_TrackC_VisualOnly": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.0,
+          "collision_rate": 0.9,
+          "mean_final_error_m": 1.2119462609291076
+        }
+      },
+      "T3_three_stage_sequential_patrol": {
+        "Oracle_TrackA": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.33333333333333337,
+          "collision_rate": 0.0,
+          "mean_final_error_m": 1.407083559036255
+        },
+        "H-JEPA_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.4666666666666666,
+          "collision_rate": 0.2,
+          "mean_final_error_m": 1.505441427230835
+        },
+        "LeWM_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.33333333333333337,
+          "collision_rate": 1.0,
+          "mean_final_error_m": 2.0882649421691895
+        },
+        "Reconstructed_Compact_16D_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.0,
+          "collision_rate": 0.0,
+          "mean_final_error_m": 2.337333083152771
+        },
+        "Reactive_Baseline_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.0,
+          "collision_rate": 0.0,
+          "mean_final_error_m": 2.22815580368042
+        },
+        "H-JEPA_TrackC_VisualOnly": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.03333333333333333,
+          "collision_rate": 1.0,
+          "mean_final_error_m": 3.4262556076049804
+        }
+      },
+      "T4_narrow_corridor_traversal": {
+        "Oracle_TrackA": {
+          "success_rate": 1.0,
+          "stage_completion_rate": 1.0,
+          "collision_rate": 0.0,
+          "mean_final_error_m": 0.27591714859008787
+        },
+        "H-JEPA_TrackB": {
+          "success_rate": 0.9,
+          "stage_completion_rate": 1.0,
+          "collision_rate": 0.1,
+          "mean_final_error_m": 0.26657016277313234
+        },
+        "LeWM_TrackB": {
+          "success_rate": 0.4,
+          "stage_completion_rate": 0.9,
+          "collision_rate": 0.6,
+          "mean_final_error_m": 0.288911908864975
+        },
+        "Reconstructed_Compact_16D_TrackB": {
+          "success_rate": 0.0,
+          "stage_completion_rate": 0.0,
+          "collision_rate": 0.9,
+          "mean_final_error_m": 1.0850716531276703
+        },
+        "Reactive_Baseline_TrackB": {
+          "success_rate": 0.2,
+          "stage_completion_rate": 0.45,
+          "collision_rate": 0.7,
+          "mean_final_error_m": 0.7451302945613861
+        },
+        "H-JEPA_TrackC_VisualOnly": {
+          "success_rate": 0.9,
+          "stage_completion_rate": 1.0,
+          "collision_rate": 0.1,
+          "mean_final_error_m": 0.26699579805135726
+        }
+      }
+    },
+    "summary_by_agent": {
+      "Oracle_TrackA": {
+        "total_episodes": 40,
+        "overall_success_rate": 0.55,
+        "overall_stage_completion_rate": 0.7666666666666666,
+        "overall_collision_rate": 0.0,
+        "overall_mean_final_error_m": 0.5688321731984616
+      },
+      "H-JEPA_TrackB": {
+        "total_episodes": 40,
+        "overall_success_rate": 0.35,
+        "overall_stage_completion_rate": 0.7916666666666666,
+        "overall_collision_rate": 0.45,
+        "overall_mean_final_error_m": 0.7345660150051116
+      },
+      "LeWM_TrackB": {
+        "total_episodes": 40,
+        "overall_success_rate": 0.1,
+        "overall_stage_completion_rate": 0.32499999999999996,
+        "overall_collision_rate": 0.675,
+        "overall_mean_final_error_m": 1.4869369283318519
+      },
+      "Reconstructed_Compact_16D_TrackB": {
+        "total_episodes": 40,
+        "overall_success_rate": 0.0,
+        "overall_stage_completion_rate": 0.0,
+        "overall_collision_rate": 0.675,
+        "overall_mean_final_error_m": 1.8765835896134377
+      },
+      "Reactive_Baseline_TrackB": {
+        "total_episodes": 40,
+        "overall_success_rate": 0.05,
+        "overall_stage_completion_rate": 0.29166666666666663,
+        "overall_collision_rate": 0.45,
+        "overall_mean_final_error_m": 1.426683123782277
+      },
+      "H-JEPA_TrackC_VisualOnly": {
+        "total_episodes": 40,
+        "overall_success_rate": 0.225,
+        "overall_stage_completion_rate": 0.2583333333333333,
+        "overall_collision_rate": 0.75,
+        "overall_mean_final_error_m": 2.1493344243615864
+      }
+    }
+  }
+}

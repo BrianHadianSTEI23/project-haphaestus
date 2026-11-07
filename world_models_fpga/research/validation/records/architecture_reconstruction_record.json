@@ -1,0 +1,70 @@
+{
+  "evaluation": "architecture_reconstruction",
+  "config": {
+    "source_artifact": "research/extraction/comparison/three_model_comparison.json",
+    "validation_summary_attached": true
+  },
+  "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
+  "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
+  "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+  "seed": 42,
+  "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
+  "results": {
+    "open_loop_comparison": {
+      "Original_HJEPA": {
+        "structural_parameters": 191907,
+        "active_nonzero_parameters": 191907,
+        "action_mse": 0.07918320596218109,
+        "action_cosine_similarity": 0.8219711780548096,
+        "collision_accuracy_pct": 100.0,
+        "latency_ms_per_frame": 0.6402676679755359
+      },
+      "Weight_Preserving_Pruned": {
+        "structural_parameters": 158196,
+        "active_nonzero_parameters": 91735,
+        "action_mse": 0.09606069326400757,
+        "action_cosine_similarity": 0.7714135646820068,
+        "collision_accuracy_pct": 100.0,
+        "latency_ms_per_frame": 0.0038052480419992207
+      },
+      "Reconstructed_Compact_16D": {
+        "structural_parameters": 39804,
+        "active_nonzero_parameters": 39804,
+        "action_mse": 0.1707480549812317,
+        "action_cosine_similarity": 0.5439754724502563,
+        "collision_accuracy_pct": 100.0,
+        "latency_ms_per_frame": 0.004495140629501293
+      }
+    },
+    "closed_loop_and_distillation_ablations": {
+      "Original_HJEPA": {
+        "success_rate": 0.7333333333333333,
+        "goal_reached_rate": 1.0,
+        "collision_rate": 0.26666666666666666,
+        "path_efficiency": 0.9576101771722272,
+        "mean_goal_error_m": 0.23317950069904328
+      },
+      "Reconstructed_Distilled_16D": {
+        "success_rate": 0.26666666666666666,
+        "goal_reached_rate": 0.26666666666666666,
+        "collision_rate": 0.3333333333333333,
+        "path_efficiency": 0.9505349707142289,
+        "mean_goal_error_m": 0.6295267105102539
+      },
+      "Reconstructed_Supervised_NoTeacher_16D": {
+        "success_rate": 0.2,
+        "goal_reached_rate": 0.2,
+        "collision_rate": 0.3333333333333333,
+        "path_efficiency": 0.9276624739932102,
+        "mean_goal_error_m": 0.614229659239451
+      },
+      "Reconstructed_BC_Only_16D": {
+        "success_rate": 0.4666666666666667,
+        "goal_reached_rate": 0.4666666666666667,
+        "collision_rate": 0.26666666666666666,
+        "path_efficiency": 0.9666692299276198,
+        "mean_goal_error_m": 0.3979680915673574
+      }
+    }
+  }
+}

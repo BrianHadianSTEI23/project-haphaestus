@@ -38,6 +38,7 @@ from research.datasets.generation.capability_tasks import (
 from research.datasets.generation.expert_navigator import ExpertNavigator
 from research.datasets.counterfactual.counterfactual_generator import generate_counterfactual_pair
 from research.datasets.counterfactual.disambiguation_tasks import generate_disambiguation_tasks
+from research.datasets.dataset_config import DATASET_VERSION, SPLITS_DIR, generator_code_sha256
 
 class BenchmarkDatasetGenerator:
     def __init__(self, xml_path=None, seed=42):
@@ -217,7 +218,7 @@ class BenchmarkDatasetGenerator:
           - Held-out Test split: 100 episodes (held-out obstacle arrangements & unseen commands)
         """
         if output_dir is None:
-            output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../splits"))
+            output_dir = str(SPLITS_DIR)
         os.makedirs(output_dir, exist_ok=True)
 
         print(f"\n=======================================================")
@@ -273,7 +274,7 @@ class BenchmarkDatasetGenerator:
         Total = 7 * 25 * 2 = 350 episodes.
         """
         if output_dir is None:
-            output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../splits"))
+            output_dir = str(SPLITS_DIR)
         os.makedirs(output_dir, exist_ok=True)
 
         exp_types = [
@@ -317,7 +318,7 @@ class BenchmarkDatasetGenerator:
         Total = 4 * 25 = 100 episodes.
         """
         if output_dir is None:
-            output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../splits"))
+            output_dir = str(SPLITS_DIR)
         os.makedirs(output_dir, exist_ok=True)
 
         probe_specs = generate_disambiguation_tasks()
@@ -351,7 +352,7 @@ class BenchmarkDatasetGenerator:
         across all 6 capabilities and 5 difficulty tiers (60 episodes total).
         """
         if output_dir is None:
-            output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../splits"))
+            output_dir = str(SPLITS_DIR)
         os.makedirs(output_dir, exist_ok=True)
 
         print(f"\n=======================================================")
@@ -490,7 +491,9 @@ class BenchmarkDatasetGenerator:
             checksum = hashlib.sha256(checksum_file.read()).hexdigest()
         with open(json_file, "w") as f:
             json.dump({
-                "dataset_version": "2.0.0-physical-counterfactuals",
+                "dataset_version": DATASET_VERSION,
+                "generator_code_sha256": generator_code_sha256(),
+                "generation_command": "python world_models_fpga/research/datasets/generation/generate_benchmark_dataset.py --seed %d" % self.seed,
                 "split_name": split_name,
                 "split_membership": split_name,
                 "generator_seed": self.seed,

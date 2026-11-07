@@ -1,0 +1,46 @@
+{
+  "evaluation": "transfer",
+  "config": {
+    "source_artifact": "research/synthesis/experiment_b_cross_transfer/cross_transfer_results.json",
+    "validation_summary_attached": true
+  },
+  "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
+  "dataset_sha256": "f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9",
+  "checkpoint_sha256": "340f493e249a81f55f5000e1addee990407fe0d10b9644d5371a909a8200fa15",
+  "seed": 42,
+  "environment": "MuJoCo 3.x AMR Arena + AMD Kria KR260 (xck26-sfvc784-2LV-c)",
+  "results": {
+    "alignment_method": "Orthogonal Procrustes SVD fit strictly on train_benchmark.npz, evaluated on held_out_test_benchmark.npz",
+    "train_alignment_cosine_h2l": 0.7497861385345459,
+    "heldout_test_alignment_cosine_h2l": 0.6172698736190796,
+    "experiments": {
+      "0_Native_LeWM_Reference": {
+        "next_state_cosine_similarity": 0.9780420064926147,
+        "next_state_mse": 0.0380551815032959,
+        "collision_accuracy_pct": 100.0
+      },
+      "1_Unaligned_Direct_Transplant": {
+        "description": "LeWM Predictor grafted onto H-JEPA Encoder without alignment",
+        "next_state_cosine_similarity": 0.9604285955429077,
+        "next_state_mse": 0.061646148562431335
+      },
+      "2_Aligned_LeWM_Predictor_into_HJEPA": {
+        "description": "LeWM Predictor grafted onto H-JEPA Encoder via train-fit Procrustes W_h2l",
+        "next_state_cosine_similarity": 0.9773974418640137,
+        "next_state_mse": 0.035828739404678345,
+        "collision_accuracy_pct": 94.140625,
+        "cosine_retention_pct": 99.93
+      },
+      "3_Aligned_HJEPA_Macro_into_LeWM": {
+        "description": "H-JEPA Macro Predictor grafted onto LeWM Encoder via W_l2h",
+        "macro_subgoal_cosine_similarity": 0.638817548751831,
+        "collision_accuracy_pct": 100.0
+      },
+      "4_Aligned_LeWM_Foresight_into_Baseline": {
+        "description": "LeWM Predictor grafted onto Reactive CNN Baseline via W_b2l",
+        "next_state_cosine_similarity": 0.9727082848548889,
+        "collision_accuracy_pct": 100.0
+      }
+    }
+  }
+}
