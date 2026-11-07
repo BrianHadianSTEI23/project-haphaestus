@@ -1,0 +1,40 @@
+{
+  "selection": "minimum validation loss",
+  "seed": 1337,
+  "parameter_count": 155608,
+  "best_epoch": 10,
+  "validation_loss": 0.43505407944321633,
+  "sha256": "f30d034203bee7c8251c73c22f848b02a0a0aed712ac54c9dbea757f4366f112",
+  "training_config": {
+    "train_npz": "world_models_fpga/research/datasets/splits_v2/train_benchmark.npz",
+    "train_metadata": "world_models_fpga/research/datasets/splits_v2/train_benchmark_metadata.json",
+    "val_npz": "world_models_fpga/research/datasets/splits_v2/val_benchmark.npz",
+    "val_metadata": "world_models_fpga/research/datasets/splits_v2/val_benchmark_metadata.json",
+    "output_dir": "world_models_fpga/checkpoints_v2",
+    "epochs": 15,
+    "batch_size": 128,
+    "stride_k": 5,
+    "seed": 1337,
+    "seeds": "42,1337,2026",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "device": "cuda",
+    "git_commit": "31e607db61676a594d3acc33e894dc45ed81893e",
+    "torch": "2.14.1+cu126",
+    "python": "3.13.16",
+    "train_dataset": {
+      "npz": "world_models_fpga/research/datasets/splits_v2/train_benchmark.npz",
+      "episodes": 408,
+      "transitions": 12816,
+      "sha256": "1367770f470c51458292bd44fe100105a8d54a64e5644b792d0639e907eb60a3",
+      "status": "VALID"
+    },
+    "val_dataset": {
+      "npz": "world_models_fpga/research/datasets/splits_v2/val_benchmark.npz",
+      "episodes": 96,
+      "transitions": 2934,
+      "sha256": "b17b033de6fd4afc80412e05197c04cec8c6fdf0d5834dc00ab758144a556dc4",
+      "status": "VALID"
+    }
+  }
+}
