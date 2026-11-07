@@ -11,7 +11,7 @@ class MacroPredictor(nn.Module):
     Predicts coarse latent subgoals \hat{S}_{k+1} = T_macro(S_k, A_macro)
     where A_macro is a macro displacement / trajectory intent vector.
     """
-    def __init__(self, macro_dim=32, macro_act_dim=3, hidden_dim=64):
+    def __init__(self, macro_dim=32, macro_act_dim=15, hidden_dim=64):
         super().__init__()
         self.macro_dim = macro_dim
         self.macro_act_dim = macro_act_dim
@@ -107,7 +107,9 @@ class HJEPAModel(nn.Module):
             nn.LayerNorm(latent_dim)
         )
 
-        self.macro_predictor = MacroPredictor(macro_dim=latent_dim, macro_act_dim=3, hidden_dim=hidden_dim)
+        # A macro transition receives the full ordered K-action interval.  An
+        # average action cannot in general identify a non-commutative trajectory.
+        self.macro_predictor = MacroPredictor(macro_dim=latent_dim, macro_act_dim=3 * stride_k, hidden_dim=hidden_dim)
         self.micro_predictor = MicroPredictor(micro_dim=latent_dim, macro_dim=latent_dim, action_dim=3, hidden_dim=hidden_dim)
 
         self.sigreg = SIGRegLoss(latent_dim=latent_dim)
@@ -141,8 +143,8 @@ class HJEPAModel(nn.Module):
         # 2. Macro Step Losses (Stride K)
         if seq_len > self.stride_k:
             s_macro_start = latents[:, 0]
-            # Macro action is integrated displacement over K steps
-            macro_action = torch.mean(action_seq[:, :self.stride_k], dim=1)
+            # Exact interval: [a_t, ..., a_(t+K-1)] predicts z_(t+K).
+            macro_action = action_seq[:, :self.stride_k].reshape(batch_size, -1)
             s_macro_target = latents[:, self.stride_k].detach()
 
             pred_s_macro, macro_col = self.macro_predictor(s_macro_start, macro_action)
@@ -152,11 +154,18 @@ class HJEPAModel(nn.Module):
             loss_macro_pred = torch.tensor(0.0, device=device)
             loss_macro_col = torch.tensor(0.0, device=device)
 
+        # The micro policy must be trained. During supervised demonstration
+        # learning the future encoded state is a label-only subgoal; inference
+        # receives a macro-predicted subgoal instead.
+        policy_subgoal = s_macro_target if seq_len > self.stride_k else s_t1_target
+        pred_action = self.micro_predictor.select_action(s_t, policy_subgoal)
+        loss_action = F.mse_loss(pred_action, a_t)
+
         # 3. SIGReg Regularization
         loss_sigreg = self.sigreg(s_t)
 
         total_loss = (
-            loss_micro_pred + 0.8 * loss_macro_pred +
+            loss_micro_pred + 0.8 * loss_macro_pred + loss_action +
             lambda_reg * loss_sigreg +
             0.2 * (loss_micro_col + loss_macro_col)
         )
@@ -165,7 +174,8 @@ class HJEPAModel(nn.Module):
             "loss_total": total_loss.item(),
             "loss_micro_pred": loss_micro_pred.item(),
             "loss_macro_pred": loss_macro_pred.item(),
-            "loss_sigreg": loss_sigreg.item()
+            "loss_sigreg": loss_sigreg.item(),
+            "loss_action": loss_action.item()
         }
         return total_loss, metrics
 
@@ -177,10 +187,11 @@ class HJEPAModel(nn.Module):
           Step 2 (Micro Level): Execute micro action tracking S*
         """
         # 1. Macro Planning: evaluate coarse macro actions
-        macro_actions = torch.randn(num_macro_candidates, 3, device=device) * 0.7
-        macro_actions[:, 0] += 0.5  # Bias forward
-        macro_actions = torch.clamp(macro_actions, -1.0, 1.0)
-        macro_actions[0] = torch.tensor([0.8, 0.0, 0.0], device=device)
+        primitive_actions = torch.randn(num_macro_candidates, 3, device=device) * 0.7
+        primitive_actions[:, 0] += 0.5  # Bias forward
+        primitive_actions = torch.clamp(primitive_actions, -1.0, 1.0)
+        primitive_actions[0] = torch.tensor([0.8, 0.0, 0.0], device=device)
+        macro_actions = primitive_actions.repeat(1, self.stride_k)
 
         s_macro_batch = s_current.repeat(num_macro_candidates, 1)
         next_S_macro, col_logits = self.macro_predictor(s_macro_batch, macro_actions)
