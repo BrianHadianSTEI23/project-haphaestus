@@ -1,0 +1,40 @@
+{
+  "selection": "minimum validation loss",
+  "seed": 42,
+  "parameter_count": 169660,
+  "best_epoch": 6,
+  "validation_loss": 0.6367192762654003,
+  "sha256": "e1793359ac416171158b03a2ac7389883a95dd273b14a51c4b882bbfda958f11",
+  "training_config": {
+    "train_npz": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/train_benchmark.npz",
+    "train_metadata": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/train_benchmark_metadata.json",
+    "val_npz": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/val_benchmark.npz",
+    "val_metadata": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/val_benchmark_metadata.json",
+    "output_dir": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v3",
+    "epochs": 6,
+    "batch_size": 64,
+    "stride_k": 5,
+    "seed": 42,
+    "seeds": "42,1337,2026",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "device": "cuda",
+    "git_commit": "f92675c83240080a32c5bfe727bbea754a2b0144",
+    "torch": "2.14.1+cu126",
+    "python": "3.13.16",
+    "train_dataset": {
+      "npz": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/train_benchmark.npz",
+      "episodes": 408,
+      "transitions": 13188,
+      "sha256": "db151773653b539d99de76723c1571672e43836b193ca17d60a2d3604e601e9e",
+      "status": "VALID"
+    },
+    "val_dataset": {
+      "npz": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/val_benchmark.npz",
+      "episodes": 96,
+      "transitions": 3077,
+      "sha256": "eede5b8fb5844aee29b69d61f87084fa066368866233c52ea2184e7020c1754d",
+      "status": "VALID"
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import copy
 import os
+os.environ.setdefault("MUJOCO_GL", "egl")
 import numpy as np
 import mujoco
 import gymnasium as gym
@@ -152,12 +153,15 @@ class JetAutoEnv(gym.Env):
                     return True
         robot_contype = self.model.geom_contype[self.robot_geom_id]
         robot_affinity = self.model.geom_conaffinity[self.robot_geom_id]
+        robot_body_id = self.model.geom_bodyid[self.robot_geom_id]
         for geom_id in range(self.model.ngeom):
             if geom_id in (self.robot_geom_id, self.floor_geom_id):
                 continue
+            if self.model.geom_bodyid[geom_id] == robot_body_id:
+                continue
             if not ((robot_contype & self.model.geom_conaffinity[geom_id]) or (self.model.geom_contype[geom_id] & robot_affinity)):
                 continue
-            if mujoco.mj_geomDistance(self.model, self.data, self.robot_geom_id, geom_id, 0.0, None) <= 0.0:
+            if mujoco.mj_geomDistance(self.model, self.data, self.robot_geom_id, geom_id, 10.0, None) <= 0.0:
                 return True
         return False
 

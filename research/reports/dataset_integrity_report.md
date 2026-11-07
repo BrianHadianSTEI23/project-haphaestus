@@ -1,7 +1,8 @@
 # Dataset & Counterfactual Integrity Report
 
-**Status:** VERIFIED (`E3` Executable Simulator & Checksum Verification)  
-**Dataset Version:** `2.0.0-physical-counterfactuals` (`world_models_fpga/research/datasets/splits_v2/`)
+**Status:** VERIFIED (`E3` Executable Simulator, Deterministic Replay & SHA-256 Checksum Verification)  
+**Active Dataset Version:** `3.0.0-physical-counterfactuals` (`world_models_fpga/research/datasets/splits_v3/`)  
+**Historical Pre-Repair Version (Preserved):** `2.0.0-physical-counterfactuals` (`world_models_fpga/research/datasets/splits_v2/`)
 
 ---
 
@@ -12,22 +13,23 @@
 | `SIM-BARRIER` | [amr_arena.xml](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/env/amr_arena.xml) | `DISAMBIG_04_visibility_vs_reachability` and OOD obstacle avoidance referenced `geom_name: "obs_barrier"`, which did not exist in the MuJoCo XML model, raising `KeyError: "Unknown MuJoCo geometry 'obs_barrier'"` during `JetAutoEnv.apply_task_spec`. | Added reserved collidable box geometry `<geom name="obs_barrier" type="box" pos="0 0 -10" size="0.05 0.7 0.35" rgba="0.3 0.3 0.3 1.0"/>` to `amr_arena.xml`. | [test_counterfactual_physics.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/tests/test_counterfactual_physics.py) verifies physical placement and contact collision when the robot overlaps `obs_barrier`. |
 | `CF-PAIR` | [counterfactual_generator.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/counterfactual/counterfactual_generator.py) | `generate_counterfactual_pair(experiment_type, pair_id)` initialized `rng = np.random.default_rng(1000 + pair_id)` but never used `pair_id` or `rng` to vary scene initial pose or geometry, causing all 25 pairs per `E1`–`E7` to be identical copies (`n_eff = 1`). | Applied deterministic pair-specific initial pose perturbations (`rx, ry in [-0.22, 0.22]`, `yaw_jitter in [-0.15, 0.15]`) and dynamic line-of-sight obstacle placement (`mid_xy = 0.5 * (initial_pose[:2] + target_pos[:2])` for `E5`) while keeping `E0` and `Ei` within each pair identical on all non-intervened variables. | `TestCounterfactualPhysics.test_counterfactual_pairs_are_distinct_across_pair_ids` and `verify_dataset.py` confirm 25/25 unique `config_sha256` hashes per `E1`–`E7`. |
 | `SIM-CAP` | [capability_tasks.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/generation/capability_tasks.py) | `obstacle_avoidance` contained `pass` placeholders across `easy`, `difficult`, `counterfactual`, and `ood` tiers (never inserting an obstacle on the line of sight), and `object_grounding` (`counterfactual`) did not mutate target RGBA. | Inserted real collidable `obs_inserted` (and `obs_barrier` for `ood`) along the robot-to-target line of sight and mutated `obstacles[target_key]["rgba"]` in `object_grounding` (`counterfactual`). | `TestExpertNavigatorAndCapabilities.test_capability_tasks_populate_real_obstacles_and_color_mutations`. |
-| `DATA-SPLIT` | [generate_benchmark_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/generation/generate_benchmark_dataset.py) | Legacy `splits/` lacked `dataset_version`, `config_sha256`, `experiment_type`, `pair_id`, and an independent validation suite, and contained pre-repair unmutated counterfactual episodes. | Regenerated all splits into `splits_v2/` with `dataset_version = "2.0.0-physical-counterfactuals"`, per-episode `config_sha256`, and a new 60-episode `independent_validation_suite` (`seed_idx >= 9000`). | [verify_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/verify_dataset.py) confirms `status: "VALID"` across all 6 splits with zero episode or seed leakage. |
+| `SIM-COLLISION` | [amr_env.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/env/amr_env.py) | `JetAutoEnv._check_collision()` called `mujoco.mj_geomDistance(..., distmax=0.0, None) <= 0.0` without filtering out child geometries attached to the robot's own body (`geom 14..39`: wheels, lidar, camera mount). Because `mj_geomDistance` returns `min(dist, distmax)` (`0.0` for all separated geometries when `distmax=0.0`) and robot child geoms overlap `amr_chassis` (`dist = -0.061m`), `_check_collision()` returned `True` on 100% of steps. | Filtered out `self.model.geom_bodyid[geom_id] == robot_body_id`, set `distmax = 10.0`, recomputed exact physical MuJoCo collision labels across all 6 splits, and added `assert 0.0 <= col_rate < 0.50` in `verify_dataset.py`. | [verify_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/verify_dataset.py) confirms non-degenerate physical collision rates (`0.00%–3.02%` across splits). |
+| `DATA-SPLIT` | [generate_benchmark_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/generation/generate_benchmark_dataset.py) | Generator source code had been modified after `splits_v2` was baked, creating generator-hash divergence. | Introduced `dataset_config.py` with `generator_code_sha256()` enforcement, generated `splits_v3/` (`3.0.0-physical-counterfactuals`), and verified with `replay_determinism_check.py` (100% action and collision label match on replay). | [verify_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/verify_dataset.py) confirms `status: "VALID"` across all 6 splits with zero episode or seed leakage. |
 
 ---
 
-## 2. Verified Dataset Splits (`splits_v2/`)
+## 2. Verified Active Dataset Splits (`splits_v3/`)
 
-All splits were generated by [generate_benchmark_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/generation/generate_benchmark_dataset.py) and validated by [verify_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/verify_dataset.py):
+All splits were generated by [generate_benchmark_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/generation/generate_benchmark_dataset.py) under `dataset_version: 3.0.0-physical-counterfactuals` and validated by [verify_dataset.py](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/verify_dataset.py):
 
-| Split Name | Episodes | Transitions | Seed Range | NPZ SHA-256 Checksum | Status |
-|---|---:|---:|---|---|---|
-| `train_benchmark` | 408 | 12,816 | `1000..1599` (`i % 6 < 4`) | `1367770f470c51458292bd44fe100105a8d54a64e5644b792d0639e907eb60a3` | `VALID` |
-| `val_benchmark` | 96 | 2,934 | `1000..1599` (`i % 6 == 4`) | `b17b033de6fd4afc80412e05197c04cec8c6fdf0d5834dc00ab758144a556dc4` | `VALID` |
-| `held_out_test_benchmark` | 96 | 3,016 | `1000..1599` (`i % 6 == 5`) | `a362a9467aa9cf703af43c79c9e7fe796bc7b2a309859c75fae519e1d8efd7e6` | `VALID` |
-| `counterfactual_suite` | 350 (175 pairs) | 12,250 | `1000..1024` per `E1`–`E7` | `24cff5a5be37e917f337bdccbad8b0d238ec805ca13c8dee03983befe24eb198` | `VALID` |
-| `disambiguation_suite` | 100 (4 probes $\times$ 25) | 3,450 | `42` + deterministic jitter | `0b615c4c4e0a2c8bbaa1a476c9fb2aa7b62b0fc98fe512dc836799a36ddeacd1` | `VALID` |
-| `independent_validation_suite` | 60 (6 caps $\times$ 10) | 1,877 | `9000..9059` | `80df077765b304c6eb9f3c472c1764268863ef478e6fc6a60cfe6c0ece5a86ce` | `VALID` |
+| Split Name | Episodes | Transitions | Collision Rate | Seed Range | NPZ SHA-256 Checksum | Status |
+|---|---:|---:|---:|---|---|---|
+| `train_benchmark` | 408 | 13,188 | 2.05% | `1000..1599` (`i % 6 < 4`) | `db151773653b539d99de76723c1571672e43836b193ca17d60a2d3604e601e9e` | `VALID` |
+| `val_benchmark` | 96 | 3,077 | 3.02% | `1000..1599` (`i % 6 == 4`) | `eede5b8fb5844aee29b69d61f87084fa066368866233c52ea2184e7020c1754d` | `VALID` |
+| `held_out_test_benchmark` | 96 | 3,122 | 1.67% | `1000..1599` (`i % 6 == 5`) | `5714175d5cc1a34f95c70fb45fb8e2492084440ba2b34676b7d4005220a065e5` | `VALID` |
+| `counterfactual_suite` | 350 (175 pairs) | 12,250 | 0.00% | `1000..1024` per `E1`–`E7` | `9e2cf025e93ae56e2781dbd9fc410d6829c39222065e6fcf3997b92dada4c54a` | `VALID` |
+| `disambiguation_suite` | 100 (4 probes $\times$ 25) | 3,450 | 0.00% | `42` + deterministic jitter | `bf310f6b3ffa1b19f12ddff1d3ae20af9e9fe5fa65423d182c561f9fd12a9ff0` | `VALID` |
+| `independent_validation_suite` | 60 (6 caps $\times$ 10) | 1,946 | 2.31% | `9000..9059` | `f032fd5a370b11fbf98200b5bb4f10737fd74b3a8c29405edc3654b180be96d9` | `VALID` |
 
 ---
 

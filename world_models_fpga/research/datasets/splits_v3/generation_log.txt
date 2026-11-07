@@ -1,0 +1,76 @@
+
+=======================================================
+  PHASE 1: BENCHMARK DATASET GENERATION
+  Total Base Episodes: 600 (100 per capability)
+  Output Directory: /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3
+=======================================================
+
+[Capability 1/6] Generating: OBJECT_GROUNDING (100 episodes)...
+  -> Generated 100 episodes (2922 transitions).
+
+[Capability 2/6] Generating: SPATIAL_REASONING (100 episodes)...
+  -> Generated 100 episodes (3412 transitions).
+
+[Capability 3/6] Generating: OBSTACLE_AVOIDANCE (100 episodes)...
+  -> Generated 100 episodes (3169 transitions).
+
+[Capability 4/6] Generating: ACTION_PREDICTION (100 episodes)...
+  -> Generated 100 episodes (3384 transitions).
+
+[Capability 5/6] Generating: TEMPORAL_PLANNING (100 episodes)...
+  -> Generated 100 episodes (3000 transitions).
+
+[Capability 6/6] Generating: GENERALIZATION (100 episodes)...
+  -> Generated 100 episodes (3500 transitions).
+
+Base benchmark generation finished in 509.52 s (600 episodes).
+  Saving train_benchmark (408 episodes)...
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/train_benchmark.npz (66.14 MB, 13188 transitions)
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/train_benchmark_metadata.json
+  Saving val_benchmark (96 episodes)...
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/val_benchmark.npz (15.58 MB, 3077 transitions)
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/val_benchmark_metadata.json
+  Saving held_out_test_benchmark (96 episodes)...
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz (16.10 MB, 3122 transitions)
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark_metadata.json
+
+=======================================================
+  PHASE 1: COUNTERFACTUAL SUITE GENERATION (E1 - E7)
+  Pairs per type: 25 | Total Suites: 7
+=======================================================
+[1/7] Generating matched pairs for E1_position_shift...
+[2/7] Generating matched pairs for E2_color_shift...
+[3/7] Generating matched pairs for E3_robot_rotation...
+[4/7] Generating matched pairs for E4_robot_position...
+[5/7] Generating matched pairs for E5_intermediate_obstacle...
+[6/7] Generating matched pairs for E6_shape_mutation...
+[7/7] Generating matched pairs for E7_camera_viewpoint...
+Counterfactual generation finished in 407.25 s (350 episodes).
+  Saving counterfactual_suite (350 episodes)...
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/counterfactual_suite.npz (71.63 MB, 12250 transitions)
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/counterfactual_suite_metadata.json
+
+=======================================================
+  PHASE 1: DISAMBIGUATION PROBE SUITE GENERATION
+  Probes: 4 | Repeats: 25
+=======================================================
+[1/4] Generating probe: DISAMBIG_01_ego_left_vs_world_left...
+[2/4] Generating probe: DISAMBIG_02_ego_front_vs_object_behind...
+[3/4] Generating probe: DISAMBIG_03_geometric_vs_visual_proximity...
+[4/4] Generating probe: DISAMBIG_04_visibility_vs_reachability...
+Disambiguation generation finished in 115.44 s (100 episodes).
+  Saving disambiguation_suite (100 episodes)...
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/disambiguation_suite.npz (14.60 MB, 3450 transitions)
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/disambiguation_suite_metadata.json
+
+=======================================================
+  PHASE 1: INDEPENDENT VALIDATION SUITE GENERATION
+  Episodes per capability: 10 | Seed offset: 9000
+=======================================================
+Independent validation generation finished in 50.52 s (60 episodes).
+  Saving independent_validation_suite (60 episodes)...
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/independent_validation_suite.npz (9.63 MB, 1946 transitions)
+  -> Saved /home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/datasets/splits_v3/independent_validation_suite_metadata.json
+
+[ALL BENCHMARK DATASETS SUCCESSFULLY GENERATED AND VERIFIED]
+

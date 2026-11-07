@@ -28,6 +28,7 @@ from models.baseline_policy import BaselineNavigationPolicy, encode_task_id
 from models.h_jepa import HJEPAModel
 from models.le_world_model import LeWorldModel
 from research.datasets.verify_dataset import validate_split
+from research.datasets.dataset_config import SPLITS_DIR, CKPT_DIR
 
 
 def _sha256(path: Path) -> str:
@@ -310,11 +311,11 @@ def train_models(args: argparse.Namespace) -> dict:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train-npz", default="world_models_fpga/research/datasets/splits_v2/train_benchmark.npz")
-    parser.add_argument("--train-metadata", default="world_models_fpga/research/datasets/splits_v2/train_benchmark_metadata.json")
-    parser.add_argument("--val-npz", default="world_models_fpga/research/datasets/splits_v2/val_benchmark.npz")
-    parser.add_argument("--val-metadata", default="world_models_fpga/research/datasets/splits_v2/val_benchmark_metadata.json")
-    parser.add_argument("--output-dir", default="world_models_fpga/checkpoints_v2")
+    parser.add_argument("--train-npz", default=str(SPLITS_DIR / "train_benchmark.npz"))
+    parser.add_argument("--train-metadata", default=str(SPLITS_DIR / "train_benchmark_metadata.json"))
+    parser.add_argument("--val-npz", default=str(SPLITS_DIR / "val_benchmark.npz"))
+    parser.add_argument("--val-metadata", default=str(SPLITS_DIR / "val_benchmark_metadata.json"))
+    parser.add_argument("--output-dir", default=str(CKPT_DIR))
     parser.add_argument("--epochs", type=int, default=15)
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--stride-k", type=int, default=5)

@@ -172,12 +172,12 @@ class HJEPAModel(nn.Module):
         return self.encoder(img_tensor)
 
     def predict_macro_displacement(self, s_t: torch.Tensor, next_S: torch.Tensor) -> torch.Tensor:
-        """Decodes K-step body-frame displacement [dx_b, dy_b, dtheta] strictly from (s_t, next_S)."""
-        return self.macro_ego_head(torch.cat([s_t, next_S - s_t], dim=-1))
+        """Decodes K-step body-frame displacement [dx_b, dy_b, dtheta] strictly from macro latent delta (next_S - s_t)."""
+        return self.macro_ego_head(torch.cat([torch.zeros_like(s_t), next_S - s_t], dim=-1))
 
     def predict_micro_displacement(self, s_t: torch.Tensor, next_s: torch.Tensor) -> torch.Tensor:
-        """Decodes 1-step body-frame displacement [dx_b, dy_b, dtheta] strictly from (s_t, next_s)."""
-        return self.micro_ego_head(torch.cat([s_t, next_s - s_t], dim=-1))
+        """Decodes 1-step body-frame displacement [dx_b, dy_b, dtheta] strictly from micro latent delta (next_s - s_t)."""
+        return self.micro_ego_head(torch.cat([torch.zeros_like(s_t), next_s - s_t], dim=-1))
 
     def predict_reactive_action(self, s_t: torch.Tensor, goal_vec: torch.Tensor) -> torch.Tensor:
         """Predicts reactive proposal action in [-1, 1]^3 from current latent s_t and body-frame goal_vec."""
@@ -268,21 +268,26 @@ class HJEPAModel(nn.Module):
             + 0.2 * (loss_micro_col + loss_macro_col)
         )
 
-        # 4. Latent Ego-Motion Displacement Losses (Micro 1-step & Macro K-step)
+        # 4. Latent Ego-Motion Displacement Losses (Micro 1-step & Macro K-step with counterfactual action consistency)
         loss_ego = torch.tensor(0.0, device=device)
+        perm = torch.roll(torch.arange(batch_size, device=device), shifts=1, dims=0)
         if micro_ego_target is not None:
-            l_micro_ego = 0.5 * (
-                F.mse_loss(self.predict_micro_displacement(s_t, s_t1_online), micro_ego_target)
-                + F.mse_loss(self.predict_micro_displacement(s_t.detach(), pred_s_t1), micro_ego_target)
+            pred_s_t1_perm, _ = self.micro_predictor.forward_transition(s_t.detach(), a_t[perm])
+            l_micro_ego = (
+                0.35 * F.mse_loss(self.predict_micro_displacement(s_t, s_t1_online), micro_ego_target)
+                + 0.35 * F.mse_loss(self.predict_micro_displacement(s_t.detach(), pred_s_t1), micro_ego_target)
+                + 0.30 * F.mse_loss(self.predict_micro_displacement(s_t.detach(), pred_s_t1_perm), micro_ego_target[perm])
             )
             loss_ego = loss_ego + l_micro_ego
         if macro_ego_target is not None and seq_len > self.stride_k:
-            l_macro_ego = 0.5 * (
-                F.mse_loss(self.predict_macro_displacement(s_t, s_macro_online), macro_ego_target)
-                + F.mse_loss(self.predict_macro_displacement(s_t.detach(), pred_s_macro), macro_ego_target)
+            pred_s_macro_perm, _ = self.macro_predictor(s_macro_start.detach(), macro_action[perm])
+            l_macro_ego = (
+                0.35 * F.mse_loss(self.predict_macro_displacement(s_t, s_macro_online), macro_ego_target)
+                + 0.35 * F.mse_loss(self.predict_macro_displacement(s_t.detach(), pred_s_macro), macro_ego_target)
+                + 0.30 * F.mse_loss(self.predict_macro_displacement(s_t.detach(), pred_s_macro_perm), macro_ego_target[perm])
             )
             loss_ego = loss_ego + l_macro_ego
-        total_loss = total_loss + 1.0 * loss_ego
+        total_loss = total_loss + 1.5 * loss_ego
 
         # 5. Reactive Policy Proposal & Track C Grounding Losses
         loss_policy = torch.tensor(0.0, device=device)

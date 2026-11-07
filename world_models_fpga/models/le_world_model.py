@@ -185,8 +185,9 @@ class LeWorldModel(nn.Module):
         return next_s, col_logit
 
     def predict_ego_displacement(self, s_t: torch.Tensor, next_s: torch.Tensor) -> torch.Tensor:
-        """Decodes 1-step body-frame displacement [dx_b, dy_b, dtheta] strictly from (s_t, next_s)."""
-        feat = torch.cat([s_t, next_s - s_t], dim=-1)
+        """Decodes 1-step body-frame displacement [dx_b, dy_b, dtheta] strictly from latent transition delta (next_s - s_t)."""
+        delta_s = next_s - s_t
+        feat = torch.cat([torch.zeros_like(s_t), delta_s], dim=-1)
         return self.ego_motion_head(feat)
 
     def predict_reactive_action(self, s_t: torch.Tensor, goal_vec: torch.Tensor) -> torch.Tensor:
@@ -237,16 +238,20 @@ class LeWorldModel(nn.Module):
 
         total_loss = loss_pred + lambda_reg * loss_sigreg + 0.2 * loss_col
 
-        # 4. Latent Ego-Motion Displacement Loss (forces both encoder and predictor latents to encode spatial motion)
+        # 4. Latent Ego-Motion Displacement Loss (forces both encoder and predictor latents to encode action-conditioned spatial motion)
         loss_ego = torch.tensor(0.0, device=img_t.device)
         if ego_disp_target is not None:
             pred_disp_from_gt = self.predict_ego_displacement(s_t, s_next_online)
             pred_disp_from_pred = self.predict_ego_displacement(s_t.detach(), pred_s_next)
-            loss_ego = 0.5 * (
-                F.mse_loss(pred_disp_from_gt, ego_disp_target)
-                + F.mse_loss(pred_disp_from_pred, ego_disp_target)
+            perm = torch.roll(torch.arange(s_t.shape[0], device=s_t.device), shifts=1, dims=0)
+            pred_s_perm, _ = self.predict_next(s_t.detach(), action_t[perm])
+            pred_disp_perm = self.predict_ego_displacement(s_t.detach(), pred_s_perm)
+            loss_ego = (
+                0.35 * F.mse_loss(pred_disp_from_gt, ego_disp_target)
+                + 0.35 * F.mse_loss(pred_disp_from_pred, ego_disp_target)
+                + 0.30 * F.mse_loss(pred_disp_perm, ego_disp_target[perm])
             )
-            total_loss = total_loss + 1.0 * loss_ego
+            total_loss = total_loss + 1.5 * loss_ego
 
         # 5. Goal-Conditioned Policy Proposal Loss & Track C Visual Task Grounding Loss
         loss_policy = torch.tensor(0.0, device=img_t.device)

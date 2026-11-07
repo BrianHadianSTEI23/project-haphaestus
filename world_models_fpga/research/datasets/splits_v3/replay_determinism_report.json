@@ -1,0 +1,247 @@
+{
+  "train_benchmark": {
+    "deterministic_and_consistent": true,
+    "episodes": [
+      {
+        "episode_id": "object_grounding_easy_0000",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "spatial_reasoning_failure_0199",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "action_prediction_failure_0399",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "generalization_failure_0599",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      }
+    ]
+  },
+  "val_benchmark": {
+    "deterministic_and_consistent": true,
+    "episodes": [
+      {
+        "episode_id": "object_grounding_failure_0004",
+        "stored_length": 10,
+        "replayed_length": 10,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 10,
+        "replayed_collisions": 10
+      },
+      {
+        "episode_id": "spatial_reasoning_failure_0194",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "action_prediction_failure_0394",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "generalization_failure_0594",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      }
+    ]
+  },
+  "held_out_test_benchmark": {
+    "deterministic_and_consistent": true,
+    "episodes": [
+      {
+        "episode_id": "object_grounding_easy_0005",
+        "stored_length": 20,
+        "replayed_length": 20,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "spatial_reasoning_easy_0195",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "action_prediction_easy_0395",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "generalization_easy_0595",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      }
+    ]
+  },
+  "counterfactual_suite": {
+    "deterministic_and_consistent": true,
+    "episodes": [
+      {
+        "episode_id": "E1_position_shift_p00_E0",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "E3_robot_rotation_p08_E0",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "E5_intermediate_obstacle_p16_E0",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "E7_camera_viewpoint_p24_Ei",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      }
+    ]
+  },
+  "independent_validation_suite": {
+    "deterministic_and_consistent": true,
+    "episodes": [
+      {
+        "episode_id": "indep_object_grounding_easy_0000",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "indep_spatial_reasoning_failure_0019",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "indep_action_prediction_failure_0039",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "indep_generalization_failure_0059",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      }
+    ]
+  }
+}
