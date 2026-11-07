@@ -22,6 +22,7 @@ import copy
 import time
 import json
 import argparse
+import hashlib
 import numpy as np
 import mujoco
 
@@ -59,21 +60,12 @@ class BenchmarkDatasetGenerator:
         }
 
     def _apply_environment_obstacles(self, obstacles_dict):
-        """Updates MuJoCo geom positions and RGBA in-memory for the current task."""
-        for k, info in obstacles_dict.items():
-            if k in self.geom_ids:
-                gid = self.geom_ids[k]
-                self.env.model.geom_pos[gid] = info["pos"]
-                if "rgba" in info:
-                    self.env.model.geom_rgba[gid] = info["rgba"]
-                if "size" in info and info["shape"] == "box":
-                    self.env.model.geom_size[gid] = info["size"]
-                elif "radius" in info and info["shape"] == "cylinder":
-                    self.env.model.geom_size[gid][:2] = [info["radius"], info["height"]]
+        """Compatibility helper: apply real MuJoCo geometry mutations."""
+        self.env.apply_task_spec({"obstacles": obstacles_dict})
 
     def _reset_canonical_obstacles(self):
         """Restores canonical arena obstacle positions and colors."""
-        self._apply_environment_obstacles(CANONICAL_OBSTACLES)
+        self.env.restore_physical_baseline()
 
     def _get_ground_truth_objects(self, obstacles_dict):
         """Extracts (6, 3) positions, (6,) classes, (6, 4) colors."""
@@ -100,12 +92,14 @@ class BenchmarkDatasetGenerator:
         """
         Executes a single controlled episode in MuJoCo, returning list of transition dicts.
         """
-        # 1. Apply environment modifications
-        self._apply_environment_obstacles(task_spec["obstacles"])
+        # 1. Apply physical/rendering mutations before reset.  This is the only
+        # route through which E1--E7 enter the simulator.
+        self.env.apply_task_spec(task_spec)
 
         # 2. Reset robot pose
         init_pos = task_spec["initial_pose"]
-        obs, info = self.env.reset(options={"initial_pos": (init_pos[0], init_pos[1], init_pos[2])})
+        episode_seed = int(task_spec.get("generation_seed", task_spec.get("seed_idx", self.seed)))
+        obs, info = self.env.reset(seed=episode_seed, options={"initial_pos": (init_pos[0], init_pos[1], init_pos[2])})
 
         waypoints = task_spec["waypoints"]
         wp_idx = 0
@@ -179,6 +173,7 @@ class BenchmarkDatasetGenerator:
                 "object_colors": gt_col,
                 "language_instruction": task_spec["instruction"],
                 "grounded_goal": goal_target,
+                "episode_seed": episode_seed,
                 "action": action,
                 "next_action": next_action,
                 "collision": collision,
@@ -196,6 +191,19 @@ class BenchmarkDatasetGenerator:
         for tr in transitions:
             tr["episode_success"] = is_success
 
+        # Record the *applied* simulator values before restoring the baseline.
+        # This lets validation distinguish a real MuJoCo mutation from metadata.
+        task_spec["_physical_geometry_records"] = {
+            key: {
+                "geom_name": value["geom_name"],
+                "position": self.env.model.geom_pos[self.env.geometry_id(value["geom_name"])].tolist(),
+                "size": self.env.model.geom_size[self.env.geometry_id(value["geom_name"])].tolist(),
+                "geom_type": int(self.env.model.geom_type[self.env.geometry_id(value["geom_name"])]),
+                "rgba": self.env.model.geom_rgba[self.env.geometry_id(value["geom_name"])].tolist(),
+            }
+            for key, value in task_spec["obstacles"].items()
+        }
+        task_spec["_physical_camera_quat"] = self.env.model.cam_quat[self.env.front_camera_id].tolist()
         # Restore canonical state
         self._reset_canonical_obstacles()
         return transitions
@@ -353,6 +361,8 @@ class BenchmarkDatasetGenerator:
         all_collisions = []
         all_goals_reached = []
         all_ep_successes = []
+        all_goals = []
+        all_episode_indices = []
         ep_starts = []
 
         metadata_records = []
@@ -362,6 +372,7 @@ class BenchmarkDatasetGenerator:
             if len(trans) == 0:
                 continue
 
+            physical_geometries = spec.get("_physical_geometry_records", {})
             ep_meta = {
                 "episode_id": spec.get("episode_id", f"ep_{ep_idx}"),
                 "start_index": curr_idx,
@@ -374,7 +385,18 @@ class BenchmarkDatasetGenerator:
                 "counterfactual_id": spec.get("counterfactual_id", ""),
                 "expected_invariant": spec.get("expected_invariant", ""),
                 "target_key": spec.get("target_key", ""),
-                "episode_success": bool(trans[0]["episode_success"])
+                "episode_success": bool(trans[0]["episode_success"]),
+                "generation_seed": int(trans[0]["episode_seed"]),
+                "intervention": spec.get("intervention", {"name": "none", "parameters": {}}),
+                "environment_parameters": {
+                    "frame_skip": self.env.frame_skip,
+                    "control_dt_seconds": self.env.model.opt.timestep * self.env.frame_skip,
+                    "velocity_limits": [self.env.vx_limit, self.env.vy_limit, self.env.wz_limit],
+                    "camera_pitch_offset_degrees": float(spec.get("camera_pitch_offset", 0.0)),
+                    "front_camera_quaternion": spec.get("_physical_camera_quat", []),
+                    "physical_geometries": physical_geometries,
+                },
+                "label_provenance": "privileged_geometric_expert; simulator state used only for labels",
             }
             metadata_records.append(ep_meta)
 
@@ -391,6 +413,8 @@ class BenchmarkDatasetGenerator:
                 all_collisions.append(tr["collision"])
                 all_goals_reached.append(tr["goal_reached"])
                 all_ep_successes.append(tr["episode_success"])
+                all_goals.append(tr["grounded_goal"])
+                all_episode_indices.append(ep_idx)
                 ep_starts.append(step_i == 0)
                 curr_idx += 1
 
@@ -411,16 +435,25 @@ class BenchmarkDatasetGenerator:
             collisions=np.array(all_collisions, dtype=bool),
             goals_reached=np.array(all_goals_reached, dtype=bool),
             episode_successes=np.array(all_ep_successes, dtype=bool),
-            episode_starts=np.array(ep_starts, dtype=bool)
+            episode_starts=np.array(ep_starts, dtype=bool),
+            grounded_goals=np.array(all_goals, dtype=np.float32),
+            transition_episode_indices=np.array(all_episode_indices, dtype=np.int32),
         )
 
+        with open(npz_file, "rb") as checksum_file:
+            checksum = hashlib.sha256(checksum_file.read()).hexdigest()
         with open(json_file, "w") as f:
             json.dump({
+                "dataset_version": "2.0.0-physical-counterfactuals",
                 "split_name": split_name,
+                "split_membership": split_name,
+                "generator_seed": self.seed,
                 "total_episodes": len(metadata_records),
                 "total_transitions": curr_idx,
+                "npz_sha256": checksum,
+                "label_provenance": "privileged MuJoCo simulator state and deterministic geometric planner",
                 "episodes": metadata_records
-            }, f, indent=2)
+            }, f, indent=2, default=lambda value: value.tolist() if isinstance(value, np.ndarray) else str(value))
 
         file_size_mb = os.path.getsize(npz_file) / (1024 * 1024)
         print(f"  -> Saved {npz_file} ({file_size_mb:.2f} MB, {curr_idx} transitions)")
@@ -435,6 +468,7 @@ if __name__ == "__main__":
     parser.add_argument("--cf_pairs", type=int, default=25, help="Counterfactual pairs per type (E1-E7)")
     parser.add_argument("--disambig_repeats", type=int, default=25, help="Disambiguation repeats per probe")
     parser.add_argument("--seed", type=int, default=42, help="Random seed for deterministic generation")
+    parser.add_argument("--output-dir", type=str, default=None, help="Directory for versioned NPZ/metadata outputs")
     parser.add_argument("--skip_base", action="store_true", help="Skip base benchmark generation if already generated")
     parser.add_argument("--skip_cf", action="store_true", help="Skip counterfactual generation if already generated")
     args = parser.parse_args()
@@ -442,15 +476,15 @@ if __name__ == "__main__":
     gen = BenchmarkDatasetGenerator(seed=args.seed)
     # 1. Base benchmark splits (Train, Val, Held-out Test)
     if not args.skip_base:
-        gen.generate_benchmark_splits(total_episodes=args.episodes)
+        gen.generate_benchmark_splits(total_episodes=args.episodes, output_dir=args.output_dir)
     else:
         print("Skipping base benchmark generation (--skip_base specified).")
     # 2. Counterfactual suites (E1 - E7)
     if not args.skip_cf:
-        gen.generate_counterfactual_suite(pairs_per_type=args.cf_pairs)
+        gen.generate_counterfactual_suite(pairs_per_type=args.cf_pairs, output_dir=args.output_dir)
     else:
         print("Skipping counterfactual suite generation (--skip_cf specified).")
     # 3. Disambiguation suites
-    gen.generate_disambiguation_suite(repeats_per_probe=args.disambig_repeats)
+    gen.generate_disambiguation_suite(repeats_per_probe=args.disambig_repeats, output_dir=args.output_dir)
     gen.close()
     print("\n[ALL BENCHMARK DATASETS SUCCESSFULLY GENERATED AND VERIFIED]\n")

@@ -1,3 +1,4 @@
+import copy
 import os
 import numpy as np
 import mujoco
@@ -57,9 +58,91 @@ class JetAutoEnv(gym.Env):
         self.jx_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, "slide_x")
         self.jy_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, "slide_y")
         self.jz_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, "hinge_z")
+        self.front_camera_id = mujoco.mj_name2id(
+            self.model, mujoco.mjtObj.mjOBJ_CAMERA, "front_cam"
+        )
+        # Runtime mutations alter MjModel arrays.  Keep an exact baseline so each
+        # episode starts from the same physical simulator, not from the preceding
+        # counterfactual.
+        self._baseline_geom_pos = self.model.geom_pos.copy()
+        self._baseline_geom_size = self.model.geom_size.copy()
+        self._baseline_geom_rgba = self.model.geom_rgba.copy()
+        self._baseline_geom_type = self.model.geom_type.copy()
+        self._baseline_cam_quat = self.model.cam_quat.copy()
+        self._baseline_geom_friction = self.model.geom_friction.copy()
+        self.active_task_spec = None
+
+    def geometry_id(self, geom_name):
+        """Return a checked geometry id; fail early on misspelled mutations."""
+        geom_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, geom_name)
+        if geom_id < 0:
+            raise KeyError(f"Unknown MuJoCo geometry: {geom_name}")
+        return geom_id
+
+    def restore_physical_baseline(self):
+        """Undo every runtime counterfactual mutation in the MuJoCo model."""
+        self.model.geom_pos[:] = self._baseline_geom_pos
+        self.model.geom_size[:] = self._baseline_geom_size
+        self.model.geom_rgba[:] = self._baseline_geom_rgba
+        self.model.geom_type[:] = self._baseline_geom_type
+        self.model.geom_friction[:] = self._baseline_geom_friction
+        self.model.cam_quat[:] = self._baseline_cam_quat
+        self.active_task_spec = None
+        mujoco.mj_forward(self.model, self.data)
+
+    def apply_task_spec(self, task_spec):
+        """Apply a task specification to real MuJoCo state and rendering state.
+
+        This is deliberately the sole mutation path used by dataset generation and
+        benchmarking.  It supports E1--E7 with physical geometry, collision shape,
+        appearance, and camera changes rather than metadata-only changes.
+        """
+        self.restore_physical_baseline()
+        obstacles = task_spec.get("obstacles", {})
+        for key, obstacle in obstacles.items():
+            geom_name = obstacle.get("geom_name")
+            if not geom_name:
+                raise ValueError(f"Obstacle {key!r} has no geom_name")
+            geom_id = self.geometry_id(geom_name)
+            self.model.geom_pos[geom_id] = np.asarray(obstacle["pos"], dtype=np.float64)
+            if "rgba" in obstacle:
+                self.model.geom_rgba[geom_id] = np.asarray(obstacle["rgba"], dtype=np.float32)
+
+            shape = obstacle.get("shape")
+            if shape == "box":
+                self.model.geom_type[geom_id] = mujoco.mjtGeom.mjGEOM_BOX
+                size = np.asarray(obstacle.get("size", [0.25, 0.25, 0.35]), dtype=np.float64)
+                self.model.geom_size[geom_id, :3] = size[:3]
+            elif shape == "cylinder":
+                self.model.geom_type[geom_id] = mujoco.mjtGeom.mjGEOM_CYLINDER
+                self.model.geom_size[geom_id, 0] = float(obstacle.get("radius", 0.25))
+                self.model.geom_size[geom_id, 1] = float(obstacle.get("height", 0.35))
+
+        pitch_degrees = float(task_spec.get("camera_pitch_offset", 0.0))
+        if pitch_degrees:
+            pitch_quat = np.empty(4, dtype=np.float64)
+            mujoco.mju_euler2Quat(pitch_quat, np.array([0.0, np.deg2rad(pitch_degrees), 0.0]), "XYZ")
+            adjusted = np.empty(4, dtype=np.float64)
+            # Post-multiplication applies the pitch in the camera's local frame.
+            mujoco.mju_mulQuat(adjusted, self._baseline_cam_quat[self.front_camera_id], pitch_quat)
+            self.model.cam_quat[self.front_camera_id] = adjusted
+
+        # Optional embodiment intervention used only by explicit tests.
+        friction_scale = float(task_spec.get("floor_friction_scale", 1.0))
+        if friction_scale <= 0:
+            raise ValueError("floor_friction_scale must be positive")
+        self.model.geom_friction[self.floor_geom_id] *= friction_scale
+        self.active_task_spec = copy.deepcopy(task_spec)
+        mujoco.mj_forward(self.model, self.data)
 
     def _check_collision(self):
-        """Returns True if amr_chassis contacts any obstacle or arena wall."""
+        """Returns True if amr_chassis intersects an obstacle or arena wall.
+
+        Velocity actuators can make MuJoCo's contact solver omit a transient
+        contact manifold at reset.  We therefore retain contact inspection and
+        add an exact signed geometry-distance fallback.  The fallback still uses
+        the simulator's collision geometries, not task metadata.
+        """
         for i in range(self.data.ncon):
             contact = self.data.contact[i]
             g1, g2 = contact.geom1, contact.geom2
@@ -67,6 +150,15 @@ class JetAutoEnv(gym.Env):
                 other_geom = g2 if g1 == self.robot_geom_id else g1
                 if other_geom != self.floor_geom_id:
                     return True
+        robot_contype = self.model.geom_contype[self.robot_geom_id]
+        robot_affinity = self.model.geom_conaffinity[self.robot_geom_id]
+        for geom_id in range(self.model.ngeom):
+            if geom_id in (self.robot_geom_id, self.floor_geom_id):
+                continue
+            if not ((robot_contype & self.model.geom_conaffinity[geom_id]) or (self.model.geom_contype[geom_id] & robot_affinity)):
+                continue
+            if mujoco.mj_geomDistance(self.model, self.data, self.robot_geom_id, geom_id, 0.0, None) <= 0.0:
+                return True
         return False
 
     def reset(self, seed=None, options=None):
@@ -79,9 +171,9 @@ class JetAutoEnv(gym.Env):
         else:
             # Randomize initial robot pose within safe central clearance
             for _ in range(100):
-                rx = np.random.uniform(-1.5, 1.5)
-                ry = np.random.uniform(-1.5, 1.5)
-                r_theta = np.random.uniform(-np.pi, np.pi)
+                rx = self.np_random.uniform(-1.5, 1.5)
+                ry = self.np_random.uniform(-1.5, 1.5)
+                r_theta = self.np_random.uniform(-np.pi, np.pi)
 
                 self.data.qpos[self.jx_id] = rx
                 self.data.qpos[self.jy_id] = ry

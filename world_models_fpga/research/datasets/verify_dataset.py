@@ -1,94 +1,94 @@
-"""
-Phase 1: Benchmark Dataset Verification & Statistics Tool
-Author: Brian A. Hadian
-Project: Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA
+"""Dataset-integrity validation for versioned, episode-level navigation data."""
 
-Loads and validates all generated Phase 1 dataset splits (.npz + .json):
-  - Validates tensor shapes and dtypes
-  - Confirms zero NaN / Inf values
-  - Computes capability distribution and class balances
-  - Calculates collision rates and trajectory length metrics
-  - Emits markdown statistics table for dataset_statistics.md
-"""
+from __future__ import annotations
 
-import os
+import argparse
+import hashlib
 import json
+from pathlib import Path
+
 import numpy as np
 
-def verify_all_splits(splits_dir):
-    splits = [
-        "train_benchmark",
-        "val_benchmark",
-        "held_out_test_benchmark",
-        "counterfactual_suite",
-        "disambiguation_suite"
-    ]
 
-    summary = []
-    print("\n=======================================================")
-    print("  PHASE 1 DATASET INTEGRITY & VALIDATION REPORT")
-    print(f"  Splits Directory: {splits_dir}")
-    print("=======================================================\n")
+REQUIRED_ARRAYS = {
+    "rgb", "next_rgb", "robot_pose", "robot_velocity", "object_positions",
+    "object_classes", "object_colors", "actions", "next_actions", "collisions",
+    "goals_reached", "episode_successes", "episode_starts", "grounded_goals",
+    "transition_episode_indices",
+}
 
-    total_transitions_all = 0
-    total_episodes_all = 0
 
-    for s_name in splits:
-        npz_path = os.path.join(splits_dir, f"{s_name}.npz")
-        json_path = os.path.join(splits_dir, f"{s_name}_metadata.json")
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        for block in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
-        if not os.path.exists(npz_path) or not os.path.exists(json_path):
-            print(f"[MISSING] {s_name} files not found.")
-            continue
 
-        size_mb = os.path.getsize(npz_path) / (1024 * 1024)
-        with open(json_path, "r") as f:
-            meta = json.load(f)
+def validate_split(npz_path: str | Path, metadata_path: str | Path) -> dict:
+    """Validate one generated split and return machine-readable measurements.
 
-        data = np.load(npz_path)
-        N = len(data["rgb"])
-        num_ep = meta["total_episodes"]
-        total_transitions_all += N
-        total_episodes_all += num_ep
+    Raises ``AssertionError`` for invalid data, preventing a training run from
+    quietly consuming a leaky or malformed dataset.
+    """
+    npz_path, metadata_path = Path(npz_path), Path(metadata_path)
+    with metadata_path.open() as file:
+        metadata = json.load(file)
+    assert metadata.get("dataset_version") == "2.0.0-physical-counterfactuals", "legacy/unversioned split is not valid for repaired experiments"
+    assert metadata.get("npz_sha256") == _sha256(npz_path), "NPZ checksum does not match metadata"
+    data = np.load(npz_path, allow_pickle=False)
+    missing = REQUIRED_ARRAYS - set(data.files)
+    assert not missing, f"missing required arrays: {sorted(missing)}"
+    n = len(data["rgb"])
+    assert n > 0
+    assert data["rgb"].shape == (n, 64, 64, 3) and data["rgb"].dtype == np.uint8
+    assert data["next_rgb"].shape == (n, 64, 64, 3) and data["next_rgb"].dtype == np.uint8
+    for name, shape in {"robot_pose": (n, 3), "robot_velocity": (n, 3), "actions": (n, 3), "next_actions": (n, 3), "grounded_goals": (n, 3)}.items():
+        assert data[name].shape == shape, f"invalid {name} shape: {data[name].shape}"
+        assert np.isfinite(data[name]).all(), f"non-finite values in {name}"
+    assert data["object_positions"].shape == (n, 6, 3)
+    assert np.isfinite(data["object_positions"]).all()
+    assert np.all(np.abs(data["actions"]) <= 1.00001), "action labels exceed normalized limits"
+    starts = np.flatnonzero(data["episode_starts"])
+    assert len(starts) == metadata["total_episodes"] == len(metadata["episodes"])
+    assert len(starts) and starts[0] == 0
+    assert np.array_equal(np.unique(data["transition_episode_indices"]), np.arange(len(starts)))
+    episode_ids = set()
+    for episode_index, (start, episode) in enumerate(zip(starts, metadata["episodes"])):
+        length = int(episode["length"])
+        assert int(episode["start_index"]) == int(start)
+        assert length > 0 and start + length <= n
+        assert not data["episode_starts"][start + 1:start + length].any(), "episode boundary inside episode"
+        assert np.all(data["transition_episode_indices"][start:start + length] == episode_index)
+        assert episode["episode_id"] not in episode_ids, "duplicate episode id"
+        episode_ids.add(episode["episode_id"])
+        assert episode.get("label_provenance"), "label provenance absent"
+        assert episode.get("environment_parameters", {}).get("physical_geometries") is not None
+    return {"npz": str(npz_path), "episodes": len(starts), "transitions": n, "sha256": metadata["npz_sha256"], "status": "VALID"}
 
-        # Verify shapes & types
-        assert data["rgb"].shape == (N, 64, 64, 3), f"Invalid rgb shape: {data['rgb'].shape}"
-        assert data["next_rgb"].shape == (N, 64, 64, 3), f"Invalid next_rgb shape"
-        assert data["robot_pose"].shape == (N, 3), f"Invalid robot_pose shape"
-        assert data["robot_velocity"].shape == (N, 3), f"Invalid robot_velocity shape"
-        assert data["object_positions"].shape == (N, 6, 3), f"Invalid object_positions shape"
-        assert data["actions"].shape == (N, 3), f"Invalid actions shape"
-        assert data["next_actions"].shape == (N, 3), f"Invalid next_actions shape"
-        assert data["collisions"].shape == (N,), f"Invalid collisions shape"
-        assert data["goals_reached"].shape == (N,), f"Invalid goals_reached shape"
-        assert data["episode_successes"].shape == (N,), f"Invalid episode_successes shape"
-        assert data["episode_starts"].shape == (N,), f"Invalid episode_starts shape"
 
-        # Check for NaNs
-        assert not np.isnan(data["robot_pose"]).any(), f"NaN in robot_pose for {s_name}"
-        assert not np.isnan(data["actions"]).any(), f"NaN in actions for {s_name}"
+def verify_all_splits(splits_dir: str | Path) -> list[dict]:
+    root = Path(splits_dir)
+    results = []
+    for split in ("train_benchmark", "val_benchmark", "held_out_test_benchmark", "counterfactual_suite", "disambiguation_suite"):
+        npz_path, metadata_path = root / f"{split}.npz", root / f"{split}_metadata.json"
+        if npz_path.exists() or metadata_path.exists():
+            assert npz_path.exists() and metadata_path.exists(), f"incomplete split {split}"
+            results.append(validate_split(npz_path, metadata_path))
+    ids_by_split = []
+    for result in results:
+        with Path(result["npz"]).with_name(Path(result["npz"]).stem + "_metadata.json").open() as file:
+            ids_by_split.append((Path(result["npz"]).stem, {e["episode_id"] for e in json.load(file)["episodes"]}))
+    for i, (left_name, left_ids) in enumerate(ids_by_split):
+        for right_name, right_ids in ids_by_split[i + 1:]:
+            assert not left_ids & right_ids, f"episode leakage between {left_name} and {right_name}"
+    return results
 
-        col_rate = float(np.mean(data["collisions"])) * 100.0
-        succ_rate = float(np.mean([ep["episode_success"] for ep in meta["episodes"]])) * 100.0
-        avg_len = N / float(num_ep)
-
-        print(f"[{s_name.upper()}] - VALIDATED OK")
-        print(f"  Episodes: {num_ep:4d} | Transitions: {N:6d} | File Size: {size_mb:6.2f} MB")
-        print(f"  Avg Ep Length: {avg_len:5.1f} steps | Success Rate: {succ_rate:5.1f}% | Collision Rate: {col_rate:4.2f}%\n")
-
-        summary.append({
-            "split": s_name,
-            "episodes": num_ep,
-            "transitions": N,
-            "size_mb": size_mb,
-            "avg_length": avg_len,
-            "success_rate": succ_rate,
-            "collision_rate": col_rate
-        })
-
-    print(f"TOTAL BENCHMARK CORPUS: {total_episodes_all} Episodes, {total_transitions_all} Transitions.")
-    return summary
 
 if __name__ == "__main__":
-    splits_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "splits"))
-    verify_all_splits(splits_dir)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("splits_dir", nargs="?", default=Path(__file__).with_name("splits"))
+    args = parser.parse_args()
+    for result in verify_all_splits(args.splits_dir):
+        print(json.dumps(result, sort_keys=True))

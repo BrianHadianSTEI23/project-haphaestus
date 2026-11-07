@@ -23,7 +23,8 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
     where both share the identical instruction, seed, and reference frames,
     differing strictly along the single manipulated axis.
     """
-    rng = np.random.default_rng(1000 + pair_id)
+    generation_seed = 1000 + pair_id
+    rng = np.random.default_rng(generation_seed)
 
     # Base canonical obstacles
     from research.datasets.generation.capability_tasks import CANONICAL_OBSTACLES, get_waypoint_for_relation
@@ -49,6 +50,8 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
         "initial_pose": np.array([0.0, 0.0, float(np.arctan2(target_pos[1], target_pos[0]))], dtype=np.float32),
         "camera_config": "front_cam",
         "camera_pitch_offset": 0.0,
+        "generation_seed": generation_seed,
+        "intervention": {"name": "none", "parameters": {}},
         "expected_invariant": "reference_baseline"
     }
     # Waypoints for E0
@@ -72,6 +75,7 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
         ei_spec["expected_invariant"] = "spatial_relation_meaning_invariant_to_position"
         new_pos = np.array([0.8, -1.2, 0.35], dtype=np.float32)
         ei_spec["obstacles"][target_key]["pos"] = new_pos
+        ei_spec["intervention"] = {"name": "target_position", "parameters": {"position": new_pos.tolist()}}
         # Recompute waypoints with mutated position
         g_pose_mut = get_waypoint_for_relation(new_pos, relation, ei_spec["initial_pose"])
         c_vec_mut = new_pos[:2]
@@ -88,6 +92,7 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
         # Turn yellow cylinder into bright blue / red in RGBA
         ei_spec["obstacles"][target_key]["rgba"] = np.array([0.15, 0.35, 0.85, 1.0], dtype=np.float32)
         ei_spec["obstacles"][target_key]["color"] = "mutated_blue"
+        ei_spec["intervention"] = {"name": "target_rgba", "parameters": {"rgba": [0.15, 0.35, 0.85, 1.0]}}
 
     # -------------------------------------------------------------
     # E3: Robot rotates 90 deg initial heading
@@ -96,6 +101,7 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
         ei_spec["expected_invariant"] = "allocentric_goal_interpretation_invariant_to_heading"
         rotated_heading = float(e0_spec["initial_pose"][2] + np.pi / 2.0)
         ei_spec["initial_pose"][2] = rotated_heading
+        ei_spec["intervention"] = {"name": "robot_yaw", "parameters": {"yaw_radians": rotated_heading}}
 
     # -------------------------------------------------------------
     # E4: Robot changes starting position to opposite quadrant
@@ -103,13 +109,15 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
     elif experiment_type == "E4_robot_position":
         ei_spec["expected_invariant"] = "object_relative_goal_invariant_to_start_pose"
         ei_spec["initial_pose"] = np.array([1.0, 1.0, -2.35], dtype=np.float32)
+        ei_spec["intervention"] = {"name": "robot_initial_pose", "parameters": {"pose": ei_spec["initial_pose"].tolist()}}
 
     # -------------------------------------------------------------
     # E5: Add intermediate obstacle directly between robot and target
     # -------------------------------------------------------------
     elif experiment_type == "E5_intermediate_obstacle":
         ei_spec["expected_invariant"] = "goal_identity_invariant_under_path_detour"
-        # Place synthetic obstacle right at [-0.6, -0.45]
+        # obs_inserted is a reserved collidable MuJoCo geometry in amr_arena.xml.
+        # The generator moves it into the arena via JetAutoEnv.apply_task_spec.
         ei_spec["obstacles"]["inserted_obstacle"] = {
             "geom_name": "obs_inserted",
             "pos": np.array([-0.6, -0.45, 0.35], dtype=np.float32),
@@ -118,6 +126,7 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
             "color": "magenta",
             "rgba": np.array([0.8, 0.1, 0.8, 1.0], dtype=np.float32)
         }
+        ei_spec["intervention"] = {"name": "inserted_collidable_obstacle", "parameters": {"geom_name": "obs_inserted", "position": [-0.6, -0.45, 0.35], "shape": "cylinder"}}
         # Add extra avoidance detour waypoint
         detour = np.array([-0.3, -0.9, e0_spec["waypoints"][0][2]], dtype=np.float32)
         ei_spec["waypoints"] = [detour] + e0_spec["waypoints"]
@@ -129,6 +138,7 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
         ei_spec["expected_invariant"] = "relational_reasoning_invariant_to_shape"
         ei_spec["obstacles"][target_key]["shape"] = "box"
         ei_spec["obstacles"][target_key]["size"] = np.array([0.25, 0.25, 0.35], dtype=np.float32)
+        ei_spec["intervention"] = {"name": "target_geom_type", "parameters": {"shape": "box", "size": [0.25, 0.25, 0.35]}}
 
     # -------------------------------------------------------------
     # E7: Change camera viewpoint / pitch
@@ -136,5 +146,6 @@ def generate_counterfactual_pair(experiment_type: str, pair_id: int):
     elif experiment_type == "E7_camera_viewpoint":
         ei_spec["expected_invariant"] = "spatial_grounding_invariant_to_camera_pitch"
         ei_spec["camera_pitch_offset"] = 10.0 # +10 deg pitch down
+        ei_spec["intervention"] = {"name": "front_camera_pitch", "parameters": {"degrees": 10.0}}
 
     return e0_spec, ei_spec
