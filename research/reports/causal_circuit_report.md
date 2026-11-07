@@ -2,8 +2,8 @@
 
 **Author:** Brian A. Hadian  
 **Branch:** `fix/interpretability`  
-**Dataset Version:** `3.0.0-physical-counterfactuals` (`splits_v3`)  
-**Date:** 2026-11-07  
+**Dataset Version:** `4.0.0-multiwaypoint-aligned` (`splits_v4`)  
+**Date:** 2026-11-08  
 **Artifact Dependencies:** `activation_patching_results.json`, `circuit_registry.json`, `attribution_graphs.json`  
 
 ---
@@ -73,11 +73,11 @@ flowchart TD
 
 | Circuit ID | Circuit Name | Functional Role | Discovered Subspace (Top-8 Dims) | Necessity Score (vs Rand) | Sufficiency Score (vs Rand) | Cross-Context Gen. | Empirical Scientific Verdict |
 |---|---|---|---|---|---|---|---|
-| **C1** | `target_grounding` | Landmark identification & spatial reference | `[1, 14, 15, 17, 18, 20, 23, 27]` | **0.583** (0.652) | **0.161** (0.145) | **1.000** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **C2** | `egocentric_transformation`| World-to-robot coordinate frame transform | `[0, 1, 3, 7, 12, 17, 26, 31]` | **0.760** (0.878) | **0.126** (0.141) | **0.934** | `FALSIFIED_NON_SELECTIVE` |
-| **C3** | `obstacle_collision_detection`| Near-field obstacle boundary estimation | `[2, 4, 10, 16, 21, 22, 28, 30]` | **0.113** (0.142) | **0.524** (0.431) | **0.957** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **C4** | `action_conditioned_transition`| Action counterfactual rollout $\hat{s}_{t+1}$ | `[0, 6, 8, 11, 13, 19, 24, 25]` | **0.631** (0.573) | **0.133** (0.114) | **1.000** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **C5** | `hierarchical_subgoal_decomposition`| Macro waypoint planning at stride $K=5$ | `[5, 9, 13, 16, 20, 23, 27, 29]` | **0.707** (0.696) | **0.125** (0.198) | **0.856** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
+| **C1** | `target_grounding` | Landmark identification & spatial reference | `[8, 30, 20, 18, 19, 9, 10, 11]` | **0.546** (0.279) | **0.305** (0.188) | **1.000** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
+| **C2** | `egocentric_transformation`| World-to-robot coordinate frame transform | `[5, 31, 17, 23, 29, 8, 7, 6]` | **0.515** (0.815) | **0.061** (0.346) | **1.000** | `FALSIFIED_NON_SELECTIVE` |
+| **C3** | `obstacle_collision_detection`| Near-field obstacle boundary estimation | `[26, 17, 23, 8, 14, 12, 10, 0]` | **0.468** (0.326) | **0.238** (0.314) | **1.000** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
+| **C4** | `action_conditioned_transition`| Action counterfactual rollout $\hat{s}_{t+1}$ | `[11, 1, 29, 13, 10, 5, 22, 17]` | **0.580** (0.452) | **0.107** (0.061) | **1.000** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
+| **C5** | `hierarchical_subgoal_decomposition`| Macro waypoint planning at stride $K=5$ | `[8, 30, 20, 9, 19, 18, 4, 5]` | **0.447** (0.426) | **0.261** (0.022) | **0.817** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
 
 ---
 
@@ -87,8 +87,8 @@ A major scientific result of this investigation is the explicit falsification of
 
 - **Hypothesis:** The network contains an isolated 8-dimensional subspace dedicated to performing coordinate rotations from allocentric camera coordinates to robot-centric body coordinates.
 - **Empirical Test:**
-  - When the proposed C2 subspace was mean-ablated, the disruption was **0.760**, which was *lower* than ablating a random 8-dimensional subspace (**0.878**).
-  - When all 24 complement dimensions were ablated, keeping *only* C2 active, sufficiency was only **0.126** (below the random control **0.141**).
+  - When the proposed C2 subspace was mean-ablated, the disruption was **0.515**, which was significantly *lower* than ablating a random 8-dimensional subspace (**0.815**, Selectivity Gain = **$-0.300$**).
+  - When all complement dimensions were ablated, keeping *only* C2 active, sufficiency was only **0.061** (below the random control **0.346**, Selectivity Gain = **$-0.285$**).
 - **Scientific Conclusion:**
   - Egocentric coordinate transformation is **not modularized into a separable linear subspace**.
   - Rather, rotational and translational spatial transforms are computed **distributively across the entire latent manifold**.

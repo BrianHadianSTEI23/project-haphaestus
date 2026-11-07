@@ -1,6 +1,6 @@
 {
   "train_benchmark": {
-    "deterministic_and_consistent": false,
+    "deterministic_and_consistent": true,
     "episodes": [
       {
         "episode_id": "object_grounding_easy_0000",
@@ -14,8 +14,8 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "spatial_reasoning_failure_0149",
-        "stored_length": 10,
+        "episode_id": "spatial_reasoning_failure_0119",
+        "stored_length": 35,
         "replayed_length": 35,
         "max_action_abs_diff": 0.0,
         "max_pose_abs_diff": 0.0,
@@ -25,26 +25,37 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "obstacle_avoidance_failure_0299",
-        "stored_length": 10,
-        "replayed_length": 18,
+        "episode_id": "obstacle_avoidance_ood_0238",
+        "stored_length": 35,
+        "replayed_length": 35,
         "max_action_abs_diff": 0.0,
-        "max_pose_abs_diff": 0.8557266592979431,
-        "max_rgb_abs_diff": 248,
-        "collision_label_agreement": 0.8,
-        "stored_collisions": 2,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
         "replayed_collisions": 0
       },
       {
-        "episode_id": "temporal_planning_failure_0449",
+        "episode_id": "action_prediction_easy_0360",
+        "stored_length": 25,
+        "replayed_length": 25,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "temporal_planning_failure_0479",
         "stored_length": 10,
         "replayed_length": 10,
         "max_action_abs_diff": 0.0,
         "max_pose_abs_diff": 0.0,
         "max_rgb_abs_diff": 0,
         "collision_label_agreement": 1.0,
-        "stored_collisions": 3,
-        "replayed_collisions": 3
+        "stored_collisions": 7,
+        "replayed_collisions": 7
       },
       {
         "episode_id": "generalization_failure_0599",
@@ -60,7 +71,7 @@
     ]
   },
   "val_benchmark": {
-    "deterministic_and_consistent": false,
+    "deterministic_and_consistent": true,
     "episodes": [
       {
         "episode_id": "object_grounding_failure_0004",
@@ -74,9 +85,9 @@
         "replayed_collisions": 10
       },
       {
-        "episode_id": "spatial_reasoning_difficult_0146",
-        "stored_length": 28,
-        "replayed_length": 28,
+        "episode_id": "spatial_reasoning_counterfactual_0122",
+        "stored_length": 35,
+        "replayed_length": 35,
         "max_action_abs_diff": 0.0,
         "max_pose_abs_diff": 0.0,
         "max_rgb_abs_diff": 0,
@@ -85,18 +96,29 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "obstacle_avoidance_failure_0294",
-        "stored_length": 10,
-        "replayed_length": 23,
+        "episode_id": "obstacle_avoidance_easy_0240",
+        "stored_length": 35,
+        "replayed_length": 35,
         "max_action_abs_diff": 0.0,
-        "max_pose_abs_diff": 0.934999942779541,
-        "max_rgb_abs_diff": 249,
-        "collision_label_agreement": 0.8,
-        "stored_collisions": 2,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
         "replayed_collisions": 0
       },
       {
-        "episode_id": "temporal_planning_difficult_0446",
+        "episode_id": "action_prediction_ood_0358",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 10,
+        "replayed_collisions": 10
+      },
+      {
+        "episode_id": "temporal_planning_difficult_0476",
         "stored_length": 35,
         "replayed_length": 35,
         "max_action_abs_diff": 0.0,
@@ -120,7 +142,7 @@
     ]
   },
   "held_out_test_benchmark": {
-    "deterministic_and_consistent": false,
+    "deterministic_and_consistent": true,
     "episodes": [
       {
         "episode_id": "object_grounding_easy_0005",
@@ -134,7 +156,7 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "spatial_reasoning_counterfactual_0147",
+        "episode_id": "spatial_reasoning_ood_0123",
         "stored_length": 35,
         "replayed_length": 35,
         "max_action_abs_diff": 0.0,
@@ -145,18 +167,29 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "obstacle_avoidance_easy_0295",
+        "episode_id": "obstacle_avoidance_difficult_0241",
         "stored_length": 35,
         "replayed_length": 35,
-        "max_action_abs_diff": 0.699999988079071,
-        "max_pose_abs_diff": 1.5071247816085815,
-        "max_rgb_abs_diff": 253,
-        "collision_label_agreement": 0.9428571428571428,
-        "stored_collisions": 2,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
         "replayed_collisions": 0
       },
       {
-        "episode_id": "temporal_planning_counterfactual_0447",
+        "episode_id": "action_prediction_failure_0359",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "temporal_planning_counterfactual_0477",
         "stored_length": 35,
         "replayed_length": 35,
         "max_action_abs_diff": 0.0,
@@ -194,7 +227,7 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "E2_color_shift_p18_Ei",
+        "episode_id": "E2_color_shift_p09_Ei",
         "stored_length": 35,
         "replayed_length": 35,
         "max_action_abs_diff": 0.0,
@@ -205,7 +238,7 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "E4_robot_position_p12_E0",
+        "episode_id": "E3_robot_rotation_p19_Ei",
         "stored_length": 35,
         "replayed_length": 35,
         "max_action_abs_diff": 0.0,
@@ -216,7 +249,18 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "E6_shape_mutation_p05_Ei",
+        "episode_id": "E5_intermediate_obstacle_p04_Ei",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "E6_shape_mutation_p14_Ei",
         "stored_length": 35,
         "replayed_length": 35,
         "max_action_abs_diff": 0.0,
@@ -240,7 +284,7 @@
     ]
   },
   "independent_validation_suite": {
-    "deterministic_and_consistent": false,
+    "deterministic_and_consistent": true,
     "episodes": [
       {
         "episode_id": "indep_object_grounding_easy_0000",
@@ -254,8 +298,30 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "indep_spatial_reasoning_failure_0014",
-        "stored_length": 10,
+        "episode_id": "indep_spatial_reasoning_difficult_0011",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 0,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 1,
+        "replayed_collisions": 1
+      },
+      {
+        "episode_id": "indep_obstacle_avoidance_ood_0023",
+        "stored_length": 35,
+        "replayed_length": 35,
+        "max_action_abs_diff": 0.0,
+        "max_pose_abs_diff": 0.0,
+        "max_rgb_abs_diff": 1,
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
+      },
+      {
+        "episode_id": "indep_action_prediction_easy_0035",
+        "stored_length": 35,
         "replayed_length": 35,
         "max_action_abs_diff": 0.0,
         "max_pose_abs_diff": 0.0,
@@ -265,26 +331,15 @@
         "replayed_collisions": 0
       },
       {
-        "episode_id": "indep_obstacle_avoidance_failure_0029",
-        "stored_length": 10,
-        "replayed_length": 23,
-        "max_action_abs_diff": 0.0,
-        "max_pose_abs_diff": 0.9349998831748962,
-        "max_rgb_abs_diff": 252,
-        "collision_label_agreement": 0.8,
-        "stored_collisions": 2,
-        "replayed_collisions": 0
-      },
-      {
-        "episode_id": "indep_temporal_planning_failure_0044",
-        "stored_length": 10,
-        "replayed_length": 10,
+        "episode_id": "indep_temporal_planning_counterfactual_0047",
+        "stored_length": 35,
+        "replayed_length": 35,
         "max_action_abs_diff": 0.0,
         "max_pose_abs_diff": 0.0,
         "max_rgb_abs_diff": 0,
-        "collision_label_agreement": 0.9,
-        "stored_collisions": 5,
-        "replayed_collisions": 6
+        "collision_label_agreement": 1.0,
+        "stored_collisions": 0,
+        "replayed_collisions": 0
       },
       {
         "episode_id": "indep_generalization_failure_0059",

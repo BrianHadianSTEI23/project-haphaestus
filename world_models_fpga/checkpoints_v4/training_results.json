@@ -1,0 +1,138 @@
+{
+  "primary_seed": 42,
+  "seeds": [
+    42,
+    1337,
+    2026
+  ],
+  "results_by_seed": {
+    "seed_42": {
+      "baseline": {
+        "seed": 42,
+        "parameter_count": 155608,
+        "best_epoch": 2,
+        "best_validation_loss": 0.4107617147085143,
+        "final_train_loss": 0.12779576016323907,
+        "final_grad_norm": 0.7587729370960102,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/baseline_seed42_best.pt",
+        "sha256": "6debd5f887cc24de01f55f479a358d742c5f4efc554dd5d991e27ed432680b66"
+      },
+      "lewm": {
+        "seed": 42,
+        "parameter_count": 169660,
+        "best_epoch": 4,
+        "best_validation_loss": 0.5411320757575151,
+        "final_train_loss": 0.15545269046510968,
+        "final_grad_norm": 0.9650812357945331,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/lewm_seed42_best.pt",
+        "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+      },
+      "hjepa": {
+        "seed": 42,
+        "parameter_count": 191907,
+        "best_epoch": 6,
+        "best_validation_loss": 0.7872601020626906,
+        "final_train_loss": 0.3362253716162273,
+        "final_grad_norm": 1.0284068957171109,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/hjepa_seed42_best.pt",
+        "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+      }
+    },
+    "seed_1337": {
+      "baseline": {
+        "seed": 1337,
+        "parameter_count": 155608,
+        "best_epoch": 2,
+        "best_validation_loss": 0.4135905820422056,
+        "final_train_loss": 0.1527952242749078,
+        "final_grad_norm": 0.8112294327154872,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/baseline_seed1337_best.pt",
+        "sha256": "8945227de23d6fa3d07f33834cd4e75261e5cd69ebed20b7581cfc5e9e68ec11"
+      },
+      "lewm": {
+        "seed": 1337,
+        "parameter_count": 169660,
+        "best_epoch": 5,
+        "best_validation_loss": 0.4935710619135601,
+        "final_train_loss": 0.14930409908294678,
+        "final_grad_norm": 0.7532776657067101,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/lewm_seed1337_best.pt",
+        "sha256": "b1785f246e315a613b49bda9493d924499cfbcedf9a9af9ea9038704458e6f27"
+      },
+      "hjepa": {
+        "seed": 1337,
+        "parameter_count": 191907,
+        "best_epoch": 5,
+        "best_validation_loss": 0.9164744978997765,
+        "final_train_loss": 0.38498353259904045,
+        "final_grad_norm": 1.0608913329141,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/hjepa_seed1337_best.pt",
+        "sha256": "2ef324bcb7485c920f0535443a4346a162c7740a02b2849e407e6a21a5622145"
+      }
+    },
+    "seed_2026": {
+      "baseline": {
+        "seed": 2026,
+        "parameter_count": 155608,
+        "best_epoch": 5,
+        "best_validation_loss": 0.292075417663266,
+        "final_train_loss": 0.13629116092409407,
+        "final_grad_norm": 0.6818301173891906,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/baseline_seed2026_best.pt",
+        "sha256": "7caa9f115356b9881a237533e919cc0fce4a53397dbacc74b00b9c9c796e2b7f"
+      },
+      "lewm": {
+        "seed": 2026,
+        "parameter_count": 169660,
+        "best_epoch": 4,
+        "best_validation_loss": 0.47842052651614675,
+        "final_train_loss": 0.14614377558231353,
+        "final_grad_norm": 0.7238267825792666,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/lewm_seed2026_best.pt",
+        "sha256": "4d8558ddd8fef1e3f0f68e5afedb22115fe46486196be2bfe4a3f7311cfdd70f"
+      },
+      "hjepa": {
+        "seed": 2026,
+        "parameter_count": 191907,
+        "best_epoch": 4,
+        "best_validation_loss": 0.8973328456646059,
+        "final_train_loss": 0.34155701194490706,
+        "final_grad_norm": 1.085769511949477,
+        "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/hjepa_seed2026_best.pt",
+        "sha256": "00bb947e4ffa31ba807b0c53674a6cd359afaa0fa9d6fd42e4f84e1ee2290a40"
+      }
+    }
+  },
+  "primary_results": {
+    "baseline": {
+      "seed": 42,
+      "parameter_count": 155608,
+      "best_epoch": 2,
+      "best_validation_loss": 0.4107617147085143,
+      "final_train_loss": 0.12779576016323907,
+      "final_grad_norm": 0.7587729370960102,
+      "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/baseline_seed42_best.pt",
+      "sha256": "6debd5f887cc24de01f55f479a358d742c5f4efc554dd5d991e27ed432680b66"
+    },
+    "lewm": {
+      "seed": 42,
+      "parameter_count": 169660,
+      "best_epoch": 4,
+      "best_validation_loss": 0.5411320757575151,
+      "final_train_loss": 0.15545269046510968,
+      "final_grad_norm": 0.9650812357945331,
+      "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/lewm_seed42_best.pt",
+      "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+    },
+    "hjepa": {
+      "seed": 42,
+      "parameter_count": 191907,
+      "best_epoch": 6,
+      "best_validation_loss": 0.7872601020626906,
+      "final_train_loss": 0.3362253716162273,
+      "final_grad_norm": 1.0284068957171109,
+      "checkpoint": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/checkpoints_v4/hjepa_seed42_best.pt",
+      "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "epoch": 1,
+    "train": {
+      "loss_total": 0.5059553265571595,
+      "loss_action": 0.19921100897448404,
+      "loss_collision": 0.08709886781073042,
+      "loss_ground": 0.5786490872928074,
+      "grad_norm": 1.3513607466564916
+    },
+    "validation": {
+      "loss_total": 0.49921530194398833,
+      "loss_action": 0.1639481992801515,
+      "loss_collision": 0.08502588266643082,
+      "loss_ground": 0.6365238555320879
+    }
+  }
+]

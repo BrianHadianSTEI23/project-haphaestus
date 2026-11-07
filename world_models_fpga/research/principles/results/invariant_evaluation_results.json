@@ -2,224 +2,224 @@
   "Baseline": {
     "transformation_invariance": {
       "E1_position_shift": {
-        "invariance_score": 0.2964878695506435,
-        "cosine_invariance": 0.5669323205947876,
-        "normalized_l2_drift": 2.3728192708713456,
-        "equivariance_score": 0.5114350615390787,
-        "equivariance_heldout_cosine": 0.9121912121772766
+        "invariance_score": 0.2594450756812415,
+        "cosine_invariance": 0.9896249175071716,
+        "normalized_l2_drift": 2.8543803437942934,
+        "equivariance_score": 0.47788470790332,
+        "equivariance_heldout_cosine": 0.9981841444969177
       },
       "E2_color_shift": {
-        "invariance_score": 0.43840249343427046,
-        "cosine_invariance": 0.8660846948623657,
-        "normalized_l2_drift": 1.2810089243936513,
-        "equivariance_score": 0.7725044627248143,
-        "equivariance_heldout_cosine": 0.9898474812507629
+        "invariance_score": 0.07943562713867774,
+        "cosine_invariance": 0.9539265632629395,
+        "normalized_l2_drift": 11.588809782469676,
+        "equivariance_score": 0.313213032600918,
+        "equivariance_heldout_cosine": 0.9964498281478882
       },
       "E3_robot_rotation": {
-        "invariance_score": 0.31240295629738235,
-        "cosine_invariance": 0.6246855854988098,
-        "normalized_l2_drift": 2.2009940362026565,
-        "equivariance_score": 0.40311767876406196,
-        "equivariance_heldout_cosine": 0.8225964903831482
+        "invariance_score": 0.2938401557585723,
+        "cosine_invariance": 0.9921228289604187,
+        "normalized_l2_drift": 2.403210828752859,
+        "equivariance_score": 0.418189464582797,
+        "equivariance_heldout_cosine": 0.9974244832992554
       },
       "E4_robot_position": {
-        "invariance_score": 0.3175234039266092,
-        "cosine_invariance": 0.6314773559570312,
-        "normalized_l2_drift": 2.1493741489088314,
-        "equivariance_score": 0.6642386917758355,
-        "equivariance_heldout_cosine": 0.977355420589447
+        "invariance_score": 0.19872735505601918,
+        "cosine_invariance": 0.9796870350837708,
+        "normalized_l2_drift": 4.032019873248504,
+        "equivariance_score": 0.677239723972155,
+        "equivariance_heldout_cosine": 0.9997144937515259
       },
       "E5_intermediate_obstacle": {
-        "invariance_score": 0.1856244994017406,
-        "cosine_invariance": 0.21097666025161743,
-        "normalized_l2_drift": 4.387219915598183,
-        "equivariance_score": 0.41559578084926,
-        "equivariance_heldout_cosine": 0.9316340684890747
+        "invariance_score": 0.06701993353610357,
+        "cosine_invariance": 0.8533722162246704,
+        "normalized_l2_drift": 13.920933925744661,
+        "equivariance_score": 0.1533650250119714,
+        "equivariance_heldout_cosine": 0.9799840450286865
       },
       "E6_shape_mutation": {
-        "invariance_score": 0.5873718674911945,
-        "cosine_invariance": 0.9689843654632568,
-        "normalized_l2_drift": 0.7024989710032228,
-        "equivariance_score": 0.7138711067570135,
-        "equivariance_heldout_cosine": 0.9848106503486633
+        "invariance_score": 0.40224744897895165,
+        "cosine_invariance": 0.9983615875244141,
+        "normalized_l2_drift": 1.4860319252200576,
+        "equivariance_score": 0.6956420928743006,
+        "equivariance_heldout_cosine": 0.9997633099555969
       },
       "E7_camera_viewpoint": {
-        "invariance_score": 0.43182253884483784,
-        "cosine_invariance": 0.8507897257804871,
-        "normalized_l2_drift": 1.315766107704997,
-        "equivariance_score": 0.6537265009058615,
-        "equivariance_heldout_cosine": 0.9727404713630676
+        "invariance_score": 0.47533388563465123,
+        "cosine_invariance": 0.9984185695648193,
+        "normalized_l2_drift": 1.1037843718312461,
+        "equivariance_score": 0.6060093230391939,
+        "equivariance_heldout_cosine": 0.9993676543235779
       }
     },
     "embodiment_stability": {
       "nominal_success_rate": 0.6,
-      "camera_pitch_10deg": 0.6,
-      "action_magnitude_scaling_0.7x": 0.6,
+      "camera_pitch_10deg": 0.5,
+      "action_magnitude_scaling_0.7x": 0.5,
       "surface_friction_perturbation": 0.6
     },
     "horizon_generalization": {
-      "horizon_K1": 0.9708701968193054,
-      "horizon_K3": 0.919536292552948,
-      "horizon_K5": 0.883857250213623,
-      "horizon_K8": 0.8178269863128662
+      "horizon_K1": 0.9981380105018616,
+      "horizon_K3": 0.9932718276977539,
+      "horizon_K5": 0.9901838302612305,
+      "horizon_K8": 0.9783885478973389
     }
   },
   "LeWM": {
     "transformation_invariance": {
       "E1_position_shift": {
-        "invariance_score": 0.2695464634102092,
-        "cosine_invariance": 0.1897204965353012,
-        "normalized_l2_drift": 2.7099355240960823,
-        "equivariance_score": 0.4095284724928659,
-        "equivariance_heldout_cosine": 0.6992042660713196,
-        "dynamics_residual_invariance": 0.3232874675897516,
-        "dynamics_residual_equivariance": 0.47171747543274045
+        "invariance_score": 0.23955418304391232,
+        "cosine_invariance": 0.11513212323188782,
+        "normalized_l2_drift": 3.174420948502876,
+        "equivariance_score": 0.4242339586908607,
+        "equivariance_heldout_cosine": 0.753650963306427,
+        "dynamics_residual_invariance": 0.32414621216481676,
+        "dynamics_residual_equivariance": 0.4907963342253969
       },
       "E2_color_shift": {
-        "invariance_score": 0.2672251993019603,
-        "cosine_invariance": 0.19782599806785583,
-        "normalized_l2_drift": 2.7421620513790526,
-        "equivariance_score": 0.6833294901550725,
-        "equivariance_heldout_cosine": 0.9640930891036987,
-        "dynamics_residual_invariance": 0.39067374282607,
-        "dynamics_residual_equivariance": 0.549067843581726
+        "invariance_score": 0.5057646131274144,
+        "cosine_invariance": 0.9116276502609253,
+        "normalized_l2_drift": 0.9772043635407047,
+        "equivariance_score": 0.8275102147636832,
+        "equivariance_heldout_cosine": 0.9940564632415771,
+        "dynamics_residual_invariance": 0.5641714915190569,
+        "dynamics_residual_equivariance": 0.6568984253199858
       },
       "E3_robot_rotation": {
-        "invariance_score": 0.2804961310022327,
-        "cosine_invariance": 0.2636374831199646,
-        "normalized_l2_drift": 2.565111562954286,
-        "equivariance_score": 0.40018423933175795,
-        "equivariance_heldout_cosine": 0.7185395956039429,
-        "dynamics_residual_invariance": 0.34691337794554056,
-        "dynamics_residual_equivariance": 0.46718036817360026
+        "invariance_score": 0.30352857446892956,
+        "cosine_invariance": 0.5159018635749817,
+        "normalized_l2_drift": 2.2945827316247094,
+        "equivariance_score": 0.41862630259796985,
+        "equivariance_heldout_cosine": 0.8207548260688782,
+        "dynamics_residual_invariance": 0.3541337678238512,
+        "dynamics_residual_equivariance": 0.4758982495724998
       },
       "E4_robot_position": {
-        "invariance_score": 0.26383934804761083,
-        "cosine_invariance": 0.16129130125045776,
-        "normalized_l2_drift": 2.7901852297616583,
-        "equivariance_score": 0.7492827876837396,
-        "equivariance_heldout_cosine": 0.984769880771637,
-        "dynamics_residual_invariance": 0.3645389404686499,
-        "dynamics_residual_equivariance": 0.7375848660102918
+        "invariance_score": 0.2571758251834973,
+        "cosine_invariance": 0.2727162539958954,
+        "normalized_l2_drift": 2.8883903620664615,
+        "equivariance_score": 0.8119780833592917,
+        "equivariance_heldout_cosine": 0.9948485493659973,
+        "dynamics_residual_invariance": 0.37886988816728756,
+        "dynamics_residual_equivariance": 0.7493292044606421
       },
       "E5_intermediate_obstacle": {
-        "invariance_score": 0.24020043630109697,
-        "cosine_invariance": -0.04539094492793083,
-        "normalized_l2_drift": 3.1631897735043086,
-        "equivariance_score": 0.5129487548258204,
-        "equivariance_heldout_cosine": 0.8765588998794556,
-        "dynamics_residual_invariance": 0.3313472479664756,
-        "dynamics_residual_equivariance": 0.5794644611219133
+        "invariance_score": 0.22184195110668636,
+        "cosine_invariance": -0.07126078009605408,
+        "normalized_l2_drift": 3.5077136899102026,
+        "equivariance_score": 0.45352436635538595,
+        "equivariance_heldout_cosine": 0.8579836487770081,
+        "dynamics_residual_invariance": 0.2841636843796552,
+        "dynamics_residual_equivariance": 0.5093647122487718
       },
       "E6_shape_mutation": {
-        "invariance_score": 0.6676629057915611,
-        "cosine_invariance": 0.9715826511383057,
-        "normalized_l2_drift": 0.49776180663269,
-        "equivariance_score": 0.7729260709900675,
-        "equivariance_heldout_cosine": 0.9817578792572021,
-        "dynamics_residual_invariance": 0.6647405543933091,
-        "dynamics_residual_equivariance": 0.6851362488621962
+        "invariance_score": 0.5552356067462831,
+        "cosine_invariance": 0.9421507120132446,
+        "normalized_l2_drift": 0.801037231491808,
+        "equivariance_score": 0.8309224165093942,
+        "equivariance_heldout_cosine": 0.9944924116134644,
+        "dynamics_residual_invariance": 0.6312064882585464,
+        "dynamics_residual_equivariance": 0.6373374173256524
       },
       "E7_camera_viewpoint": {
-        "invariance_score": 0.42162537486736157,
-        "cosine_invariance": 0.7923651337623596,
-        "normalized_l2_drift": 1.3717737584332736,
-        "equivariance_score": 0.7426643747375011,
-        "equivariance_heldout_cosine": 0.9798665046691895,
-        "dynamics_residual_invariance": 0.38347140796928153,
-        "dynamics_residual_equivariance": 0.564234137101312
+        "invariance_score": 0.4260942240438792,
+        "cosine_invariance": 0.8266782164573669,
+        "normalized_l2_drift": 1.3468987457971737,
+        "equivariance_score": 0.7883860950069375,
+        "equivariance_heldout_cosine": 0.9914904236793518,
+        "dynamics_residual_invariance": 0.4373960424279231,
+        "dynamics_residual_equivariance": 0.6027845651197276
       }
     },
     "embodiment_stability": {
-      "nominal_success_rate": 0.4,
-      "camera_pitch_10deg": 0.8,
-      "action_magnitude_scaling_0.7x": 0.4,
-      "surface_friction_perturbation": 0.4
+      "nominal_success_rate": 0.5,
+      "camera_pitch_10deg": 0.2,
+      "action_magnitude_scaling_0.7x": 0.6,
+      "surface_friction_perturbation": 0.5
     },
     "horizon_generalization": {
-      "horizon_K1": 0.9778105020523071,
-      "horizon_K3": 0.901957094669342,
-      "horizon_K5": 0.8249808549880981,
-      "horizon_K8": 0.6905853152275085
+      "horizon_K1": 0.9658709764480591,
+      "horizon_K3": 0.8547099232673645,
+      "horizon_K5": 0.7574333548545837,
+      "horizon_K8": 0.6110188364982605
     }
   },
   "H-JEPA": {
     "transformation_invariance": {
       "E1_position_shift": {
-        "invariance_score": 0.2542907561820043,
-        "cosine_invariance": 0.11168728023767471,
-        "normalized_l2_drift": 2.932506297178443,
-        "equivariance_score": 0.4262093448720591,
-        "equivariance_heldout_cosine": 0.7347159385681152,
-        "macro_subgoal_invariance": 0.2871403758540659,
-        "macro_subgoal_equivariance": 0.5032268100147235
+        "invariance_score": 0.21620191412920328,
+        "cosine_invariance": 0.9971191883087158,
+        "normalized_l2_drift": 3.6253059508177863,
+        "equivariance_score": 0.5543882135351527,
+        "equivariance_heldout_cosine": 0.9998189806938171,
+        "macro_subgoal_invariance": 0.20993340227418758,
+        "macro_subgoal_equivariance": 0.15183085545526662
       },
       "E2_color_shift": {
-        "invariance_score": 0.27615523113900736,
-        "cosine_invariance": 0.3282473683357239,
-        "normalized_l2_drift": 2.621151755393086,
-        "equivariance_score": 0.7780692749607249,
-        "equivariance_heldout_cosine": 0.9877678155899048,
-        "macro_subgoal_invariance": 0.37768506123477086,
-        "macro_subgoal_equivariance": 0.6849059742182372
+        "invariance_score": 0.5175828732549269,
+        "cosine_invariance": 0.9998201131820679,
+        "normalized_l2_drift": 0.932057747025695,
+        "equivariance_score": 0.5298108810770676,
+        "equivariance_heldout_cosine": 0.9998008012771606,
+        "macro_subgoal_invariance": 0.47208807363786687,
+        "macro_subgoal_equivariance": 0.1488746967705406
       },
       "E3_robot_rotation": {
-        "invariance_score": 0.2747470279468319,
-        "cosine_invariance": 0.26457878947257996,
-        "normalized_l2_drift": 2.6397118013357233,
-        "equivariance_score": 0.4699862840959776,
-        "equivariance_heldout_cosine": 0.8200657367706299,
-        "macro_subgoal_invariance": 0.35102464244103093,
-        "macro_subgoal_equivariance": 0.5025641766071115
+        "invariance_score": 0.2783604170075411,
+        "cosine_invariance": 0.9984902143478394,
+        "normalized_l2_drift": 2.5924648006721043,
+        "equivariance_score": 0.47801384031266725,
+        "equivariance_heldout_cosine": 0.9997084140777588,
+        "macro_subgoal_invariance": 0.2748702809442716,
+        "macro_subgoal_equivariance": 0.1496312395967627
       },
       "E4_robot_position": {
-        "invariance_score": 0.23974850104092257,
-        "cosine_invariance": -0.016299420967698097,
-        "normalized_l2_drift": 3.1710375483403355,
-        "equivariance_score": 0.7140772014901408,
-        "equivariance_heldout_cosine": 0.9768512845039368,
-        "macro_subgoal_invariance": 0.2713473868900204,
-        "macro_subgoal_equivariance": 0.7149840108714355
+        "invariance_score": 0.2249238988419341,
+        "cosine_invariance": 0.9974558353424072,
+        "normalized_l2_drift": 3.4459481858028473,
+        "equivariance_score": 0.6870757662770093,
+        "equivariance_heldout_cosine": 0.9999493360519409,
+        "macro_subgoal_invariance": 0.2130062972813565,
+        "macro_subgoal_equivariance": 0.1521384273741106
       },
       "E5_intermediate_obstacle": {
-        "invariance_score": 0.21668199235315622,
-        "cosine_invariance": -0.21878384053707123,
-        "normalized_l2_drift": 3.615058174147501,
-        "equivariance_score": 0.43731065516096823,
-        "equivariance_heldout_cosine": 0.8145384788513184,
-        "macro_subgoal_invariance": 0.281729811808346,
-        "macro_subgoal_equivariance": 0.44630494219232314
+        "invariance_score": 0.22802946998755885,
+        "cosine_invariance": 0.9974822402000427,
+        "normalized_l2_drift": 3.3853980805838795,
+        "equivariance_score": 0.41727629458446663,
+        "equivariance_heldout_cosine": 0.9995347857475281,
+        "macro_subgoal_invariance": 0.21524072345772916,
+        "macro_subgoal_equivariance": 0.15087611156051714
       },
       "E6_shape_mutation": {
-        "invariance_score": 0.6166708241240818,
-        "cosine_invariance": 0.9599391222000122,
-        "normalized_l2_drift": 0.6216106890096486,
-        "equivariance_score": 0.8047239860324124,
-        "equivariance_heldout_cosine": 0.9896341562271118,
-        "macro_subgoal_invariance": 0.6367557211758884,
-        "macro_subgoal_equivariance": 0.7216735383997688
+        "invariance_score": 0.4137595994732796,
+        "cosine_invariance": 0.9995741248130798,
+        "normalized_l2_drift": 1.4168623550317883,
+        "equivariance_score": 0.4805326216069569,
+        "equivariance_heldout_cosine": 0.9996911883354187,
+        "macro_subgoal_invariance": 0.40776557173062355,
+        "macro_subgoal_equivariance": 0.14794770071580474
       },
       "E7_camera_viewpoint": {
-        "invariance_score": 0.4549662260261036,
-        "cosine_invariance": 0.8505504131317139,
-        "normalized_l2_drift": 1.1979653495040425,
-        "equivariance_score": 0.7319547628375161,
-        "equivariance_heldout_cosine": 0.9774332642555237,
-        "macro_subgoal_invariance": 0.45793455237914915,
-        "macro_subgoal_equivariance": 0.6025701907835423
+        "invariance_score": 0.4678080215811506,
+        "cosine_invariance": 0.9997225999832153,
+        "normalized_l2_drift": 1.1376290141842516,
+        "equivariance_score": 0.5437772132244968,
+        "equivariance_heldout_cosine": 0.9998207688331604,
+        "macro_subgoal_invariance": 0.47285307741831856,
+        "macro_subgoal_equivariance": 0.15301462194264726
       }
     },
     "embodiment_stability": {
-      "nominal_success_rate": 0.6,
-      "camera_pitch_10deg": 0.8,
-      "action_magnitude_scaling_0.7x": 0.6,
-      "surface_friction_perturbation": 0.6
+      "nominal_success_rate": 0.5,
+      "camera_pitch_10deg": 0.5,
+      "action_magnitude_scaling_0.7x": 0.5,
+      "surface_friction_perturbation": 0.5
     },
     "horizon_generalization": {
-      "horizon_K1": 0.9857954382896423,
-      "horizon_K3": 0.93204265832901,
-      "horizon_K5": 0.899868905544281,
-      "horizon_K8": 0.7936592698097229
+      "horizon_K1": 0.9997652769088745,
+      "horizon_K3": 0.9986118674278259,
+      "horizon_K5": 0.9985913038253784,
+      "horizon_K8": 0.9964280724525452
     }
   }
 }

@@ -107,7 +107,7 @@ class BenchmarkDatasetGenerator:
         transitions = []
 
         gt_pos, gt_cls, gt_col = self._get_ground_truth_objects(task_spec["obstacles"])
-        goal_target = waypoints[-1] if len(waypoints) > 0 else init_pos
+        final_goal = waypoints[-1].copy() if len(waypoints) > 0 else init_pos.copy()
 
         is_success = False
 
@@ -137,7 +137,7 @@ class BenchmarkDatasetGenerator:
                 goal_reached = True
                 is_success = True
 
-            # Compute demonstrator action
+            # Compute demonstrator action toward active waypoint curr_wp
             action = self.navigator.compute_action(
                 curr_pose, curr_wp, task_spec, is_last_waypoint=(wp_idx >= len(waypoints) - 1)
             )
@@ -173,7 +173,11 @@ class BenchmarkDatasetGenerator:
                 "object_classes": gt_cls,
                 "object_colors": gt_col,
                 "language_instruction": task_spec["instruction"],
-                "grounded_goal": goal_target,
+                "grounded_goal": curr_wp.copy(), # Action-aligned: active waypoint toward which action was generated
+                "active_subgoal": curr_wp.copy(),
+                "final_goal": final_goal.copy(),
+                "active_waypoint_index": wp_idx,
+                "remaining_waypoint_count": max(0, len(waypoints) - wp_idx),
                 "episode_seed": episode_seed,
                 "action": action,
                 "next_action": next_action,
@@ -394,6 +398,9 @@ class BenchmarkDatasetGenerator:
         all_goals_reached = []
         all_ep_successes = []
         all_goals = []
+        all_final_goals = []
+        all_active_subgoals = []
+        all_remaining_wps = []
         all_episode_indices = []
         ep_starts = []
 
@@ -461,6 +468,9 @@ class BenchmarkDatasetGenerator:
                 all_goals_reached.append(tr["goal_reached"])
                 all_ep_successes.append(tr["episode_success"])
                 all_goals.append(tr["grounded_goal"])
+                all_final_goals.append(tr["final_goal"])
+                all_active_subgoals.append(tr["active_subgoal"])
+                all_remaining_wps.append(tr["remaining_waypoint_count"])
                 all_episode_indices.append(ep_idx)
                 ep_starts.append(step_i == 0)
                 curr_idx += 1
@@ -484,6 +494,9 @@ class BenchmarkDatasetGenerator:
             episode_successes=np.array(all_ep_successes, dtype=bool),
             episode_starts=np.array(ep_starts, dtype=bool),
             grounded_goals=np.array(all_goals, dtype=np.float32),
+            final_goals=np.array(all_final_goals, dtype=np.float32),
+            active_subgoals=np.array(all_active_subgoals, dtype=np.float32),
+            remaining_waypoints=np.array(all_remaining_wps, dtype=np.int32),
             transition_episode_indices=np.array(all_episode_indices, dtype=np.int32),
         )
 

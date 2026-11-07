@@ -51,6 +51,36 @@ def _find_top_k_dims(s_donor: torch.Tensor, s_rec: torch.Tensor, k: int = 8) -> 
     return torch.topk(mean_diff, k=k).indices
 
 
+def _extract_tensors(pairs_subset, cf_rgb, cf_actions, cf_pose, cf_goals, device):
+    donor_frames, rec_frames, donor_goals, rec_goals, donor_acts = [], [], [], [], []
+    for ep0, epi in pairs_subset:
+        s0, l0 = int(ep0["start_index"]), int(ep0["length"])
+        si, li = int(epi["start_index"]), int(epi["length"])
+        L = min(l0, li, 12)
+        for t in range(L):
+            i0, ii = s0 + t, si + t
+            donor_frames.append(cf_rgb[i0])
+            rec_frames.append(cf_rgb[ii])
+            donor_acts.append(cf_actions[i0])
+
+            for pose, goal, dst_list in (
+                (cf_pose[i0], cf_goals[i0], donor_goals),
+                (cf_pose[ii], cf_goals[ii], rec_goals),
+            ):
+                dx, dy = float(goal[0] - pose[0]), float(goal[1] - pose[1])
+                th = float(pose[2])
+                c, s = np.cos(th), np.sin(th)
+                dth = float(goal[2] - pose[2])
+                dst_list.append(np.array([c * dx + s * dy, -s * dx + c * dy, np.sin(dth), np.cos(dth)], dtype=np.float32))
+
+    img_donor = torch.from_numpy(np.array(donor_frames)).permute(0, 3, 1, 2).float().to(device) / 255.0
+    img_rec = torch.from_numpy(np.array(rec_frames)).permute(0, 3, 1, 2).float().to(device) / 255.0
+    g_donor = torch.from_numpy(np.array(donor_goals)).float().to(device)
+    g_rec = torch.from_numpy(np.array(rec_goals)).float().to(device)
+    a_donor = torch.from_numpy(np.array(donor_acts)).float().to(device)
+    return img_donor, img_rec, g_donor, g_rec, a_donor
+
+
 def run_activation_patching():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     v2_splits = str(_ACTIVE_SPLITS_DIR)
@@ -115,44 +145,26 @@ def run_activation_patching():
 
     for exp_name, circuit_label in patching_configs:
         print(f"\n--- Patching Intervention: {exp_name} ({circuit_label}) ---", flush=True)
-        pairs = pairs_by_exp.get(exp_name, [])
-        donor_frames, rec_frames, donor_goals, rec_goals, donor_acts = [], [], [], [], []
+        all_pairs = pairs_by_exp.get(exp_name, [])
+        # Strictly split pairs into discovery (first 50%) and evaluation (second 50%)
+        n_disc = max(2, len(all_pairs) // 2)
+        disc_pairs = all_pairs[:n_disc]
+        eval_pairs = all_pairs[n_disc:]
 
-        for ep0, epi in pairs:
-            s0, l0 = int(ep0["start_index"]), int(ep0["length"])
-            si, li = int(epi["start_index"]), int(epi["length"])
-            L = min(l0, li, 12)
-            for t in range(L):
-                i0, ii = s0 + t, si + t
-                donor_frames.append(cf_rgb[i0])
-                rec_frames.append(cf_rgb[ii])
-                donor_acts.append(cf_actions[i0])
-
-                for pose, goal, dst_list in (
-                    (cf_pose[i0], cf_goals[i0], donor_goals),
-                    (cf_pose[ii], cf_goals[ii], rec_goals),
-                ):
-                    dx, dy = float(goal[0] - pose[0]), float(goal[1] - pose[1])
-                    th = float(pose[2])
-                    c, s = np.cos(th), np.sin(th)
-                    dth = float(goal[2] - pose[2])
-                    dst_list.append(np.array([c * dx + s * dy, -s * dx + c * dy, np.sin(dth), np.cos(dth)], dtype=np.float32))
-
-        img_donor = torch.from_numpy(np.array(donor_frames)).permute(0, 3, 1, 2).float().to(device) / 255.0
-        img_rec = torch.from_numpy(np.array(rec_frames)).permute(0, 3, 1, 2).float().to(device) / 255.0
-        g_donor = torch.from_numpy(np.array(donor_goals)).float().to(device)
-        g_rec = torch.from_numpy(np.array(rec_goals)).float().to(device)
-        a_donor = torch.from_numpy(np.array(donor_acts)).float().to(device)
+        img_d_tr, img_r_tr, _, _, _ = _extract_tensors(disc_pairs, cf_rgb, cf_actions, cf_pose, cf_goals, device)
+        img_donor, img_rec, g_donor, g_rec, a_donor = _extract_tensors(eval_pairs, cf_rgb, cf_actions, cf_pose, cf_goals, device)
 
         with torch.no_grad():
             # 1. Baseline Policy
+            # Discover top-8 dimensions strictly on discovery split
+            top8_b = _find_top_k_dims(b_model.encoder(img_d_tr), b_model.encoder(img_r_tr), k=8)
+            rand8_b = torch.tensor(rng.choice(32, size=8, replace=False), dtype=torch.long, device=device)
+
+            # Evaluate causal patching effect strictly on held-out evaluation pairs
             z_d_b = b_model.encoder(img_donor)
             z_r_b = b_model.encoder(img_rec)
             act_d_b, _ = b_model.forward_with_latent(z_d_b, g_donor)
             act_r_b, _ = b_model.forward_with_latent(z_r_b, g_rec)
-
-            top8_b = _find_top_k_dims(z_d_b, z_r_b, k=8)
-            rand8_b = torch.tensor(rng.choice(32, size=8, replace=False), dtype=torch.long, device=device)
 
             z_patch_top8_b = z_r_b.clone()
             z_patch_top8_b[:, top8_b] = z_d_b[:, top8_b]
@@ -181,15 +193,15 @@ def run_activation_patching():
             }
 
             # 2. LeWorldModel (LeWM)
+            top8_l = _find_top_k_dims(l_model.encode(img_d_tr), l_model.encode(img_r_tr), k=8)
+            rand8_l = torch.tensor(rng.choice(32, size=8, replace=False), dtype=torch.long, device=device)
+
             s_d_l = l_model.encode(img_donor)
             s_r_l = l_model.encode(img_rec)
             ns_d_l, col_d_l = l_model.predict_next(s_d_l, a_donor)
             ns_r_l, col_r_l = l_model.predict_next(s_r_l, a_donor)
             disp_d_l = l_model.predict_ego_displacement(s_d_l, ns_d_l)
             disp_r_l = l_model.predict_ego_displacement(s_r_l, ns_r_l)
-
-            top8_l = _find_top_k_dims(s_d_l, s_r_l, k=8)
-            rand8_l = torch.tensor(rng.choice(32, size=8, replace=False), dtype=torch.long, device=device)
 
             s_patch_top8_l = s_r_l.clone()
             s_patch_top8_l[:, top8_l] = s_d_l[:, top8_l]
@@ -230,15 +242,15 @@ def run_activation_patching():
             }
 
             # 3. H-JEPA (Hierarchical Macro + Micro)
+            top8_h = _find_top_k_dims(h_model.encode(img_d_tr), h_model.encode(img_r_tr), k=8)
+            rand8_h = torch.tensor(rng.choice(32, size=8, replace=False), dtype=torch.long, device=device)
+
             s_d_h = h_model.encode(img_donor)
             s_r_h = h_model.encode(img_rec)
             S_d_macro, col_d_m = h_model.macro_predictor(s_d_h, a_donor)
             S_r_macro, col_r_m = h_model.macro_predictor(s_r_h, a_donor)
             act_d_h = h_model.micro_predictor.select_action(s_d_h, S_d_macro)
             act_r_h = h_model.micro_predictor.select_action(s_r_h, S_r_macro)
-
-            top8_h = _find_top_k_dims(s_d_h, s_r_h, k=8)
-            rand8_h = torch.tensor(rng.choice(32, size=8, replace=False), dtype=torch.long, device=device)
 
             # Patch top-8 dimensions of macro subgoal vs random-8 control
             S_patch_top8 = S_r_macro.clone()

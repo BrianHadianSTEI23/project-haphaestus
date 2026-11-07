@@ -93,6 +93,8 @@ class BenchmarkEvaluator:
         goal_reached = False
         actual_path_dist = 0.0
         prev_xy = init_pos[:2].copy()
+        action_prediction_maes = []
+        action_prediction_cosines = []
 
         for t in range(effective_max_steps):
             curr_pose = self.env.get_robot_pose()
@@ -123,8 +125,15 @@ class BenchmarkEvaluator:
             t1 = time.perf_counter()
             latencies.append((t1 - t0) * 1e6)
 
+            # Action prediction probe evaluation (do NOT override action, evaluate predicted action)
             if task_spec.get("capability") == "action_prediction" and "action_probe_vector" in task_spec:
-                action = np.asarray(task_spec["action_probe_vector"], dtype=np.float32)
+                probe_target = np.asarray(task_spec["action_probe_vector"], dtype=np.float32)
+                err_mae = float(np.mean(np.abs(action - probe_target)))
+                norm_a = float(np.linalg.norm(action))
+                norm_t = float(np.linalg.norm(probe_target))
+                cos_sim = float(np.dot(action, probe_target) / (norm_a * norm_t + 1e-8)) if norm_a > 1e-4 and norm_t > 1e-4 else 0.0
+                action_prediction_maes.append(err_mae)
+                action_prediction_cosines.append(cos_sim)
 
             obs, _, _, _, step_info = self.env.step(action)
             if step_info["collision"]:
@@ -147,10 +156,16 @@ class BenchmarkEvaluator:
         if final_goal_err < 0.28:
             goal_reached = True
 
-        if task_spec.get("is_failure_example", False):
+        is_action_pred_task = bool(task_spec.get("capability") == "action_prediction")
+        is_navigation_task = not is_action_pred_task
+
+        if is_action_pred_task:
+            mean_mae = float(np.mean(action_prediction_maes)) if action_prediction_maes else 1.0
+            mean_cos = float(np.mean(action_prediction_cosines)) if action_prediction_cosines else 0.0
+            # Action prediction probe is successful strictly based on prediction fidelity, NOT free pass
+            is_success = bool(mean_mae < 0.35 and mean_cos > 0.70)
+        elif task_spec.get("is_failure_example", False):
             is_success = bool(collision_count == 0)
-        elif task_spec.get("capability") == "action_prediction":
-            is_success = True
         else:
             is_success = bool(goal_reached and (collision_count == 0))
 
@@ -163,6 +178,9 @@ class BenchmarkEvaluator:
 
         return {
             "episode_id": task_spec.get("episode_id", "ep"),
+            "capability": task_spec.get("capability", "navigation"),
+            "is_navigation_task": is_navigation_task,
+            "is_action_prediction_task": is_action_pred_task,
             "track": getattr(agent, "track", "structured"),
             "ablation_mode": getattr(agent, "ablation_mode", "prediction_used"),
             "success": is_success,
@@ -178,6 +196,8 @@ class BenchmarkEvaluator:
             "trajectory_length": actual_path_dist,
             "steps_taken": len(latencies),
             "steps": len(latencies),
+            "action_prediction_mae": float(np.mean(action_prediction_maes)) if action_prediction_maes else None,
+            "action_prediction_cosine": float(np.mean(action_prediction_cosines)) if action_prediction_cosines else None,
             "mean_latency_us": float(np.mean(latencies)),
             "median_latency_us": float(np.median(latencies)),
             "p99_latency_us": float(np.percentile(latencies, 99)),
@@ -186,18 +206,56 @@ class BenchmarkEvaluator:
 
     def evaluate_suite(self, agent, task_specs, max_steps=45, perturbation=None):
         results = [self.evaluate_episode(agent, spec, max_steps=max_steps, perturbation=perturbation) for spec in task_specs]
+        nav_results = [r for r in results if r.get("is_navigation_task", True)]
+        act_results = [r for r in results if r.get("is_action_prediction_task", False)]
+
+        # Separate navigation success from action-prediction probe evaluation
+        nav_succ_rate = float(np.mean([r["success"] for r in nav_results])) * 100.0 if nav_results else 0.0
+        nav_goal_rate = float(np.mean([r["goal_reached"] for r in nav_results])) * 100.0 if nav_results else 0.0
+        nav_col_rate = float(np.mean([r["had_collision"] for r in nav_results])) * 100.0 if nav_results else 0.0
+        nav_err = float(np.mean([r["final_goal_error"] for r in nav_results])) if nav_results else 0.0
+        nav_eff = float(np.mean([r["path_efficiency"] for r in nav_results])) if nav_results else 0.0
+
+        # Action prediction probe metrics
+        act_maes = [r["action_prediction_mae"] for r in act_results if r["action_prediction_mae"] is not None]
+        act_cos = [r["action_prediction_cosine"] for r in act_results if r["action_prediction_cosine"] is not None]
+        act_succ = [r["success"] for r in act_results]
+
+        # Capability breakdown
+        capabilities = {}
+        for cap in sorted(set(r.get("capability", "navigation") for r in results)):
+            cap_res = [r for r in results if r.get("capability") == cap]
+            capabilities[cap] = {
+                "episodes": len(cap_res),
+                "success_rate": float(np.mean([r["success"] for r in cap_res])) * 100.0,
+                "collision_rate": float(np.mean([r["had_collision"] for r in cap_res])) * 100.0,
+                "mean_goal_error": float(np.mean([r["final_goal_error"] for r in cap_res])),
+            }
+
+        # Independent episode 95% confidence intervals
+        n_nav = len(nav_results)
+        ci95_nav = float(1.96 * np.sqrt(max(0.0, (nav_succ_rate / 100.0) * (1.0 - nav_succ_rate / 100.0)) / max(1, n_nav)) * 100.0)
+
         return {
             "model_name": getattr(agent, "name", "Agent"),
             "track": getattr(agent, "track", "structured"),
             "ablation_mode": getattr(agent, "ablation_mode", "prediction_used"),
             "total_episodes": len(results),
-            "success_rate": float(np.mean([r["success"] for r in results])) * 100.0,
-            "goal_reached_rate": float(np.mean([r["goal_reached"] for r in results])) * 100.0,
-            "collision_rate": float(np.mean([r["had_collision"] for r in results])) * 100.0,
-            "path_efficiency": float(np.mean([r["path_efficiency"] for r in results])),
-            "goal_localization_error": float(np.mean([r["final_goal_error"] for r in results])),
+            "navigation_episodes": len(nav_results),
+            "action_prediction_episodes": len(act_results),
+            "success_rate": nav_succ_rate,  # Cleaned: reflects navigation success without action prediction contamination
+            "navigation_success_rate": nav_succ_rate,
+            "navigation_success_ci95": ci95_nav,
+            "goal_reached_rate": nav_goal_rate,
+            "collision_rate": nav_col_rate,
+            "path_efficiency": nav_eff,
+            "goal_localization_error": nav_err,
+            "action_prediction_mae": float(np.mean(act_maes)) if act_maes else None,
+            "action_prediction_cosine": float(np.mean(act_cos)) if act_cos else None,
+            "action_prediction_accuracy": float(np.mean(act_succ)) * 100.0 if act_succ else None,
+            "capabilities_breakdown": capabilities,
             "mean_latency_us": float(np.mean([r["mean_latency_us"] for r in results])),
-            "p99_latency_us": float(np.mean([r["p99_latency_us"] for r in results])),
+            "p99_latency_us": float(np.percentile([r["p99_latency_us"] for r in results], 99)),
             "recovery_rate": float(np.mean([r["recovered"] for r in results])) * 100.0 if perturbation else 0.0,
             "episodes": results,
         }

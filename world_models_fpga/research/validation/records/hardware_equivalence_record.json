@@ -1,42 +1,41 @@
 {
   "record_id": "REC-HARDWARE_EQUIVALENCE-001",
   "evaluation": "hardware_equivalence",
-  "provenance_status": "LEGACY_UNVERIFIED",
-  "command_executed": "UNKNOWN_HISTORICAL_RUN",
-  "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
-  "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
-  "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
-  "dataset_sha256": "missing",
-  "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
-  "checkpoint_sha256": "missing",
+  "provenance_status": "INDEPENDENTLY_EXECUTED",
+  "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/hardware/validate_hardware_equivalence.py",
+  "execution_timestamp": "2026-11-07T17:32:19.346682+00:00",
+  "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+  "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
+  "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+  "checkpoint_path": "world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_compact_best.pt",
+  "checkpoint_sha256": "18ddc0711856f2ef77e6748846a39568cc5a5aa8750941b493fc024d7f8121c0",
   "random_seed": 42,
   "configuration": {
-    "source_artifact": "research/hardware/hardware_equivalence_results.json"
+    "precision": "Q8.8_signed_fixed_point",
+    "simulation": "Icarus_Verilog_RTL",
+    "clock_freq_mhz": 125
   },
   "environment": {
-    "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
     "python_version": "3.13.16",
-    "torch_version": "2.14.1+cu126",
-    "cuda_available": true,
-    "cuda_version": "12.6",
-    "cpu_count": 16,
-    "mujoco_version": "3.17.0"
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
   },
   "result_artifact_path": "research/hardware/hardware_equivalence_results.json",
-  "result_artifact_sha256": "fb509073c8f9123a1572a8423cb2fb2145ef16a25034f68b727c688ad57afbd9",
-  "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+  "result_artifact_sha256": "1bc6b4117f5c043b030dc6a31b1786b306d36329e90c4c1498ebd801843b5cc9",
+  "provenance_notes": "Independently executed with verified embedded execution metadata.",
   "config": {
-    "source_artifact": "research/hardware/hardware_equivalence_results.json"
+    "precision": "Q8.8_signed_fixed_point",
+    "simulation": "Icarus_Verilog_RTL",
+    "clock_freq_mhz": 125
   },
-  "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+  "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
   "seed": 42,
   "results": {
     "num_test_transitions": 300,
     "fpga_vs_fixedpoint_e_rel": 0.0,
-    "next_state_e_rel": 0.009685,
-    "collision_prob_e_rel": 0.847952,
-    "action_vector_e_rel": 0.052327,
-    "action_cosine_similarity": 0.9995,
+    "next_state_e_rel": 0.010328,
+    "collision_prob_e_rel": 0.931404,
+    "action_vector_e_rel": 0.037034,
+    "action_cosine_similarity": 0.9997,
     "safety_decision_concordance_pct": 100.0,
     "rtl_simulation": {
       "passed": true,
@@ -48,9 +47,9 @@
       "single_pass_latency_us_at_200mhz": 21.635,
       "mpc24_plus_micro_latency_ms_at_200mhz": 0.2723,
       "simulator_stdout_tail": [
-        "  MATCH Action[0]: 0x0075 (Float: 0.4570)",
-        "  MATCH Action[1]: 0x0004 (Float: 0.0156)",
-        "  MATCH Action[2]: 0x0031 (Float: 0.1914)",
+        "  MATCH Action[0]: 0x00ba (Float: 0.7266)",
+        "  MATCH Action[1]: 0xff5d (Float: -0.6367)",
+        "  MATCH Action[2]: 0x002f (Float: 0.1836)",
         "",
         "--- TESTING AXI4-STREAM DMA PACKET INGRESS (35 WORDS + TLAST) ---",
         "[Time 24193000 ns] *** AXI4-STREAM INTERRUPT DETECTED! ***",
@@ -61,6 +60,25 @@
         "  Numerical Relative Error E_rel = 0.000000           ",
         "======================================================="
       ]
+    },
+    "execution_metadata": {
+      "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/hardware/validate_hardware_equivalence.py",
+      "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+      "execution_timestamp": "2026-11-07T17:32:19.346682+00:00",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
+      "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+      "checkpoint_path": "world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_compact_best.pt",
+      "checkpoint_sha256": "18ddc0711856f2ef77e6748846a39568cc5a5aa8750941b493fc024d7f8121c0",
+      "random_seed": 42,
+      "configuration": {
+        "precision": "Q8.8_signed_fixed_point",
+        "simulation": "Icarus_Verilog_RTL",
+        "clock_freq_mhz": 125
+      },
+      "environment": {
+        "python_version": "3.13.16",
+        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+      }
     }
   }
 }

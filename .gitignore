@@ -39,5 +39,7 @@ research_direction.md
 # Versioned regenerated binary artifacts (metadata/checksums tracked in git)
 world_models_fpga/research/datasets/splits_v2/*.npz
 world_models_fpga/research/datasets/splits_v3/*.npz
+world_models_fpga/research/datasets/splits_v4/*.npz
 world_models_fpga/checkpoints_v2/*.pt
 world_models_fpga/checkpoints_v3/*.pt
+world_models_fpga/checkpoints_v4/*.pt

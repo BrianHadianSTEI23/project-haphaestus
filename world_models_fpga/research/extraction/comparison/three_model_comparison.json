@@ -3,10 +3,10 @@
     "Original_HJEPA": {
       "structural_parameters": 191907,
       "active_nonzero_parameters": 191907,
-      "action_mse": 0.07918320596218109,
-      "action_cosine_similarity": 0.8219711780548096,
-      "collision_accuracy_pct": 100.0,
-      "latency_ms_per_frame": 0.6402676679755359
+      "action_mse": 0.20049452781677246,
+      "action_cosine_similarity": 0.39537426829338074,
+      "collision_accuracy_pct": 94.140625,
+      "latency_ms_per_frame": 0.7766335585870365
     },
     "Weight_Preserving_Pruned": {
       "structural_parameters": 158196,
@@ -14,45 +14,67 @@
       "action_mse": 0.09606069326400757,
       "action_cosine_similarity": 0.7714135646820068,
       "collision_accuracy_pct": 100.0,
-      "latency_ms_per_frame": 0.0038052480419992207
+      "latency_ms_per_frame": 0.003220935539616221
     },
     "Reconstructed_Compact_16D": {
       "structural_parameters": 39804,
       "active_nonzero_parameters": 39804,
-      "action_mse": 0.1707480549812317,
-      "action_cosine_similarity": 0.5439754724502563,
+      "action_mse": 0.14946968853473663,
+      "action_cosine_similarity": 0.6643537282943726,
       "collision_accuracy_pct": 100.0,
-      "latency_ms_per_frame": 0.004495140629501293
+      "latency_ms_per_frame": 0.003169041008277418
     }
   },
   "closed_loop_and_distillation_ablations": {
     "Original_HJEPA": {
       "success_rate": 0.7333333333333333,
-      "goal_reached_rate": 1.0,
+      "goal_reached_rate": 0.8,
       "collision_rate": 0.26666666666666666,
-      "path_efficiency": 0.9576101771722272,
-      "mean_goal_error_m": 0.23317950069904328
+      "path_efficiency": 1.0,
+      "mean_goal_error_m": 0.35010864237944284
     },
     "Reconstructed_Distilled_16D": {
-      "success_rate": 0.26666666666666666,
-      "goal_reached_rate": 0.26666666666666666,
-      "collision_rate": 0.3333333333333333,
-      "path_efficiency": 0.9505349707142289,
-      "mean_goal_error_m": 0.6295267105102539
-    },
-    "Reconstructed_Supervised_NoTeacher_16D": {
-      "success_rate": 0.2,
-      "goal_reached_rate": 0.2,
-      "collision_rate": 0.3333333333333333,
-      "path_efficiency": 0.9276624739932102,
-      "mean_goal_error_m": 0.614229659239451
-    },
-    "Reconstructed_BC_Only_16D": {
       "success_rate": 0.4666666666666667,
       "goal_reached_rate": 0.4666666666666667,
       "collision_rate": 0.26666666666666666,
-      "path_efficiency": 0.9666692299276198,
-      "mean_goal_error_m": 0.3979680915673574
+      "path_efficiency": 0.9804692473408562,
+      "mean_goal_error_m": 0.5154184182484944
+    },
+    "Reconstructed_Supervised_NoTeacher_16D": {
+      "success_rate": 0.13333333333333333,
+      "goal_reached_rate": 0.2,
+      "collision_rate": 0.3333333333333333,
+      "path_efficiency": 0.907369395330624,
+      "mean_goal_error_m": 0.7680633693933487
+    },
+    "Reconstructed_BC_Only_16D": {
+      "success_rate": 0.5333333333333333,
+      "goal_reached_rate": 0.6666666666666666,
+      "collision_rate": 0.3333333333333333,
+      "path_efficiency": 0.9859150317190128,
+      "mean_goal_error_m": 0.3913785308599472
+    }
+  },
+  "execution_metadata": {
+    "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/extraction/comparison/compare_three_models.py",
+    "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+    "execution_timestamp": "2026-11-07T17:32:19.346678+00:00",
+    "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
+    "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+    "checkpoint_path": "world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_compact_best.pt",
+    "checkpoint_sha256": "18ddc0711856f2ef77e6748846a39568cc5a5aa8750941b493fc024d7f8121c0",
+    "random_seed": 42,
+    "configuration": {
+      "models": [
+        "Original_HJEPA",
+        "Weight_Preserving_Pruned",
+        "Reconstructed_Compact_16D"
+      ],
+      "compact_params": 39804
+    },
+    "environment": {
+      "python_version": "3.13.16",
+      "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
     }
   }
 }

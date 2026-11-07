@@ -114,67 +114,212 @@ def audit_latent_predictions(data_npz_path, output_dir=None):
             hjepa_micro_cos.extend(cos_micro)
 
     # -------------------------------------------------------------
-    # 3. H-JEPA Macro Evaluation (K=5)
-    # Evaluates sequences of stride K=5
+    # 3. Explicit Multi-Horizon Prediction Audit: K in {1, 3, 5, 10}
+    # Evaluates Latent MSE, Cosine Similarity, Collision Accuracy,
+    # and Decoded Physical Displacement Error against MuJoCo Ground Truth.
     # -------------------------------------------------------------
-    K = 5
-    hjepa_macro_mse = []
-    hjepa_macro_cos = []
-    hjepa_macro_col_acc = []
-
-    # Find contiguous K=5 sequences
+    robot_pose = data["robot_pose"] if "robot_pose" in data else None
     ep_indices = np.where(ep_starts)[0]
     ep_indices = np.append(ep_indices, N)
 
-    macro_seqs = []
-    for ep_i in range(len(ep_indices) - 1):
-        s_pos = ep_indices[ep_i]
-        e_pos = ep_indices[ep_i + 1]
-        for t in range(s_pos, e_pos - K):
-            macro_seqs.append(t)
+    horizons = [1, 3, 5, 10]
+    horizon_results = {}
+    lewm_k5_mse_list, lewm_k5_cos_list = [], []
+    hjepa_macro_mse, hjepa_macro_cos, hjepa_macro_col_acc = [], [], []
 
-    print(f"Evaluating {len(macro_seqs)} Macro Sequences (Stride K={K})...")
-    with torch.no_grad():
-        for b in range(0, len(macro_seqs), batch_size):
-            batch_t = macro_seqs[b : b + batch_size]
-            if len(batch_t) == 0:
-                break
+    for K in horizons:
+        seq_indices = []
+        for ep_i in range(len(ep_indices) - 1):
+            s_pos = ep_indices[ep_i]
+            e_pos = ep_indices[ep_i + 1]
+            for t in range(s_pos, e_pos - K):
+                seq_indices.append(t)
 
-            img_0 = torch.from_numpy(obs[batch_t]).permute(0, 3, 1, 2).float().to(device) / 255.0
-            img_K = torch.from_numpy(obs[[t + K for t in batch_t]]).permute(0, 3, 1, 2).float().to(device) / 255.0
+        print(f"Evaluating {len(seq_indices)} sequences for horizon K={K}...")
+        l_mse, l_cos, l_col, l_disp, l_head = [], [], [], [], []
+        h_micro_mse, h_micro_cos, h_micro_col, h_micro_disp, h_micro_head = [], [], [], [], []
+        h_macro_mse, h_macro_cos, h_macro_col, h_macro_disp, h_macro_head = [], [], [], [], []
 
-            # Ordered K=5 action sequence (B, 15) vs averaged action (B, 3)
-            act_slices = np.asarray([actions[t : t + K] for t in batch_t], dtype=np.float32)  # (B, K, 3)
-            macro_act = torch.from_numpy(act_slices.reshape(len(batch_t), -1)).float().to(device)
+        with torch.no_grad():
+            for b in range(0, len(seq_indices), batch_size):
+                batch_t = seq_indices[b : b + batch_size]
+                if len(batch_t) == 0:
+                    break
 
-            col_slices = [any(collisions[t : t + K]) for t in batch_t]
-            macro_col_gt = torch.tensor(col_slices, dtype=torch.float32, device=device)
+                img_0 = torch.from_numpy(obs[batch_t]).permute(0, 3, 1, 2).float().to(device) / 255.0
+                img_K = torch.from_numpy(obs[[t + K for t in batch_t]]).permute(0, 3, 1, 2).float().to(device) / 255.0
+                act_slices = np.asarray([actions[t : t + K] for t in batch_t], dtype=np.float32)  # (B, K, 3)
 
-            S_0 = hjepa.encode(img_0)
-            S_K_target = hjepa.encode(img_K)
+                col_slices = [any(collisions[t : t + K]) for t in batch_t]
+                col_gt = np.asarray(col_slices, dtype=bool)
 
-            pred_S_K, macro_col_log = hjepa.macro_predictor(S_0, macro_act)
+                # Ground truth physical displacement in step-0 body frame
+                has_pose = robot_pose is not None
+                if has_pose:
+                    p0 = robot_pose[batch_t]
+                    pK = robot_pose[[t + K for t in batch_t]]
+                    dx_w = pK[:, 0] - p0[:, 0]
+                    dy_w = pK[:, 1] - p0[:, 1]
+                    c0 = np.cos(p0[:, 2])
+                    s0 = np.sin(p0[:, 2])
+                    gt_dx_ego = c0 * dx_w + s0 * dy_w
+                    gt_dy_ego = -s0 * dx_w + c0 * dy_w
+                    gt_dth = np.arctan2(np.sin(pK[:, 2] - p0[:, 2]), np.cos(pK[:, 2] - p0[:, 2]))
 
-            # Also evaluate 5-step autoregressive rollout of LeWM for direct comparison
-            lewm_s = lewm.encode(img_0)
-            lewm_k_target = lewm.encode(img_K)
-            for step_k in range(K):
-                a_step = torch.from_numpy(act_slices[:, step_k, :]).float().to(device)
-                lewm_s, _ = lewm.predict_next(lewm_s, a_step)
-            lewm_k5_mse = F.mse_loss(lewm_s, lewm_k_target, reduction="none").mean(dim=-1).cpu().numpy()
-            lewm_k5_cos = F.cosine_similarity(lewm_s, lewm_k_target, dim=-1).cpu().numpy()
-            if "lewm_k5_mse_list" not in locals():
-                lewm_k5_mse_list, lewm_k5_cos_list = [], []
-            lewm_k5_mse_list.extend(lewm_k5_mse)
-            lewm_k5_cos_list.extend(lewm_k5_cos)
+                # ---------------------------------------------------------
+                # LeWM Rollout
+                # ---------------------------------------------------------
+                target_s_K_lewm = lewm.encode(img_K)
+                s_curr = lewm.encode(img_0)
+                cum_dx = torch.zeros(len(batch_t), device=device)
+                cum_dy = torch.zeros(len(batch_t), device=device)
+                cum_dth = torch.zeros(len(batch_t), device=device)
+                l_col_pred = torch.zeros(len(batch_t), dtype=torch.bool, device=device)
 
-            mse_macro = F.mse_loss(pred_S_K, S_K_target, reduction="none").mean(dim=-1).cpu().numpy()
-            cos_macro = F.cosine_similarity(pred_S_K, S_K_target, dim=-1).cpu().numpy()
-            hjepa_macro_mse.extend(mse_macro)
-            hjepa_macro_cos.extend(cos_macro)
+                for step in range(K):
+                    a_step = torch.from_numpy(act_slices[:, step, :]).float().to(device)
+                    s_next, col_logit = lewm.predict_next(s_curr, a_step)
+                    disp = lewm.predict_ego_displacement(s_curr, s_next)
+                    step_dx = disp[:, 0]
+                    step_dy = disp[:, 1]
+                    step_dth = disp[:, 2]
 
-            pred_macro_col = (torch.sigmoid(macro_col_log).squeeze(-1) > 0.5).float()
-            hjepa_macro_col_acc.extend((pred_macro_col == macro_col_gt).float().cpu().numpy())
+                    c_th = torch.cos(cum_dth)
+                    s_th = torch.sin(cum_dth)
+                    cum_dx = cum_dx + c_th * step_dx - s_th * step_dy
+                    cum_dy = cum_dy + s_th * step_dx + c_th * step_dy
+                    cum_dth = cum_dth + step_dth
+
+                    l_col_pred = l_col_pred | (torch.sigmoid(col_logit).squeeze(-1) > 0.5)
+                    s_curr = s_next
+
+                l_mse.extend(F.mse_loss(s_curr, target_s_K_lewm, reduction="none").mean(dim=-1).cpu().numpy())
+                l_cos.extend(F.cosine_similarity(s_curr, target_s_K_lewm, dim=-1).cpu().numpy())
+                l_col.extend((l_col_pred.cpu().numpy() == col_gt).astype(np.float32))
+
+                if has_pose:
+                    disp_err = np.sqrt((cum_dx.cpu().numpy() - gt_dx_ego) ** 2 + (cum_dy.cpu().numpy() - gt_dy_ego) ** 2)
+                    head_err = np.abs(np.arctan2(np.sin(cum_dth.cpu().numpy() - gt_dth), np.cos(cum_dth.cpu().numpy() - gt_dth)))
+                    l_disp.extend(disp_err)
+                    l_head.extend(head_err)
+
+                if K == 5:
+                    lewm_k5_mse_list.extend(F.mse_loss(s_curr, target_s_K_lewm, reduction="none").mean(dim=-1).cpu().numpy())
+                    lewm_k5_cos_list.extend(F.cosine_similarity(s_curr, target_s_K_lewm, dim=-1).cpu().numpy())
+
+                # ---------------------------------------------------------
+                # H-JEPA Micro Autoregressive Rollout
+                # ---------------------------------------------------------
+                target_s_K_hjepa = hjepa.encode(img_K)
+                h_s_curr = hjepa.encode(img_0)
+                h_cum_dx = torch.zeros(len(batch_t), device=device)
+                h_cum_dy = torch.zeros(len(batch_t), device=device)
+                h_cum_dth = torch.zeros(len(batch_t), device=device)
+                h_col_pred = torch.zeros(len(batch_t), dtype=torch.bool, device=device)
+
+                for step in range(K):
+                    a_step = torch.from_numpy(act_slices[:, step, :]).float().to(device)
+                    h_next, col_logit = hjepa.micro_predictor.forward_transition(h_s_curr, a_step)
+                    disp = hjepa.predict_micro_displacement(h_s_curr, h_next)
+                    step_dx = disp[:, 0]
+                    step_dy = disp[:, 1]
+                    step_dth = disp[:, 2]
+
+                    c_th = torch.cos(h_cum_dth)
+                    s_th = torch.sin(h_cum_dth)
+                    h_cum_dx = h_cum_dx + c_th * step_dx - s_th * step_dy
+                    h_cum_dy = h_cum_dy + s_th * step_dx + c_th * step_dy
+                    h_cum_dth = h_cum_dth + step_dth
+
+                    h_col_pred = h_col_pred | (torch.sigmoid(col_logit).squeeze(-1) > 0.5)
+                    h_s_curr = h_next
+
+                h_micro_mse.extend(F.mse_loss(h_s_curr, target_s_K_hjepa, reduction="none").mean(dim=-1).cpu().numpy())
+                h_micro_cos.extend(F.cosine_similarity(h_s_curr, target_s_K_hjepa, dim=-1).cpu().numpy())
+                h_micro_col.extend((h_col_pred.cpu().numpy() == col_gt).astype(np.float32))
+
+                if has_pose:
+                    h_disp_err = np.sqrt((h_cum_dx.cpu().numpy() - gt_dx_ego) ** 2 + (h_cum_dy.cpu().numpy() - gt_dy_ego) ** 2)
+                    h_head_err = np.abs(np.arctan2(np.sin(h_cum_dth.cpu().numpy() - gt_dth), np.cos(h_cum_dth.cpu().numpy() - gt_dth)))
+                    h_micro_disp.extend(h_disp_err)
+                    h_micro_head.extend(h_head_err)
+
+                # ---------------------------------------------------------
+                # H-JEPA Macro Prediction (for K=5 single jump, K=10 chained jump)
+                # ---------------------------------------------------------
+                if K == 5:
+                    macro_act = torch.from_numpy(act_slices.reshape(len(batch_t), -1)).float().to(device)
+                    S_0 = hjepa.encode(img_0)
+                    pred_S_5, macro_col_log = hjepa.macro_predictor(S_0, macro_act)
+                    disp_macro = hjepa.predict_macro_displacement(S_0, pred_S_5)
+
+                    h_macro_mse.extend(F.mse_loss(pred_S_5, target_s_K_hjepa, reduction="none").mean(dim=-1).cpu().numpy())
+                    h_macro_cos.extend(F.cosine_similarity(pred_S_5, target_s_K_hjepa, dim=-1).cpu().numpy())
+                    pred_col_m = (torch.sigmoid(macro_col_log).squeeze(-1) > 0.5).cpu().numpy()
+                    h_macro_col.extend((pred_col_m == col_gt).astype(np.float32))
+
+                    if has_pose:
+                        m_dx = disp_macro[:, 0].cpu().numpy()
+                        m_dy = disp_macro[:, 1].cpu().numpy()
+                        m_dth = disp_macro[:, 2].cpu().numpy()
+                        h_macro_disp.extend(np.sqrt((m_dx - gt_dx_ego) ** 2 + (m_dy - gt_dy_ego) ** 2))
+                        h_macro_head.extend(np.abs(np.arctan2(np.sin(m_dth - gt_dth), np.cos(m_dth - gt_dth))))
+
+                    hjepa_macro_mse = h_macro_mse
+                    hjepa_macro_cos = h_macro_cos
+                    hjepa_macro_col_acc = h_macro_col
+
+                elif K == 10:
+                    act_1 = torch.from_numpy(act_slices[:, :5, :].reshape(len(batch_t), -1)).float().to(device)
+                    act_2 = torch.from_numpy(act_slices[:, 5:, :].reshape(len(batch_t), -1)).float().to(device)
+                    S_0 = hjepa.encode(img_0)
+                    pred_S_5, col_1 = hjepa.macro_predictor(S_0, act_1)
+                    disp_1 = hjepa.predict_macro_displacement(S_0, pred_S_5)
+                    pred_S_10, col_2 = hjepa.macro_predictor(pred_S_5, act_2)
+                    disp_2 = hjepa.predict_macro_displacement(pred_S_5, pred_S_10)
+
+                    h_macro_mse.extend(F.mse_loss(pred_S_10, target_s_K_hjepa, reduction="none").mean(dim=-1).cpu().numpy())
+                    h_macro_cos.extend(F.cosine_similarity(pred_S_10, target_s_K_hjepa, dim=-1).cpu().numpy())
+                    pred_col_m = ((torch.sigmoid(col_1).squeeze(-1) > 0.5) | (torch.sigmoid(col_2).squeeze(-1) > 0.5)).cpu().numpy()
+                    h_macro_col.extend((pred_col_m == col_gt).astype(np.float32))
+
+                    if has_pose:
+                        c1 = torch.cos(disp_1[:, 2])
+                        s1 = torch.sin(disp_1[:, 2])
+                        dx_10 = (disp_1[:, 0] + c1 * disp_2[:, 0] - s1 * disp_2[:, 1]).cpu().numpy()
+                        dy_10 = (disp_1[:, 1] + s1 * disp_2[:, 0] + c1 * disp_2[:, 1]).cpu().numpy()
+                        dth_10 = (disp_1[:, 2] + disp_2[:, 2]).cpu().numpy()
+                        h_macro_disp.extend(np.sqrt((dx_10 - gt_dx_ego) ** 2 + (dy_10 - gt_dy_ego) ** 2))
+                        h_macro_head.extend(np.abs(np.arctan2(np.sin(dth_10 - gt_dth), np.cos(dth_10 - gt_dth))))
+
+        h_entry = {
+            "sequences_evaluated": len(seq_indices),
+            "lewm": {
+                "latent_mse": float(np.mean(l_mse)),
+                "latent_cosine_similarity": float(np.mean(l_cos)),
+                "collision_accuracy": float(np.mean(l_col)) * 100.0,
+                "displacement_error_m": float(np.mean(l_disp)) if l_disp else 0.0,
+                "heading_error_rad": float(np.mean(l_head)) if l_head else 0.0,
+            },
+            "hjepa_micro": {
+                "latent_mse": float(np.mean(h_micro_mse)),
+                "latent_cosine_similarity": float(np.mean(h_micro_cos)),
+                "collision_accuracy": float(np.mean(h_micro_col)) * 100.0,
+                "displacement_error_m": float(np.mean(h_micro_disp)) if h_micro_disp else 0.0,
+                "heading_error_rad": float(np.mean(h_micro_head)) if h_micro_head else 0.0,
+            },
+        }
+        if K in (5, 10):
+            h_entry["hjepa_macro"] = {
+                "latent_mse": float(np.mean(h_macro_mse)),
+                "latent_cosine_similarity": float(np.mean(h_macro_cos)),
+                "collision_accuracy": float(np.mean(h_macro_col)) * 100.0,
+                "displacement_error_m": float(np.mean(h_macro_disp)) if h_macro_disp else 0.0,
+                "heading_error_rad": float(np.mean(h_macro_head)) if h_macro_head else 0.0,
+            }
+        horizon_results[f"horizon_k{K}"] = h_entry
+
+    macro_seqs = [t for ep_i in range(len(ep_indices) - 1) for t in range(ep_indices[ep_i], ep_indices[ep_i + 1] - 5)]
 
     audit_results = {
         "dataset": os.path.basename(data_npz_path),
@@ -195,22 +340,19 @@ def audit_latent_predictions(data_npz_path, output_dir=None):
             "latent_mse": float(np.mean(hjepa_macro_mse)),
             "latent_cosine_similarity": float(np.mean(hjepa_macro_cos)),
             "macro_collision_accuracy": float(np.mean(hjepa_macro_col_acc)) * 100.0
-        }
+        },
+        "multi_horizon_sweep": horizon_results,
     }
 
-    print("\n--- LATENT PREDICTION AUDIT RESULTS ---")
-    print(f"LeWorldModel (LeWM):")
-    print(f"  Latent MSE (s_t+1):          {audit_results['lewm']['latent_mse']:.5f}")
-    print(f"  Cosine Similarity:           {audit_results['lewm']['latent_cosine_similarity']:.4f}")
-    print(f"  Collision Accuracy:          {audit_results['lewm']['collision_prediction_accuracy']:.1f}%")
-    print(f"  5-Step Rollout MSE:          {audit_results['lewm']['rollout_k5_mse']:.5f}")
-    print(f"H-JEPA Micro-Level (K=1):")
-    print(f"  Latent MSE (s_t+1):          {audit_results['hjepa_micro_k1']['latent_mse']:.5f}")
-    print(f"  Cosine Similarity:           {audit_results['hjepa_micro_k1']['latent_cosine_similarity']:.4f}")
-    print(f"H-JEPA Macro-Level (K=5):")
-    print(f"  Macro Latent MSE (S_k+1):    {audit_results['hjepa_macro_k5']['latent_mse']:.5f}")
-    print(f"  Macro Cosine Similarity:     {audit_results['hjepa_macro_k5']['latent_cosine_similarity']:.4f}")
-    print(f"  Macro Collision Accuracy:    {audit_results['hjepa_macro_k5']['macro_collision_accuracy']:.1f}%")
+    print("\n--- MULTI-HORIZON LATENT PREDICTION & PHYSICAL DISPLACEMENT AUDIT ---")
+    for K in horizons:
+        res = horizon_results[f"horizon_k{K}"]
+        print(f"Horizon K={K:2d}:")
+        print(f"  LeWM:        Latent MSE={res['lewm']['latent_mse']:.4f} | CosSim={res['lewm']['latent_cosine_similarity']:.4f} | DispErr={res['lewm']['displacement_error_m']:.3f}m | HeadErr={res['lewm']['heading_error_rad']:.3f}rad | ColAcc={res['lewm']['collision_accuracy']:.1f}%")
+        print(f"  H-JEPA Micro: Latent MSE={res['hjepa_micro']['latent_mse']:.4f} | CosSim={res['hjepa_micro']['latent_cosine_similarity']:.4f} | DispErr={res['hjepa_micro']['displacement_error_m']:.3f}m | HeadErr={res['hjepa_micro']['heading_error_rad']:.3f}rad | ColAcc={res['hjepa_micro']['collision_accuracy']:.1f}%")
+        if f"hjepa_macro" in res:
+            m_res = res["hjepa_macro"]
+            print(f"  H-JEPA Macro: Latent MSE={m_res['latent_mse']:.4f} | CosSim={m_res['latent_cosine_similarity']:.4f} | DispErr={m_res['displacement_error_m']:.3f}m | HeadErr={m_res['heading_error_rad']:.3f}rad | ColAcc={m_res['collision_accuracy']:.1f}%")
 
     out_json = os.path.join(output_dir, "latent_prediction_audit.json")
     with open(out_json, "w") as f:

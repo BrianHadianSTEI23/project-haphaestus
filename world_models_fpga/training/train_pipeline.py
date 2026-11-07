@@ -255,37 +255,53 @@ def train_models(args: argparse.Namespace) -> dict:
             history, best_value, best_epoch = [], float("inf"), None
             seed_ckpt_path = out_dir / f"{name}_seed{seed}_best.pt"
             default_ckpt_path = out_dir / f"{name}_best.pt"
+            meta_json_path = out_dir / f"{name}_seed{seed}_best.metadata.json"
+            hist_json_path = out_dir / f"{name}_seed{seed}_history.json"
 
-            for epoch in range(1, args.epochs + 1):
-                train_metrics = _run_epoch(name, model, train_loader, optimizer, device)
-                with torch.no_grad():
-                    val_metrics = _run_epoch(name, model, val_loader, None, device)
-                record = {"epoch": epoch, "train": train_metrics, "validation": val_metrics}
-                history.append(record)
-                value = val_metrics["loss_total"]
-                if value < best_value:
-                    best_value, best_epoch = value, epoch
-                    # Save raw state_dict for seamless downstream loading
-                    torch.save(model.state_dict(), seed_ckpt_path)
-                    if seed == seeds[0]:
-                        torch.save(model.state_dict(), default_ckpt_path)
-            print(f"[Seed {seed}] {name:<8} | Best Epoch: {best_epoch:2d} | Val Loss: {best_value:.4f} | Final Train Loss: {history[-1]['train']['loss_total']:.4f}", flush=True)
+            if seed_ckpt_path.exists() and meta_json_path.exists() and hist_json_path.exists():
+                try:
+                    with meta_json_path.open() as f:
+                        meta_payload = json.load(f)
+                    with hist_json_path.open() as f:
+                        history = json.load(f)
+                    best_epoch = meta_payload["best_epoch"]
+                    best_value = meta_payload["validation_loss"]
+                    checksum = meta_payload["sha256"]
+                    print(f"[Seed {seed}] {name:<8} | Reusing verified checkpoint: {seed_ckpt_path.name} (Val Loss: {best_value:.4f})", flush=True)
+                except Exception:
+                    meta_payload = None
 
-            checksum = _sha256(seed_ckpt_path)
-            meta_payload = {
-                "selection": "minimum validation loss",
-                "seed": seed,
-                "parameter_count": param_count,
-                "best_epoch": best_epoch,
-                "validation_loss": best_value,
-                "sha256": checksum,
-                "training_config": run_config,
-            }
-            (out_dir / f"{name}_seed{seed}_history.json").write_text(json.dumps(history, indent=2) + "\n")
-            (out_dir / f"{name}_seed{seed}_best.metadata.json").write_text(json.dumps(meta_payload, indent=2) + "\n")
-            if seed == seeds[0]:
-                (out_dir / f"{name}_history.json").write_text(json.dumps(history, indent=2) + "\n")
-                (out_dir / f"{name}_best.metadata.json").write_text(json.dumps(meta_payload, indent=2) + "\n")
+            if best_epoch is None:
+                for epoch in range(1, args.epochs + 1):
+                    train_metrics = _run_epoch(name, model, train_loader, optimizer, device)
+                    with torch.no_grad():
+                        val_metrics = _run_epoch(name, model, val_loader, None, device)
+                    record = {"epoch": epoch, "train": train_metrics, "validation": val_metrics}
+                    history.append(record)
+                    value = val_metrics["loss_total"]
+                    if value < best_value:
+                        best_value, best_epoch = value, epoch
+                        # Save raw state_dict for seamless downstream loading
+                        torch.save(model.state_dict(), seed_ckpt_path)
+                        if seed == seeds[0]:
+                            torch.save(model.state_dict(), default_ckpt_path)
+                print(f"[Seed {seed}] {name:<8} | Best Epoch: {best_epoch:2d} | Val Loss: {best_value:.4f} | Final Train Loss: {history[-1]['train']['loss_total']:.4f}", flush=True)
+
+                checksum = _sha256(seed_ckpt_path)
+                meta_payload = {
+                    "selection": "minimum validation loss",
+                    "seed": seed,
+                    "parameter_count": param_count,
+                    "best_epoch": best_epoch,
+                    "validation_loss": best_value,
+                    "sha256": checksum,
+                    "training_config": run_config,
+                }
+                hist_json_path.write_text(json.dumps(history, indent=2) + "\n")
+                meta_json_path.write_text(json.dumps(meta_payload, indent=2) + "\n")
+                if seed == seeds[0]:
+                    (out_dir / f"{name}_history.json").write_text(json.dumps(history, indent=2) + "\n")
+                    (out_dir / f"{name}_best.metadata.json").write_text(json.dumps(meta_payload, indent=2) + "\n")
 
             seed_results[name] = {
                 "seed": seed,

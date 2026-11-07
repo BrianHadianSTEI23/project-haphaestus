@@ -17,12 +17,11 @@ import os
 from pathlib import Path
 
 WM_ROOT = Path(__file__).resolve().parents[2]          # world_models_fpga/
-DATASET_VERSION = "3.0.0-physical-counterfactuals"
-LEGACY_VERSIONS = ("2.0.0-physical-counterfactuals",)
-SPLITS_DIR = Path(os.environ.get("HEPHAESTUS_SPLITS_DIR", WM_ROOT / "research/datasets/splits_v3"))
-# Checkpoints trained on SPLITS_DIR.  checkpoints/ (legacy, leaky data) and
-# checkpoints_v2/ (trained on stale splits_v2) are preserved for history only.
-CKPT_DIR = Path(os.environ.get("HEPHAESTUS_CKPT_DIR", WM_ROOT / "checkpoints_v3"))
+DATASET_VERSION = "4.0.0-aligned-subgoals"
+LEGACY_VERSIONS = ("2.0.0-physical-counterfactuals", "3.0.0-physical-counterfactuals")
+SPLITS_DIR = Path(os.environ.get("HEPHAESTUS_SPLITS_DIR", WM_ROOT / "research/datasets/splits_v4"))
+# Checkpoints trained on SPLITS_DIR. checkpoints_v2 and checkpoints_v3 are preserved for history.
+CKPT_DIR = Path(os.environ.get("HEPHAESTUS_CKPT_DIR", WM_ROOT / "checkpoints_v4"))
 
 # Files whose behaviour determines rendered observations, physics, labels and splits.
 GENERATOR_SOURCES = (

@@ -1,54 +1,168 @@
 {
   "record_id": "REC-PREDICTION-001",
   "evaluation": "prediction",
-  "provenance_status": "LEGACY_UNVERIFIED",
-  "command_executed": "UNKNOWN_HISTORICAL_RUN",
-  "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
-  "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
-  "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
-  "dataset_sha256": "missing",
-  "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
-  "checkpoint_sha256": "missing",
+  "provenance_status": "INDEPENDENTLY_EXECUTED",
+  "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/audit_latent_predictions.py",
+  "execution_timestamp": "2026-11-07T17:32:19.346628+00:00",
+  "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+  "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
+  "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+  "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+  "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
   "random_seed": 42,
   "configuration": {
-    "source_artifact": "research/benchmarks/behavioral/latent_prediction_audit.json"
+    "horizons": [
+      1,
+      3,
+      5,
+      10
+    ],
+    "dataset": "held_out_test_benchmark.npz"
   },
   "environment": {
-    "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
     "python_version": "3.13.16",
-    "torch_version": "2.14.1+cu126",
-    "cuda_available": true,
-    "cuda_version": "12.6",
-    "cpu_count": 16,
-    "mujoco_version": "3.17.0"
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
   },
   "result_artifact_path": "research/benchmarks/behavioral/latent_prediction_audit.json",
-  "result_artifact_sha256": "e47da7b835780231bb0aa4e80ff43bd51b40b1a4c0398c7d94abfbfb45aa23b7",
-  "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+  "result_artifact_sha256": "af38ff78b2eaa6075be28ecbe590186dc0ebe66f0d611cc80ab6b506377da427",
+  "provenance_notes": "Independently executed with verified embedded execution metadata.",
   "config": {
-    "source_artifact": "research/benchmarks/behavioral/latent_prediction_audit.json"
+    "horizons": [
+      1,
+      3,
+      5,
+      10
+    ],
+    "dataset": "held_out_test_benchmark.npz"
   },
-  "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+  "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
   "seed": 42,
   "results": {
     "dataset": "held_out_test_benchmark.npz",
     "total_transitions": 3122,
     "total_macro_sequences": 2642,
     "lewm": {
-      "latent_mse": 0.049880702048540115,
-      "latent_cosine_similarity": 0.9712644219398499,
-      "collision_prediction_accuracy": 99.26329255104065,
-      "rollout_k5_mse": 0.3564346432685852,
-      "rollout_k5_cosine_similarity": 0.7862309217453003
+      "latent_mse": 0.054610252380371094,
+      "latent_cosine_similarity": 0.966964840888977,
+      "collision_prediction_accuracy": 98.334401845932,
+      "rollout_k5_mse": 0.4802996516227722,
+      "rollout_k5_cosine_similarity": 0.7085898518562317
     },
     "hjepa_micro_k1": {
-      "latent_mse": 0.02843872457742691,
-      "latent_cosine_similarity": 0.9810230135917664
+      "latent_mse": 0.0003233213210478425,
+      "latent_cosine_similarity": 0.9997290372848511
     },
     "hjepa_macro_k5": {
-      "latent_mse": 0.19095513224601746,
-      "latent_cosine_similarity": 0.8647109866142273,
-      "macro_collision_accuracy": 99.8864471912384
+      "latent_mse": 0.0023455102927982807,
+      "latent_cosine_similarity": 0.9980300664901733,
+      "macro_collision_accuracy": 98.94019961357117
+    },
+    "multi_horizon_sweep": {
+      "horizon_k1": {
+        "sequences_evaluated": 3026,
+        "lewm": {
+          "latent_mse": 0.054518651217222214,
+          "latent_cosine_similarity": 0.9670358300209045,
+          "collision_accuracy": 98.61202836036682,
+          "displacement_error_m": 0.026714488863945007,
+          "heading_error_rad": 0.029982253909111023
+        },
+        "hjepa_micro": {
+          "latent_mse": 0.00032379309413954616,
+          "latent_cosine_similarity": 0.9997287392616272,
+          "collision_accuracy": 98.61202836036682,
+          "displacement_error_m": 0.012712622061371803,
+          "heading_error_rad": 0.006962087471038103
+        }
+      },
+      "horizon_k3": {
+        "sequences_evaluated": 2834,
+        "lewm": {
+          "latent_mse": 0.2788589894771576,
+          "latent_cosine_similarity": 0.828789472579956,
+          "collision_accuracy": 98.72971177101135,
+          "displacement_error_m": 0.07880619913339615,
+          "heading_error_rad": 0.0802784413099289
+        },
+        "hjepa_micro": {
+          "latent_mse": 0.002236630767583847,
+          "latent_cosine_similarity": 0.9981319904327393,
+          "collision_accuracy": 98.72971177101135,
+          "displacement_error_m": 0.036290597170591354,
+          "heading_error_rad": 0.02382403425872326
+        }
+      },
+      "horizon_k5": {
+        "sequences_evaluated": 2642,
+        "lewm": {
+          "latent_mse": 0.4802996516227722,
+          "latent_cosine_similarity": 0.7085898518562317,
+          "collision_accuracy": 98.94019961357117,
+          "displacement_error_m": 0.12982261180877686,
+          "heading_error_rad": 0.130461186170578
+        },
+        "hjepa_micro": {
+          "latent_mse": 0.005918724462389946,
+          "latent_cosine_similarity": 0.99502032995224,
+          "collision_accuracy": 98.94019961357117,
+          "displacement_error_m": 0.0593784861266613,
+          "heading_error_rad": 0.04739203676581383
+        },
+        "hjepa_macro": {
+          "latent_mse": 0.0023455102927982807,
+          "latent_cosine_similarity": 0.9980300664901733,
+          "collision_accuracy": 98.94019961357117,
+          "displacement_error_m": 0.03561009094119072,
+          "heading_error_rad": 0.027884142473340034
+        }
+      },
+      "horizon_k10": {
+        "sequences_evaluated": 2162,
+        "lewm": {
+          "latent_mse": 0.8506502509117126,
+          "latent_cosine_similarity": 0.5285549163818359,
+          "collision_accuracy": 100.0,
+          "displacement_error_m": 0.26003867387771606,
+          "heading_error_rad": 0.250928670167923
+        },
+        "hjepa_micro": {
+          "latent_mse": 0.026350975036621094,
+          "latent_cosine_similarity": 0.9771641492843628,
+          "collision_accuracy": 100.0,
+          "displacement_error_m": 0.1258985549211502,
+          "heading_error_rad": 0.14373144507408142
+        },
+        "hjepa_macro": {
+          "latent_mse": 0.006904801819473505,
+          "latent_cosine_similarity": 0.9943147301673889,
+          "collision_accuracy": 100.0,
+          "displacement_error_m": 0.0685121938586235,
+          "heading_error_rad": 0.0581078827381134
+        }
+      }
+    },
+    "execution_metadata": {
+      "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/audit_latent_predictions.py",
+      "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+      "execution_timestamp": "2026-11-07T17:32:19.346628+00:00",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
+      "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+      "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "random_seed": 42,
+      "configuration": {
+        "horizons": [
+          1,
+          3,
+          5,
+          10
+        ],
+        "dataset": "held_out_test_benchmark.npz"
+      },
+      "environment": {
+        "python_version": "3.13.16",
+        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+      }
     }
   }
 }

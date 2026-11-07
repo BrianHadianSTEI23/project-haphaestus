@@ -1,66 +1,217 @@
 {
   "record_id": "REC-TRANSFER-001",
   "evaluation": "transfer",
-  "provenance_status": "LEGACY_UNVERIFIED",
-  "command_executed": "UNKNOWN_HISTORICAL_RUN",
-  "execution_timestamp": "UNKNOWN_HISTORICAL_TIMESTAMP",
-  "source_git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
-  "dataset_path": "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz",
-  "dataset_sha256": "missing",
-  "checkpoint_path": "world_models_fpga/checkpoints_v3/hjepa_best.pt",
-  "checkpoint_sha256": "missing",
+  "provenance_status": "INDEPENDENTLY_EXECUTED",
+  "command_executed": ".venv/bin/python world_models_fpga/research/principles/test_causal_transfer.py",
+  "execution_timestamp": "2026-11-07T17:32:19.346668+00:00",
+  "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+  "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
+  "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+  "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+  "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
   "random_seed": 42,
   "configuration": {
-    "source_artifact": "research/synthesis/experiment_b_cross_transfer/cross_transfer_results.json"
+    "models": [
+      "Baseline",
+      "LeWM",
+      "H-JEPA"
+    ],
+    "alignment_metric": "pearson_r"
   },
   "environment": {
-    "os_platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
     "python_version": "3.13.16",
-    "torch_version": "2.14.1+cu126",
-    "cuda_available": true,
-    "cuda_version": "12.6",
-    "cpu_count": 16,
-    "mujoco_version": "3.17.0"
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
   },
-  "result_artifact_path": "research/synthesis/experiment_b_cross_transfer/cross_transfer_results.json",
-  "result_artifact_sha256": "fc5e55d0906411153275a17945bdb8331eb10b22fb1c73f5a717d49c864557f6",
-  "provenance_notes": "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol.",
+  "result_artifact_path": "research/principles/results/causal_transfer_results.json",
+  "result_artifact_sha256": "18b603b4924b1a7b80396099f9f6d856e19b73a7c5f981f1bd8695adad5895ab",
+  "provenance_notes": "Independently executed with verified embedded execution metadata.",
   "config": {
-    "source_artifact": "research/synthesis/experiment_b_cross_transfer/cross_transfer_results.json"
+    "models": [
+      "Baseline",
+      "LeWM",
+      "H-JEPA"
+    ],
+    "alignment_metric": "pearson_r"
   },
-  "git_commit": "UNVERIFIED_PRE_AUDIT_COMMIT",
+  "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
   "seed": 42,
   "results": {
-    "alignment_method": "Orthogonal Procrustes SVD fit strictly on train_benchmark.npz, evaluated on held_out_test_benchmark.npz",
-    "train_alignment_cosine_h2l": 0.7497861385345459,
-    "heldout_test_alignment_cosine_h2l": 0.6172698736190796,
-    "experiments": {
-      "0_Native_LeWM_Reference": {
-        "next_state_cosine_similarity": 0.9780420064926147,
-        "next_state_mse": 0.0380551815032959,
-        "collision_accuracy_pct": 100.0
+    "models_evaluated": [
+      "Baseline",
+      "LeWM",
+      "H-JEPA"
+    ],
+    "measured_model_profiles": {
+      "Baseline": {
+        "object_grounding_success": 0.4,
+        "spatial_reasoning_success": 0.3,
+        "obstacle_avoidance_success": 0.3,
+        "temporal_planning_success": 0.0,
+        "generalization_success": 0.0,
+        "overall_success_rate": 0.18333333333333335,
+        "overall_collision_rate": 0.5333333333333333,
+        "e2_color_shift_retention": 0.7142857142857143,
+        "e3_heading_rotation_retention": 0.0,
+        "e5_obstacle_insertion_retention": 0.5714285714285714,
+        "disambig_ego_vs_world_left": 0.6666666666666666,
+        "horizon_K5_rollout_cosine": 0.9901838302612305,
+        "probe_relative_goal_r2": 0.25009074807167053,
+        "probe_collision_auroc": 0.9892445502380356,
+        "effective_rank": 2.485367774963379
       },
-      "1_Unaligned_Direct_Transplant": {
-        "description": "LeWM Predictor grafted onto H-JEPA Encoder without alignment",
-        "next_state_cosine_similarity": 0.9604285955429077,
-        "next_state_mse": 0.061646148562431335
+      "LeWM": {
+        "object_grounding_success": 0.9,
+        "spatial_reasoning_success": 0.2,
+        "obstacle_avoidance_success": 0.1,
+        "temporal_planning_success": 0.0,
+        "generalization_success": 0.2,
+        "overall_success_rate": 0.26666666666666666,
+        "overall_collision_rate": 0.5499999999999999,
+        "e2_color_shift_retention": 0.0,
+        "e3_heading_rotation_retention": 0.0,
+        "e5_obstacle_insertion_retention": 0.0,
+        "disambig_ego_vs_world_left": 0.0,
+        "horizon_K5_rollout_cosine": 0.7574333548545837,
+        "probe_relative_goal_r2": 0.21244627237319946,
+        "probe_collision_auroc": 0.9904221999498872,
+        "effective_rank": 5.451121807098389
       },
-      "2_Aligned_LeWM_Predictor_into_HJEPA": {
-        "description": "LeWM Predictor grafted onto H-JEPA Encoder via train-fit Procrustes W_h2l",
-        "next_state_cosine_similarity": 0.9773974418640137,
-        "next_state_mse": 0.035828739404678345,
-        "collision_accuracy_pct": 94.140625,
-        "cosine_retention_pct": 99.93
+      "H-JEPA": {
+        "object_grounding_success": 1.0,
+        "spatial_reasoning_success": 0.6,
+        "obstacle_avoidance_success": 0.2,
+        "temporal_planning_success": 0.0,
+        "generalization_success": 0.2,
+        "overall_success_rate": 0.3666666666666667,
+        "overall_collision_rate": 0.4833333333333334,
+        "e2_color_shift_retention": 0.5,
+        "e3_heading_rotation_retention": 1.0,
+        "e5_obstacle_insertion_retention": 0.0,
+        "disambig_ego_vs_world_left": 0.0,
+        "horizon_K5_rollout_cosine": 0.9985913038253784,
+        "probe_relative_goal_r2": 0.171697735786438,
+        "probe_collision_auroc": 0.9630856928088198,
+        "effective_rank": 1.6108945608139038
+      }
+    },
+    "causal_transfer_matrix": [
+      {
+        "circuit_id": "C1_target_grounding",
+        "name": "Target Grounding & Relative Goal Subspace",
+        "target_behavioral_metric": "object_grounding_success",
+        "model_feature_scores": {
+          "Baseline": 0.25009074807167053,
+          "LeWM": 0.21244627237319946,
+          "H-JEPA": 0.171697735786438
+        },
+        "model_behavioral_scores": {
+          "Baseline": 0.4,
+          "LeWM": 0.9,
+          "H-JEPA": 1.0
+        },
+        "descriptive_cross_model_r": -0.9248030399662763,
+        "cross_context_generalization": 1.0,
+        "circuit_verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
+        "sample_size_note": "n=3 model families; reported as descriptive alignment alongside closed-loop ablation evidence."
       },
-      "3_Aligned_HJEPA_Macro_into_LeWM": {
-        "description": "H-JEPA Macro Predictor grafted onto LeWM Encoder via W_l2h",
-        "macro_subgoal_cosine_similarity": 0.638817548751831,
-        "collision_accuracy_pct": 100.0
+      {
+        "circuit_id": "C2_egocentric_transformation",
+        "name": "Egocentric Body-Frame Displacement Subspace",
+        "target_behavioral_metric": "disambig_ego_vs_world_left",
+        "model_feature_scores": {
+          "Baseline": 0.418189464582797,
+          "LeWM": 0.41862630259796985,
+          "H-JEPA": 0.47801384031266725
+        },
+        "model_behavioral_scores": {
+          "Baseline": 0.6666666666666666,
+          "LeWM": 0.0,
+          "H-JEPA": 0.0
+        },
+        "descriptive_cross_model_r": -0.5054863921444719,
+        "cross_context_generalization": 1.0,
+        "circuit_verification_status": "FALSIFIED_NON_SELECTIVE",
+        "sample_size_note": "n=3 model families; reported as descriptive alignment alongside closed-loop ablation evidence."
       },
-      "4_Aligned_LeWM_Foresight_into_Baseline": {
-        "description": "LeWM Predictor grafted onto Reactive CNN Baseline via W_b2l",
-        "next_state_cosine_similarity": 0.9727082848548889,
-        "collision_accuracy_pct": 100.0
+      {
+        "circuit_id": "C3_obstacle_collision_detection",
+        "name": "Obstacle Proximity & Collision Risk Subspace",
+        "target_behavioral_metric": "obstacle_avoidance_success",
+        "model_feature_scores": {
+          "Baseline": 0.9892445502380356,
+          "LeWM": 0.9904221999498872,
+          "H-JEPA": 0.9630856928088198
+        },
+        "model_behavioral_scores": {
+          "Baseline": 0.3,
+          "LeWM": 0.1,
+          "H-JEPA": 0.2
+        },
+        "descriptive_cross_model_r": -0.03810176854575613,
+        "cross_context_generalization": 1.0,
+        "circuit_verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
+        "sample_size_note": "n=3 model families; reported as descriptive alignment alongside closed-loop ablation evidence."
+      },
+      {
+        "circuit_id": "C4_action_conditioned_transition",
+        "name": "Action-Conditioned Residual Transition Circuit",
+        "target_behavioral_metric": "e5_obstacle_insertion_retention",
+        "model_feature_scores": {
+          "Baseline": 0.0,
+          "LeWM": 0.8547099232673645,
+          "H-JEPA": 0.9986118674278259
+        },
+        "model_behavioral_scores": {
+          "Baseline": 0.5714285714285714,
+          "LeWM": 0.0,
+          "H-JEPA": 0.0
+        },
+        "descriptive_cross_model_r": -0.991077633269021,
+        "cross_context_generalization": 1.0,
+        "circuit_verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
+        "sample_size_note": "n=3 model families; reported as descriptive alignment alongside closed-loop ablation evidence."
+      },
+      {
+        "circuit_id": "C5_hierarchical_subgoal_decomposition",
+        "name": "Hierarchical Macro-to-Micro Subgoal Coupling Circuit",
+        "target_behavioral_metric": "temporal_planning_success",
+        "model_feature_scores": {
+          "Baseline": 0.9901838302612305,
+          "LeWM": 0.7574333548545837,
+          "H-JEPA": 0.9985913038253784
+        },
+        "model_behavioral_scores": {
+          "Baseline": 0.0,
+          "LeWM": 0.0,
+          "H-JEPA": 0.0
+        },
+        "descriptive_cross_model_r": 0.0,
+        "cross_context_generalization": 0.8165860188552484,
+        "circuit_verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
+        "sample_size_note": "n=3 model families; reported as descriptive alignment alongside closed-loop ablation evidence."
+      }
+    ],
+    "mean_cross_model_alignment_r": -0.49189376678510505,
+    "execution_metadata": {
+      "command_executed": ".venv/bin/python world_models_fpga/research/principles/test_causal_transfer.py",
+      "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+      "execution_timestamp": "2026-11-07T17:32:19.346668+00:00",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
+      "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+      "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "random_seed": 42,
+      "configuration": {
+        "models": [
+          "Baseline",
+          "LeWM",
+          "H-JEPA"
+        ],
+        "alignment_metric": "pearson_r"
+      },
+      "environment": {
+        "python_version": "3.13.16",
+        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
       }
     }
   }
