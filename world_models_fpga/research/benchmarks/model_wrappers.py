@@ -1,211 +1,542 @@
 """
-Phase 2: Standardized Model Agents for Behavioral Benchmarking
-Author: Brian A. Hadian
-Project: Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA
+Phase 2: Unified Agent Evaluation Wrappers (Repaired for Strict Information Regimes)
 
-Wraps Baseline Policy, LeWorldModel (LeWM), and H-JEPA into a uniform interface:
-    agent.select_action(obs_rgb, robot_pose, target_pose, goal_dict=None) -> action_norm
+Enforces three distinct evaluation tracks:
+  - Track A ('oracle'): Privileged simulator state (robot_pose, target_pose, obstacles) via ExpertNavigator.
+  - Track B ('structured'): Camera RGB observation + egocentric body-frame relative goal vector g_body in R^4.
+    Zero world poses, zero obstacle coordinates, zero analytical kinematics.
+  - Track C ('observation'): Camera RGB observation + discrete task ID (target_key, semantic_relation) only.
+    Zero simulator coordinates of any kind.
+
+Also supports controlled causal ablations:
+  - 'prediction_used' (default full world-model latent rollout)
+  - 'reactive' (learned reactive policy head without world-model rollout)
+  - 'prediction_ignored' (world model rollout executed, but next_s replaced by s_t in scorer)
+  - 'no_action_conditioning' (action input to transition predictor zeroed out)
+  - 'no_collision_prediction' (collision risk weight set to 0)
+  - 'no_temporal_hierarchy' (H-JEPA bypasses K-step MacroPredictor and uses 1-step MicroPredictor only)
 """
 
+from __future__ import annotations
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
+
 import os
-import time
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import numpy as np
 import torch
-import torch.nn.functional as F
 
-from models.baseline_policy import BaselineNavigationPolicy
-from models.le_world_model import LeWorldModel
+from models.baseline_policy import BaselineNavigationPolicy, encode_task_id
 from models.h_jepa import HJEPAModel
+from models.le_world_model import LeWorldModel
+from research.datasets.generation.expert_navigator import ExpertNavigator
 
-class BaselineAgent:
-    def __init__(self, ckpt_path, device="cuda" if torch.cuda.is_available() else "cpu"):
-        self.name = "Baseline Policy"
-        self.model_id = "baseline"
+
+def _default_ckpt_path(filename: str) -> str:
+    # No silent fallback to legacy checkpoints trained on leaky/stale data.
+    return os.path.join(str(_ACTIVE_CKPT_DIR), filename)
+
+
+def _load_state_dict_flexible(model: torch.nn.Module, ckpt_path: str | None, device: str, default_file: str | None = None) -> bool:
+    if not ckpt_path and default_file:
+        ckpt_path = _default_ckpt_path(default_file)
+    if not ckpt_path or not os.path.exists(ckpt_path):
+        raise FileNotFoundError(
+            f"checkpoint {ckpt_path!r} not found; refusing to evaluate an untrained model as if it were trained")
+    payload = torch.load(ckpt_path, map_location=device, weights_only=False)
+    if isinstance(payload, dict) and "state_dict" in payload:
+        payload = payload["state_dict"]
+    model.load_state_dict(payload, strict=False)
+    return True
+
+
+def compute_body_frame_goal_vec(robot_pose: np.ndarray, target_pose: np.ndarray) -> np.ndarray:
+    """Computes purely egocentric relative goal vector [dx_b, dy_b, sin(dth), cos(dth)]."""
+    dx = float(target_pose[0] - robot_pose[0])
+    dy = float(target_pose[1] - robot_pose[1])
+    th = float(robot_pose[2])
+    dx_b = float(np.cos(th) * dx + np.sin(th) * dy)
+    dy_b = float(-np.sin(th) * dx + np.cos(th) * dy)
+    dth = float(target_pose[2] - robot_pose[2])
+    return np.array([dx_b, dy_b, np.sin(dth), np.cos(dth)], dtype=np.float32)
+
+
+def _build_holonomic_candidates(a_react: torch.Tensor, device: str) -> torch.Tensor:
+    """
+    Constructs 25 deterministic holonomic 3-DOF action candidates in [-1, 1]^3:
+      - Candidate 0: learned reactive proposal a_react
+      - Candidates 1..8: local perturbations around a_react
+      - Candidates 9..24: structured holonomic basis (forward, strafe, diagonal detour, yaw)
+    """
+    ar = a_react.squeeze(0)
+    deltas = torch.tensor(
+        [
+            [0.0, 0.0, 0.0],
+            [0.25, 0.0, 0.0],
+            [-0.25, 0.0, 0.0],
+            [0.0, 0.45, 0.0],
+            [0.0, -0.45, 0.0],
+            [0.15, 0.40, 0.20],
+            [0.15, -0.40, -0.20],
+            [0.0, 0.0, 0.45],
+            [0.0, 0.0, -0.45],
+        ],
+        dtype=torch.float32,
+        device=device,
+    )
+    local_cands = torch.clamp(ar.unsqueeze(0) + deltas, -1.0, 1.0)
+    fixed_cands = torch.tensor(
+        [
+            [0.85, 0.0, 0.0],
+            [0.55, 0.0, 0.0],
+            [0.65, 0.55, 0.0],
+            [0.65, -0.55, 0.0],
+            [0.40, 0.75, 0.15],
+            [0.40, -0.75, -0.15],
+            [0.0, 0.80, 0.0],
+            [0.0, -0.80, 0.0],
+            [-0.35, 0.65, 0.25],
+            [-0.35, -0.65, -0.25],
+            [0.70, 0.0, 0.55],
+            [0.70, 0.0, -0.55],
+            [0.35, 0.35, 0.65],
+            [0.35, -0.35, -0.65],
+            [0.0, 0.0, 0.85],
+            [0.0, 0.0, -0.85],
+        ],
+        dtype=torch.float32,
+        device=device,
+    )
+    return torch.cat([local_cands, fixed_cands], dim=0)
+
+
+class BaseAgentWrapper:
+    def __init__(self, name: str, track: str = "structured", ablation_mode: str = "prediction_used", device: str = "cpu"):
+        self.name = name
+        self.model_id = name
+        self.track = track
+        self.ablation_mode = ablation_mode
         self.device = device
-        self.model = BaselineNavigationPolicy().to(self.device)
-        if os.path.exists(ckpt_path):
-            self.model.load_state_dict(torch.load(ckpt_path, map_location=self.device))
+        self._prev_latent = None
+        self._ego_goal_memory = None
+
+    def reset(self):
+        self._prev_latent = None
+        self._ego_goal_memory = None
+
+    def act(
+        self,
+        obs_rgb: np.ndarray,
+        robot_pose: np.ndarray | None = None,
+        target_pose: np.ndarray | None = None,
+        task_spec: dict | None = None,
+        goal_vec_body: np.ndarray | None = None,
+    ):
+        raise NotImplementedError
+
+
+class OracleAgent(BaseAgentWrapper):
+    """Track A Upper Bound: Privileged Geometric Planner with full simulator state."""
+
+    def __init__(self):
+        super().__init__(name="Oracle_Expert", track="oracle", ablation_mode="oracle_controller")
+        self.nav = ExpertNavigator()
+
+    def act(self, obs_rgb, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=None):
+        if robot_pose is None or target_pose is None:
+            raise ValueError("OracleAgent requires privileged robot_pose and target_pose (Track A only).")
+        action = self.nav.compute_action(robot_pose, target_pose, task_spec or {}, is_last_waypoint=True)
+        return action, {"col_risk": 0.0, "latent": np.zeros(32, dtype=np.float32), "track": "oracle"}
+
+
+class RandomAgent(BaseAgentWrapper):
+    """Uninformed Lower Bound: Seeded random holonomic walk."""
+
+    def __init__(self, seed: int = 42):
+        super().__init__(name="Random_Policy", track="observation", ablation_mode="random")
+        self.rng = np.random.default_rng(seed)
+
+    def act(self, obs_rgb, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=None):
+        act = self.rng.uniform(-0.8, 0.8, size=3).astype(np.float32)
+        return act, {"col_risk": 0.5, "latent": np.zeros(32, dtype=np.float32), "track": self.track}
+
+
+class BaselineAgent(BaseAgentWrapper):
+    """Reactive CNN Policy without latent transition model."""
+
+    def __init__(self, ckpt_path: str | None = None, device: str = "cpu", track: str = "structured"):
+        super().__init__(name="CNN_Reactive_Baseline", track=track, ablation_mode="reactive", device=device)
+        self.model = BaselineNavigationPolicy(latent_dim=32, goal_dim=4, action_dim=3, hidden_dim=64).to(device)
+        _load_state_dict_flexible(self.model, ckpt_path, device, default_file="baseline_best.pt")
         self.model.eval()
 
-    def select_action(self, obs_rgb, robot_pose, target_pose, goal_dict=None):
-        """
-        Baseline Goal-Conditioned Reactive Policy.
-        """
-        rx, ry, rth = robot_pose[0], robot_pose[1], robot_pose[2]
-        gx, gy, gth = target_pose[0], target_pose[1], target_pose[2]
-
-        # Arena displacement
-        dx_w = gx - rx
-        dy_w = gy - ry
-        target_dist = np.sqrt(dx_w**2 + dy_w**2)
-
-        # Body-frame projection
-        c, s = np.cos(rth), np.sin(rth)
-        dx_b = c * dx_w + s * dy_w
-        dy_b = -s * dx_w + c * dy_w
-
-        ang_to_goal = np.arctan2(dy_b, dx_b) if target_dist > 0.05 else 0.0
-        vx_nom = float(np.clip(0.3 * dx_b, -0.4, 0.5))
-        vy_nom = float(np.clip(0.3 * dy_b, -0.4, 0.4))
-        wz_nom = float(np.clip(1.5 * ang_to_goal, -1.0, 1.0))
-
-        with torch.no_grad():
-            act, col_risk, _ = self.model.act(obs_rgb, robot_pose, target_pose, device=self.device)
-
-        # Blend learned policy output with nominal goal orientation
-        act[0] = 0.65 * act[0] + 0.35 * vx_nom
-        act[1] = 0.65 * act[1] + 0.35 * vy_nom
-        act[2] = 0.50 * act[2] + 0.50 * wz_nom
-        return np.clip(act, -1.0, 1.0).astype(np.float32)
-
-class LeWMAgent:
-    def __init__(self, ckpt_path, device="cuda" if torch.cuda.is_available() else "cpu", num_candidates=24):
-        self.name = "LeWorldModel (LeWM)"
-        self.model_id = "lewm"
-        self.device = device
-        self.num_candidates = num_candidates
-        self.model = LeWorldModel().to(self.device)
-        if os.path.exists(ckpt_path):
-            self.model.load_state_dict(torch.load(ckpt_path, map_location=self.device))
-        self.model.eval()
-
-    def select_action(self, obs_rgb, robot_pose, target_pose, goal_dict=None):
-        """
-        LeWorldModel Latent Foresight MPC:
-        Evaluates candidate trajectories using LeWM dynamics predictor to minimize distance
-        while penalizing latent collision risk.
-        """
-        rx, ry, rth = robot_pose[0], robot_pose[1], robot_pose[2]
-        gx, gy, gth = target_pose[0], target_pose[1], target_pose[2]
-
-        dx_w = gx - rx
-        dy_w = gy - ry
-        target_dist = np.sqrt(dx_w**2 + dy_w**2)
-
-        c, s = np.cos(rth), np.sin(rth)
-        dx_b = c * dx_w + s * dy_w
-        dy_b = -s * dx_w + c * dy_w
-        ang_to_goal = np.arctan2(dy_b, dx_b) if target_dist > 0.05 else 0.0
-
-        vx_nom = float(np.clip(0.35 * dx_b, -0.4, 0.6))
-        vy_nom = float(np.clip(0.35 * dy_b, -0.4, 0.4))
-        wz_nom = float(np.clip(1.6 * ang_to_goal, -1.0, 1.0))
-
+    @torch.no_grad()
+    def act(self, obs_rgb, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=None):
         img_t = torch.from_numpy(obs_rgb).permute(2, 0, 1).unsqueeze(0).float().to(self.device) / 255.0
-        with torch.no_grad():
-            s_curr = self.model.encode(img_t)
+        z_vis = self.model.encode(img_t) if hasattr(self.model, "encode") else self.model.encoder(img_t)
 
-        # Generate action candidates around nominal
-        cands = [[vx_nom, vy_nom, wz_nom]]
-        rng = np.random.default_rng(int((rx + ry) * 100) % 10000)
-        for _ in range(self.num_candidates - 1):
-            vx_v = np.clip(vx_nom + rng.uniform(-0.25, 0.25), -0.5, 0.9)
-            vy_v = np.clip(vy_nom + rng.uniform(-0.35, 0.35), -0.7, 0.7)
-            wz_v = np.clip(wz_nom + rng.uniform(-0.35, 0.35), -1.0, 1.0)
-            cands.append([vx_v, vy_v, wz_v])
+        if self.track == "observation":
+            spec = task_spec or {}
+            tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
+            goal_t = self.model.infer_goal_vec(z_vis, t_tensor)
+        else:
+            if goal_vec_body is None:
+                if robot_pose is None or target_pose is None:
+                    raise ValueError("Track B requires goal_vec_body (or relative pose to compute it).")
+                goal_vec_body = compute_body_frame_goal_vec(robot_pose, target_pose)
+            goal_t = torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
 
-        cands_t = torch.tensor(cands, dtype=torch.float32, device=self.device)
-        s_batch = s_curr.repeat(self.num_candidates, 1)
+        actions, col_risk = self.model.forward_with_latent(z_vis, goal_t)
+        act_np = np.clip(actions.squeeze(0).cpu().numpy(), -1.0, 1.0).astype(np.float32)
+        col_np = float(col_risk.squeeze(0).cpu().numpy()[0])
+        z_np = z_vis.squeeze(0).cpu().numpy()
+        return act_np, {"col_risk": col_np, "latent": z_np, "track": self.track, "ablation_mode": self.ablation_mode}
 
-        with torch.no_grad():
-            next_s, col_logits = self.model.predict_next(s_batch, cands_t)
-            col_probs = torch.sigmoid(col_logits).squeeze(-1).cpu().numpy()
 
-        best_score = -float("inf")
-        best_act = np.array([vx_nom, vy_nom, wz_nom], dtype=np.float32)
-        dt = 0.1
+class LeWMAgent(BaseAgentWrapper):
+    r"""
+    Single-Scale Action-Conditioned World Model (LeWM).
+    Selects actions using predicted future latent states \hat{s}_{t+1} = g(s_t, a),
+    decoded latent ego-motion displacement, and predicted collision risk.
+    """
 
-        for i, cand in enumerate(cands):
-            vx_s = cand[0] * 0.6
-            vy_s = cand[1] * 0.4
-            wz_s = cand[2] * 1.5
-
-            fut_th = rth + wz_s * dt
-            fut_dx_w = dx_w - (np.cos(fut_th) * vx_s - np.sin(fut_th) * vy_s) * dt
-            fut_dy_w = dy_w - (np.sin(fut_th) * vx_s + np.cos(fut_th) * vy_s) * dt
-            fut_dist = np.sqrt(fut_dx_w**2 + fut_dy_w**2)
-            dist_gain = (target_dist - fut_dist)
-
-            col_pen = 3.5 * col_probs[i]
-            score = dist_gain - col_pen
-
-            if score > best_score:
-                best_score = score
-                best_act = np.array(cand, dtype=np.float32)
-
-        return np.clip(best_act, -1.0, 1.0).astype(np.float32)
-
-class HJEPAAgent:
-    def __init__(self, ckpt_path, device="cuda" if torch.cuda.is_available() else "cpu", num_candidates=24):
-        self.name = "H-JEPA Hierarchical"
-        self.model_id = "hjepa"
-        self.device = device
-        self.num_candidates = num_candidates
-        self.model = HJEPAModel(stride_k=5).to(self.device)
-        if os.path.exists(ckpt_path):
-            self.model.load_state_dict(torch.load(ckpt_path, map_location=self.device))
+    def __init__(
+        self,
+        ckpt_path: str | None = None,
+        device: str = "cpu",
+        track: str = "structured",
+        ablation_mode: str = "prediction_used",
+    ):
+        super().__init__(name="LeWorldModel_SingleScale", track=track, ablation_mode=ablation_mode, device=device)
+        self.model = LeWorldModel(latent_dim=32, action_dim=3, hidden_dim=64).to(device)
+        _load_state_dict_flexible(self.model, ckpt_path, device, default_file="lewm_best.pt")
         self.model.eval()
 
-    def select_action(self, obs_rgb, robot_pose, target_pose, goal_dict=None):
-        """
-        H-JEPA Hierarchical Foresight MPC:
-        Level 1 (Macro Stride K=5): Evaluates multi-step path progress and macro obstacle collision over 0.5s horizon.
-        """
-        rx, ry, rth = robot_pose[0], robot_pose[1], robot_pose[2]
-        gx, gy, gth = target_pose[0], target_pose[1], target_pose[2]
+    def _resolve_goal_vec(self, s_t: torch.Tensor, robot_pose, target_pose, task_spec, goal_vec_body) -> torch.Tensor:
+        if self.track == "observation":
+            spec = task_spec or {}
+            tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
+            vis_goal = self.model.infer_goal_vec(s_t, t_tensor)
+            if self._prev_latent is not None and self._ego_goal_memory is not None:
+                # Update egocentric goal memory using decoded latent ego-motion between t-1 and t
+                realized_disp = self.model.predict_ego_displacement(self._prev_latent, s_t).squeeze(0)
+                mem = self._ego_goal_memory.clone()
+                dx_rem = mem[0] - realized_disp[0]
+                dy_rem = mem[1] - realized_disp[1]
+                dth = realized_disp[2]
+                c, s = torch.cos(dth), torch.sin(dth)
+                mem_dx = c * dx_rem + s * dy_rem
+                mem_dy = -s * dx_rem + c * dy_rem
+                mem_updated = torch.stack([mem_dx, mem_dy, mem[2], mem[3]]).unsqueeze(0)
+                goal_t = 0.65 * vis_goal + 0.35 * mem_updated
+            else:
+                goal_t = vis_goal
+            self._prev_latent = s_t.detach()
+            self._ego_goal_memory = goal_t.squeeze(0).detach()
+            return goal_t
 
-        dx_w = gx - rx
-        dy_w = gy - ry
-        target_dist = np.sqrt(dx_w**2 + dy_w**2)
+        if goal_vec_body is None:
+            if robot_pose is None or target_pose is None:
+                raise ValueError("Track B requires goal_vec_body.")
+            goal_vec_body = compute_body_frame_goal_vec(robot_pose, target_pose)
+        return torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
 
-        c, s = np.cos(rth), np.sin(rth)
-        dx_b = c * dx_w + s * dy_w
-        dy_b = -s * dx_w + c * dy_w
-        ang_to_goal = np.arctan2(dy_b, dx_b) if target_dist > 0.05 else 0.0
-
-        vx_nom = float(np.clip(0.35 * dx_b, -0.4, 0.6))
-        vy_nom = float(np.clip(0.35 * dy_b, -0.4, 0.4))
-        wz_nom = float(np.clip(1.6 * ang_to_goal, -1.0, 1.0))
-
+    @torch.no_grad()
+    def act(self, obs_rgb, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=None):
         img_t = torch.from_numpy(obs_rgb).permute(2, 0, 1).unsqueeze(0).float().to(self.device) / 255.0
-        with torch.no_grad():
-            s_curr = self.model.encode(img_t)
+        s_t = self.model.encode(img_t)
+        goal_t = self._resolve_goal_vec(s_t, robot_pose, target_pose, task_spec, goal_vec_body)
 
-        cands = [[vx_nom, vy_nom, wz_nom]]
-        rng = np.random.default_rng(int((rx + ry) * 100) % 10000)
-        for _ in range(self.num_candidates - 1):
-            vx_v = np.clip(vx_nom + rng.uniform(-0.25, 0.25), -0.5, 0.9)
-            vy_v = np.clip(vy_nom + rng.uniform(-0.35, 0.35), -0.7, 0.7)
-            wz_v = np.clip(wz_nom + rng.uniform(-0.35, 0.35), -1.0, 1.0)
-            cands.append([vx_v, vy_v, wz_v])
+        a_react = self.model.predict_reactive_action(s_t, goal_t)
+        if self.ablation_mode == "reactive":
+            _, col_logit = self.model.predict_next(s_t, a_react)
+            return (
+                np.clip(a_react.squeeze(0).cpu().numpy(), -1.0, 1.0).astype(np.float32),
+                {
+                    "col_risk": float(torch.sigmoid(col_logit).item()),
+                    "latent": s_t.squeeze(0).cpu().numpy(),
+                    "track": self.track,
+                    "ablation_mode": self.ablation_mode,
+                },
+            )
 
-        cands_t = torch.tensor(cands, dtype=torch.float32, device=self.device)
-        s_batch = s_curr.repeat(self.num_candidates, 1)
+        cand_actions = _build_holonomic_candidates(a_react, self.device)
+        num_cands = cand_actions.shape[0]
+        s_batch = s_t.repeat(num_cands, 1)
 
-        with torch.no_grad():
-            next_S, macro_col_logits = self.model.macro_predictor(s_batch, cands_t)
-            col_probs = torch.sigmoid(macro_col_logits).squeeze(-1).cpu().numpy()
+        if self.ablation_mode == "no_action_conditioning":
+            action_in = torch.zeros_like(cand_actions)
+        else:
+            action_in = cand_actions
 
-        best_score = -float("inf")
-        best_act = np.array([vx_nom, vy_nom, wz_nom], dtype=np.float32)
-        dt_macro = 0.5 # Stride K=5 at 10 Hz
+        next_s, col_logits = self.model.predict_next(s_batch, action_in)
+        if self.ablation_mode == "prediction_ignored":
+            # Replace predicted latent state next_s with unrolled current state s_batch
+            next_s = s_batch
 
-        for i, cand in enumerate(cands):
-            vx_s = cand[0] * 0.6
-            vy_s = cand[1] * 0.4
-            wz_s = cand[2] * 1.5
+        # Decode predicted 1-step body-frame displacement strictly from (s_batch, next_s)
+        pred_disp = self.model.predict_ego_displacement(s_batch, next_s)
+        col_probs = torch.sigmoid(col_logits).squeeze(-1)
 
-            fut_th = rth + wz_s * dt_macro
-            fut_dx_w = dx_w - (np.cos(fut_th) * vx_s - np.sin(fut_th) * vy_s) * dt_macro
-            fut_dy_w = dy_w - (np.sin(fut_th) * vx_s + np.cos(fut_th) * vy_s) * dt_macro
-            fut_dist = np.sqrt(fut_dx_w**2 + fut_dy_w**2)
-            dist_gain = (target_dist - fut_dist)
+        gx = goal_t[0, 0]
+        gy = goal_t[0, 1]
+        g_dth = torch.atan2(goal_t[0, 2], goal_t[0, 3])
 
-            col_pen = 4.0 * col_probs[i]
-            score = dist_gain - col_pen
+        # Evaluate multi-step projection of the 1-step predicted displacement (horizon scaling = 3.5 steps)
+        horizon_scale = 3.5
+        rem_dx = gx - horizon_scale * pred_disp[:, 0]
+        rem_dy = gy - horizon_scale * pred_disp[:, 1]
+        rem_dist = torch.sqrt(rem_dx ** 2 + rem_dy ** 2 + 1e-6)
+        rem_yaw = torch.abs(torch.atan2(torch.sin(g_dth - horizon_scale * pred_disp[:, 2]), torch.cos(g_dth - horizon_scale * pred_disp[:, 2])))
 
-            if score > best_score:
-                best_score = score
-                best_act = np.array(cand, dtype=np.float32)
+        prior_cost = torch.sum((cand_actions - a_react) ** 2, dim=-1)
+        lambda_col = 0.0 if self.ablation_mode == "no_collision_prediction" else 1.8
 
-        return np.clip(best_act, -1.0, 1.0).astype(np.float32)
+        if self.ablation_mode == "prediction_ignored":
+            best_idx = 0
+        else:
+            total_cost = rem_dist + 0.15 * rem_yaw + 0.12 * prior_cost + lambda_col * col_probs
+            best_idx = int(torch.argmin(total_cost).item())
+
+        best_act = np.clip(cand_actions[best_idx].cpu().numpy(), -1.0, 1.0).astype(np.float32)
+        best_col = float(col_probs[best_idx].item())
+        return best_act, {
+            "col_risk": best_col,
+            "latent": s_t.squeeze(0).cpu().numpy(),
+            "predicted_next_latent": next_s[best_idx].cpu().numpy(),
+            "track": self.track,
+            "ablation_mode": self.ablation_mode,
+        }
+
+
+class HJEPAAgent(BaseAgentWrapper):
+    """
+    Hierarchical World Model (H-JEPA):
+      - Tier 1 (Macro, stride K=5): Evaluates multi-step macro action sequences via MacroPredictor,
+        decodes K-step latent displacement from next_S, and selects optimal latent subgoal S*_{t+K}.
+      - Tier 2 (Micro, stride 1): Generates primitive action via MicroPredictor.select_action(s_t, S*_{t+K})
+        with 1-step micro collision verification.
+    """
+
+    def __init__(
+        self,
+        ckpt_path: str | None = None,
+        device: str = "cpu",
+        track: str = "structured",
+        ablation_mode: str = "prediction_used",
+    ):
+        super().__init__(name="H_JEPA_Hierarchical", track=track, ablation_mode=ablation_mode, device=device)
+        self.model = HJEPAModel(latent_dim=32, stride_k=5, hidden_dim=64).to(device)
+        _load_state_dict_flexible(self.model, ckpt_path, device, default_file="hjepa_best.pt")
+        self.model.eval()
+
+    def _resolve_goal_vec(self, s_t: torch.Tensor, robot_pose, target_pose, task_spec, goal_vec_body) -> torch.Tensor:
+        if self.track == "observation":
+            spec = task_spec or {}
+            tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
+            vis_goal = self.model.infer_goal_vec(s_t, t_tensor)
+            if self._prev_latent is not None and self._ego_goal_memory is not None:
+                realized_disp = self.model.predict_micro_displacement(self._prev_latent, s_t).squeeze(0)
+                mem = self._ego_goal_memory.clone()
+                dx_rem = mem[0] - realized_disp[0]
+                dy_rem = mem[1] - realized_disp[1]
+                dth = realized_disp[2]
+                c, s = torch.cos(dth), torch.sin(dth)
+                mem_dx = c * dx_rem + s * dy_rem
+                mem_dy = -s * dx_rem + c * dy_rem
+                mem_updated = torch.stack([mem_dx, mem_dy, mem[2], mem[3]]).unsqueeze(0)
+                goal_t = 0.65 * vis_goal + 0.35 * mem_updated
+            else:
+                goal_t = vis_goal
+            self._prev_latent = s_t.detach()
+            self._ego_goal_memory = goal_t.squeeze(0).detach()
+            return goal_t
+
+        if goal_vec_body is None:
+            if robot_pose is None or target_pose is None:
+                raise ValueError("Track B requires goal_vec_body.")
+            goal_vec_body = compute_body_frame_goal_vec(robot_pose, target_pose)
+        return torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
+
+    def _build_macro_sequence_candidates(self, a_react: torch.Tensor, cand_1step: torch.Tensor) -> torch.Tensor:
+        """
+        Builds 25 K-step macro action sequences (shape: 25 x 15):
+          - Candidates 0..16: constant-action macro rollouts repeated across K=5 steps
+          - Candidates 17..24: non-commutative two-phase detour-then-advance sequences
+            (e.g. 2 steps lateral strafe around obstacle + 3 steps forward toward goal)
+        """
+        k = self.model.stride_k
+        const_cands = cand_1step[:17].repeat(1, k)  # (17, 15)
+        ar = a_react.squeeze(0)
+        two_phase_list = [
+            # Left strafe detour (2 steps) -> forward approach (3 steps)
+            torch.cat([torch.tensor([0.30, 0.75, 0.10], device=self.device).repeat(2), torch.tensor([0.80, -0.15, 0.0], device=self.device).repeat(k - 2)]),
+            # Right strafe detour (2 steps) -> forward approach (3 steps)
+            torch.cat([torch.tensor([0.30, -0.75, -0.10], device=self.device).repeat(2), torch.tensor([0.80, 0.15, 0.0], device=self.device).repeat(k - 2)]),
+            # Wide left flank (3 steps) -> inward turn (2 steps)
+            torch.cat([torch.tensor([0.55, 0.65, 0.20], device=self.device).repeat(3), torch.tensor([0.75, -0.35, -0.20], device=self.device).repeat(k - 3)]),
+            # Wide right flank (3 steps) -> inward turn (2 steps)
+            torch.cat([torch.tensor([0.55, -0.65, -0.20], device=self.device).repeat(3), torch.tensor([0.75, 0.35, 0.20], device=self.device).repeat(k - 3)]),
+            # Rotate left (2 steps) -> drive forward (3 steps)
+            torch.cat([torch.tensor([0.15, 0.0, 0.75], device=self.device).repeat(2), torch.tensor([0.85, 0.0, 0.0], device=self.device).repeat(k - 2)]),
+            # Rotate right (2 steps) -> drive forward (3 steps)
+            torch.cat([torch.tensor([0.15, 0.0, -0.75], device=self.device).repeat(2), torch.tensor([0.85, 0.0, 0.0], device=self.device).repeat(k - 2)]),
+            # Back-off + left strafe (2 steps) -> forward (3 steps)
+            torch.cat([torch.tensor([-0.30, 0.70, 0.20], device=self.device).repeat(2), torch.tensor([0.75, 0.20, 0.0], device=self.device).repeat(k - 2)]),
+            # Reactive proposal (2 steps) -> damped approach (3 steps)
+            torch.cat([ar.repeat(2), (ar * 0.7).repeat(k - 2)]),
+        ]
+        two_phase = torch.stack(two_phase_list, dim=0)
+        return torch.cat([const_cands, two_phase], dim=0)
+
+    @torch.no_grad()
+    def act(self, obs_rgb, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=None):
+        img_t = torch.from_numpy(obs_rgb).permute(2, 0, 1).unsqueeze(0).float().to(self.device) / 255.0
+        s_t = self.model.encode(img_t)
+        goal_t = self._resolve_goal_vec(s_t, robot_pose, target_pose, task_spec, goal_vec_body)
+
+        a_react = self.model.predict_reactive_action(s_t, goal_t)
+        if self.ablation_mode == "reactive":
+            _, micro_col_logit = self.model.micro_predictor.forward_transition(s_t, a_react)
+            return (
+                np.clip(a_react.squeeze(0).cpu().numpy(), -1.0, 1.0).astype(np.float32),
+                {
+                    "col_risk": float(torch.sigmoid(micro_col_logit).item()),
+                    "latent": s_t.squeeze(0).cpu().numpy(),
+                    "track": self.track,
+                    "ablation_mode": self.ablation_mode,
+                },
+            )
+
+        cand_1step = _build_holonomic_candidates(a_react, self.device)
+        num_cands = cand_1step.shape[0]
+        s_batch = s_t.repeat(num_cands, 1)
+
+        gx = goal_t[0, 0]
+        gy = goal_t[0, 1]
+        g_dth = torch.atan2(goal_t[0, 2], goal_t[0, 3])
+        lambda_col = 0.0 if self.ablation_mode == "no_collision_prediction" else 1.8
+
+        if self.ablation_mode == "no_temporal_hierarchy":
+            # Ablation: bypass MacroPredictor (K=5) and plan using 1-step MicroPredictor only
+            act_in = torch.zeros_like(cand_1step) if self.ablation_mode == "no_action_conditioning" else cand_1step
+            next_s_micro, micro_col_logits = self.model.micro_predictor.forward_transition(s_batch, act_in)
+            pred_micro_disp = self.model.predict_micro_displacement(s_batch, next_s_micro)
+            col_probs = torch.sigmoid(micro_col_logits).squeeze(-1)
+            rem_dx = gx - 3.5 * pred_micro_disp[:, 0]
+            rem_dy = gy - 3.5 * pred_micro_disp[:, 1]
+            rem_dist = torch.sqrt(rem_dx ** 2 + rem_dy ** 2 + 1e-6)
+            prior_cost = torch.sum((cand_1step - a_react) ** 2, dim=-1)
+            total_cost = rem_dist + 0.12 * prior_cost + lambda_col * col_probs
+            best_idx = int(torch.argmin(total_cost).item())
+            best_act = np.clip(cand_1step[best_idx].cpu().numpy(), -1.0, 1.0).astype(np.float32)
+            return best_act, {
+                "col_risk": float(col_probs[best_idx].item()),
+                "latent": s_t.squeeze(0).cpu().numpy(),
+                "track": self.track,
+                "ablation_mode": self.ablation_mode,
+            }
+
+        # Tier 1: Macro Planning over K=5 steps
+        macro_seqs = self._build_macro_sequence_candidates(a_react, cand_1step)
+        macro_in = torch.zeros_like(macro_seqs) if self.ablation_mode == "no_action_conditioning" else macro_seqs
+        next_S, macro_col_logits = self.model.macro_predictor(s_batch, macro_in)
+        if self.ablation_mode == "prediction_ignored":
+            next_S = s_batch
+
+        pred_macro_disp = self.model.predict_macro_displacement(s_batch, next_S)
+        state_macro_col = self.model.state_col_head(next_S)
+        macro_col_probs = torch.sigmoid(0.5 * (macro_col_logits + state_macro_col)).squeeze(-1)
+
+        rem_dx_macro = gx - pred_macro_disp[:, 0]
+        rem_dy_macro = gy - pred_macro_disp[:, 1]
+        rem_dist_macro = torch.sqrt(rem_dx_macro ** 2 + rem_dy_macro ** 2 + 1e-6)
+        rem_yaw_macro = torch.abs(
+            torch.atan2(torch.sin(g_dth - pred_macro_disp[:, 2]), torch.cos(g_dth - pred_macro_disp[:, 2]))
+        )
+        first_step_actions = macro_seqs[:, :3]
+        prior_macro = torch.sum((first_step_actions - a_react) ** 2, dim=-1)
+
+        if self.ablation_mode == "prediction_ignored":
+            best_macro_idx = 0
+        else:
+            macro_cost = rem_dist_macro + 0.15 * rem_yaw_macro + 0.10 * prior_macro + lambda_col * macro_col_probs
+            best_macro_idx = int(torch.argmin(macro_cost).item())
+
+        best_subgoal = next_S[best_macro_idx : best_macro_idx + 1]
+        subgoal_first_action = first_step_actions[best_macro_idx : best_macro_idx + 1]
+
+        # Tier 2: Micro Policy tracking best_subgoal + 1-step micro safety refinement
+        a_micro_pol = self.model.micro_predictor.select_action(s_t, best_subgoal)
+        a_proposal = 0.55 * a_micro_pol + 0.45 * subgoal_first_action
+
+        micro_cands = _build_holonomic_candidates(a_proposal, self.device)
+        micro_in = torch.zeros_like(micro_cands) if self.ablation_mode == "no_action_conditioning" else micro_cands
+        next_s_m, micro_col_logits = self.model.micro_predictor.forward_transition(s_batch, micro_in)
+        if self.ablation_mode == "prediction_ignored":
+            next_s_m = s_batch
+
+        pred_micro_disp = self.model.predict_micro_displacement(s_batch, next_s_m)
+        micro_col_probs = torch.sigmoid(micro_col_logits).squeeze(-1)
+
+        # Score micro candidates by alignment toward macro subgoal displacement + local collision avoidance
+        target_step_disp = pred_macro_disp[best_macro_idx] / float(self.model.stride_k)
+        step_err = torch.sqrt(
+            (pred_micro_disp[:, 0] - target_step_disp[0]) ** 2
+            + (pred_micro_disp[:, 1] - target_step_disp[1]) ** 2
+            + 1e-6
+        )
+        rem_dx_m = gx - 3.5 * pred_micro_disp[:, 0]
+        rem_dy_m = gy - 3.5 * pred_micro_disp[:, 1]
+        rem_dist_m = torch.sqrt(rem_dx_m ** 2 + rem_dy_m ** 2 + 1e-6)
+        micro_prior = torch.sum((micro_cands - a_proposal) ** 2, dim=-1)
+
+        if self.ablation_mode == "prediction_ignored":
+            best_micro_idx = 0
+        else:
+            micro_cost = 0.6 * rem_dist_m + 0.4 * step_err + 0.12 * micro_prior + lambda_col * micro_col_probs
+            best_micro_idx = int(torch.argmin(micro_cost).item())
+
+        best_act = np.clip(micro_cands[best_micro_idx].cpu().numpy(), -1.0, 1.0).astype(np.float32)
+        best_col = float(0.5 * (macro_col_probs[best_macro_idx].item() + micro_col_probs[best_micro_idx].item()))
+        return best_act, {
+            "col_risk": best_col,
+            "latent": s_t.squeeze(0).cpu().numpy(),
+            "macro_subgoal": best_subgoal.squeeze(0).cpu().numpy(),
+            "predicted_next_latent": next_s_m[best_micro_idx].cpu().numpy(),
+            "track": self.track,
+            "ablation_mode": self.ablation_mode,
+        }
+
+
+def load_all_agents(ckpt_dir: str | None = None, device: str = "cpu", track: str = "structured", seed: int | None = None):
+    if ckpt_dir is None:
+        v2_dir = str(_ACTIVE_CKPT_DIR)
+        legacy_dir = str(_ACTIVE_CKPT_DIR)
+        ckpt_dir = v2_dir if os.path.exists(os.path.join(v2_dir, "lewm_best.pt")) else legacy_dir
+
+    suffix = f"_seed{seed}_best.pt" if seed is not None else "_best.pt"
+    base_pt = os.path.join(ckpt_dir, f"baseline{suffix}")
+    lewm_pt = os.path.join(ckpt_dir, f"lewm{suffix}")
+    hjepa_pt = os.path.join(ckpt_dir, f"hjepa{suffix}")
+    if not os.path.exists(base_pt):
+        base_pt = os.path.join(ckpt_dir, "baseline_best.pt")
+        lewm_pt = os.path.join(ckpt_dir, "lewm_best.pt")
+        hjepa_pt = os.path.join(ckpt_dir, "hjepa_best.pt")
+
+    return {
+        "Oracle": OracleAgent(),
+        "Random": RandomAgent(seed=seed or 42),
+        "Baseline": BaselineAgent(base_pt, device=device, track=track),
+        "LeWM": LeWMAgent(lewm_pt, device=device, track=track),
+        "H-JEPA": HJEPAAgent(hjepa_pt, device=device, track=track),
+    }

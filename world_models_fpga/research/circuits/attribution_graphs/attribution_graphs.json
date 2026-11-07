@@ -1,0 +1,219 @@
+{
+  "Baseline": {
+    "nodes": [
+      {
+        "id": "encoder.conv2",
+        "type": "conv_feature",
+        "mean_attribution": 7.590384143441042e-07
+      },
+      {
+        "id": "encoder.conv4",
+        "type": "conv_feature",
+        "mean_attribution": 4.0060094761429355e-06
+      },
+      {
+        "id": "z_vis",
+        "type": "latent_state",
+        "mean_attribution": 0.0001286202168557793
+      },
+      {
+        "id": "goal_vec",
+        "type": "structured_goal_input",
+        "mean_attribution": 0.00029276215354911983
+      },
+      {
+        "id": "fc1",
+        "type": "mlp_hidden",
+        "mean_attribution": 0.00010384897177573293
+      },
+      {
+        "id": "fc2",
+        "type": "mlp_hidden",
+        "mean_attribution": 0.00011973551590926945
+      },
+      {
+        "id": "action_out",
+        "type": "output",
+        "top_latent_dims": [
+          26,
+          28,
+          16,
+          11,
+          18,
+          12,
+          29,
+          19
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "encoder.conv2",
+        "target": "encoder.conv4",
+        "weight": 0.01
+      },
+      {
+        "source": "encoder.conv4",
+        "target": "z_vis",
+        "weight": 0.0137
+      },
+      {
+        "source": "z_vis",
+        "target": "fc1",
+        "weight": 0.4393
+      },
+      {
+        "source": "goal_vec",
+        "target": "fc1",
+        "weight": 1.0
+      },
+      {
+        "source": "fc1",
+        "target": "fc2",
+        "weight": 0.3547
+      },
+      {
+        "source": "fc2",
+        "target": "action_out",
+        "weight": 0.409
+      }
+    ]
+  },
+  "LeWM": {
+    "nodes": [
+      {
+        "id": "s_t",
+        "type": "latent_state",
+        "mean_attribution": 0.00013204943388700485,
+        "top_dims": [
+          11,
+          7,
+          28,
+          16,
+          2,
+          3,
+          15,
+          13
+        ]
+      },
+      {
+        "id": "a_t",
+        "type": "action_input",
+        "mean_attribution": 0.00045361145748756826
+      },
+      {
+        "id": "pred_fc1",
+        "type": "transition_hidden",
+        "mean_attribution": 0.00010933530575130135
+      },
+      {
+        "id": "pred_fc2",
+        "type": "transition_hidden",
+        "mean_attribution": 0.00016888207755982876
+      },
+      {
+        "id": "next_s",
+        "type": "predicted_latent",
+        "mean_attribution": 0.00045588932698592544
+      }
+    ],
+    "edges": [
+      {
+        "source": "s_t",
+        "target": "pred_fc1",
+        "weight": 0.2896
+      },
+      {
+        "source": "a_t",
+        "target": "pred_fc1",
+        "weight": 0.995
+      },
+      {
+        "source": "pred_fc1",
+        "target": "pred_fc2",
+        "weight": 0.2398
+      },
+      {
+        "source": "pred_fc2",
+        "target": "next_s",
+        "weight": 0.3704
+      }
+    ]
+  },
+  "H-JEPA": {
+    "nodes": [
+      {
+        "id": "s_t",
+        "type": "latent_state",
+        "mean_attribution": 0.0005608315113931894,
+        "top_dims": [
+          20,
+          21,
+          28,
+          30,
+          17,
+          15,
+          19,
+          25
+        ]
+      },
+      {
+        "id": "a_t",
+        "type": "macro_action_input",
+        "mean_attribution": 0.0023855529725551605
+      },
+      {
+        "id": "macro_fc1",
+        "type": "macro_hidden",
+        "mean_attribution": 0.0003506551729515195
+      },
+      {
+        "id": "S_macro",
+        "type": "macro_subgoal",
+        "mean_attribution": 0.0005348533159121871
+      },
+      {
+        "id": "micro_pol_fc1",
+        "type": "micro_policy_hidden",
+        "mean_attribution": 0.00013392923574429005
+      },
+      {
+        "id": "micro_dyn_fc1",
+        "type": "micro_dynamics_hidden",
+        "mean_attribution": 0.00010892261343542486
+      }
+    ],
+    "edges": [
+      {
+        "source": "s_t",
+        "target": "macro_fc1",
+        "weight": 0.2351
+      },
+      {
+        "source": "a_t",
+        "target": "macro_fc1",
+        "weight": 1.0
+      },
+      {
+        "source": "macro_fc1",
+        "target": "S_macro",
+        "weight": 0.147
+      },
+      {
+        "source": "S_macro",
+        "target": "micro_pol_fc1",
+        "weight": 0.2242
+      },
+      {
+        "source": "s_t",
+        "target": "micro_pol_fc1",
+        "weight": 0.2351
+      },
+      {
+        "source": "micro_pol_fc1",
+        "target": "micro_dyn_fc1",
+        "weight": 0.0561
+      }
+    ]
+  }
+}

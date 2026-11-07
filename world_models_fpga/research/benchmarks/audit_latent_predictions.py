@@ -11,6 +11,10 @@ Audits future state prediction in latent space:
 Evaluated on held-out test transitions and counterfactual suites.
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -31,7 +35,9 @@ def audit_latent_predictions(data_npz_path, output_dir=None):
     os.makedirs(output_dir, exist_ok=True)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "lewm_best.pt")) else legacy_ckpt
 
     print("\n=======================================================")
     print("  PHASE 2: LATENT PREDICTION AUDIT (LeWM vs H-JEPA)")
@@ -137,9 +143,9 @@ def audit_latent_predictions(data_npz_path, output_dir=None):
             img_0 = torch.from_numpy(obs[batch_t]).permute(0, 3, 1, 2).float().to(device) / 255.0
             img_K = torch.from_numpy(obs[[t + K for t in batch_t]]).permute(0, 3, 1, 2).float().to(device) / 255.0
 
-            # Average action over K=5 steps
-            act_slices = [actions[t : t + K] for t in batch_t]
-            macro_act = torch.from_numpy(np.mean(act_slices, axis=1)).float().to(device)
+            # Ordered K=5 action sequence (B, 15) vs averaged action (B, 3)
+            act_slices = np.asarray([actions[t : t + K] for t in batch_t], dtype=np.float32)  # (B, K, 3)
+            macro_act = torch.from_numpy(act_slices.reshape(len(batch_t), -1)).float().to(device)
 
             col_slices = [any(collisions[t : t + K]) for t in batch_t]
             macro_col_gt = torch.tensor(col_slices, dtype=torch.float32, device=device)
@@ -148,6 +154,19 @@ def audit_latent_predictions(data_npz_path, output_dir=None):
             S_K_target = hjepa.encode(img_K)
 
             pred_S_K, macro_col_log = hjepa.macro_predictor(S_0, macro_act)
+
+            # Also evaluate 5-step autoregressive rollout of LeWM for direct comparison
+            lewm_s = lewm.encode(img_0)
+            lewm_k_target = lewm.encode(img_K)
+            for step_k in range(K):
+                a_step = torch.from_numpy(act_slices[:, step_k, :]).float().to(device)
+                lewm_s, _ = lewm.predict_next(lewm_s, a_step)
+            lewm_k5_mse = F.mse_loss(lewm_s, lewm_k_target, reduction="none").mean(dim=-1).cpu().numpy()
+            lewm_k5_cos = F.cosine_similarity(lewm_s, lewm_k_target, dim=-1).cpu().numpy()
+            if "lewm_k5_mse_list" not in locals():
+                lewm_k5_mse_list, lewm_k5_cos_list = [], []
+            lewm_k5_mse_list.extend(lewm_k5_mse)
+            lewm_k5_cos_list.extend(lewm_k5_cos)
 
             mse_macro = F.mse_loss(pred_S_K, S_K_target, reduction="none").mean(dim=-1).cpu().numpy()
             cos_macro = F.cosine_similarity(pred_S_K, S_K_target, dim=-1).cpu().numpy()
@@ -164,7 +183,9 @@ def audit_latent_predictions(data_npz_path, output_dir=None):
         "lewm": {
             "latent_mse": float(np.mean(lewm_mse_list)),
             "latent_cosine_similarity": float(np.mean(lewm_cos_list)),
-            "collision_prediction_accuracy": float(np.mean(lewm_col_acc)) * 100.0
+            "collision_prediction_accuracy": float(np.mean(lewm_col_acc)) * 100.0,
+            "rollout_k5_mse": float(np.mean(lewm_k5_mse_list)),
+            "rollout_k5_cosine_similarity": float(np.mean(lewm_k5_cos_list)),
         },
         "hjepa_micro_k1": {
             "latent_mse": float(np.mean(hjepa_micro_mse)),
@@ -182,6 +203,7 @@ def audit_latent_predictions(data_npz_path, output_dir=None):
     print(f"  Latent MSE (s_t+1):          {audit_results['lewm']['latent_mse']:.5f}")
     print(f"  Cosine Similarity:           {audit_results['lewm']['latent_cosine_similarity']:.4f}")
     print(f"  Collision Accuracy:          {audit_results['lewm']['collision_prediction_accuracy']:.1f}%")
+    print(f"  5-Step Rollout MSE:          {audit_results['lewm']['rollout_k5_mse']:.5f}")
     print(f"H-JEPA Micro-Level (K=1):")
     print(f"  Latent MSE (s_t+1):          {audit_results['hjepa_micro_k1']['latent_mse']:.5f}")
     print(f"  Cosine Similarity:           {audit_results['hjepa_micro_k1']['latent_cosine_similarity']:.4f}")
@@ -198,5 +220,6 @@ def audit_latent_predictions(data_npz_path, output_dir=None):
     return audit_results
 
 if __name__ == "__main__":
-    test_npz = os.path.abspath(os.path.join(os.path.dirname(__file__), "../datasets/splits/held_out_test_benchmark.npz"))
-    audit_latent_predictions(test_npz)
+    v2_npz = str(_ACTIVE_SPLITS_DIR / "held_out_test_benchmark.npz")
+    legacy_npz = str(_ACTIVE_SPLITS_DIR / "held_out_test_benchmark.npz")
+    audit_latent_predictions(v2_npz if os.path.exists(v2_npz) else legacy_npz)

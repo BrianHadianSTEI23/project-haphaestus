@@ -1,313 +1,260 @@
 """
-Phase 5: Computational Circuit Reconstruction - Attribution Graphs
-Author: Brian A. Hadian
-Project: Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA
+Phase 4: Mechanistic Attribution Graph Builder (Repaired)
 
-Constructs directed attribution graphs representing candidate computational influence
-across layers, semantic feature groups, predictive dynamics, and action heads:
-  Nodes: Layer activations, latent semantic clusters, predictor modules, output heads
-  Edges: Gradient-weighted activation attribution A(u -> v) = E[|a_u * (dy_v / da_u)|]
+Fixes:
+  1. Eliminates all hardcoded edge weights (0.84, 0.72, 0.91, etc.) and hardcoded registry tables.
+  2. Actually invokes `compute_gradient_attribution` (gradient x activation E[|dY/dh * h|])
+     across layers of Baseline, LeWM, and H-JEPA on held-out test transitions.
+  3. Delegates `circuit_registry.json` generation to `test_necessity_sufficiency()` so there
+     is a single authoritative, empirically measured circuit registry.
 """
 
+from __future__ import annotations
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
+
+import json
 import os
 import sys
-import json
-import csv
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import numpy as np
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 from models.baseline_policy import BaselineNavigationPolicy
-from models.le_world_model import LeWorldModel
 from models.h_jepa import HJEPAModel
+from models.le_world_model import LeWorldModel
+from research.circuits.test_necessity_sufficiency import test_necessity_sufficiency
 
-def compute_gradient_attribution(model, x_in, goal_in, target_layer, output_fn, device):
+
+def compute_gradient_attribution(model, loss_scalar: torch.Tensor, layer_activations: dict[str, torch.Tensor]) -> dict[str, np.ndarray]:
     """
-    Computes activation * gradient attribution for target_layer relative to output_fn.
+    Computes empirical gradient-times-activation attribution:
+      Attr(h_i) = E_batch[ | (dY / dh_i) * h_i | ]
     """
-    activations = []
-    def fwd_hook(mod, inp, out):
-        out_tensor = out[0] if isinstance(out, tuple) else out
-        out_tensor.retain_grad()
-        activations.append(out_tensor)
+    attributions = {}
+    for layer_name, act_tensor in layer_activations.items():
+        if not act_tensor.requires_grad:
+            continue
+        grad = torch.autograd.grad(
+            outputs=loss_scalar,
+            inputs=act_tensor,
+            retain_graph=True,
+            create_graph=False,
+            allow_unused=True,
+        )[0]
+        if grad is not None:
+            attr = torch.abs(grad * act_tensor)
+            if attr.dim() == 4:
+                attr_score = attr.mean(dim=(0, 2, 3)).detach().cpu().numpy()
+            else:
+                attr_score = attr.mean(dim=0).detach().cpu().numpy()
+            attributions[layer_name] = attr_score
+        else:
+            attributions[layer_name] = np.zeros(act_tensor.shape[1] if act_tensor.dim() > 1 else 1, dtype=np.float32)
+    return attributions
 
-    handle = target_layer.register_forward_hook(fwd_hook)
-    
-    if hasattr(model, "forward_with_latent"):
-        # Baseline model
-        y, _ = model(x_in, goal_in)
-    elif hasattr(model, "macro_predictor"):
-        # H-JEPA
-        s = model.encode(x_in)
-        y = s # Intermediate target or output
-    elif hasattr(model, "predict_next"):
-        # LeWM
-        s = model.encode(x_in)
-        y = s
-    else:
-        y = model(x_in)
 
-    target_loss = output_fn(y)
-    model.zero_grad()
-    target_loss.backward(retain_graph=True)
+def _make_hook(d, k):
+    def hook(m, i, o):
+        o.retain_grad()
+        d[k] = o
+        return None
+    return hook
 
-    handle.remove()
-    if len(activations) > 0 and activations[0].grad is not None:
-        act = activations[0].detach()
-        grad = activations[0].grad.detach()
-        attr = torch.mean(torch.abs(act * grad)).item()
-        return float(attr)
-    return 0.0
 
-def build_baseline_attribution_graph(dataset_path, ckpt_path, output_dir, device="cuda" if torch.cuda.is_available() else "cpu"):
-    print("\n--- Constructing Attribution Graph: [BASELINE POLICY] ---")
-    data = np.load(dataset_path)
-    obs = data["rgb"][:200]
-    N = len(obs)
+def _norm_weight(val: float, scale: float) -> float:
+    return float(np.round(np.clip(val / (scale + 1e-8), 0.01, 1.0), 4))
 
-    model = BaselineNavigationPolicy().to(device)
-    model.load_state_dict(torch.load(ckpt_path, map_location=device))
-    model.eval()
 
-    # Load semantic cluster definitions from Phase 4
-    class_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../representations/counterfactual_analysis/feature_classification.json"))
-    with open(class_json_path) as f:
-        class_data = json.load(f)
-    baseline_dims = class_data.get("baseline_z", [])
+def build_attribution_graphs(output_dir: str | None = None):
+    if output_dir is None:
+        output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "attribution_graphs"))
+    os.makedirs(output_dir, exist_ok=True)
+    res_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "results"))
+    os.makedirs(res_dir, exist_ok=True)
 
-    nodes = [
-        {"id": "input_rgb", "type": "input", "layer": "input", "dim": [64, 64, 3]},
-        {"id": "input_goal", "type": "input", "layer": "input", "dim": [4]},
-        {"id": "conv1", "type": "layer", "layer": "encoder.conv1", "dim": 16},
-        {"id": "conv2", "type": "layer", "layer": "encoder.conv2", "dim": 32},
-        {"id": "conv3", "type": "layer", "layer": "encoder.conv3", "dim": 64},
-        {"id": "conv4", "type": "layer", "layer": "encoder.conv4", "dim": 64},
-        {"id": "flatten", "type": "layer", "layer": "encoder.flatten", "dim": 256},
-        {"id": "latent_z", "type": "representation", "layer": "encoder.fc", "dim": 32},
-        {"id": "cluster_appearance", "type": "semantic_cluster", "layer": "latent_z", "dim": 23},
-        {"id": "cluster_heading", "type": "semantic_cluster", "layer": "latent_z", "dim": 3},
-        {"id": "cluster_position", "type": "semantic_cluster", "layer": "latent_z", "dim": 5},
-        {"id": "cluster_geometry", "type": "semantic_cluster", "layer": "latent_z", "dim": 1},
-        {"id": "policy_fc1", "type": "layer", "layer": "fc1", "dim": 64},
-        {"id": "policy_fc2", "type": "layer", "layer": "fc2", "dim": 64},
-        {"id": "action_head", "type": "output", "layer": "action_head", "dim": 3},
-        {"id": "collision_head", "type": "output", "layer": "collision_head", "dim": 1}
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    v2_splits = str(_ACTIVE_SPLITS_DIR)
+    legacy_splits = str(_ACTIVE_SPLITS_DIR)
+    splits_dir = v2_splits if os.path.exists(os.path.join(v2_splits, "held_out_test_benchmark.npz")) else legacy_splits
+
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "lewm_best.pt")) else legacy_ckpt
+
+    print("\n=======================================================")
+    print("  PHASE 4: MECHANISTIC ATTRIBUTION GRAPH CONSTRUCTION")
+    print(f"  Output Directory: {output_dir}")
+    print("=======================================================\n")
+
+    te_d = np.load(os.path.join(splits_dir, "held_out_test_benchmark.npz"))
+    n = min(256, len(te_d["rgb"]))
+    imgs = torch.from_numpy(te_d["rgb"][:n]).permute(0, 3, 1, 2).float().to(device) / 255.0
+    acts = torch.from_numpy(te_d["actions"][:n]).float().to(device)
+    poses = te_d["robot_pose"][:n]
+    goals = te_d["grounded_goals"][:n]
+    dx, dy = goals[:, 0] - poses[:, 0], goals[:, 1] - poses[:, 1]
+    th = poses[:, 2]
+    c, s = np.cos(th), np.sin(th)
+    dth = goals[:, 2] - poses[:, 2]
+    g_vecs = torch.from_numpy(
+        np.stack([c * dx + s * dy, -s * dx + c * dy, np.sin(dth), np.cos(dth)], axis=-1).astype(np.float32)
+    ).to(device)
+
+    # 1. Baseline Policy Gradient x Activation Attribution
+    b_model = BaselineNavigationPolicy().to(device)
+    b_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "baseline_best.pt"), map_location=device, weights_only=False), strict=False)
+    b_model.eval()
+    b_acts = {}
+    b_hooks = [
+        b_model.encoder.conv2.register_forward_hook(_make_hook(b_acts, "conv2")),
+        b_model.encoder.conv4.register_forward_hook(_make_hook(b_acts, "conv4")),
+        b_model.fc1.register_forward_hook(_make_hook(b_acts, "fc1")),
+        b_model.fc2.register_forward_hook(_make_hook(b_acts, "fc2")),
     ]
+    imgs_b = imgs.clone().requires_grad_(True)
+    g_b = g_vecs.clone().requires_grad_(True)
+    z_b = b_model.encoder(imgs_b)
+    z_b.retain_grad()
+    b_acts["z_vis"] = z_b
+    (pred_act_b, pred_col_b) = b_model.forward_with_latent(z_b, g_b)
+    b_acts["goal_vec"] = g_b
+    target_b = torch.norm(pred_act_b, dim=-1).mean() + pred_col_b.mean()
+    attr_b = compute_gradient_attribution(b_model, target_b, b_acts)
+    for h in b_hooks:
+        h.remove()
 
-    # Measure attribution values
-    imgs = torch.from_numpy(obs).permute(0, 3, 1, 2).float().to(device) / 255.0
-    goals = torch.tensor([[1.0, 0.0, 0.0, 1.0]], device=device).repeat(N, 1)
+    # 2. LeWorldModel Gradient x Activation Attribution
+    l_model = LeWorldModel().to(device)
+    l_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "lewm_best.pt"), map_location=device, weights_only=False), strict=False)
+    l_model.eval()
+    l_acts = {}
+    l_hooks = [
+        l_model.pred_fc1.register_forward_hook(_make_hook(l_acts, "pred_fc1")),
+        l_model.pred_fc2.register_forward_hook(_make_hook(l_acts, "pred_fc2")),
+    ]
+    imgs_l = imgs.clone().requires_grad_(True)
+    a_l = acts.clone().requires_grad_(True)
+    s_l = l_model.encode(imgs_l)
+    s_l.retain_grad()
+    l_acts["s_t"] = s_l
+    l_acts["a_t"] = a_l
+    ns_l, col_l = l_model.predict_next(s_l, a_l)
+    ns_l.retain_grad()
+    l_acts["next_s"] = ns_l
+    disp_l = l_model.predict_ego_displacement(s_l, ns_l)
+    target_l = torch.norm(ns_l - s_l, dim=-1).mean() + torch.norm(disp_l, dim=-1).mean() + torch.sigmoid(col_l).mean()
+    attr_l = compute_gradient_attribution(l_model, target_l, l_acts)
+    for h in l_hooks:
+        h.remove()
 
-    # Layer forward-backward
-    layers_dict = {
-        "conv1": model.encoder.conv1,
-        "conv2": model.encoder.conv2,
-        "conv3": model.encoder.conv3,
-        "conv4": model.encoder.conv4,
-        "latent_z": model.encoder.fc,
-        "policy_fc1": model.fc1,
-        "policy_fc2": model.fc2
+    # 3. H-JEPA Gradient x Activation Attribution
+    h_model = HJEPAModel().to(device)
+    h_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "hjepa_best.pt"), map_location=device, weights_only=False), strict=False)
+    h_model.eval()
+    h_acts = {}
+    h_hooks = [
+        h_model.macro_predictor.fc1.register_forward_hook(_make_hook(h_acts, "macro_fc1")),
+        h_model.micro_predictor.pol_fc1.register_forward_hook(_make_hook(h_acts, "micro_pol_fc1")),
+        h_model.micro_predictor.dyn_fc1.register_forward_hook(_make_hook(h_acts, "micro_dyn_fc1")),
+    ]
+    imgs_h = imgs.clone().requires_grad_(True)
+    a_h = acts.clone().requires_grad_(True)
+    s_h = h_model.encode(imgs_h)
+    s_h.retain_grad()
+    h_acts["s_t"] = s_h
+    h_acts["a_t"] = a_h
+    S_mac_h, col_mac_h = h_model.macro_predictor(s_h, a_h)
+    S_mac_h.retain_grad()
+    h_acts["S_macro"] = S_mac_h
+    act_h = h_model.micro_predictor.select_action(s_h, S_mac_h)
+    ns_h, col_mic_h = h_model.micro_predictor.forward_transition(s_h, act_h)
+    target_h = (
+        torch.norm(act_h, dim=-1).mean()
+        + torch.norm(S_mac_h - s_h, dim=-1).mean()
+        + torch.sigmoid(col_mac_h).mean()
+        + torch.norm(ns_h - s_h, dim=-1).mean()
+        + torch.sigmoid(col_mic_h).mean()
+    )
+    attr_h = compute_gradient_attribution(h_model, target_h, h_acts)
+    for h in h_hooks:
+        h.remove()
+
+    b_scale = float(max(np.mean(v) for v in attr_b.values()))
+    l_scale = float(max(np.mean(v) for v in attr_l.values()))
+    h_scale = float(max(np.mean(v) for v in attr_h.values()))
+
+    graphs = {
+        "Baseline": {
+            "nodes": [
+                {"id": "encoder.conv2", "type": "conv_feature", "mean_attribution": float(np.mean(attr_b["conv2"]))},
+                {"id": "encoder.conv4", "type": "conv_feature", "mean_attribution": float(np.mean(attr_b["conv4"]))},
+                {"id": "z_vis", "type": "latent_state", "mean_attribution": float(np.mean(attr_b["z_vis"]))},
+                {"id": "goal_vec", "type": "structured_goal_input", "mean_attribution": float(np.mean(attr_b["goal_vec"]))},
+                {"id": "fc1", "type": "mlp_hidden", "mean_attribution": float(np.mean(attr_b["fc1"]))},
+                {"id": "fc2", "type": "mlp_hidden", "mean_attribution": float(np.mean(attr_b["fc2"]))},
+                {"id": "action_out", "type": "output", "top_latent_dims": np.argsort(-attr_b["z_vis"])[:8].tolist()},
+            ],
+            "edges": [
+                {"source": "encoder.conv2", "target": "encoder.conv4", "weight": _norm_weight(float(np.mean(attr_b["conv2"])), b_scale)},
+                {"source": "encoder.conv4", "target": "z_vis", "weight": _norm_weight(float(np.mean(attr_b["conv4"])), b_scale)},
+                {"source": "z_vis", "target": "fc1", "weight": _norm_weight(float(np.mean(attr_b["z_vis"])), b_scale)},
+                {"source": "goal_vec", "target": "fc1", "weight": _norm_weight(float(np.mean(attr_b["goal_vec"])), b_scale)},
+                {"source": "fc1", "target": "fc2", "weight": _norm_weight(float(np.mean(attr_b["fc1"])), b_scale)},
+                {"source": "fc2", "target": "action_out", "weight": _norm_weight(float(np.mean(attr_b["fc2"])), b_scale)},
+            ],
+        },
+        "LeWM": {
+            "nodes": [
+                {"id": "s_t", "type": "latent_state", "mean_attribution": float(np.mean(attr_l["s_t"])), "top_dims": np.argsort(-attr_l["s_t"])[:8].tolist()},
+                {"id": "a_t", "type": "action_input", "mean_attribution": float(np.mean(attr_l["a_t"]))},
+                {"id": "pred_fc1", "type": "transition_hidden", "mean_attribution": float(np.mean(attr_l["pred_fc1"]))},
+                {"id": "pred_fc2", "type": "transition_hidden", "mean_attribution": float(np.mean(attr_l["pred_fc2"]))},
+                {"id": "next_s", "type": "predicted_latent", "mean_attribution": float(np.mean(attr_l["next_s"]))},
+            ],
+            "edges": [
+                {"source": "s_t", "target": "pred_fc1", "weight": _norm_weight(float(np.mean(attr_l["s_t"])), l_scale)},
+                {"source": "a_t", "target": "pred_fc1", "weight": _norm_weight(float(np.mean(attr_l["a_t"])), l_scale)},
+                {"source": "pred_fc1", "target": "pred_fc2", "weight": _norm_weight(float(np.mean(attr_l["pred_fc1"])), l_scale)},
+                {"source": "pred_fc2", "target": "next_s", "weight": _norm_weight(float(np.mean(attr_l["pred_fc2"])), l_scale)},
+            ],
+        },
+        "H-JEPA": {
+            "nodes": [
+                {"id": "s_t", "type": "latent_state", "mean_attribution": float(np.mean(attr_h["s_t"])), "top_dims": np.argsort(-attr_h["s_t"])[:8].tolist()},
+                {"id": "a_t", "type": "macro_action_input", "mean_attribution": float(np.mean(attr_h["a_t"]))},
+                {"id": "macro_fc1", "type": "macro_hidden", "mean_attribution": float(np.mean(attr_h["macro_fc1"]))},
+                {"id": "S_macro", "type": "macro_subgoal", "mean_attribution": float(np.mean(attr_h["S_macro"]))},
+                {"id": "micro_pol_fc1", "type": "micro_policy_hidden", "mean_attribution": float(np.mean(attr_h["micro_pol_fc1"]))},
+                {"id": "micro_dyn_fc1", "type": "micro_dynamics_hidden", "mean_attribution": float(np.mean(attr_h["micro_dyn_fc1"]))},
+            ],
+            "edges": [
+                {"source": "s_t", "target": "macro_fc1", "weight": _norm_weight(float(np.mean(attr_h["s_t"])), h_scale)},
+                {"source": "a_t", "target": "macro_fc1", "weight": _norm_weight(float(np.mean(attr_h["a_t"])), h_scale)},
+                {"source": "macro_fc1", "target": "S_macro", "weight": _norm_weight(float(np.mean(attr_h["macro_fc1"])), h_scale)},
+                {"source": "S_macro", "target": "micro_pol_fc1", "weight": _norm_weight(float(np.mean(attr_h["S_macro"])), h_scale)},
+                {"source": "s_t", "target": "micro_pol_fc1", "weight": _norm_weight(float(np.mean(attr_h["s_t"])), h_scale)},
+                {"source": "micro_pol_fc1", "target": "micro_dyn_fc1", "weight": _norm_weight(float(np.mean(attr_h["micro_pol_fc1"])), h_scale)},
+            ],
+        },
     }
 
-    edges = []
-    # Feedforward backbone pipeline
-    backbone = [("input_rgb", "conv1"), ("conv1", "conv2"), ("conv2", "conv3"), 
-                ("conv3", "conv4"), ("conv4", "flatten"), ("flatten", "latent_z")]
-    
-    for src, dst in backbone:
-        edges.append({
-            "source": src,
-            "destination": dst,
-            "attribution": 0.85, # Backbone feedforward
-            "condition": "standard_navigation",
-            "validation_status": "validated"
-        })
+    graph_path_1 = os.path.join(output_dir, "attribution_graphs.json")
+    graph_path_2 = os.path.join(res_dir, "attribution_graphs.json")
+    with open(graph_path_1, "w") as f:
+        json.dump(graphs, f, indent=2)
+    with open(graph_path_2, "w") as f:
+        json.dump(graphs, f, indent=2)
 
-    # Latent to clusters
-    edges.append({"source": "latent_z", "destination": "cluster_appearance", "attribution": 0.719, "condition": "color_dominant", "validation_status": "validated"})
-    edges.append({"source": "latent_z", "destination": "cluster_heading", "attribution": 0.094, "condition": "rotation_dominant", "validation_status": "validated"})
-    edges.append({"source": "latent_z", "destination": "cluster_position", "attribution": 0.156, "condition": "start_pose_dominant", "validation_status": "validated"})
-    edges.append({"source": "latent_z", "destination": "cluster_geometry", "attribution": 0.031, "condition": "geometry_dominant", "validation_status": "validated"})
+    registry = test_necessity_sufficiency()
+    print(f"Saved empirical attribution graphs to {graph_path_1} and {graph_path_2}")
+    return graphs, registry
 
-    # Clusters to policy_fc1
-    edges.append({"source": "cluster_appearance", "destination": "policy_fc1", "attribution": 0.684, "condition": "direct_influence", "validation_status": "validated"})
-    edges.append({"source": "cluster_heading", "destination": "policy_fc1", "attribution": 0.142, "condition": "direct_influence", "validation_status": "validated"})
-    edges.append({"source": "cluster_position", "destination": "policy_fc1", "attribution": 0.125, "condition": "direct_influence", "validation_status": "validated"})
-    edges.append({"source": "cluster_geometry", "destination": "policy_fc1", "attribution": 0.049, "condition": "direct_influence", "validation_status": "validated"})
-    edges.append({"source": "input_goal", "destination": "policy_fc1", "attribution": 0.521, "condition": "goal_vector_injection", "validation_status": "validated"})
-
-    # Dense policy to output
-    edges.append({"source": "policy_fc1", "destination": "policy_fc2", "attribution": 0.912, "condition": "internal_feedforward", "validation_status": "validated"})
-    edges.append({"source": "policy_fc2", "destination": "action_head", "attribution": 0.884, "condition": "motor_output", "validation_status": "validated"})
-    edges.append({"source": "policy_fc2", "destination": "collision_head", "attribution": 0.432, "condition": "collision_risk", "validation_status": "validated"})
-
-    graph = {
-        "model_id": "baseline_policy",
-        "nodes": nodes,
-        "edges": edges,
-        "dominant_pathway": "input_rgb -> conv1..4 -> latent_z -> cluster_appearance (71.9%) -> policy_fc1 -> action_head"
-    }
-
-    out_file = os.path.join(output_dir, "attribution_graph_baseline.json")
-    with open(out_file, "w") as f:
-        json.dump(graph, f, indent=2)
-    print(f"  Saved: {out_file} ({len(nodes)} nodes, {len(edges)} edges)")
-    return graph
-
-def build_lewm_attribution_graph(dataset_path, ckpt_path, output_dir, device="cuda" if torch.cuda.is_available() else "cpu"):
-    print("\n--- Constructing Attribution Graph: [LeWorldModel] ---")
-    nodes = [
-        {"id": "input_rgb", "type": "input", "layer": "input", "dim": [64, 64, 3]},
-        {"id": "conv1", "type": "layer", "layer": "encoder.0", "dim": 16},
-        {"id": "conv2", "type": "layer", "layer": "encoder.2", "dim": 32},
-        {"id": "conv3", "type": "layer", "layer": "encoder.4", "dim": 64},
-        {"id": "conv4", "type": "layer", "layer": "encoder.6", "dim": 64},
-        {"id": "flatten", "type": "layer", "layer": "encoder.8", "dim": 256},
-        {"id": "latent_state_s", "type": "representation", "layer": "encoder.10", "dim": 32},
-        {"id": "cluster_heading", "type": "semantic_cluster", "layer": "latent_s", "dim": 10},
-        {"id": "cluster_geometry", "type": "semantic_cluster", "layer": "latent_s", "dim": 10},
-        {"id": "cluster_appearance", "type": "semantic_cluster", "layer": "latent_s", "dim": 9},
-        {"id": "cluster_position", "type": "semantic_cluster", "layer": "latent_s", "dim": 3},
-        {"id": "input_action_candidate", "type": "input", "layer": "planner", "dim": 3},
-        {"id": "pred_fc1", "type": "module", "layer": "pred_fc1", "dim": 64},
-        {"id": "pred_fc2", "type": "module", "layer": "pred_fc2", "dim": 64},
-        {"id": "delta_head", "type": "module", "layer": "pred_delta", "dim": 32},
-        {"id": "predicted_next_s", "type": "representation", "layer": "s_next", "dim": 32},
-        {"id": "collision_head", "type": "output", "layer": "col_fc", "dim": 1},
-        {"id": "action_selection", "type": "output", "layer": "planner", "dim": 3}
-    ]
-
-    edges = [
-        {"source": "input_rgb", "destination": "conv1", "attribution": 0.88, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "conv1", "destination": "conv2", "attribution": 0.86, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "conv2", "destination": "conv3", "attribution": 0.84, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "conv3", "destination": "conv4", "attribution": 0.82, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "conv4", "destination": "flatten", "attribution": 0.79, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "flatten", "destination": "latent_state_s", "attribution": 0.95, "condition": "projection", "validation_status": "validated"},
-        # Latent to clusters
-        {"source": "latent_state_s", "destination": "cluster_heading", "attribution": 0.312, "condition": "heading_dominant", "validation_status": "validated"},
-        {"source": "latent_state_s", "destination": "cluster_geometry", "attribution": 0.312, "condition": "geometry_dominant", "validation_status": "validated"},
-        {"source": "latent_state_s", "destination": "cluster_appearance", "attribution": 0.281, "condition": "color_dominant", "validation_status": "validated"},
-        {"source": "latent_state_s", "destination": "cluster_position", "attribution": 0.094, "condition": "position_dominant", "validation_status": "validated"},
-        # Predictor pathway
-        {"source": "cluster_geometry", "destination": "pred_fc1", "attribution": 0.442, "condition": "transition_dynamics", "validation_status": "validated"},
-        {"source": "cluster_heading", "destination": "pred_fc1", "attribution": 0.385, "condition": "transition_dynamics", "validation_status": "validated"},
-        {"source": "input_action_candidate", "destination": "pred_fc1", "attribution": 0.710, "condition": "action_conditioning", "validation_status": "validated"},
-        {"source": "pred_fc1", "destination": "pred_fc2", "attribution": 0.920, "condition": "transition_dynamics", "validation_status": "validated"},
-        {"source": "pred_fc2", "destination": "delta_head", "attribution": 0.890, "condition": "delta_prediction", "validation_status": "validated"},
-        {"source": "latent_state_s", "destination": "predicted_next_s", "attribution": 0.940, "condition": "residual_skip_connection", "validation_status": "validated"},
-        {"source": "delta_head", "destination": "predicted_next_s", "attribution": 0.875, "condition": "residual_delta", "validation_status": "validated"},
-        {"source": "pred_fc2", "destination": "collision_head", "attribution": 0.765, "condition": "collision_anticipation", "validation_status": "validated"},
-        {"source": "predicted_next_s", "destination": "action_selection", "attribution": 0.820, "condition": "goal_distance_evaluation", "validation_status": "validated"},
-        {"source": "collision_head", "destination": "action_selection", "attribution": 0.780, "condition": "safety_barrier_cost", "validation_status": "validated"}
-    ]
-
-    graph = {
-        "model_id": "le_world_model",
-        "nodes": nodes,
-        "edges": edges,
-        "dominant_pathway": "latent_s -> (cluster_geometry + cluster_heading) -> pred_fc1..2 -> (delta_head + col_head) -> action_selection"
-    }
-
-    out_file = os.path.join(output_dir, "attribution_graph_lewm.json")
-    with open(out_file, "w") as f:
-        json.dump(graph, f, indent=2)
-    print(f"  Saved: {out_file} ({len(nodes)} nodes, {len(edges)} edges)")
-    return graph
-
-def build_hjepa_attribution_graph(dataset_path, ckpt_path, output_dir, device="cuda" if torch.cuda.is_available() else "cpu"):
-    print("\n--- Constructing Attribution Graph: [H-JEPA] ---")
-    nodes = [
-        {"id": "input_rgb", "type": "input", "layer": "input", "dim": [64, 64, 3]},
-        {"id": "conv1", "type": "layer", "layer": "encoder.0", "dim": 16},
-        {"id": "conv2", "type": "layer", "layer": "encoder.2", "dim": 32},
-        {"id": "conv3", "type": "layer", "layer": "encoder.4", "dim": 64},
-        {"id": "conv4", "type": "layer", "layer": "encoder.6", "dim": 64},
-        {"id": "flatten", "type": "layer", "layer": "encoder.8", "dim": 256},
-        {"id": "latent_state_s", "type": "representation", "layer": "encoder.10", "dim": 32},
-        {"id": "cluster_geometry", "type": "semantic_cluster", "layer": "latent_s", "dim": 12},
-        {"id": "cluster_position", "type": "semantic_cluster", "layer": "latent_s", "dim": 11},
-        {"id": "cluster_heading", "type": "semantic_cluster", "layer": "latent_s", "dim": 8},
-        {"id": "cluster_appearance", "type": "semantic_cluster", "layer": "latent_s", "dim": 1},
-        # Macro Level Circuit (Horizon K=5)
-        {"id": "input_macro_action", "type": "input", "layer": "macro_planner", "dim": 3},
-        {"id": "macro_fc1", "type": "module", "layer": "macro_predictor.fc1", "dim": 64},
-        {"id": "macro_fc2", "type": "module", "layer": "macro_predictor.fc2", "dim": 64},
-        {"id": "macro_delta_S", "type": "module", "layer": "macro_predictor.delta_head", "dim": 32},
-        {"id": "macro_subgoal_S", "type": "representation", "layer": "macro_subgoal", "dim": 32},
-        {"id": "macro_col_head", "type": "output", "layer": "macro_predictor.col_head", "dim": 1},
-        # Micro Level Tracking Circuit (Horizon k=1)
-        {"id": "micro_pol_fc1", "type": "module", "layer": "micro_predictor.pol_fc1", "dim": 64},
-        {"id": "micro_action_head", "type": "output", "layer": "micro_predictor.action_head", "dim": 3},
-        {"id": "micro_dyn_fc1", "type": "module", "layer": "micro_predictor.dyn_fc1", "dim": 64},
-        {"id": "micro_col_head", "type": "output", "layer": "micro_predictor.col_head", "dim": 1}
-    ]
-
-    edges = [
-        {"source": "input_rgb", "destination": "conv1", "attribution": 0.89, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "conv1", "destination": "conv2", "attribution": 0.87, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "conv2", "destination": "conv3", "attribution": 0.85, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "conv3", "destination": "conv4", "attribution": 0.83, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "conv4", "destination": "flatten", "attribution": 0.80, "condition": "feedforward", "validation_status": "validated"},
-        {"source": "flatten", "destination": "latent_state_s", "attribution": 0.96, "condition": "projection", "validation_status": "validated"},
-        # Latent to clusters (96.9% geometric / spatial)
-        {"source": "latent_state_s", "destination": "cluster_geometry", "attribution": 0.375, "condition": "geometry_dominant", "validation_status": "validated"},
-        {"source": "latent_state_s", "destination": "cluster_position", "attribution": 0.344, "condition": "position_dominant", "validation_status": "validated"},
-        {"source": "latent_state_s", "destination": "cluster_heading", "attribution": 0.250, "condition": "heading_dominant", "validation_status": "validated"},
-        {"source": "latent_state_s", "destination": "cluster_appearance", "attribution": 0.031, "condition": "color_suppressed", "validation_status": "validated"},
-        # Macro Circuit
-        {"source": "cluster_geometry", "destination": "macro_fc1", "attribution": 0.490, "condition": "macro_planning", "validation_status": "validated"},
-        {"source": "cluster_heading", "destination": "macro_fc1", "attribution": 0.360, "condition": "macro_planning", "validation_status": "validated"},
-        {"source": "input_macro_action", "destination": "macro_fc1", "attribution": 0.650, "condition": "macro_intent", "validation_status": "validated"},
-        {"source": "macro_fc1", "destination": "macro_fc2", "attribution": 0.910, "condition": "macro_feedforward", "validation_status": "validated"},
-        {"source": "macro_fc2", "destination": "macro_delta_S", "attribution": 0.880, "condition": "subgoal_delta", "validation_status": "validated"},
-        {"source": "latent_state_s", "destination": "macro_subgoal_S", "attribution": 0.950, "condition": "macro_residual", "validation_status": "validated"},
-        {"source": "macro_delta_S", "destination": "macro_subgoal_S", "attribution": 0.865, "condition": "macro_subgoal_injection", "validation_status": "validated"},
-        {"source": "macro_fc2", "destination": "macro_col_head", "attribution": 0.810, "condition": "macro_collision_barrier", "validation_status": "validated"},
-        # Micro Tracking Circuit (Conditioned on macro subgoal S*)
-        {"source": "latent_state_s", "destination": "micro_pol_fc1", "attribution": 0.620, "condition": "micro_current_state", "validation_status": "validated"},
-        {"source": "macro_subgoal_S", "destination": "micro_pol_fc1", "attribution": 0.845, "condition": "subgoal_guidance", "validation_status": "validated"},
-        {"source": "micro_pol_fc1", "destination": "micro_action_head", "attribution": 0.915, "condition": "primitive_steering_action", "validation_status": "validated"},
-        {"source": "micro_pol_fc1", "destination": "micro_col_head", "attribution": 0.740, "condition": "immediate_contact_prevention", "validation_status": "validated"}
-    ]
-
-    graph = {
-        "model_id": "h_jepa",
-        "nodes": nodes,
-        "edges": edges,
-        "dominant_pathway": "latent_s -> (cluster_geometry + cluster_heading) -> macro_predictor (K=5) -> macro_subgoal_S -> micro_pol_fc1 -> micro_action_head"
-    }
-
-    out_file = os.path.join(output_dir, "attribution_graph_hjepa.json")
-    with open(out_file, "w") as f:
-        json.dump(graph, f, indent=2)
-    print(f"  Saved: {out_file} ({len(nodes)} nodes, {len(edges)} edges)")
-    return graph
-
-def export_attribution_summary(graphs, output_dir):
-    csv_path = os.path.join(output_dir, "attribution_summary.csv")
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["Model", "Source Component", "Destination Component", "Attribution Magnitude", "Condition", "Status"])
-        for g in graphs:
-            m_id = g["model_id"]
-            for e in g["edges"]:
-                writer.writerow([m_id, e["source"], e["destination"], f"{e['attribution']:.3f}", e["condition"], e["validation_status"]])
-    print(f"Saved Attribution Summary CSV to: {csv_path}")
 
 if __name__ == "__main__":
-    out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "attribution_graphs"))
-    os.makedirs(out_dir, exist_ok=True)
-    
-    val_npz = os.path.abspath(os.path.join(os.path.dirname(__file__), "../datasets/splits/val_benchmark.npz"))
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
-
-    g1 = build_baseline_attribution_graph(val_npz, os.path.join(ckpt_dir, "baseline_best.pt"), out_dir)
-    g2 = build_lewm_attribution_graph(val_npz, os.path.join(ckpt_dir, "lewm_best.pt"), out_dir)
-    g3 = build_hjepa_attribution_graph(val_npz, os.path.join(ckpt_dir, "hjepa_best.pt"), out_dir)
-
-    export_attribution_summary([g1, g2, g3], out_dir)
+    build_attribution_graphs()

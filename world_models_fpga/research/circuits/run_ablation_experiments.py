@@ -1,274 +1,265 @@
 """
-Phase 5: Computational Circuit Reconstruction - Systematic Ablation Experiments
-Author: Brian A. Hadian
-Project: Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA
+Phase 4: Causal Subspace & SAE Feature Ablation Engine (Repaired)
 
-Ablates candidate functional circuits, semantic feature clusters, and predictor modules:
-  1. Appearance / Color Cluster (zeroed)
-  2. Spatial Geometry Cluster (zeroed)
-  3. Egocentric Heading Cluster (zeroed)
-  4. Obstacle Avoidance / Collision Head (zeroed)
-  5. Action-Conditioned Dynamics Predictor Core (residual bypass)
-  6. Macro Planning Circuit (in H-JEPA)
-
-Measures causal impact across 5 core capabilities:
-  - Object Grounding
-  - Spatial Reasoning
-  - Obstacle Avoidance
-  - Trajectory Execution / Foresight
-  - Robustness under Kinetic Perturbation
+Executes both:
+  1. Open-loop latent/action/collision ablations on held-out test transitions
+     (comparing targeted top-8 subspaces against matched 8-dim random subspace controls).
+  2. Closed-loop MuJoCo behavioral ablations (via forward hooks on the visual encoder during
+     closed-loop navigation episodes, measuring task success drop and collision increase).
 """
 
+from __future__ import annotations
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
+
+import json
 import os
 import sys
-import json
-import csv
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import numpy as np
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 from models.baseline_policy import BaselineNavigationPolicy
-from models.le_world_model import LeWorldModel
 from models.h_jepa import HJEPAModel
-from research.instrumentation.model_inspector import ModelInspector
+from models.le_world_model import LeWorldModel
+from research.benchmarks.evaluator import BenchmarkEvaluator
+from research.benchmarks.model_wrappers import BaselineAgent, HJEPAAgent, LeWMAgent
+from research.datasets.generation.capability_tasks import generate_task_specification
+from research.representations.sae_model import SparseAutoencoder
 
-CAPABILITIES = [
-    "object_grounding",
-    "spatial_reasoning",
-    "obstacle_avoidance",
-    "trajectory_foresight",
-    "robustness_recovery"
-]
 
-def evaluate_capabilities_under_ablation(model, model_type, inspector, ablate_spec, test_data, device):
-    """
-    Evaluates the 5 core capabilities on test_data under the specified ablation context.
-    ablate_spec: dict with 'target', 'channel_indices', 'mode', 'bypass_module'
-    """
-    obs = test_data["rgb"][:100]
-    poses = test_data["robot_pose"][:100]
-    actions = test_data["actions"][:100]
-    obj_pos = test_data["object_positions"][:100]
-    N = len(obs)
+def _select_correlated_dims(latents: np.ndarray, target_vec: np.ndarray, k: int = 8) -> np.ndarray:
+    if target_vec.ndim > 1:
+        target_vec = np.linalg.norm(target_vec, axis=-1)
+    t_std = np.std(target_vec) + 1e-8
+    t_c = (target_vec - np.mean(target_vec)) / t_std
+    corrs = np.zeros(latents.shape[1], dtype=np.float32)
+    for d in range(latents.shape[1]):
+        l_d = latents[:, d]
+        corrs[d] = abs(float(np.mean(((l_d - np.mean(l_d)) / (np.std(l_d) + 1e-8)) * t_c)))
+    return np.argsort(-corrs)[:k]
 
-    imgs = torch.from_numpy(obs).permute(0, 3, 1, 2).float().to(device) / 255.0
-    cand_a = torch.tensor([[0.8, 0.0, 0.0]], device=device).repeat(N, 1)
-    goal_vecs = torch.tensor([[1.0, 0.0, 0.0, 1.0]], device=device).repeat(N, 1)
 
-    # Context manager for ablation
-    ablate_context = None
-    target_layer = ablate_spec.get("target")
-    ch_indices = ablate_spec.get("channel_indices")
+def _run_closed_loop_with_latent_mask(evaluator: BenchmarkEvaluator, agent, specs: list[dict], dims_to_ablate: np.ndarray, mean_vec: torch.Tensor) -> dict:
+    """Installs a temporary forward hook on agent.model.encoder that mean-ablates `dims_to_ablate`."""
+    idx_tensor = torch.as_tensor(dims_to_ablate, dtype=torch.long, device=agent.device)
+    mean_dev = mean_vec.to(agent.device)
 
-    if target_layer and ch_indices is not None:
-        ablate_context = inspector.ablate_component(target_layer, channel_indices=ch_indices, mode="zero")
+    def _hook(_module, _inp, out):
+        patched = out.clone()
+        patched[:, idx_tensor] = mean_dev[idx_tensor]
+        return patched
 
-    def run_forward():
-        if model_type == "baseline":
-            (pred_actions, col_risks), z = model(imgs, goal_vecs)
-            return pred_actions, col_risks, z
-        elif model_type == "lewm":
-            s = model.encode(imgs)
-            if ablate_spec.get("bypass_dynamics"):
-                # Predictor disabled: delta_s = 0, col = 0
-                pred_s = s
-                col_risks = torch.zeros(N, 1, device=device)
-            else:
-                pred_s, col_l = model.predict_next(s, cand_a)
-                col_risks = torch.sigmoid(col_l)
-            col_p = col_risks
-            pred_actions = cand_a * (1.0 - col_p) + torch.tensor([[0.1, 0.6, 0.4]], device=device) * col_p
-            return pred_actions, col_risks, pred_s
-        elif model_type == "hjepa":
-            s = model.encode(imgs)
-            if ablate_spec.get("bypass_macro"):
-                # Macro circuit disabled: direct zero subgoal
-                S_subgoal = torch.zeros_like(s)
-                col_risks = torch.zeros(N, 1, device=device)
-            else:
-                S_subgoal, col_l = model.macro_predictor(s, cand_a)
-                col_risks = torch.sigmoid(col_l)
-            pred_actions = model.micro_predictor.select_action(s, S_subgoal)
-            return pred_actions, col_risks, S_subgoal
-
-    if ablate_context:
-        with ablate_context:
-            pred_actions, col_risks, latent_out = run_forward()
-    else:
-        pred_actions, col_risks, latent_out = run_forward()
-
-    pred_act_np = pred_actions.detach().cpu().numpy()
-    gt_act_np = actions[:, :3]
-
-    # 1. Object Grounding: alignment of forward velocity towards target
-    grounding_score = float(np.mean(np.maximum(0.0, pred_act_np[:, 0])))
-
-    # 2. Spatial Reasoning: angular steering alignment towards landmark
-    angle_error = np.abs(pred_act_np[:, 2] - gt_act_np[:, 2])
-    spatial_score = float(np.mean(np.maximum(0.0, 1.0 - angle_error)))
-
-    # 3. Obstacle Avoidance: collision risk anticipation when near obstacles
-    dists = np.linalg.norm(obj_pos[:, :, :2] - poses[:, np.newaxis, :2], axis=-1)
-    min_dists = np.min(dists, axis=-1)
-    near_mask = min_dists < 0.65
-    col_np = col_risks.detach().cpu().numpy().squeeze(-1)
-    if np.sum(near_mask) > 0:
-        avoidance_score = float(np.mean(col_np[near_mask]))
-    else:
-        avoidance_score = 0.5
-
-    # 4. Trajectory Foresight: action fidelity to expert demonstration
-    act_mse = np.mean((pred_act_np - gt_act_np) ** 2)
-    foresight_score = float(max(0.0, 1.0 - act_mse))
-
-    # 5. Robustness under Perturbation: stability of command output
-    robustness_score = float(np.clip(1.0 - np.std(pred_act_np, axis=0).mean(), 0.0, 1.0))
+    handle = agent.model.encoder.register_forward_hook(_hook)
+    try:
+        records = [evaluator.evaluate_episode(agent, sp) for sp in specs]
+    finally:
+        handle.remove()
 
     return {
-        "object_grounding": grounding_score,
-        "spatial_reasoning": spatial_score,
-        "obstacle_avoidance": avoidance_score,
-        "trajectory_foresight": foresight_score,
-        "robustness_recovery": robustness_score
+        "success_rate": float(np.mean([1.0 if r["success"] else 0.0 for r in records])),
+        "collision_rate": float(np.mean([0.0 if r["collision_free"] else 1.0 for r in records])),
+        "mean_goal_error_m": float(np.mean([r["final_goal_error"] for r in records])),
     }
 
-def run_ablation_suite():
-    out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "ablation_results"))
-    os.makedirs(out_dir, exist_ok=True)
-    val_npz = os.path.abspath(os.path.join(os.path.dirname(__file__), "../datasets/splits/val_benchmark.npz"))
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
-    test_data = np.load(val_npz)
+
+def run_ablation_experiments():
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    v2_splits = str(_ACTIVE_SPLITS_DIR)
+    legacy_splits = str(_ACTIVE_SPLITS_DIR)
+    splits_dir = v2_splits if os.path.exists(os.path.join(v2_splits, "held_out_test_benchmark.npz")) else legacy_splits
 
-    print("\n=======================================================")
-    print("  PHASE 5: SYSTEMATIC CIRCUIT ABLATION EXPERIMENTS")
-    print("=======================================================\n")
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "lewm_best.pt")) else legacy_ckpt
 
-    # Load semantic cluster definitions from Phase 4
-    class_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../representations/counterfactual_analysis/feature_classification.json"))
-    with open(class_json_path) as f:
-        class_data = json.load(f)
+    sae_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../representations/results"))
+    out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "results"))
+    os.makedirs(out_dir, exist_ok=True)
 
-    models_config = [
-        ("baseline", BaselineNavigationPolicy, "baseline_best.pt", "baseline.visual_latent_z"),
-        ("lewm", LeWorldModel, "lewm_best.pt", "lewm.latent_state_s"),
-        ("hjepa", lambda: HJEPAModel(stride_k=5), "hjepa_best.pt", "hjepa.shared_latent_s")
-    ]
+    print("=================================================================")
+    print("  PHASE 4: CAUSAL SUBSPACE & CLOSED-LOOP ABLATION EXPERIMENTS")
+    print("=================================================================")
 
-    ablation_results = {}
-    csv_rows = []
+    te_d = np.load(os.path.join(splits_dir, "held_out_test_benchmark.npz"))
+    N = min(1200, len(te_d["rgb"]))
 
-    for m_type, m_cls, ckpt_name, latent_name in models_config:
-        print(f"\n--- Running Ablations for: [{m_type.upper()}] ---")
-        model = m_cls().to(device)
-        model.load_state_dict(torch.load(os.path.join(ckpt_dir, ckpt_name), map_location=device))
-        model.eval()
+    imgs = torch.from_numpy(te_d["rgb"][:N]).permute(0, 3, 1, 2).float().to(device) / 255.0
+    poses = te_d["robot_pose"][:N]
+    goals = te_d["grounded_goals"][:N]
+    acts_gt = torch.from_numpy(te_d["actions"][:N]).float().to(device)
+    cols_gt = te_d["collisions"][:N].astype(np.float32)
 
-        inspector = ModelInspector(model, m_type)
+    dx = goals[:, 0] - poses[:, 0]
+    dy = goals[:, 1] - poses[:, 1]
+    th = poses[:, 2]
+    c, s = np.cos(th), np.sin(th)
+    dth = goals[:, 2] - poses[:, 2]
+    g_vecs = torch.from_numpy(np.stack([c * dx + s * dy, -s * dx + c * dy, np.sin(dth), np.cos(dth)], axis=-1).astype(np.float32)).to(device)
 
-        # 1. Unablated Baseline Reference
-        clean_scores = evaluate_capabilities_under_ablation(model, m_type, inspector, {}, test_data, device)
-        ablation_results[m_type] = {"clean_reference": clean_scores, "ablations": {}}
+    b_ckpt = os.path.join(ckpt_dir, "baseline_best.pt")
+    l_ckpt = os.path.join(ckpt_dir, "lewm_best.pt")
+    h_ckpt = os.path.join(ckpt_dir, "hjepa_best.pt")
 
-        print(f"  [Clean Reference] Grounding: {clean_scores['object_grounding']:.3f} | Spatial: {clean_scores['spatial_reasoning']:.3f} | Avoidance: {clean_scores['obstacle_avoidance']:.3f} | Foresight: {clean_scores['trajectory_foresight']:.3f}")
+    b_model = BaselineNavigationPolicy().to(device)
+    b_model.load_state_dict(torch.load(b_ckpt, map_location=device, weights_only=False), strict=False)
+    b_model.eval()
 
-        # Define ablation interventions
-        m_key = f"{m_type}_z" if m_type == "baseline" else f"{m_type}_s"
-        cluster_map = {}
-        for entry in class_data.get(m_key, []):
-            cat = entry["category"]
-            if cat not in cluster_map: cluster_map[cat] = []
-            cluster_map[cat].append(entry["dim"])
+    l_model = LeWorldModel().to(device)
+    l_model.load_state_dict(torch.load(l_ckpt, map_location=device, weights_only=False), strict=False)
+    l_model.eval()
 
-        interventions = [
-            ("ablate_appearance", {
-                "target": latent_name,
-                "channel_indices": cluster_map.get("Visual Appearance / Color", []),
-                "desc": f"Zero out appearance features ({len(cluster_map.get('Visual Appearance / Color', []))} dims)"
-            }),
-            ("ablate_geometry", {
-                "target": latent_name,
-                "channel_indices": cluster_map.get("Geometry / Target Location", []),
-                "desc": f"Zero out geometry features ({len(cluster_map.get('Geometry / Target Location', []))} dims)"
-            }),
-            ("ablate_heading", {
-                "target": latent_name,
-                "channel_indices": cluster_map.get("Egocentric Heading", []),
-                "desc": f"Zero out heading features ({len(cluster_map.get('Egocentric Heading', []))} dims)"
-            })
-        ]
+    h_model = HJEPAModel().to(device)
+    h_model.load_state_dict(torch.load(h_ckpt, map_location=device, weights_only=False), strict=False)
+    h_model.eval()
 
-        # Model-specific module ablations
-        if m_type == "lewm":
-            interventions.append(("ablate_transition_dynamics", {
-                "bypass_dynamics": True,
-                "desc": "Bypass predictive dynamics core (delta_s = 0, residual only)"
-            }))
-        elif m_type == "hjepa":
-            interventions.append(("ablate_macro_planner", {
-                "bypass_macro": True,
-                "desc": "Disable macro planning circuit (subgoal S* = 0)"
-            }))
+    models_dict = {
+        "Baseline": b_model,
+        "LeWM": l_model,
+        "H-JEPA": h_model,
+    }
+    agent_wrappers = {
+        "Baseline": BaselineAgent(b_ckpt, device=device, track="structured"),
+        "LeWM": LeWMAgent(l_ckpt, device=device, track="structured"),
+        "H-JEPA": HJEPAAgent(h_ckpt, device=device, track="structured"),
+    }
 
-        for ab_name, ab_spec in interventions:
-            if ab_spec.get("channel_indices") is not None and len(ab_spec["channel_indices"]) == 0:
-                continue
+    closed_loop_specs = (
+        [generate_task_specification("obstacle_avoidance", "difficult", seed_idx=5200 + i) for i in range(6)]
+        + [generate_task_specification("spatial_reasoning", "difficult", seed_idx=5300 + i) for i in range(6)]
+    )
+    evaluator = BenchmarkEvaluator()
+    rng = np.random.default_rng(42)
 
-            ab_scores = evaluate_capabilities_under_ablation(model, m_type, inspector, ab_spec, test_data, device)
-            
-            # Compute relative capability drop: Delta S = (Clean - Ablated) / Clean
-            drops = {}
-            for cap in CAPABILITIES:
-                ref = clean_scores[cap]
-                val = ab_scores[cap]
-                drop_pct = float((ref - val) / (ref + 1e-8) * 100.0)
-                drops[cap] = drop_pct
+    ablation_results: dict = {}
 
-            ablation_results[m_type]["ablations"][ab_name] = {
-                "description": ab_spec["desc"],
-                "scores": ab_scores,
-                "capability_drops_pct": drops
+    for m_name, mdl in models_dict.items():
+        print(f"\n--- Ablating Model: {m_name} ---")
+        with torch.no_grad():
+            s_clean = mdl.encoder(imgs) if m_name == "Baseline" else mdl.encode(imgs)
+            s_np = s_clean.cpu().numpy()
+            s_mean = torch.mean(s_clean, dim=0)
+
+            # Identify top-8 correlated dimensions for each functional variable
+            nav_dims = _select_correlated_dims(s_np, g_vecs[:, :2].cpu().numpy(), k=8)
+            frame_dims = _select_correlated_dims(s_np, np.stack([np.sin(th), np.cos(th)], axis=-1), k=8)
+            col_dims = _select_correlated_dims(s_np, cols_gt, k=8)
+            rand_dims = rng.choice(32, size=8, replace=False)
+
+            def eval_open_loop(s_mod):
+                if m_name == "Baseline":
+                    act_p, col_p = mdl.forward_with_latent(s_mod, g_vecs)
+                    return act_p, col_p.squeeze(-1), s_mod
+                elif m_name == "LeWM":
+                    ns, col_log = mdl.predict_next(s_mod, acts_gt)
+                    act_p = mdl.predict_reactive_action(s_mod, g_vecs)
+                    return act_p, torch.sigmoid(col_log).squeeze(-1), ns
+                else:
+                    S_mac, col_log = mdl.macro_predictor(s_mod, acts_gt)
+                    act_p = mdl.micro_predictor.select_action(s_mod, S_mac)
+                    return act_p, torch.sigmoid(col_log).squeeze(-1), S_mac
+
+            act_0, col_0, ns_0 = eval_open_loop(s_clean)
+
+            subspaces = {
+                "goal_navigation_subspace": nav_dims,
+                "egocentric_frame_subspace": frame_dims,
+                "collision_avoidance_subspace": col_dims,
+                "random_control_subspace": rand_dims,
             }
 
-            print(f"  [{ab_name:26s}] Grounding Drop: {drops['object_grounding']:+5.1f}% | "
-                  f"Spatial Drop: {drops['spatial_reasoning']:+5.1f}% | "
-                  f"Avoidance Drop: {drops['obstacle_avoidance']:+5.1f}% | "
-                  f"Foresight Drop: {drops['trajectory_foresight']:+5.1f}%")
+            m_abl = {"open_loop_subspace_ablations": {}, "closed_loop_behavioral_ablations": {}, "sae_top_feature_ablations": {}}
 
-            csv_rows.append([
-                m_type, ab_name, ab_spec["desc"],
-                f"{drops['object_grounding']:+.1f}%",
-                f"{drops['spatial_reasoning']:+.1f}%",
-                f"{drops['obstacle_avoidance']:+.1f}%",
-                f"{drops['trajectory_foresight']:+.1f}%",
-                f"{drops['robustness_recovery']:+.1f}%"
-            ])
+            for sub_name, dims in subspaces.items():
+                s_zero = s_clean.clone()
+                s_zero[:, dims] = 0.0
+                act_z, col_z, ns_z = eval_open_loop(s_zero)
 
-        inspector.close()
+                s_m = s_clean.clone()
+                s_m[:, dims] = s_mean[dims]
+                act_m, col_m, ns_m = eval_open_loop(s_m)
 
-    # Save outputs
-    json_path = os.path.join(out_dir, "ablation_matrix.json")
-    with open(json_path, "w") as f:
+                act_mse_zero = float(torch.mean((act_z - act_0) ** 2).item())
+                act_mse_mean = float(torch.mean((act_m - act_0) ** 2).item())
+                col_shift = float(torch.mean(torch.abs(col_z - col_0)).item())
+                lat_shift = float(torch.mean((ns_z - ns_0) ** 2).item())
+
+                m_abl["open_loop_subspace_ablations"][sub_name] = {
+                    "dimensions": dims.tolist(),
+                    "zero_ablation_action_mse_shift": act_mse_zero,
+                    "mean_ablation_action_mse_shift": act_mse_mean,
+                    "collision_prob_shift": col_shift,
+                    "next_latent_mse_shift": lat_shift,
+                }
+                print(
+                    f"  [Open-Loop   | {sub_name:28s}] ActMSE: {act_mse_mean:.4f} | "
+                    f"ColShift: {col_shift:.4f} | LatShift: {lat_shift:.4f}"
+                )
+
+        # Closed-loop MuJoCo behavioral ablations (intact vs targeted subspace vs random-8 control)
+        ag = agent_wrappers[m_name]
+        intact_recs = [evaluator.evaluate_episode(ag, sp) for sp in closed_loop_specs]
+        intact_cl = {
+            "success_rate": float(np.mean([1.0 if r["success"] else 0.0 for r in intact_recs])),
+            "collision_rate": float(np.mean([0.0 if r["collision_free"] else 1.0 for r in intact_recs])),
+            "mean_goal_error_m": float(np.mean([r["final_goal_error"] for r in intact_recs])),
+        }
+        m_abl["closed_loop_behavioral_ablations"]["intact_baseline"] = intact_cl
+
+        for sub_name in ("goal_navigation_subspace", "collision_avoidance_subspace", "random_control_subspace"):
+            dims = subspaces[sub_name]
+            cl_res = _run_closed_loop_with_latent_mask(evaluator, ag, closed_loop_specs, dims, s_mean)
+            cl_res["success_rate_drop"] = intact_cl["success_rate"] - cl_res["success_rate"]
+            cl_res["collision_rate_increase"] = cl_res["collision_rate"] - intact_cl["collision_rate"]
+            m_abl["closed_loop_behavioral_ablations"][sub_name] = cl_res
+            print(
+                f"  [Closed-Loop | {sub_name:28s}] Success: {cl_res['success_rate']*100:5.1f}% "
+                f"(drop={cl_res['success_rate_drop']*100:+5.1f}%) | Col: {cl_res['collision_rate']*100:5.1f}%"
+            )
+
+        # SAE Feature Clamping (if SAE checkpoint exists)
+        sae_path = os.path.join(sae_dir, f"sae_{m_name}.pt")
+        if os.path.exists(sae_path):
+            with torch.no_grad():
+                sae = SparseAutoencoder(act_dim=32, dict_dim=128).to(device)
+                sae.load_state_dict(torch.load(sae_path, map_location=device, weights_only=False))
+                sae.eval()
+                _, f_acts = sae(s_clean)
+                top_feats = torch.argsort(torch.var(f_acts, dim=0), descending=True)[:8]
+                f_abl = f_acts.clone()
+                f_abl[:, top_feats] = 0.0
+                s_sae_abl = sae.W_dec(f_abl) + sae.b_dec
+                act_sae, col_sae, ns_sae = eval_open_loop(s_sae_abl)
+
+                f_rand = f_acts.clone()
+                rand_feats = torch.tensor(rng.choice(128, size=8, replace=False), dtype=torch.long, device=device)
+                f_rand[:, rand_feats] = 0.0
+                s_sae_rand = sae.W_dec(f_rand) + sae.b_dec
+                act_sae_r, col_sae_r, ns_sae_r = eval_open_loop(s_sae_rand)
+
+                m_abl["sae_top_feature_ablations"] = {
+                    "ablated_feature_ids": top_feats.cpu().tolist(),
+                    "action_mse_shift": float(torch.mean((act_sae - act_0) ** 2).item()),
+                    "random8_feature_control_action_mse_shift": float(torch.mean((act_sae_r - act_0) ** 2).item()),
+                    "collision_prob_shift": float(torch.mean(torch.abs(col_sae - col_0)).item()),
+                    "next_latent_mse_shift": float(torch.mean((ns_sae - ns_0) ** 2).item()),
+                }
+
+        ablation_results[m_name] = m_abl
+
+    evaluator.close()
+
+    out_path = os.path.join(out_dir, "ablation_results.json")
+    with open(out_path, "w") as f:
         json.dump(ablation_results, f, indent=2)
-
-    csv_path = os.path.join(out_dir, "ablation_results.csv")
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            "Model", "Ablation Target", "Description",
-            "Grounding Drop", "Spatial Drop", "Avoidance Drop", "Foresight Drop", "Robustness Drop"
-        ])
-        writer.writerows(csv_rows)
-
-    print(f"\nSaved Ablation Results to:")
-    print(f"  -> {json_path}")
-    print(f"  -> {csv_path}")
-
+    print(f"\n[SAVED ABLATION RESULTS TO {out_path}]")
     return ablation_results
 
+
 if __name__ == "__main__":
-    run_ablation_suite()
+    run_ablation_experiments()

@@ -24,6 +24,10 @@ Classifies each latent dimension into functional semantic categories:
   - Viewpoint / Perspective
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -76,18 +80,20 @@ def analyze_counterfactuals(cf_npz_path, output_dir=None, device="cuda" if torch
     steps_per_ep = 35
     assert total_episodes == 350, f"Expected 350 episodes, got {total_episodes}"
 
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "lewm_best.pt")) else legacy_ckpt
 
     base_model = BaselineNavigationPolicy().to(device)
-    base_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "baseline_best.pt"), map_location=device))
+    base_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "baseline_best.pt"), map_location=device, weights_only=False), strict=False)
     base_model.eval()
 
     lewm_model = LeWorldModel().to(device)
-    lewm_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "lewm_best.pt"), map_location=device))
+    lewm_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "lewm_best.pt"), map_location=device, weights_only=False), strict=False)
     lewm_model.eval()
 
     hjepa_model = HJEPAModel(stride_k=5).to(device)
-    hjepa_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "hjepa_best.pt"), map_location=device))
+    hjepa_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "hjepa_best.pt"), map_location=device, weights_only=False), strict=False)
     hjepa_model.eval()
 
     # Extract initial frame (t=0) for all 350 episodes
@@ -196,5 +202,6 @@ def analyze_counterfactuals(cf_npz_path, output_dir=None, device="cuda" if torch
     return sensitivity_results, classification_results
 
 if __name__ == "__main__":
-    cf_npz = os.path.abspath(os.path.join(os.path.dirname(__file__), "../datasets/splits/counterfactual_suite.npz"))
-    analyze_counterfactuals(cf_npz)
+    v2_cf = str(_ACTIVE_SPLITS_DIR / "counterfactual_suite.npz")
+    legacy_cf = str(_ACTIVE_SPLITS_DIR / "counterfactual_suite.npz")
+    analyze_counterfactuals(v2_cf if os.path.exists(v2_cf) else legacy_cf)

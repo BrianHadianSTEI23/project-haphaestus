@@ -16,6 +16,10 @@ Computes:
   - Effective Bit Width requirement: ceil(log2(max(|min|, |max|) + 1)) + frac_bits
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -86,7 +90,7 @@ def run_activation_profiling(dataset_npz_path, output_dir=None, device="cuda" if
     obs = data["rgb"][:1000] # Profile 1000 validation frames
     N = len(obs)
 
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
+    ckpt_dir = str(_ACTIVE_CKPT_DIR)
 
     models_config = [
         ("baseline", BaselineNavigationPolicy, "baseline_best.pt"),
@@ -171,5 +175,5 @@ def run_activation_profiling(dataset_npz_path, output_dir=None, device="cuda" if
     return all_stats
 
 if __name__ == "__main__":
-    val_npz = os.path.abspath(os.path.join(os.path.dirname(__file__), "../datasets/splits/val_benchmark.npz"))
+    val_npz = str(_ACTIVE_SPLITS_DIR / "val_benchmark.npz")
     run_activation_profiling(val_npz)

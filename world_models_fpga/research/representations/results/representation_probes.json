@@ -1,0 +1,615 @@
+{
+  "Random_CNN": {
+    "continuous_probes": {
+      "robot_position": {
+        "r2": 0.2975817322731018,
+        "val_r2": 0.3317066431045532,
+        "mse": 0.4498799443244934,
+        "best_alpha": 0.01
+      },
+      "robot_orientation": {
+        "r2": -0.023229926824569702,
+        "val_r2": 0.11820647120475769,
+        "mse": 0.3990873396396637,
+        "best_alpha": 10.0
+      },
+      "relative_goal_vector": {
+        "r2": 0.01914122700691223,
+        "val_r2": 0.05699816346168518,
+        "mse": 0.8772540092468262,
+        "best_alpha": 10.0
+      },
+      "goal_distance": {
+        "r2": 0.45448601245880127,
+        "val_r2": 0.37212425470352173,
+        "mse": 0.40717417001724243,
+        "best_alpha": 10.0
+      },
+      "robot_velocity": {
+        "r2": 0.005317032337188721,
+        "val_r2": 0.019575953483581543,
+        "mse": 0.13566823303699493,
+        "best_alpha": 10.0
+      },
+      "future_position": {
+        "r2": 0.2963710427284241,
+        "val_r2": 0.32793930172920227,
+        "mse": 0.4540248513221741,
+        "best_alpha": 0.01
+      },
+      "ego_step_displacement": {
+        "r2": 0.18308505415916443,
+        "val_r2": 0.12099963426589966,
+        "mse": 0.00037350982893258333,
+        "best_alpha": 1.0
+      }
+    },
+    "binary_probes": {
+      "collision_risk": {
+        "accuracy": 0.9811018577834721,
+        "auroc": 0.9771423202204961
+      },
+      "goal_reachability": {
+        "accuracy": 0.901665598975016,
+        "auroc": 0.5783040041859441
+      }
+    },
+    "subspace_geometry": {
+      "effective_rank_participation_ratio": 6.4590325355529785,
+      "top8_pca_explained_variance": 0.7621517181396484,
+      "probe_direction_cosine_similarity": {
+        "robot_position": {
+          "robot_position": 1.0,
+          "robot_orientation": 0.25969234108924866,
+          "relative_goal_vector": -0.49836039543151855,
+          "goal_distance": -0.15528246760368347,
+          "robot_velocity": -0.018372874706983566,
+          "future_position": 0.9996325969696045,
+          "ego_step_displacement": 0.4368327260017395
+        },
+        "robot_orientation": {
+          "robot_position": 0.25969234108924866,
+          "robot_orientation": 1.0,
+          "relative_goal_vector": 0.06551215052604675,
+          "goal_distance": 0.07273532450199127,
+          "robot_velocity": 0.42116308212280273,
+          "future_position": 0.26954641938209534,
+          "ego_step_displacement": 0.46710216999053955
+        },
+        "relative_goal_vector": {
+          "robot_position": -0.49836039543151855,
+          "robot_orientation": 0.06551215052604675,
+          "relative_goal_vector": 1.0,
+          "goal_distance": 0.5964476466178894,
+          "robot_velocity": 0.4874038100242615,
+          "future_position": -0.4862675070762634,
+          "ego_step_displacement": 0.09213712811470032
+        },
+        "goal_distance": {
+          "robot_position": -0.15528246760368347,
+          "robot_orientation": 0.07273532450199127,
+          "relative_goal_vector": 0.5964476466178894,
+          "goal_distance": 0.9999999403953552,
+          "robot_velocity": 0.40340256690979004,
+          "future_position": -0.14257849752902985,
+          "ego_step_displacement": 0.1429438292980194
+        },
+        "robot_velocity": {
+          "robot_position": -0.018372874706983566,
+          "robot_orientation": 0.42116308212280273,
+          "relative_goal_vector": 0.4874038100242615,
+          "goal_distance": 0.40340256690979004,
+          "robot_velocity": 1.0,
+          "future_position": 0.0003378167748451233,
+          "ego_step_displacement": 0.48927396535873413
+        },
+        "future_position": {
+          "robot_position": 0.9996325969696045,
+          "robot_orientation": 0.26954641938209534,
+          "relative_goal_vector": -0.4862675070762634,
+          "goal_distance": -0.14257849752902985,
+          "robot_velocity": 0.0003378167748451233,
+          "future_position": 1.0,
+          "ego_step_displacement": 0.4561387598514557
+        },
+        "ego_step_displacement": {
+          "robot_position": 0.4368327260017395,
+          "robot_orientation": 0.46710216999053955,
+          "relative_goal_vector": 0.09213712811470032,
+          "goal_distance": 0.1429438292980194,
+          "robot_velocity": 0.48927396535873413,
+          "future_position": 0.4561387598514557,
+          "ego_step_displacement": 0.9999998807907104
+        }
+      }
+    }
+  },
+  "Baseline": {
+    "continuous_probes": {
+      "robot_position": {
+        "r2": 0.4754440486431122,
+        "val_r2": 0.46666765213012695,
+        "mse": 0.32993412017822266,
+        "best_alpha": 100.0
+      },
+      "robot_orientation": {
+        "r2": 0.23763370513916016,
+        "val_r2": 0.303355872631073,
+        "mse": 0.29853978753089905,
+        "best_alpha": 100.0
+      },
+      "relative_goal_vector": {
+        "r2": 0.1312042474746704,
+        "val_r2": 0.10253188014030457,
+        "mse": 0.7703325152397156,
+        "best_alpha": 100.0
+      },
+      "goal_distance": {
+        "r2": 0.6407201290130615,
+        "val_r2": 0.3830772042274475,
+        "mse": 0.2681681513786316,
+        "best_alpha": 0.01
+      },
+      "robot_velocity": {
+        "r2": 0.08865636587142944,
+        "val_r2": 0.09929881244897842,
+        "mse": 0.1260000765323639,
+        "best_alpha": 100.0
+      },
+      "future_position": {
+        "r2": 0.4696330428123474,
+        "val_r2": 0.4612977206707001,
+        "mse": 0.3356981575489044,
+        "best_alpha": 100.0
+      },
+      "ego_step_displacement": {
+        "r2": 0.3979684114456177,
+        "val_r2": 0.2607342302799225,
+        "mse": 0.0002629716182127595,
+        "best_alpha": 100.0
+      }
+    },
+    "binary_probes": {
+      "collision_risk": {
+        "accuracy": 0.9868673926969891,
+        "auroc": 0.9982836381859184
+      },
+      "goal_reachability": {
+        "accuracy": 0.8680333119795003,
+        "auroc": 0.7176966292134831
+      }
+    },
+    "subspace_geometry": {
+      "effective_rank_participation_ratio": 7.963311672210693,
+      "top8_pca_explained_variance": 0.8546425700187683,
+      "probe_direction_cosine_similarity": {
+        "robot_position": {
+          "robot_position": 1.0,
+          "robot_orientation": 0.10538721829652786,
+          "relative_goal_vector": -0.36778587102890015,
+          "goal_distance": -0.002740338444709778,
+          "robot_velocity": -0.17435429990291595,
+          "future_position": 0.999735414981842,
+          "ego_step_displacement": 0.13969773054122925
+        },
+        "robot_orientation": {
+          "robot_position": 0.10538721829652786,
+          "robot_orientation": 1.0,
+          "relative_goal_vector": 0.3270811140537262,
+          "goal_distance": 0.2695063352584839,
+          "robot_velocity": 0.3745647072792053,
+          "future_position": 0.11828283220529556,
+          "ego_step_displacement": 0.005788121372461319
+        },
+        "relative_goal_vector": {
+          "robot_position": -0.36778587102890015,
+          "robot_orientation": 0.3270811140537262,
+          "relative_goal_vector": 1.0000001192092896,
+          "goal_distance": 0.49100011587142944,
+          "robot_velocity": 0.10752037167549133,
+          "future_position": -0.3649807572364807,
+          "ego_step_displacement": -0.002677507698535919
+        },
+        "goal_distance": {
+          "robot_position": -0.002740338444709778,
+          "robot_orientation": 0.2695063352584839,
+          "relative_goal_vector": 0.49100011587142944,
+          "goal_distance": 1.0,
+          "robot_velocity": -0.10456497967243195,
+          "future_position": 0.0008772164583206177,
+          "ego_step_displacement": -0.02320893108844757
+        },
+        "robot_velocity": {
+          "robot_position": -0.17435429990291595,
+          "robot_orientation": 0.3745647072792053,
+          "relative_goal_vector": 0.10752037167549133,
+          "goal_distance": -0.10456497967243195,
+          "robot_velocity": 0.9999997615814209,
+          "future_position": -0.1581086367368698,
+          "ego_step_displacement": 0.05631175637245178
+        },
+        "future_position": {
+          "robot_position": 0.999735414981842,
+          "robot_orientation": 0.11828283220529556,
+          "relative_goal_vector": -0.3649807572364807,
+          "goal_distance": 0.0008772164583206177,
+          "robot_velocity": -0.1581086367368698,
+          "future_position": 0.9999998807907104,
+          "ego_step_displacement": 0.14849403500556946
+        },
+        "ego_step_displacement": {
+          "robot_position": 0.13969773054122925,
+          "robot_orientation": 0.005788121372461319,
+          "relative_goal_vector": -0.002677507698535919,
+          "goal_distance": -0.02320893108844757,
+          "robot_velocity": 0.05631175637245178,
+          "future_position": 0.14849403500556946,
+          "ego_step_displacement": 0.9999980926513672
+        }
+      }
+    }
+  },
+  "LeWM": {
+    "continuous_probes": {
+      "robot_position": {
+        "r2": 0.4931810796260834,
+        "val_r2": 0.5530844926834106,
+        "mse": 0.3187958002090454,
+        "best_alpha": 100.0
+      },
+      "robot_orientation": {
+        "r2": 0.1754239797592163,
+        "val_r2": 0.4019460380077362,
+        "mse": 0.31700706481933594,
+        "best_alpha": 100.0
+      },
+      "relative_goal_vector": {
+        "r2": 0.15638574957847595,
+        "val_r2": 0.1259177029132843,
+        "mse": 0.748174786567688,
+        "best_alpha": 100.0
+      },
+      "goal_distance": {
+        "r2": 0.5709490776062012,
+        "val_r2": 0.38650190830230713,
+        "mse": 0.32024556398391724,
+        "best_alpha": 100.0
+      },
+      "robot_velocity": {
+        "r2": 0.07822694629430771,
+        "val_r2": 0.12063378095626831,
+        "mse": 0.13117629289627075,
+        "best_alpha": 100.0
+      },
+      "future_position": {
+        "r2": 0.48918619751930237,
+        "val_r2": 0.5470305681228638,
+        "mse": 0.3231533467769623,
+        "best_alpha": 100.0
+      },
+      "ego_step_displacement": {
+        "r2": 0.3686327338218689,
+        "val_r2": 0.25636813044548035,
+        "mse": 0.00028542682412080467,
+        "best_alpha": 100.0
+      }
+    },
+    "binary_probes": {
+      "collision_risk": {
+        "accuracy": 0.9814221652786675,
+        "auroc": 0.9970746680030068
+      },
+      "goal_reachability": {
+        "accuracy": 0.8494554772581678,
+        "auroc": 0.7788093467724169
+      }
+    },
+    "subspace_geometry": {
+      "effective_rank_participation_ratio": 13.134876251220703,
+      "top8_pca_explained_variance": 0.7131184339523315,
+      "probe_direction_cosine_similarity": {
+        "robot_position": {
+          "robot_position": 0.9999999403953552,
+          "robot_orientation": -0.2759195566177368,
+          "relative_goal_vector": -0.6035794019699097,
+          "goal_distance": -0.09296733140945435,
+          "robot_velocity": 0.5636018514633179,
+          "future_position": 0.9998449087142944,
+          "ego_step_displacement": 0.11035728454589844
+        },
+        "robot_orientation": {
+          "robot_position": -0.2759195566177368,
+          "robot_orientation": 0.9999998807907104,
+          "relative_goal_vector": -0.01855511963367462,
+          "goal_distance": 0.24853993952274323,
+          "robot_velocity": -0.19004493951797485,
+          "future_position": -0.2736191749572754,
+          "ego_step_displacement": -0.36661165952682495
+        },
+        "relative_goal_vector": {
+          "robot_position": -0.6035794019699097,
+          "robot_orientation": -0.01855511963367462,
+          "relative_goal_vector": 0.9999999403953552,
+          "goal_distance": 0.3035726547241211,
+          "robot_velocity": 0.016861192882061005,
+          "future_position": -0.5998164415359497,
+          "ego_step_displacement": 0.2699316143989563
+        },
+        "goal_distance": {
+          "robot_position": -0.09296733140945435,
+          "robot_orientation": 0.24853993952274323,
+          "relative_goal_vector": 0.3035726547241211,
+          "goal_distance": 0.9999999403953552,
+          "robot_velocity": 0.14427150785923004,
+          "future_position": -0.08295240998268127,
+          "ego_step_displacement": 0.27552488446235657
+        },
+        "robot_velocity": {
+          "robot_position": 0.5636018514633179,
+          "robot_orientation": -0.19004493951797485,
+          "relative_goal_vector": 0.016861192882061005,
+          "goal_distance": 0.14427150785923004,
+          "robot_velocity": 0.9999996423721313,
+          "future_position": 0.5712306499481201,
+          "ego_step_displacement": 0.13946399092674255
+        },
+        "future_position": {
+          "robot_position": 0.9998449087142944,
+          "robot_orientation": -0.2736191749572754,
+          "relative_goal_vector": -0.5998164415359497,
+          "goal_distance": -0.08295240998268127,
+          "robot_velocity": 0.5712306499481201,
+          "future_position": 1.0000001192092896,
+          "ego_step_displacement": 0.11417471617460251
+        },
+        "ego_step_displacement": {
+          "robot_position": 0.11035728454589844,
+          "robot_orientation": -0.36661165952682495,
+          "relative_goal_vector": 0.2699316143989563,
+          "goal_distance": 0.27552488446235657,
+          "robot_velocity": 0.13946399092674255,
+          "future_position": 0.11417471617460251,
+          "ego_step_displacement": 0.9999985694885254
+        }
+      }
+    }
+  },
+  "H-JEPA": {
+    "continuous_probes": {
+      "robot_position": {
+        "r2": 0.4522959291934967,
+        "val_r2": 0.504599392414093,
+        "mse": 0.34078821539878845,
+        "best_alpha": 10.0
+      },
+      "robot_orientation": {
+        "r2": 0.08610397577285767,
+        "val_r2": 0.3053447902202606,
+        "mse": 0.3622756004333496,
+        "best_alpha": 100.0
+      },
+      "relative_goal_vector": {
+        "r2": 0.0998411774635315,
+        "val_r2": 0.08538082242012024,
+        "mse": 0.803530752658844,
+        "best_alpha": 100.0
+      },
+      "goal_distance": {
+        "r2": 0.5114898681640625,
+        "val_r2": 0.4168718457221985,
+        "mse": 0.3646261990070343,
+        "best_alpha": 100.0
+      },
+      "robot_velocity": {
+        "r2": 0.0662054643034935,
+        "val_r2": 0.13446973264217377,
+        "mse": 0.13103000819683075,
+        "best_alpha": 1.0
+      },
+      "future_position": {
+        "r2": 0.4491419792175293,
+        "val_r2": 0.49890732765197754,
+        "mse": 0.3445547819137573,
+        "best_alpha": 10.0
+      },
+      "ego_step_displacement": {
+        "r2": 0.3204014301300049,
+        "val_r2": 0.26936620473861694,
+        "mse": 0.00030942223384045064,
+        "best_alpha": 100.0
+      }
+    },
+    "binary_probes": {
+      "collision_risk": {
+        "accuracy": 0.9875080076873799,
+        "auroc": 0.9974066649962415
+      },
+      "goal_reachability": {
+        "accuracy": 0.8965406790518898,
+        "auroc": 0.7701379709187045
+      }
+    },
+    "subspace_geometry": {
+      "effective_rank_participation_ratio": 8.049748420715332,
+      "top8_pca_explained_variance": 0.919806957244873,
+      "probe_direction_cosine_similarity": {
+        "robot_position": {
+          "robot_position": 0.9999998807907104,
+          "robot_orientation": -0.09736379981040955,
+          "relative_goal_vector": -0.5466261506080627,
+          "goal_distance": -0.27989208698272705,
+          "robot_velocity": -0.40462732315063477,
+          "future_position": 0.9996865391731262,
+          "ego_step_displacement": -0.240431010723114
+        },
+        "robot_orientation": {
+          "robot_position": -0.09736379981040955,
+          "robot_orientation": 0.9999999403953552,
+          "relative_goal_vector": 0.16972920298576355,
+          "goal_distance": 0.3545648157596588,
+          "robot_velocity": 0.30848169326782227,
+          "future_position": -0.08604064583778381,
+          "ego_step_displacement": 0.10823666304349899
+        },
+        "relative_goal_vector": {
+          "robot_position": -0.5466261506080627,
+          "robot_orientation": 0.16972920298576355,
+          "relative_goal_vector": 0.9999998807907104,
+          "goal_distance": 0.6246719360351562,
+          "robot_velocity": 0.2982977628707886,
+          "future_position": -0.541606068611145,
+          "ego_step_displacement": 0.4635208249092102
+        },
+        "goal_distance": {
+          "robot_position": -0.27989208698272705,
+          "robot_orientation": 0.3545648157596588,
+          "relative_goal_vector": 0.6246719360351562,
+          "goal_distance": 1.0,
+          "robot_velocity": 0.16326934099197388,
+          "future_position": -0.27010655403137207,
+          "ego_step_displacement": 0.34230583906173706
+        },
+        "robot_velocity": {
+          "robot_position": -0.40462732315063477,
+          "robot_orientation": 0.30848169326782227,
+          "relative_goal_vector": 0.2982977628707886,
+          "goal_distance": 0.16326934099197388,
+          "robot_velocity": 1.0000001192092896,
+          "future_position": -0.3878912329673767,
+          "ego_step_displacement": 0.09035100042819977
+        },
+        "future_position": {
+          "robot_position": 0.9996865391731262,
+          "robot_orientation": -0.08604064583778381,
+          "relative_goal_vector": -0.541606068611145,
+          "goal_distance": -0.27010655403137207,
+          "robot_velocity": -0.3878912329673767,
+          "future_position": 1.0,
+          "ego_step_displacement": -0.230790913105011
+        },
+        "ego_step_displacement": {
+          "robot_position": -0.240431010723114,
+          "robot_orientation": 0.10823666304349899,
+          "relative_goal_vector": 0.4635208249092102,
+          "goal_distance": 0.34230583906173706,
+          "robot_velocity": 0.09035100042819977,
+          "future_position": -0.230790913105011,
+          "ego_step_displacement": 0.9999990463256836
+        }
+      }
+    }
+  },
+  "_multi_seed_stability": {
+    "Baseline": {
+      "robot_position": {
+        "mean_r2": 0.508475641409556,
+        "std_r2": 0.06418901272371628,
+        "n_seeds": 3
+      },
+      "robot_orientation": {
+        "mean_r2": 0.12491254011789958,
+        "std_r2": 0.09801057962791955,
+        "n_seeds": 3
+      },
+      "relative_goal_vector": {
+        "mean_r2": 0.11954135696093242,
+        "std_r2": 0.017056954331221813,
+        "n_seeds": 3
+      },
+      "goal_distance": {
+        "mean_r2": 0.6449141701062521,
+        "std_r2": 0.058177386768556334,
+        "n_seeds": 3
+      },
+      "robot_velocity": {
+        "mean_r2": 0.0758296512067318,
+        "std_r2": 0.024273142049206924,
+        "n_seeds": 3
+      },
+      "future_position": {
+        "mean_r2": 0.5034898916880289,
+        "std_r2": 0.06435662678218104,
+        "n_seeds": 3
+      },
+      "ego_step_displacement": {
+        "mean_r2": 0.36948562661806744,
+        "std_r2": 0.02907765677065305,
+        "n_seeds": 3
+      }
+    },
+    "LeWM": {
+      "robot_position": {
+        "mean_r2": 0.5237841109434763,
+        "std_r2": 0.026505025553611155,
+        "n_seeds": 3
+      },
+      "robot_orientation": {
+        "mean_r2": 0.180282195409139,
+        "std_r2": 0.02890758506508916,
+        "n_seeds": 3
+      },
+      "relative_goal_vector": {
+        "mean_r2": 0.1519953509171804,
+        "std_r2": 0.01716191916086974,
+        "n_seeds": 3
+      },
+      "goal_distance": {
+        "mean_r2": 0.5989720424016317,
+        "std_r2": 0.03594714196991394,
+        "n_seeds": 3
+      },
+      "robot_velocity": {
+        "mean_r2": 0.06299073249101639,
+        "std_r2": 0.014840833553686652,
+        "n_seeds": 3
+      },
+      "future_position": {
+        "mean_r2": 0.5206815302371979,
+        "std_r2": 0.027276330571222505,
+        "n_seeds": 3
+      },
+      "ego_step_displacement": {
+        "mean_r2": 0.3585113187630971,
+        "std_r2": 0.013975288899003912,
+        "n_seeds": 3
+      }
+    },
+    "H-JEPA": {
+      "robot_position": {
+        "mean_r2": 0.47004719575246173,
+        "std_r2": 0.03218679581275118,
+        "n_seeds": 3
+      },
+      "robot_orientation": {
+        "mean_r2": 0.04029209415117899,
+        "std_r2": 0.08657433087055277,
+        "n_seeds": 3
+      },
+      "relative_goal_vector": {
+        "mean_r2": 0.1079121728738149,
+        "std_r2": 0.022982858622812866,
+        "n_seeds": 3
+      },
+      "goal_distance": {
+        "mean_r2": 0.568824291229248,
+        "std_r2": 0.04990776201534209,
+        "n_seeds": 3
+      },
+      "robot_velocity": {
+        "mean_r2": 0.06705160190661748,
+        "std_r2": 0.0008637708834396586,
+        "n_seeds": 3
+      },
+      "future_position": {
+        "mean_r2": 0.466518630584081,
+        "std_r2": 0.0321657860440676,
+        "n_seeds": 3
+      },
+      "ego_step_displacement": {
+        "mean_r2": 0.3488117257754008,
+        "std_r2": 0.025772284846785915,
+        "n_seeds": 3
+      }
+    }
+  }
+}

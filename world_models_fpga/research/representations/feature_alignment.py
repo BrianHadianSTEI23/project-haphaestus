@@ -12,6 +12,10 @@ Computes:
 3. Cross-layer / Cross-model feature correlation
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -118,7 +122,7 @@ def run_feature_alignment_analysis(val_npz_path, sae_dir=None, output_dir=None, 
     obs = val_data["rgb"] # (N, 64, 64, 3)
     N = len(obs)
 
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
+    ckpt_dir = str(_ACTIVE_CKPT_DIR)
 
     base_model = BaselineNavigationPolicy().to(device)
     base_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "baseline_best.pt"), map_location=device))
@@ -228,5 +232,5 @@ def run_feature_alignment_analysis(val_npz_path, sae_dir=None, output_dir=None, 
     return cka_results, sae_stability_results
 
 if __name__ == "__main__":
-    val_npz = os.path.abspath(os.path.join(os.path.dirname(__file__), "../datasets/splits/val_benchmark.npz"))
+    val_npz = str(_ACTIVE_SPLITS_DIR / "val_benchmark.npz")
     run_feature_alignment_analysis(val_npz)

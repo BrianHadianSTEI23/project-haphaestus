@@ -1,19 +1,21 @@
 {
   "dataset": "held_out_test_benchmark.npz",
-  "total_transitions": 2885,
-  "total_macro_sequences": 2405,
+  "total_transitions": 3122,
+  "total_macro_sequences": 2642,
   "lewm": {
-    "latent_mse": 0.08478765189647675,
-    "latent_cosine_similarity": 0.9551910161972046,
-    "collision_prediction_accuracy": 83.29289555549622
+    "latent_mse": 0.049880702048540115,
+    "latent_cosine_similarity": 0.9712644219398499,
+    "collision_prediction_accuracy": 99.26329255104065,
+    "rollout_k5_mse": 0.3564346432685852,
+    "rollout_k5_cosine_similarity": 0.7862309217453003
   },
   "hjepa_micro_k1": {
-    "latent_mse": 0.044607434421777725,
-    "latent_cosine_similarity": 0.9751184582710266
+    "latent_mse": 0.02843872457742691,
+    "latent_cosine_similarity": 0.9810230135917664
   },
   "hjepa_macro_k5": {
-    "latent_mse": 0.41986164450645447,
-    "latent_cosine_similarity": 0.7725601196289062,
-    "macro_collision_accuracy": 81.2889814376831
+    "latent_mse": 0.19095513224601746,
+    "latent_cosine_similarity": 0.8647109866142273,
+    "macro_collision_accuracy": 99.8864471912384
   }
 }

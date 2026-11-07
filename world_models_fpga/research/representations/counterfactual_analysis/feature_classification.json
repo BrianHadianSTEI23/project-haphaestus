@@ -2,678 +2,678 @@
   "baseline_z": [
     {
       "dim": 0,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.7383718490600586,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.4134795665740967,
       "is_selective": true
     },
     {
       "dim": 1,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.7797274589538574,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.4494919776916504,
       "is_selective": true
     },
     {
       "dim": 2,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 3.0976946353912354,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 1.561402440071106,
       "is_selective": true
     },
     {
       "dim": 3,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.870509386062622,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 1.276745319366455,
       "is_selective": true
     },
     {
       "dim": 4,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.994041681289673,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.7551465034484863,
       "is_selective": true
     },
     {
       "dim": 5,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.850287437438965,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.451596736907959,
       "is_selective": true
     },
     {
       "dim": 6,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.3452260494232178,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 1.7885398864746094,
       "is_selective": true
     },
     {
       "dim": 7,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 3.2501447200775146,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.488140344619751,
       "is_selective": true
     },
     {
       "dim": 8,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.564051866531372,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.8428475856781006,
       "is_selective": true
     },
     {
       "dim": 9,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.78562593460083,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.8286657333374023,
       "is_selective": true
     },
     {
       "dim": 10,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.7153005599975586,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.205019235610962,
       "is_selective": true
     },
     {
       "dim": 11,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.5774567127227783,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.194312810897827,
       "is_selective": true
     },
     {
       "dim": 12,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.5258138179779053,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.4475595951080322,
       "is_selective": true
     },
     {
       "dim": 13,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 2.804248094558716,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.6008670330047607,
       "is_selective": true
     },
     {
       "dim": 14,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.2700612545013428,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.345874786376953,
       "is_selective": true
     },
     {
       "dim": 15,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.896167278289795,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.3080103397369385,
       "is_selective": true
     },
     {
       "dim": 16,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.3564043045043945,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.803330898284912,
       "is_selective": true
     },
     {
       "dim": 17,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.4791452884674072,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.895974636077881,
       "is_selective": true
     },
     {
       "dim": 18,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.6607935428619385,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 1.5402286052703857,
       "is_selective": true
     },
     {
       "dim": 19,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.1732091903686523,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 1.7797555923461914,
       "is_selective": true
     },
     {
       "dim": 20,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 2.7679738998413086,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.1157608032226562,
       "is_selective": true
     },
     {
       "dim": 21,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.792102336883545,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.3624048233032227,
       "is_selective": true
     },
     {
       "dim": 22,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 3.032456398010254,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 1.527941107749939,
       "is_selective": true
     },
     {
       "dim": 23,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 2.335094451904297,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.9333291053771973,
       "is_selective": true
     },
     {
       "dim": 24,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 2.706092596054077,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.861801862716675,
       "is_selective": true
     },
     {
       "dim": 25,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.4724395275115967,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.071577548980713,
       "is_selective": true
     },
     {
       "dim": 26,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 2.2208750247955322,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.4907445907592773,
       "is_selective": true
     },
     {
       "dim": 27,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.671787738800049,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.96932315826416,
       "is_selective": true
     },
     {
       "dim": 28,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.7617077827453613,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.0560457706451416,
       "is_selective": true
     },
     {
       "dim": 29,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 3.1328301429748535,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.3149912357330322,
       "is_selective": true
     },
     {
       "dim": 30,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.759364604949951,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.379537582397461,
       "is_selective": true
     },
     {
       "dim": 31,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 2.215209722518921,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.9635629653930664,
       "is_selective": true
     }
   ],
   "lewm_s": [
     {
       "dim": 0,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 3.6073529720306396,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 1.9227732419967651,
       "is_selective": true
     },
     {
       "dim": 1,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.603006601333618,
+      "dominant_factor": "E7_camera_elevation",
+      "category": "Viewpoint / Perspective",
+      "sensitivity": 1.5647797584533691,
       "is_selective": true
     },
     {
       "dim": 2,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 3.5594613552093506,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.2238526344299316,
       "is_selective": true
     },
     {
       "dim": 3,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.6770803928375244,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.071289300918579,
       "is_selective": true
     },
     {
       "dim": 4,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 3.500190496444702,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.320190668106079,
       "is_selective": true
     },
     {
       "dim": 5,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 2.995074987411499,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.058906316757202,
       "is_selective": true
     },
     {
       "dim": 6,
       "dominant_factor": "E1_position_shift",
       "category": "Geometry / Target Location",
-      "sensitivity": 2.67354679107666,
+      "sensitivity": 1.872092604637146,
       "is_selective": true
     },
     {
       "dim": 7,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.0090601444244385,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.504178762435913,
       "is_selective": true
     },
     {
       "dim": 8,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.838561773300171,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.481032609939575,
       "is_selective": true
     },
     {
       "dim": 9,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.076460838317871,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.553412675857544,
       "is_selective": true
     },
     {
       "dim": 10,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.754638910293579,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 1.5811234712600708,
       "is_selective": true
     },
     {
       "dim": 11,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.9862563610076904,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.3289005756378174,
       "is_selective": true
     },
     {
       "dim": 12,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 2.5236024856567383,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.0291457176208496,
       "is_selective": true
     },
     {
       "dim": 13,
       "dominant_factor": "E2_color_shift",
       "category": "Visual Appearance / Color",
-      "sensitivity": 3.567626714706421,
+      "sensitivity": 2.8556113243103027,
       "is_selective": true
     },
     {
       "dim": 14,
       "dominant_factor": "E1_position_shift",
       "category": "Geometry / Target Location",
-      "sensitivity": 3.0498435497283936,
+      "sensitivity": 2.692157506942749,
       "is_selective": true
     },
     {
       "dim": 15,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.3609795570373535,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 1.7373416423797607,
       "is_selective": true
     },
     {
       "dim": 16,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 2.561767816543579,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.453788995742798,
       "is_selective": true
     },
     {
       "dim": 17,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.6855924129486084,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.163644552230835,
       "is_selective": true
     },
     {
       "dim": 18,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 2.605473041534424,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 1.9774872064590454,
       "is_selective": true
     },
     {
       "dim": 19,
       "dominant_factor": "E2_color_shift",
       "category": "Visual Appearance / Color",
-      "sensitivity": 3.357090950012207,
+      "sensitivity": 2.14947509765625,
       "is_selective": true
     },
     {
       "dim": 20,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.991684675216675,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 1.8362890481948853,
       "is_selective": true
     },
     {
       "dim": 21,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.3862922191619873,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.2103922367095947,
       "is_selective": true
     },
     {
       "dim": 22,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.67086124420166,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 1.972747802734375,
       "is_selective": true
     },
     {
       "dim": 23,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.4150445461273193,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.0218279361724854,
       "is_selective": true
     },
     {
       "dim": 24,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 3.423616647720337,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 1.8963834047317505,
       "is_selective": true
     },
     {
       "dim": 25,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 2.8221826553344727,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.765902519226074,
       "is_selective": true
     },
     {
       "dim": 26,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 2.83498477935791,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.3140552043914795,
       "is_selective": true
     },
     {
       "dim": 27,
       "dominant_factor": "E2_color_shift",
       "category": "Visual Appearance / Color",
-      "sensitivity": 2.9734368324279785,
+      "sensitivity": 2.019495964050293,
       "is_selective": true
     },
     {
       "dim": 28,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.092656135559082,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 1.8657985925674438,
       "is_selective": true
     },
     {
       "dim": 29,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.6646883487701416,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 1.7022632360458374,
       "is_selective": true
     },
     {
       "dim": 30,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.0592339038848877,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.224667549133301,
       "is_selective": true
     },
     {
       "dim": 31,
       "dominant_factor": "E1_position_shift",
       "category": "Geometry / Target Location",
-      "sensitivity": 3.0234177112579346,
+      "sensitivity": 2.5102100372314453,
       "is_selective": true
     }
   ],
   "hjepa_s": [
     {
       "dim": 0,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.9006567001342773,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.1856496334075928,
       "is_selective": true
     },
     {
       "dim": 1,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 2.596512794494629,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 2.249840259552002,
       "is_selective": true
     },
     {
       "dim": 2,
       "dominant_factor": "E1_position_shift",
       "category": "Geometry / Target Location",
-      "sensitivity": 3.133552312850952,
+      "sensitivity": 2.4518837928771973,
       "is_selective": true
     },
     {
       "dim": 3,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.0878801345825195,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 1.9630556106567383,
       "is_selective": true
     },
     {
       "dim": 4,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 3.8510031700134277,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.578740119934082,
       "is_selective": true
     },
     {
       "dim": 5,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 2.7868566513061523,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.373582363128662,
       "is_selective": true
     },
     {
       "dim": 6,
       "dominant_factor": "E4_robot_start_pos",
       "category": "Global Position",
-      "sensitivity": 3.745590925216675,
+      "sensitivity": 2.191019296646118,
       "is_selective": true
     },
     {
       "dim": 7,
       "dominant_factor": "E4_robot_start_pos",
       "category": "Global Position",
-      "sensitivity": 3.1309256553649902,
+      "sensitivity": 2.8162732124328613,
       "is_selective": true
     },
     {
       "dim": 8,
-      "dominant_factor": "E2_color_shift",
-      "category": "Visual Appearance / Color",
-      "sensitivity": 2.829887628555298,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.028327703475952,
       "is_selective": true
     },
     {
       "dim": 9,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.767894983291626,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.54862117767334,
       "is_selective": true
     },
     {
       "dim": 10,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 3.5019371509552,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 1.9677695035934448,
       "is_selective": true
     },
     {
       "dim": 11,
       "dominant_factor": "E4_robot_start_pos",
       "category": "Global Position",
-      "sensitivity": 3.651125192642212,
+      "sensitivity": 2.2102367877960205,
       "is_selective": true
     },
     {
       "dim": 12,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.044429063796997,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.614816188812256,
       "is_selective": true
     },
     {
       "dim": 13,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.5085601806640625,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 3.0363950729370117,
       "is_selective": true
     },
     {
       "dim": 14,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.311455011367798,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.9713895320892334,
       "is_selective": true
     },
     {
       "dim": 15,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 3.2534966468811035,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.8074660301208496,
       "is_selective": true
     },
     {
       "dim": 16,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.6394705772399902,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.742600440979004,
       "is_selective": true
     },
     {
       "dim": 17,
       "dominant_factor": "E4_robot_start_pos",
       "category": "Global Position",
-      "sensitivity": 3.1386382579803467,
+      "sensitivity": 2.3786208629608154,
       "is_selective": true
     },
     {
       "dim": 18,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.0491461753845215,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 3.312129020690918,
       "is_selective": true
     },
     {
       "dim": 19,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 2.796081304550171,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.3279261589050293,
       "is_selective": true
     },
     {
       "dim": 20,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.3341293334960938,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 1.2095924615859985,
       "is_selective": true
     },
     {
       "dim": 21,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 3.6034417152404785,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.865654230117798,
       "is_selective": true
     },
     {
       "dim": 22,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.2836530208587646,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.6134064197540283,
       "is_selective": true
     },
     {
       "dim": 23,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.160578966140747,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 1.909621238708496,
       "is_selective": true
     },
     {
       "dim": 24,
-      "dominant_factor": "E3_robot_rotation",
-      "category": "Egocentric Heading",
-      "sensitivity": 3.328415632247925,
+      "dominant_factor": "E4_robot_start_pos",
+      "category": "Global Position",
+      "sensitivity": 2.7038826942443848,
       "is_selective": true
     },
     {
       "dim": 25,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 2.7097551822662354,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 1.9587554931640625,
       "is_selective": true
     },
     {
       "dim": 26,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.4038994312286377,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 2.422788619995117,
       "is_selective": true
     },
     {
       "dim": 27,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 3.4614813327789307,
+      "dominant_factor": "E2_color_shift",
+      "category": "Visual Appearance / Color",
+      "sensitivity": 1.7727224826812744,
       "is_selective": true
     },
     {
       "dim": 28,
       "dominant_factor": "E1_position_shift",
       "category": "Geometry / Target Location",
-      "sensitivity": 3.204871892929077,
+      "sensitivity": 1.8928594589233398,
       "is_selective": true
     },
     {
       "dim": 29,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 3.267096757888794,
+      "dominant_factor": "E3_robot_rotation",
+      "category": "Egocentric Heading",
+      "sensitivity": 1.4946714639663696,
       "is_selective": true
     },
     {
       "dim": 30,
-      "dominant_factor": "E4_robot_start_pos",
-      "category": "Global Position",
-      "sensitivity": 3.338508367538452,
+      "dominant_factor": "E1_position_shift",
+      "category": "Geometry / Target Location",
+      "sensitivity": 2.3468644618988037,
       "is_selective": true
     },
     {
       "dim": 31,
-      "dominant_factor": "E1_position_shift",
-      "category": "Geometry / Target Location",
-      "sensitivity": 3.1730148792266846,
+      "dominant_factor": "E5_obstacle_insertion",
+      "category": "Obstacle / Clearance",
+      "sensitivity": 2.6425583362579346,
       "is_selective": true
     }
   ]

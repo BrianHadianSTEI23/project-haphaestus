@@ -14,6 +14,10 @@ Evaluates:
   - Activation Frequency Distribution
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -43,18 +47,20 @@ def extract_activations(data_npz_path, device="cuda" if torch.cuda.is_available(
     N = len(obs)
     print(f"Extracting latent activations across {N} frames on {device}...")
 
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "lewm_best.pt")) else legacy_ckpt
 
     base_model = BaselineNavigationPolicy().to(device)
-    base_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "baseline_best.pt"), map_location=device))
+    base_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "baseline_best.pt"), map_location=device, weights_only=False), strict=False)
     base_model.eval()
 
     lewm_model = LeWorldModel().to(device)
-    lewm_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "lewm_best.pt"), map_location=device))
+    lewm_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "lewm_best.pt"), map_location=device, weights_only=False), strict=False)
     lewm_model.eval()
 
     hjepa_model = HJEPAModel(stride_k=5).to(device)
-    hjepa_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "hjepa_best.pt"), map_location=device))
+    hjepa_model.load_state_dict(torch.load(os.path.join(ckpt_dir, "hjepa_best.pt"), map_location=device, weights_only=False), strict=False)
     hjepa_model.eval()
 
     batch_size = 256
@@ -178,12 +184,18 @@ def train_all_saes(train_npz, output_dir=None):
         all_sae_metrics[model_key] = {}
 
         for dict_dim in dict_dims:
+            seed_decoders = {}
             for s in seeds:
                 t0 = time.time()
                 sae, metrics = train_single_sae(
                     h_tensor, dict_dim=dict_dim, seed=s, epochs=20, batch_size=128, device=device
                 )
                 t1 = time.time()
+
+                # Store normalized decoder atoms (act_dim, dict_dim) -> transpose to (dict_dim, act_dim)
+                w_dec = sae.W_d.detach().cpu().T
+                w_dec = w_dec / (torch.norm(w_dec, dim=-1, keepdim=True) + 1e-8)
+                seed_decoders[s] = w_dec
 
                 run_id = f"{model_key}_d{dict_dim}_s{s}"
                 all_sae_metrics[model_key][run_id] = metrics
@@ -197,6 +209,11 @@ def train_all_saes(train_npz, output_dir=None):
                     "state_dict": sae.state_dict(),
                     "metrics": metrics
                 }, ckpt_path)
+                if dict_dim == 128 and s == 42:
+                    short_name = {"baseline_z": "Baseline", "lewm_s": "LeWM", "hjepa_s": "H-JEPA"}[model_key]
+                    res_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "results"))
+                    os.makedirs(res_dir, exist_ok=True)
+                    torch.save(sae.state_dict(), os.path.join(res_dir, f"sae_{short_name}.pt"))
 
                 csv_rows.append([
                     model_key, dict_dim, s,
@@ -214,9 +231,22 @@ def train_all_saes(train_npz, output_dir=None):
                       f"Dead: {metrics['dead_features']:2d} ({metrics['dead_fraction']*100:4.1f}%) | "
                       f"Time: {t1-t0:4.1f}s")
 
+            # Compute cross-seed dictionary atom stability between seed 42 and seed 1337
+            if 42 in seed_decoders and 1337 in seed_decoders:
+                cos_mat = torch.abs(seed_decoders[42] @ seed_decoders[1337].T)
+                max_match_42 = float(torch.max(cos_mat, dim=1)[0].mean().item())
+                max_match_1337 = float(torch.max(cos_mat, dim=0)[0].mean().item())
+                stability = 0.5 * (max_match_42 + max_match_1337)
+                all_sae_metrics[model_key][f"d{dict_dim}_cross_seed_stability"] = stability
+                print(f"  >> [Dict={dict_dim}] Cross-Seed Atom Stability (Seed 42 vs 1337): {stability:.4f}")
+
     # Save summary JSON and CSV
     json_path = os.path.join(output_dir, "sae_training_summary.json")
     with open(json_path, "w") as f:
+        json.dump(all_sae_metrics, f, indent=2)
+    res_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "results"))
+    os.makedirs(res_dir, exist_ok=True)
+    with open(os.path.join(res_dir, "sae_analysis.json"), "w") as f:
         json.dump(all_sae_metrics, f, indent=2)
 
     csv_path = os.path.join(output_dir, "sae_training_summary.csv")
@@ -231,5 +261,6 @@ def train_all_saes(train_npz, output_dir=None):
     return all_sae_metrics
 
 if __name__ == "__main__":
-    train_npz = os.path.abspath(os.path.join(os.path.dirname(__file__), "../datasets/splits/train_benchmark.npz"))
-    train_all_saes(train_npz)
+    v2_npz = str(_ACTIVE_SPLITS_DIR / "train_benchmark.npz")
+    legacy_npz = str(_ACTIVE_SPLITS_DIR / "train_benchmark.npz")
+    train_all_saes(v2_npz if os.path.exists(v2_npz) else legacy_npz)

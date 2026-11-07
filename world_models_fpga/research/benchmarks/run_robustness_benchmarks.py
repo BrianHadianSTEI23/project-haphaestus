@@ -8,6 +8,10 @@ Evaluates closed-loop recovery when subjected to unexpected kinetic disturbances
   - Measures recovery rate, collision rate, and path divergence
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -28,7 +32,9 @@ def run_robustness_benchmarks(episodes=20, output_dir=None):
         output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "robustness"))
     os.makedirs(output_dir, exist_ok=True)
 
-    ckpt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../checkpoints"))
+    v2_ckpt = str(_ACTIVE_CKPT_DIR)
+    legacy_ckpt = str(_ACTIVE_CKPT_DIR)
+    ckpt_dir = v2_ckpt if os.path.exists(os.path.join(v2_ckpt, "lewm_best.pt")) else legacy_ckpt
     evaluator = BenchmarkEvaluator()
 
     agents = [

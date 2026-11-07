@@ -1,0 +1,392 @@
+{
+  "Baseline": {
+    "E1_position_shift": {
+      "target_circuit": "target_localization_circuit",
+      "top8_visual_subspace_effect": 0.018214723095297813,
+      "top8_visual_subspace_ci95": 0.005277756031690943,
+      "random8_subspace_control_effect": 0.043064042925834656,
+      "random8_subspace_control_ci95": 0.005852225402456452,
+      "subspace_selectivity_gain": -0.024849319830536842,
+      "goal_conditioning_patch_effect": 0.4584522545337677,
+      "goal_conditioning_patch_ci95": 0.026587038507991188,
+      "top8_dimensions": [
+        18,
+        23,
+        31,
+        27,
+        21,
+        17,
+        16,
+        5
+      ]
+    },
+    "E2_color_shift": {
+      "target_circuit": "appearance_invariance_circuit",
+      "top8_visual_subspace_effect": 0.3671093285083771,
+      "top8_visual_subspace_ci95": 0.020340625719999016,
+      "random8_subspace_control_effect": 0.289427787065506,
+      "random8_subspace_control_ci95": 0.025150094235304805,
+      "subspace_selectivity_gain": 0.0776815414428711,
+      "goal_conditioning_patch_effect": 3.6160152205866325e-08,
+      "goal_conditioning_patch_ci95": 5.483006375745549e-09,
+      "top8_dimensions": [
+        5,
+        23,
+        29,
+        16,
+        26,
+        10,
+        18,
+        17
+      ]
+    },
+    "E3_robot_rotation": {
+      "target_circuit": "egocentric_frame_transform_circuit",
+      "top8_visual_subspace_effect": 0.024649973958730698,
+      "top8_visual_subspace_ci95": 0.0038603969197339985,
+      "random8_subspace_control_effect": 0.00930140819400549,
+      "random8_subspace_control_ci95": 0.001980393123336741,
+      "subspace_selectivity_gain": 0.015348565764725208,
+      "goal_conditioning_patch_effect": 0.7066510915756226,
+      "goal_conditioning_patch_ci95": 0.012381420295143688,
+      "top8_dimensions": [
+        16,
+        22,
+        23,
+        1,
+        19,
+        25,
+        18,
+        3
+      ]
+    },
+    "E5_intermediate_obstacle": {
+      "target_circuit": "obstacle_collision_avoidance_circuit",
+      "top8_visual_subspace_effect": 0.30245062708854675,
+      "top8_visual_subspace_ci95": 0.021605010660444318,
+      "random8_subspace_control_effect": 0.1893324851989746,
+      "random8_subspace_control_ci95": 0.01861431833286576,
+      "subspace_selectivity_gain": 0.11311814188957214,
+      "goal_conditioning_patch_effect": 0.004870192147791386,
+      "goal_conditioning_patch_ci95": 0.0011587183095717293,
+      "top8_dimensions": [
+        5,
+        27,
+        29,
+        1,
+        12,
+        23,
+        19,
+        24
+      ]
+    },
+    "E6_shape_mutation": {
+      "target_circuit": "shape_invariance_circuit",
+      "top8_visual_subspace_effect": 0.3425337076187134,
+      "top8_visual_subspace_ci95": 0.02718627301983984,
+      "random8_subspace_control_effect": 0.36626631021499634,
+      "random8_subspace_control_ci95": 0.03194219012224139,
+      "subspace_selectivity_gain": -0.02373260259628296,
+      "goal_conditioning_patch_effect": 0.003086145268753171,
+      "goal_conditioning_patch_ci95": 0.002412402710548209,
+      "top8_dimensions": [
+        5,
+        16,
+        18,
+        27,
+        12,
+        31,
+        3,
+        17
+      ]
+    },
+    "E7_camera_viewpoint": {
+      "target_circuit": "viewpoint_pitch_calibration_circuit",
+      "top8_visual_subspace_effect": 0.22470207512378693,
+      "top8_visual_subspace_ci95": 0.02596997130509928,
+      "random8_subspace_control_effect": 0.1677655726671219,
+      "random8_subspace_control_ci95": 0.022632054252266942,
+      "subspace_selectivity_gain": 0.05693650245666504,
+      "goal_conditioning_patch_effect": 5.642572986630512e-08,
+      "goal_conditioning_patch_ci95": 9.61140276273924e-09,
+      "top8_dimensions": [
+        16,
+        29,
+        12,
+        22,
+        26,
+        19,
+        18,
+        3
+      ]
+    }
+  },
+  "LeWM": {
+    "E1_position_shift": {
+      "target_circuit": "target_localization_circuit",
+      "top8_subspace_effect": 0.28922003507614136,
+      "top8_subspace_ci95": 0.009557465521521301,
+      "random8_control_effect": 0.1530938744544983,
+      "random8_control_ci95": 0.005855063594648256,
+      "subspace_selectivity_gain": 0.13612616062164307,
+      "ego_displacement_patch_effect": 0.294971227645874,
+      "collision_head_top8_patch_effect": 0.4758845269680023,
+      "collision_head_top8_ci95": 0.045465077635019176,
+      "collision_head_random8_control": 0.3822174668312073,
+      "top8_dimensions": [
+        31,
+        11,
+        23,
+        16,
+        2,
+        25,
+        10,
+        18
+      ]
+    },
+    "E2_color_shift": {
+      "target_circuit": "appearance_invariance_circuit",
+      "top8_subspace_effect": 0.4762827157974243,
+      "top8_subspace_ci95": 0.015179414084352652,
+      "random8_control_effect": 0.11642387509346008,
+      "random8_control_ci95": 0.003860788795012376,
+      "subspace_selectivity_gain": 0.35985884070396423,
+      "ego_displacement_patch_effect": 0.17281554639339447,
+      "collision_head_top8_patch_effect": 0.546413242816925,
+      "collision_head_top8_ci95": 0.0822673574659293,
+      "collision_head_random8_control": 0.5749597549438477,
+      "top8_dimensions": [
+        13,
+        7,
+        31,
+        19,
+        15,
+        16,
+        10,
+        12
+      ]
+    },
+    "E3_robot_rotation": {
+      "target_circuit": "egocentric_frame_transform_circuit",
+      "top8_subspace_effect": 0.286025732755661,
+      "top8_subspace_ci95": 0.008255186972928012,
+      "random8_control_effect": 0.1467783898115158,
+      "random8_control_ci95": 0.007569067990742138,
+      "subspace_selectivity_gain": 0.1392473429441452,
+      "ego_displacement_patch_effect": 0.1968105137348175,
+      "collision_head_top8_patch_effect": 0.5679288506507874,
+      "collision_head_top8_ci95": 0.05669419912784956,
+      "collision_head_random8_control": 0.4575481414794922,
+      "top8_dimensions": [
+        31,
+        11,
+        22,
+        9,
+        3,
+        10,
+        12,
+        7
+      ]
+    },
+    "E5_intermediate_obstacle": {
+      "target_circuit": "obstacle_collision_avoidance_circuit",
+      "top8_subspace_effect": 0.38800013065338135,
+      "top8_subspace_ci95": 0.01011365827666914,
+      "random8_control_effect": 0.16304826736450195,
+      "random8_control_ci95": 0.0032280412039919805,
+      "subspace_selectivity_gain": 0.2249518632888794,
+      "ego_displacement_patch_effect": 0.19083210825920105,
+      "collision_head_top8_patch_effect": 0.896004319190979,
+      "collision_head_top8_ci95": 0.01917706350200807,
+      "collision_head_random8_control": 0.697896420955658,
+      "top8_dimensions": [
+        25,
+        3,
+        7,
+        30,
+        4,
+        10,
+        22,
+        26
+      ]
+    },
+    "E6_shape_mutation": {
+      "target_circuit": "shape_invariance_circuit",
+      "top8_subspace_effect": 0.27885672450065613,
+      "top8_subspace_ci95": 0.011448140283923724,
+      "random8_control_effect": 0.14741675555706024,
+      "random8_control_ci95": 0.00828453417269971,
+      "subspace_selectivity_gain": 0.1314399689435959,
+      "ego_displacement_patch_effect": 0.30490240454673767,
+      "collision_head_top8_patch_effect": 0.5720145106315613,
+      "collision_head_top8_ci95": 0.15226925291610827,
+      "collision_head_random8_control": 0.1028108149766922,
+      "top8_dimensions": [
+        18,
+        3,
+        31,
+        29,
+        1,
+        10,
+        11,
+        24
+      ]
+    },
+    "E7_camera_viewpoint": {
+      "target_circuit": "viewpoint_pitch_calibration_circuit",
+      "top8_subspace_effect": 0.3678183853626251,
+      "top8_subspace_ci95": 0.007989539410454247,
+      "random8_control_effect": 0.23074284195899963,
+      "random8_control_ci95": 0.008880358380259691,
+      "subspace_selectivity_gain": 0.1370755434036255,
+      "ego_displacement_patch_effect": 0.19655901193618774,
+      "collision_head_top8_patch_effect": 0.6147037148475647,
+      "collision_head_top8_ci95": 0.06844381623265319,
+      "collision_head_random8_control": 0.44455718994140625,
+      "top8_dimensions": [
+        3,
+        1,
+        18,
+        22,
+        12,
+        28,
+        10,
+        19
+      ]
+    }
+  },
+  "H-JEPA": {
+    "E1_position_shift": {
+      "target_circuit": "target_localization_circuit",
+      "macro_top8_subspace_effect": 0.10635368525981903,
+      "macro_top8_subspace_ci95": 0.023406169236863946,
+      "macro_random8_control_effect": 0.07038145512342453,
+      "macro_random8_control_ci95": 0.019767426179992862,
+      "subspace_selectivity_gain": 0.0359722301363945,
+      "macro_subgoal_branch_patch_effect": 0.2759619653224945,
+      "macro_subgoal_branch_ci95": 0.03346626233552578,
+      "micro_state_branch_patch_effect": 0.09531255066394806,
+      "micro_state_branch_ci95": 0.019389458817642407,
+      "top8_dimensions": [
+        30,
+        28,
+        16,
+        5,
+        19,
+        23,
+        10,
+        11
+      ]
+    },
+    "E2_color_shift": {
+      "target_circuit": "appearance_invariance_circuit",
+      "macro_top8_subspace_effect": 0.1937456876039505,
+      "macro_top8_subspace_ci95": 0.026704418703888552,
+      "macro_random8_control_effect": 0.10390456765890121,
+      "macro_random8_control_ci95": 0.016805936518603636,
+      "subspace_selectivity_gain": 0.08984111994504929,
+      "macro_subgoal_branch_patch_effect": 0.060587331652641296,
+      "macro_subgoal_branch_ci95": 0.016013217997190757,
+      "micro_state_branch_patch_effect": 0.01890246756374836,
+      "micro_state_branch_ci95": 0.004735679389754115,
+      "top8_dimensions": [
+        16,
+        21,
+        14,
+        13,
+        19,
+        30,
+        4,
+        0
+      ]
+    },
+    "E3_robot_rotation": {
+      "target_circuit": "egocentric_frame_transform_circuit",
+      "macro_top8_subspace_effect": 0.2069547176361084,
+      "macro_top8_subspace_ci95": 0.028339004047270057,
+      "macro_random8_control_effect": 0.03949563950300217,
+      "macro_random8_control_ci95": 0.012655889568055393,
+      "subspace_selectivity_gain": 0.16745907813310623,
+      "macro_subgoal_branch_patch_effect": 0.223968967795372,
+      "macro_subgoal_branch_ci95": 0.0328952307992551,
+      "micro_state_branch_patch_effect": 0.06890185177326202,
+      "micro_state_branch_ci95": 0.016295466273981908,
+      "top8_dimensions": [
+        30,
+        16,
+        19,
+        14,
+        4,
+        21,
+        3,
+        5
+      ]
+    },
+    "E5_intermediate_obstacle": {
+      "target_circuit": "obstacle_collision_avoidance_circuit",
+      "macro_top8_subspace_effect": 0.0008754581212997437,
+      "macro_top8_subspace_ci95": 0.0017158979580866563,
+      "macro_random8_control_effect": 0.1385781615972519,
+      "macro_random8_control_ci95": 0.021414246979376744,
+      "subspace_selectivity_gain": -0.13770270347595215,
+      "macro_subgoal_branch_patch_effect": 0.061441127210855484,
+      "macro_subgoal_branch_ci95": 0.01769174154961131,
+      "micro_state_branch_patch_effect": 0.15157407522201538,
+      "micro_state_branch_ci95": 0.023601394531968106,
+      "top8_dimensions": [
+        30,
+        8,
+        21,
+        11,
+        12,
+        2,
+        10,
+        4
+      ]
+    },
+    "E6_shape_mutation": {
+      "target_circuit": "shape_invariance_circuit",
+      "macro_top8_subspace_effect": 0.1487833708524704,
+      "macro_top8_subspace_ci95": 0.024373967825019882,
+      "macro_random8_control_effect": 0.10012637078762054,
+      "macro_random8_control_ci95": 0.019304361229749066,
+      "subspace_selectivity_gain": 0.048657000064849854,
+      "macro_subgoal_branch_patch_effect": 0.06579168885946274,
+      "macro_subgoal_branch_ci95": 0.017275438375176345,
+      "micro_state_branch_patch_effect": 0.02604377456009388,
+      "micro_state_branch_ci95": 0.012234153479497587,
+      "top8_dimensions": [
+        11,
+        9,
+        12,
+        30,
+        5,
+        26,
+        10,
+        4
+      ]
+    },
+    "E7_camera_viewpoint": {
+      "target_circuit": "viewpoint_pitch_calibration_circuit",
+      "macro_top8_subspace_effect": 0.20612287521362305,
+      "macro_top8_subspace_ci95": 0.026312908200742887,
+      "macro_random8_control_effect": 0.19058847427368164,
+      "macro_random8_control_ci95": 0.027531744415088495,
+      "subspace_selectivity_gain": 0.015534400939941406,
+      "macro_subgoal_branch_patch_effect": 0.09214439243078232,
+      "macro_subgoal_branch_ci95": 0.022800134764092587,
+      "micro_state_branch_patch_effect": 0.10718736052513123,
+      "micro_state_branch_ci95": 0.02389108628825107,
+      "top8_dimensions": [
+        11,
+        29,
+        23,
+        2,
+        20,
+        0,
+        21,
+        28
+      ]
+    }
+  }
+}

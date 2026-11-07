@@ -1,4 +1,4 @@
 Model,Recovery Rate (%),Collision Rate (%),Goal Localization Error (m),Path Efficiency
-Baseline Policy,10.0,0.0,0.645,1.000
-LeWorldModel (LeWM),25.0,0.0,0.567,1.000
-H-JEPA Hierarchical,15.0,0.0,0.578,1.000
+CNN_Reactive_Baseline,80.0,30.0,0.294,0.988
+LeWorldModel_SingleScale,55.0,25.0,0.349,0.939
+H_JEPA_Hierarchical,100.0,20.0,0.234,0.992
