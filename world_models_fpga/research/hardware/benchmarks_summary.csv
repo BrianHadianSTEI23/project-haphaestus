@@ -1,8 +1,9 @@
-Configuration,Platform,Median Latency (ms),P95 Latency (ms),P99 Latency (ms),Throughput (FPS),Power (W),Energy per Inference (mJ),FPGA LUTs,FPGA FFs,FPGA BRAM,FPGA DSPs,PS Utilization,Memory Bandwidth,Control Frequency
-Original CPU Model,Intel Core Ultra 7,4.4171,8.0839,14.8177,226.4,28.0,123.6781,-,-,-,-,48.2%,"1,420 MB/s",70 Hz
-Original GPU Model,NVIDIA RTX 3050 Laptop,0.714,1.2936,2.3565,1400.5,38.5,27.4895,-,-,-,-,12.0%,"4,850 MB/s",140 Hz
-Extracted CPU Model,Intel Core Ultra 7,6.0648,11.4766,27.9226,164.9,18.5,112.1987,-,-,-,-,22.5%,380 MB/s,130 Hz
-Extracted Kria ARM CPU,ARM Cortex-A53 (Kria PS),22.925,23.410,24.120,43.6,2.85,65.3362,-,-,-,-,98.4%,145 MB/s,43 Hz
-Extracted FPGA Model (Execution),AMD Kria KR260 PL (200 MHz),0.109,0.1115,0.1122,9172.2,0.65,0.0709,"18,450 (15.8%)","24,800 (10.6%)",35 (24.3%),128 (10.3%),0.0% (Dedicated PL),0.0 MB/s (On-Chip),"9,174 Hz"
-Extracted FPGA Model (End-to-End),AMD Kria KR260 SOM (PS+PL),0.1242,0.1267,0.1274,8049.9,2.8,0.3478,"18,450 (15.8%)","24,800 (10.6%)",35 (24.3%),128 (10.3%),4.2%,12.3 MB/s (DMA Stream),"8,051 Hz"
-Complete Robotic System,JetAuto Robot (Sensor to Motors),3.4742,3.4767,3.4774,287.8,8.5,29.5309,"18,450 (15.8%)","24,800 (10.6%)",35 (24.3%),128 (10.3%),8.5%,15.0 MB/s,10 Hz (Locked Real-Time)
+Configuration,Platform,Measurement Type,Median Latency (ms),P95 Latency (ms),P99 Latency (ms),Throughput (FPS),Power (W),Energy per Inference (mJ),FPGA LUTs,FPGA FFs,FPGA BRAM,FPGA DSPs,PS Utilization,Memory Bandwidth,Control Frequency
+Original Baseline (Host CPU),Host CPU (PyTorch FP32),host_cpu_measured,5.4731,5.5573,5.6528,182.7,28.0,153.2471,-,-,-,-,Host CPU,Host RAM,183 Hz max
+Original H-JEPA 24-MPC (Host CPU),Host CPU (PyTorch FP32),host_cpu_measured,7.1049,7.1869,7.2985,140.7,28.0,198.9359,-,-,-,-,Host CPU,Host RAM,141 Hz max
+Original H-JEPA 24-MPC (Host GPU),NVIDIA RTX 3050 Laptop GPU,host_gpu_measured,0.5921,0.7297,0.8339,1688.9,35.0,20.7235,-,-,-,-,Host CPU+GPU,PCIe / GDDR6,1000 Hz max
+Extracted Compact 24-MPC (Host CPU),Host CPU (PyTorch FP32),host_cpu_measured,3.779,5.8468,6.4602,264.6,18.5,69.9119,-,-,-,-,Host CPU,Host RAM,265 Hz max
+Extracted Compact 24-MPC (KR260 ARM PS),AMD Kria KR260 ARM Cortex-A53 (1.33 GHz),physical_kr260_ps_measured,61.775,61.775,61.775,16.2,3.4,210.035,0 (PS Only),0 (PS Only),0 (PS Only),0 (PS Only),1 Core Active,LPDDR4,16.2 Hz
+FPGA PL Kernel (1 Macro + 1 Micro),XCK26 PL @ 200 MHz (RTL Cycle-Exact),rtl_cycle_exact_and_vivado_synth,0.0216,0.0216,0.0216,46221.4,0.365,0.0079,"3,579 (3.06%)","3,749 (1.60%)",0 (0.00%),13 (1.04%),0.0% (PL Core Only),0.0 MB/s (On-Chip ROM),46221 Hz (4327 cycles)
+FPGA PL Kernel (24 Macro MPC + 1 Micro),XCK26 PL @ 200 MHz (RTL Cycle-Exact),rtl_cycle_exact_and_vivado_synth,0.2723,0.2723,0.2723,3671.9,0.365,0.0994,"3,579 (3.06%)","3,749 (1.60%)",0 (0.00%),13 (1.04%),0.0% (PL Core Only),0.0 MB/s (On-Chip ROM),3672 Hz (54467 cycles)
+KR260 Hybrid PS(CNN) + PL(24-MPC+Micro),AMD Kria KR260 SOM (ARM PS + XCK26 PL),hybrid_ps_measured_plus_rtl_cycle_exact,42.8655,42.8655,42.8655,23.3,3.4,145.7428,"3,579 (3.06%)","3,749 (1.60%)",0 (0.00%),13 (1.04%),Tier-1 CNN on PS,AXI4-Stream 35 words,23.3 Hz (10 Hz Real-Time)

@@ -12,6 +12,10 @@ Exports:
   3. Golden output vectors (golden_outputs_q88.hex)
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import numpy as np
@@ -96,11 +100,14 @@ class BitExactQ88Model:
 def export_model_q88_weights():
     out_dir = os.path.abspath(os.path.dirname(__file__))
     hex_dir = os.path.join(out_dir, "hex_weights")
+    vec_dir = os.path.abspath(os.path.join(out_dir, "../../fpga/vectors"))
     os.makedirs(hex_dir, exist_ok=True)
+    os.makedirs(vec_dir, exist_ok=True)
 
     ckpt_path = os.path.abspath(os.path.join(out_dir, "../extraction/extracted_model/reconstructed_compact/model_reconstructed_compact.pt"))
     model = ReconstructedCompactModel(latent_dim=16, stride_k=5, hidden_dim=32)
-    model.load_state_dict(torch.load(ckpt_path, map_location="cpu"))
+    sd_raw = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+    model.load_state_dict(sd_raw, strict=False)
     model.eval()
 
     sd = model.state_dict()
@@ -113,7 +120,23 @@ def export_model_q88_weights():
         q88_dict[k] = q88_arr
         safe_name = k.replace(".", "_") + ".hex"
         export_to_hex_file(q88_arr, os.path.join(hex_dir, safe_name))
+        export_to_hex_file(q88_arr, os.path.join(vec_dir, safe_name))
         print(f"Exported: {safe_name:<35} | Shape: {str(q88_arr.shape):<15} | Words: {q88_arr.size:,}")
+
+    # Also export a portable .npz bundle of real trained Q8.8 weights for Kria KR260 physical benchmarking
+    npz_bundle = {k: v for k, v in q88_dict.items()}
+    ckpt_v2_dir = str(_ACTIVE_CKPT_DIR)
+    if not os.path.exists(os.path.join(ckpt_v2_dir, "baseline_best.pt")):
+        ckpt_v2_dir = str(_ACTIVE_CKPT_DIR)
+    for name, fname in [("baseline", "baseline_best.pt"), ("lewm", "lewm_best.pt"), ("hjepa", "hjepa_best.pt")]:
+        p = os.path.join(ckpt_v2_dir, fname)
+        if os.path.exists(p):
+            m_sd = torch.load(p, map_location="cpu", weights_only=True)
+            for mk, mv in m_sd.items():
+                npz_bundle[f"{name}.{mk}"] = float_to_q88(mv.cpu().numpy())
+    npz_out_path = os.path.join(out_dir, "q88_exported_weights.npz")
+    np.savez(npz_out_path, **npz_bundle)
+    print(f"Exported portable Q8.8 weight bundle: {npz_out_path}")
 
     # Generate Golden Verification Test Vectors for RTL Testbench
     # Test vector: 16-word latent state S_k + 3-word candidate action A_k = 19 words

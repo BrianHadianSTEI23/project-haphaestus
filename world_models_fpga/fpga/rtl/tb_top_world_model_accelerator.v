@@ -257,15 +257,55 @@ module tb_top_world_model_accelerator;
             end
         end
 
+        // Step 10: Test AXI4-Stream Ingress Mode (Clear registers first, then stream 35 words + TLAST)
+        $display("\n--- TESTING AXI4-STREAM DMA PACKET INGRESS (35 WORDS + TLAST) ---");
+        for (i = 0; i < 16; i = i + 1) axi_write(10'h010 + (i * 4), 32'd0);
+        for (i = 0; i < 3; i = i + 1)  axi_write(10'h050 + (i * 4), 32'd0);
+        for (i = 0; i < 16; i = i + 1) axi_write(10'h060 + (i * 4), 32'd0);
+        // Enable stream auto-start (bit 2 = 1) and soft reset stream pointer (bit 1 = 1)
+        axi_write(10'h000, 32'h00000006);
+        @(posedge clk);
+        @(posedge clk);
+
+        for (i = 0; i < 35; i = i + 1) begin
+            @(posedge clk);
+            while (!s_axis_tready) @(posedge clk);
+            s_axis_tvalid <= 1'b1;
+            if (i < 19)
+                s_axis_tdata <= vec_macro_in[i];
+            else
+                s_axis_tdata <= vec_policy_in[16 + (i - 19)];
+            s_axis_tlast <= (i == 34) ? 1'b1 : 1'b0;
+        end
+        @(posedge clk);
+        s_axis_tvalid <= 1'b0;
+        s_axis_tlast  <= 1'b0;
+
+        // Wait for interrupt triggered by TLAST
+        @(posedge clk);
+        while (!interrupt) @(posedge clk);
+        $display("[Time %0t ns] *** AXI4-STREAM INTERRUPT DETECTED! ***", $time);
+
+        for (i = 0; i < 16; i = i + 1) begin
+            axi_read(10'h0A0 + (i * 4), read_val);
+            if (read_val[15:0] !== golden_next_s[i]) mismatch_count = mismatch_count + 1;
+        end
+        axi_read(10'h0E0, read_val);
+        if (read_val[15:0] !== golden_col_prob[0]) mismatch_count = mismatch_count + 1;
+        for (i = 0; i < 3; i = i + 1) begin
+            axi_read(10'h0E4 + (i * 4), read_val);
+            if (read_val[15:0] !== golden_action[i]) mismatch_count = mismatch_count + 1;
+        end
+
         // Final Summary
         $display("\n=======================================================");
         if (mismatch_count == 0) begin
             $display("  [PASSED] 100%% BIT-ACCURATE HARDWARE EQUIVALENCE!   ");
-            $display("  Total Verified Outputs: 20 / 20 words               ");
+            $display("  Total Verified Outputs: 20 / 20 words (AXI-Lite & AXI-Stream)");
             $display("  Numerical Relative Error E_rel = 0.000000           ");
             $display("=======================================================\n");
         end else begin
-            $display("  [FAILED] Found %0d mismatches out of 20 outputs!     ", mismatch_count);
+            $display("  [FAILED] Found %0d mismatches!                      ", mismatch_count);
             $display("=======================================================\n");
         end
 

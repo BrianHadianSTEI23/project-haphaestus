@@ -20,6 +20,10 @@ Measures:
   5. Overflow/Saturation Rate per Format
 """
 
+import sys as _hsys
+from pathlib import Path as _HPath
+_hsys.path.insert(0, str(_HPath(__file__).resolve().parents[2]))
+from research.datasets.dataset_config import SPLITS_DIR as _ACTIVE_SPLITS_DIR, CKPT_DIR as _ACTIVE_CKPT_DIR  # noqa: E402
 import os
 import sys
 import json
@@ -201,7 +205,7 @@ def run_quantization_sweeps():
     print(f"[Loaded Reference Model] {ckpt_path}")
 
     # Load Independent Validation Suite
-    val_path = os.path.abspath(os.path.join(out_dir, "../datasets/splits/independent_validation_suite.npz"))
+    val_path = str(_ACTIVE_SPLITS_DIR / "independent_validation_suite.npz")
     if not os.path.exists(val_path):
         # Fallback to test benchmark if independent suite not found
         val_path = os.path.abspath(os.path.join(out_dir, "../datasets/splits/test_benchmark_100ep.npz"))

@@ -1,44 +1,61 @@
 {
+  "weight_source": "trained_q88_bundle:q88_exported_weights.npz",
+  "telemetry_start": {
+    "hostname": "kria",
+    "machine_arch": "aarch64",
+    "sensors_present": true,
+    "board_power_w": 3.41,
+    "board_current_ma": 677.0,
+    "board_voltage_v": 5.031,
+    "temp_ps_lpd_c": 37.55,
+    "temp_ps_fpd_c": 37.72,
+    "temp_pl_c": 35.17,
+    "cpu_freq_ghz": 1.333
+  },
   "telemetry": {
-    "board_power_w": 4.13,
-    "board_current_ma": 806.0,
-    "board_voltage_v": 5.03,
-    "temp_ps_lpd_c": 35.66,
-    "temp_ps_fpd_c": 37.85,
-    "temp_pl_c": 34.97,
+    "hostname": "kria",
+    "machine_arch": "aarch64",
+    "sensors_present": true,
+    "board_power_w": 3.4,
+    "board_current_ma": 676.0,
+    "board_voltage_v": 5.031,
+    "temp_ps_lpd_c": 37.16,
+    "temp_ps_fpd_c": 38.08,
+    "temp_pl_c": 35.78,
     "cpu_freq_ghz": 1.333
   },
   "baseline": {
-    "arm_cortex_a53_ms": 5.381,
-    "fpga_pl_us": 0.47,
-    "speedup": 1238.6
+    "measurement_type": "physical_kr260_ps_measured",
+    "arm_cortex_a53_mlp_head_ms": 0.6034,
+    "arm_cortex_a53_ms": 43.181
   },
   "lewm": {
-    "arm_cortex_a53_ms": 5.39,
-    "fpga_pl_us": 0.48,
-    "speedup": 1237.2
+    "measurement_type": "physical_kr260_ps_measured",
+    "arm_cortex_a53_single_pred_ms": 0.6172,
+    "arm_cortex_a53_ms": 57.391
   },
   "hjepa": {
-    "arm_cortex_a53_ms": 5.393,
-    "fpga_pl_us": 0.48,
-    "speedup": 1235.3
+    "measurement_type": "physical_kr260_ps_measured",
+    "arm_cortex_a53_single_pred_ms": 0.6204,
+    "arm_cortex_a53_ms": 57.467
   },
   "option_b_compact": {
-    "arm_cortex_a53_total_ms": 22.925,
-    "arm_cortex_a53_tier1_cnn_ms": 4.62,
-    "arm_cortex_a53_tier34_mpc24_ms": 17.745,
-    "arm_cortex_a53_tier5_policy_ms": 0.56,
-    "arm_cortex_a53_fps": 43.6,
-    "fpga_pl_kernel_ms": 0.109,
-    "fpga_pl_kernel_fps": 9174.3,
-    "fpga_pl_power_w": 0.65,
-    "fpga_pl_energy_mj": 0.0708,
-    "fpga_som_e2e_ms": 0.1242,
-    "fpga_som_e2e_fps": 8051.5,
-    "fpga_som_power_w": 2.8,
-    "fpga_som_energy_mj": 0.3478,
-    "robot_control_loop_ms": 3.4742,
-    "robot_control_loop_hz": 287.8,
-    "speedup_vs_arm": 210.3
+    "measurement_type_ps": "physical_kr260_ps_measured",
+    "measurement_type_pl": "rtl_cycle_accurate_simulation_at_200mhz",
+    "arm_cortex_a53_total_ms": 61.775,
+    "arm_cortex_a53_tier1_cnn_ms": 42.578,
+    "arm_cortex_a53_single_macro_plus_micro_ms": 1.3726,
+    "arm_cortex_a53_tier34_mpc24_ms": 18.612,
+    "arm_cortex_a53_tier5_policy_ms": 0.585,
+    "arm_cortex_a53_fps": 16.2,
+    "fpga_pl_single_pass_cycles": 4327,
+    "fpga_pl_single_pass_ms": 0.021635,
+    "fpga_pl_mpc24_cycles": 54467,
+    "fpga_pl_kernel_ms": 0.272335,
+    "fpga_pl_kernel_fps": 3671.9,
+    "fpga_som_hybrid_e2e_ms": 42.8655,
+    "fpga_som_hybrid_e2e_fps": 23.3,
+    "head_speedup_single_vs_arm": 63.44,
+    "head_speedup_mpc24_vs_arm": 70.49
   }
 }

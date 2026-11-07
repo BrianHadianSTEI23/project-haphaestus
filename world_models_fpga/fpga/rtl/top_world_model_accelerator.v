@@ -222,12 +222,14 @@ module top_world_model_accelerator #(
     end
 
     assign interrupt = reg_status[1];
-    assign s_axis_tready = 1'b1; // Always accept streaming data
+    assign s_axis_tready = (fsm_state == FSM_IDLE); // Accept streaming packets when idle
+
+    reg [5:0] axis_word_idx;
 
     // ========================================================================
-    // AXI4-Lite Bus Protocol Implementation
+    // AXI4-Lite & AXI4-Stream Bus Protocol Implementation
     // ========================================================================
-    // AXI Write Handshake
+    // AXI Write & Stream Ingress Handshake
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s_axi_awready <= 1'b0;
@@ -235,6 +237,7 @@ module top_world_model_accelerator #(
             s_axi_bvalid  <= 1'b0;
             s_axi_bresp   <= 2'b00;
             reg_ctrl      <= 32'd0;
+            axis_word_idx <= 6'd0;
         end else begin
             // Write Address Ready
             if (!s_axi_awready && s_axi_awvalid && s_axi_wvalid) begin
@@ -253,10 +256,14 @@ module top_world_model_accelerator #(
                 s_axi_bvalid <= 1'b0;
             end
 
-            // Auto-clear start bit
+            // Auto-clear start bit and soft_reset bit
             if (reg_ctrl[0]) reg_ctrl[0] <= 1'b0;
+            if (reg_ctrl[1]) begin
+                reg_ctrl[1] <= 1'b0;
+                axis_word_idx <= 6'd0;
+            end
 
-            // Memory Mapped Registers Write
+            // Memory Mapped Registers Write (AXI4-Lite) or Streaming Packet Ingress (AXI4-Stream)
             if (s_axi_awready && s_axi_wready) begin
                 case (s_axi_awaddr[9:2])
                     8'h00: reg_ctrl <= s_axi_wdata;
@@ -272,6 +279,23 @@ module top_world_model_accelerator #(
                     8'h20, 8'h21, 8'h22, 8'h23, 8'h24, 8'h25, 8'h26, 8'h27:
                         in_subgoal_mem[s_axi_awaddr[9:2] - 8'h18] <= s_axi_wdata[15:0];
                 endcase
+            end else if (s_axis_tvalid && s_axis_tready) begin
+                if (axis_word_idx < 6'd16) begin
+                    in_state_mem[axis_word_idx] <= s_axis_tdata;
+                end else if (axis_word_idx < 6'd19) begin
+                    in_action_mem[axis_word_idx - 6'd16] <= s_axis_tdata;
+                end else if (axis_word_idx < 6'd35) begin
+                    in_subgoal_mem[axis_word_idx - 6'd19] <= s_axis_tdata;
+                end
+
+                if (s_axis_tlast || axis_word_idx == 6'd34) begin
+                    axis_word_idx <= 6'd0;
+                    if (s_axis_tlast && reg_ctrl[2]) begin
+                        reg_ctrl[0] <= 1'b1; // Trigger start on stream TLAST when mode bit 2 is set
+                    end
+                end else begin
+                    axis_word_idx <= axis_word_idx + 6'd1;
+                end
             end
         end
     end
