@@ -45,6 +45,17 @@ except ImportError:
 
 app = Flask(__name__, static_folder="static")
 
+ARENA_OBSTACLES = [
+    {"name": "red_box", "pos": np.array([1.1, 0.9]), "radius": 0.35},
+    {"name": "blue_cyl", "pos": np.array([-1.0, 1.2]), "radius": 0.26},
+    {"name": "green_cyl", "pos": np.array([1.2, -1.1]), "radius": 0.23},
+    {"name": "yellow_cyl", "pos": np.array([-1.2, -0.9]), "radius": 0.26},
+    {"name": "purple_box", "pos": np.array([0.0, 1.7]), "radius": 0.36},
+    {"name": "cyan_cyl", "pos": np.array([-0.2, -1.7]), "radius": 0.26},
+]
+ROBOT_RADIUS = 0.22
+WALL_BOUND = 2.45
+
 class AMRSimulationController:
     """
     Manages real-time 3D simulation, multi-model inference, OOD physics scenarios,
@@ -145,8 +156,41 @@ class AMRSimulationController:
         }
         self.patching_active = False
 
+        # Dynamic Safety Barrier Strength Multiplier (0.0x to 10.0x, default 5.0x Strong Barrier)
+        self.barrier_multiplier = 5.0
+
         # Reset simulation
         self.reset_sim(initial_cmd=self.current_cmd)
+
+    def set_barrier_strength(self, strength):
+        with self.lock:
+            self.barrier_multiplier = float(np.clip(strength, 0.0, 10.0))
+            print(f"[Controller] Dynamic Safety Barrier Multiplier set to: {self.barrier_multiplier:.1f}x")
+
+    def compute_clearance(self, x, y):
+        """
+        Computes signed distance clearance to nearest obstacle or wall.
+        Returns (min_dist, nearest_obstacle_pos).
+        """
+        min_dist = float("inf")
+        nearest_pos = None
+
+        for obs in ARENA_OBSTACLES:
+            d = float(np.linalg.norm(np.array([x, y]) - obs["pos"]) - obs["radius"] - ROBOT_RADIUS)
+            if d < min_dist:
+                min_dist = d
+                nearest_pos = obs["pos"]
+
+        d_wall_x = float(WALL_BOUND - abs(x) - ROBOT_RADIUS)
+        d_wall_y = float(WALL_BOUND - abs(y) - ROBOT_RADIUS)
+        d_wall = min(d_wall_x, d_wall_y)
+        if d_wall < min_dist:
+            min_dist = d_wall
+            wall_x = WALL_BOUND if x > 0 else -WALL_BOUND
+            wall_y = WALL_BOUND if y > 0 else -WALL_BOUND
+            nearest_pos = np.array([wall_x if d_wall_x < d_wall_y else x, wall_y if d_wall_y <= d_wall_x else y])
+
+        return min_dist, nearest_pos
 
     def reset_sim(self, initial_cmd=None, initial_pos=None):
         with self.lock:
@@ -309,23 +353,62 @@ class AMRSimulationController:
                 self.active_behavior = "DISTANCE CRUISING (Macro Progress to Target)"
 
             # -------------------------------------------------------------
+            # Active Safety Barrier Multiplier & Envelope
+            # -------------------------------------------------------------
+            active_barrier_mult = 0.0 if (self.ablation_flags.get("barrier", False) and not self.patching_active) else self.barrier_multiplier
+            envelope_margin = 0.20 + 0.05 * active_barrier_mult # e.g. 0.45m at 5.0x, 0.70m at 10.0x
+            curr_clearance, nearest_obs = self.compute_clearance(self.robot_pose[0], self.robot_pose[1])
+
+            # -------------------------------------------------------------
             # Execute Active World Model
             # -------------------------------------------------------------
             if self.current_model == "baseline":
-                self.current_action = np.clip(base_act[0].cpu().numpy(), -1.0, 1.0)
+                raw_act = np.clip(base_act[0].cpu().numpy(), -1.0, 1.0)
+                if active_barrier_mult > 0.0 and curr_clearance < envelope_margin and nearest_obs is not None:
+                    # Apply proactive safety repulsion field
+                    diff = self.robot_pose[:2] - nearest_obs
+                    dist_diff = np.linalg.norm(diff) + 1e-5
+                    u_rep = diff / dist_diff
+                    # Convert to robot body frame
+                    u_rep_b = np.array([
+                        np.cos(th) * u_rep[0] + np.sin(th) * u_rep[1],
+                        -np.sin(th) * u_rep[0] + np.cos(th) * u_rep[1]
+                    ])
+                    rep_weight = min(1.0, (envelope_margin - curr_clearance) / envelope_margin * (active_barrier_mult / 2.5))
+                    rep_act = np.array([
+                        float(np.clip(u_rep_b[0] * 0.8, -0.6, 0.8)),
+                        float(np.clip(u_rep_b[1] * 0.8, -0.8, 0.8)),
+                        float(1.5 * np.sign(u_rep_b[1] if abs(u_rep_b[1]) > 0.1 else 1.0))
+                    ], dtype=np.float32)
+                    self.current_action = (1.0 - rep_weight) * raw_act + rep_weight * rep_act
+                else:
+                    self.current_action = raw_act
+                self.current_action = np.clip(self.current_action, -1.0, 1.0)
                 self.inference_latency_us = 5381.0 # 5.38 ms ARM CPU
 
             elif self.current_model in ["lewm", "hjepa"]:
-                # 24-Candidate Action MPC with safety barrier
+                # Multi-Candidate Action MPC with dynamic anticipatory safety barrier
                 cands = [[vx_nominal, vy_nominal, wz_nominal]]
-                for _ in range(23):
+                rng = np.random.default_rng(int((self.robot_pose[0] + self.robot_pose[1]) * 1000) % 50000)
+                for _ in range(15):
                     cands.append([
-                        float(np.clip(vx_nominal + np.random.uniform(-0.3, 0.3), -0.5, 1.0)),
-                        float(np.clip(vy_nominal + np.random.uniform(-0.4, 0.4), -0.8, 0.8)),
-                        float(np.clip(wz_nominal + np.random.uniform(-0.4, 0.4), -1.0, 1.0))
+                        float(np.clip(vx_nominal + rng.uniform(-0.25, 0.25), -0.5, 0.9)),
+                        float(np.clip(vy_nominal + rng.uniform(-0.35, 0.35), -0.7, 0.7)),
+                        float(np.clip(wz_nominal + rng.uniform(-0.35, 0.35), -1.0, 1.0))
                     ])
+                # Explicit evasive swerve / reverse actions to guarantee escape vectors
+                cands.extend([
+                    [0.0, 0.75, 1.2],
+                    [-0.35, 0.5, 1.0],
+                    [0.0, -0.75, -1.2],
+                    [-0.35, -0.5, -1.0],
+                    [-0.45, 0.0, 0.0],
+                    [0.0, 0.0, 1.5],
+                    [0.0, 0.0, -1.5],
+                    [-0.2, 0.6, -1.2]
+                ])
                 cands_t = torch.tensor(cands, dtype=torch.float32, device=self.device)
-                s_batch = z_hjepa.repeat(24, 1)
+                s_batch = z_hjepa.repeat(len(cands), 1)
 
                 with torch.no_grad():
                     next_S, col_logits = self.hjepa.macro_predictor(s_batch, cands_t)
@@ -333,19 +416,42 @@ class AMRSimulationController:
 
                 # Ablate barrier if requested
                 if self.ablation_flags.get("barrier", False) and not self.patching_active:
-                    col_probs[:] = 0.0 # Suppress barrier
+                    col_probs[:] = 0.0
+                elif self.patching_active:
+                    col_probs = np.maximum(col_probs, 0.92)
 
                 best_score = -float("inf")
                 best_act = np.array([vx_nominal, vy_nominal, wz_nominal], dtype=np.float32)
                 dt_m = 0.5
                 for i, c in enumerate(cands):
-                    fut_th = th + c[2] * 1.5 * dt_m
-                    fut_dx_w = dx_w - (np.cos(fut_th) * c[0] * 0.6 - np.sin(fut_th) * c[1] * 0.4) * dt_m
-                    fut_dy_w = dy_w - (np.sin(fut_th) * c[0] * 0.6 + np.cos(fut_th) * c[1] * 0.4) * dt_m
+                    vx_s = c[0] * 0.6
+                    vy_s = c[1] * 0.4
+                    wz_s = c[2] * 1.5
+                    fut_th = th + wz_s * dt_m
+                    fut_dx_w = dx_w - (np.cos(fut_th) * vx_s - np.sin(fut_th) * vy_s) * dt_m
+                    fut_dy_w = dy_w - (np.sin(fut_th) * vx_s + np.cos(fut_th) * vy_s) * dt_m
                     fut_dist = np.sqrt(fut_dx_w**2 + fut_dy_w**2)
                     dist_gain = (target_dist - fut_dist)
-                    col_pen = 4.5 * col_probs[i]
-                    score = dist_gain - col_pen
+
+                    # Multi-point lookahead trajectory clearance check
+                    traj_clearances = []
+                    for t_step in [0.15, 0.35, 0.55]:
+                        th_t = th + wz_s * t_step
+                        px_t = self.robot_pose[0] + (np.cos(th_t) * vx_s - np.sin(th_t) * vy_s) * t_step
+                        py_t = self.robot_pose[1] + (np.sin(th_t) * vx_s + np.cos(th_t) * vy_s) * t_step
+                        d_t, _ = self.compute_clearance(px_t, py_t)
+                        traj_clearances.append(d_t)
+                    min_traj_clearance = min(traj_clearances)
+
+                    cand_col_prob = float(col_probs[i])
+                    hazard = max(0.0, (envelope_margin - min_traj_clearance) / (envelope_margin + 1e-5)) if active_barrier_mult > 0 else 0.0
+                    col_pen = (4.5 * active_barrier_mult) * cand_col_prob + (35.0 * active_barrier_mult) * hazard
+
+                    if active_barrier_mult >= 1.0 and (min_traj_clearance < 0.12 or hazard > 0.45):
+                        score = -1e7
+                    else:
+                        score = dist_gain - col_pen
+
                     if score > best_score:
                         best_score = score
                         best_act = np.array(c, dtype=np.float32)
@@ -353,16 +459,28 @@ class AMRSimulationController:
                 self.inference_latency_us = 5390.0
 
             elif self.current_model in ["opt_a", "opt_b"]:
-                # 24-Candidate Macro MPC with Option B
+                # Multi-Candidate Macro MPC with Option B + Dynamic Safety Barrier
                 cands = [[vx_nominal, vy_nominal, wz_nominal]]
-                for _ in range(23):
+                rng = np.random.default_rng(int((self.robot_pose[0] + self.robot_pose[1]) * 1000) % 50000)
+                for _ in range(15):
                     cands.append([
-                        float(np.clip(vx_nominal + np.random.uniform(-0.3, 0.3), -0.5, 1.0)),
-                        float(np.clip(vy_nominal + np.random.uniform(-0.4, 0.4), -0.8, 0.8)),
-                        float(np.clip(wz_nominal + np.random.uniform(-0.4, 0.4), -1.0, 1.0))
+                        float(np.clip(vx_nominal + rng.uniform(-0.25, 0.25), -0.5, 0.9)),
+                        float(np.clip(vy_nominal + rng.uniform(-0.35, 0.35), -0.7, 0.7)),
+                        float(np.clip(wz_nominal + rng.uniform(-0.35, 0.35), -1.0, 1.0))
                     ])
+                # Explicit evasive swerve / reverse actions to guarantee escape vectors
+                cands.extend([
+                    [0.0, 0.75, 1.2],
+                    [-0.35, 0.5, 1.0],
+                    [0.0, -0.75, -1.2],
+                    [-0.35, -0.5, -1.0],
+                    [-0.45, 0.0, 0.0],
+                    [0.0, 0.0, 1.5],
+                    [0.0, 0.0, -1.5],
+                    [-0.2, 0.6, -1.2]
+                ])
                 cands_t = torch.tensor(cands, dtype=torch.float32, device=self.device)
-                s_batch = z_optb.repeat(24, 1)
+                s_batch = z_optb.repeat(len(cands), 1)
 
                 with torch.no_grad():
                     next_S, col_logits = self.opt_b.forward_macro(s_batch, cands_t)
@@ -379,13 +497,34 @@ class AMRSimulationController:
                 best_act = np.array([vx_nominal, vy_nominal, wz_nominal], dtype=np.float32)
                 dt_m = 0.5
                 for i, c in enumerate(cands):
-                    fut_th = th + c[2] * 1.5 * dt_m
-                    fut_dx_w = dx_w - (np.cos(fut_th) * c[0] * 0.6 - np.sin(fut_th) * c[1] * 0.4) * dt_m
-                    fut_dy_w = dy_w - (np.sin(fut_th) * c[0] * 0.6 + np.cos(fut_th) * c[1] * 0.4) * dt_m
+                    vx_s = c[0] * 0.6
+                    vy_s = c[1] * 0.4
+                    wz_s = c[2] * 1.5
+                    fut_th = th + wz_s * dt_m
+                    fut_dx_w = dx_w - (np.cos(fut_th) * vx_s - np.sin(fut_th) * vy_s) * dt_m
+                    fut_dy_w = dy_w - (np.sin(fut_th) * vx_s + np.cos(fut_th) * vy_s) * dt_m
                     fut_dist = np.sqrt(fut_dx_w**2 + fut_dy_w**2)
                     dist_gain = (target_dist - fut_dist)
-                    col_pen = 4.5 * col_probs[i]
-                    score = dist_gain - col_pen
+
+                    # Multi-point lookahead trajectory clearance check
+                    traj_clearances = []
+                    for t_step in [0.15, 0.35, 0.55]:
+                        th_t = th + wz_s * t_step
+                        px_t = self.robot_pose[0] + (np.cos(th_t) * vx_s - np.sin(th_t) * vy_s) * t_step
+                        py_t = self.robot_pose[1] + (np.sin(th_t) * vx_s + np.cos(th_t) * vy_s) * t_step
+                        d_t, _ = self.compute_clearance(px_t, py_t)
+                        traj_clearances.append(d_t)
+                    min_traj_clearance = min(traj_clearances)
+
+                    cand_col_prob = float(col_probs[i])
+                    hazard = max(0.0, (envelope_margin - min_traj_clearance) / (envelope_margin + 1e-5)) if active_barrier_mult > 0 else 0.0
+                    col_pen = (4.5 * active_barrier_mult) * cand_col_prob + (35.0 * active_barrier_mult) * hazard
+
+                    if active_barrier_mult >= 1.0 and (min_traj_clearance < 0.12 or hazard > 0.45):
+                        score = -1e7
+                    else:
+                        score = dist_gain - col_pen
+
                     if score > best_score:
                         best_score = score
                         best_act = np.array(c, dtype=np.float32)
@@ -396,7 +535,8 @@ class AMRSimulationController:
             elif self.current_model == "novel_composition":
                 target_xy = self.goal_dict["target_xy"] if self.goal_dict else np.array([1.5, 0.0])
                 final_act = self.novel_composition.select_action(
-                    obs, self.robot_pose, current_target=target_xy, goal_dict=self.goal_dict
+                    obs, self.robot_pose, current_target=target_xy, goal_dict=self.goal_dict,
+                    barrier_multiplier=active_barrier_mult
                 )
                 self.current_action = final_act
                 self.inference_latency_us = 109.0 # Modular FPGA kernel + Real-Time Waypoint Sequencer
@@ -647,6 +787,35 @@ HTML_PAGE = """
             </div>
         </div>
 
+        <!-- Dynamic Safety Barrier Strength Multiplier & Collision Suppression Card -->
+        <div class="card" style="margin-bottom:12px; background: linear-gradient(90deg, #131c2e 0%, #1e1b4b 100%); border: 1px solid #4338ca;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div style="flex:2 1 420px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <label style="font-size:12px; font-weight:700; color:#a5b4fc; text-transform:uppercase; display:flex; align-items:center; gap:6px;">
+                            <span style="font-size:16px;">🛡️</span> Dynamic Safety Barrier Strength Multiplier (&kappa;<sub>barrier</sub>):
+                        </label>
+                        <span id="barrierStrengthValue" style="font-size:13px; font-weight:700; color:#38bdf8; font-family:'JetBrains Mono', monospace; background:#0f172a; padding:3px 10px; border-radius:4px; border:1px solid #38bdf8;">5.0x (Strong Barrier)</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+                        <span style="font-size:11px; color:#94a3b8; font-family:monospace;">0.0x (Off)</span>
+                        <input type="range" id="safetyBarrierSlider" min="0" max="10" step="0.5" value="5.0" style="flex:1; accent-color:#38bdf8; cursor:pointer;" oninput="updateBarrierSlider(this.value)">
+                        <span style="font-size:11px; color:#94a3b8; font-family:monospace;">10.0x (Max Forcefield)</span>
+                    </div>
+                </div>
+                <div style="flex:1 1 320px; display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-end;">
+                    <button class="preset-btn" style="background:#312e81; color:#c7d2fe; border-color:#4338ca;" onclick="setBarrierPreset(0.0)">0.0x (Disabled)</button>
+                    <button class="preset-btn" style="background:#312e81; color:#c7d2fe; border-color:#4338ca;" onclick="setBarrierPreset(2.5)">2.5x (Nominal)</button>
+                    <button class="preset-btn" style="background:#1e3a8a; color:#93c5fd; border-color:#3b82f6;" onclick="setBarrierPreset(5.0)">5.0x (Recommended)</button>
+                    <button class="preset-btn" style="background:#4c1d95; color:#e9d5ff; border-color:#7c3aed;" onclick="setBarrierPreset(10.0)">10.0x (Impenetrable)</button>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:11px; color:#94a3b8; font-family:'JetBrains Mono', monospace; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">
+                <div><span style="color:#a5b4fc;">Clearance Envelope Margin:</span> <span id="barrierEnvelopeDesc">0.45m repulsion buffer around obstacles & walls</span></div>
+                <div><span style="color:#a5b4fc;">Collision Suppression:</span> <span id="barrierPruneDesc">Active discard for candidate trajectories with B(s,a) &ge; 0.50</span></div>
+            </div>
+        </div>
+
         <!-- Live Telemetry Status Bar -->
         <div style="display:flex; justify-content:space-between; align-items:center; background:#131c2e; padding:10px 14px; border-radius:8px; border:1px solid #1e293b; margin-bottom:12px; font-family:'JetBrains Mono', monospace; font-size:11px;">
             <div><span style="color:#94a3b8;">PROMPT:</span> <span id="hudLivePrompt" style="color:#38bdf8; font-weight:700;">"go behind the yellow cylinder"</span></div>
@@ -770,6 +939,21 @@ HTML_PAGE = """
                         <option value="baseline">Baseline Goal-Conditioned Policy (Direct Reactive)</option>
                     </select>
                     <button style="width: 100%; background: #334155; margin-top: 4px;" onclick="resetSim()">Reset AMR Pose</button>
+                </div>
+
+                <!-- Dynamic Safety Barrier Slider Control -->
+                <div class="card" style="background: linear-gradient(135deg, #131c2e 0%, #1e1b4b 100%); border: 1px solid #4338ca;">
+                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>Dynamic Safety Barrier Multiplier</span>
+                        <span id="tab1BarrierVal" class="badge" style="background:#0f172a; color:#38bdf8; border:1px solid #38bdf8;">5.0x</span>
+                    </div>
+                    <input type="range" id="tab1BarrierSlider" min="0" max="10" step="0.5" value="5.0" style="width:100%; accent-color:#38bdf8; cursor:pointer;" oninput="updateBarrierSlider(this.value)">
+                    <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:#94a3b8;">
+                        <span onclick="setBarrierPreset(0.0)" style="cursor:pointer;">0.0x (Off)</span>
+                        <span onclick="setBarrierPreset(2.5)" style="cursor:pointer;">2.5x</span>
+                        <span onclick="setBarrierPreset(5.0)" style="cursor:pointer; color:#38bdf8; font-weight:700;">5.0x (Strong)</span>
+                        <span onclick="setBarrierPreset(10.0)" style="cursor:pointer;">10.0x (Max)</span>
+                    </div>
                 </div>
 
                 <!-- Astra Camera Feed -->
@@ -1116,6 +1300,52 @@ HTML_PAGE = """
             }
         }
 
+        window.currentBarrierStrength = 5.0;
+        let isUserDraggingBarrier = false;
+
+        function updateBarrierSlider(val) {
+            const num = parseFloat(val);
+            window.currentBarrierStrength = num;
+
+            // Sync all slider inputs
+            const s1 = document.getElementById("safetyBarrierSlider");
+            const s2 = document.getElementById("tab1BarrierSlider");
+            if (s1 && Math.abs(parseFloat(s1.value) - num) > 0.01) s1.value = num;
+            if (s2 && Math.abs(parseFloat(s2.value) - num) > 0.01) s2.value = num;
+
+            // Update status text
+            let labelText = `${num.toFixed(1)}x`;
+            if (num <= 0.0) labelText += " (Disabled / Off)";
+            else if (num < 3.0) labelText += " (Nominal)";
+            else if (num < 7.0) labelText += " (Strong Barrier)";
+            else labelText += " (Impenetrable Forcefield)";
+
+            const v1 = document.getElementById("barrierStrengthValue");
+            const v2 = document.getElementById("tab1BarrierVal");
+            if (v1) v1.innerText = labelText;
+            if (v2) v2.innerText = `${num.toFixed(1)}x`;
+
+            const envDesc = document.getElementById("barrierEnvelopeDesc");
+            const prnDesc = document.getElementById("barrierPruneDesc");
+            if (envDesc) {
+                const margin = (0.20 + 0.05 * num).toFixed(2);
+                envDesc.innerText = num <= 0 ? "0.00m (Disabled - Raw unconstrained trajectories)" : `${margin}m proactive safety envelope around obstacles & walls`;
+            }
+            if (prnDesc) {
+                prnDesc.innerText = num <= 0 ? "B(s,a) suppressed - High collision risk" : `Active discard for candidates violating envelope margin (&kappa; = ${num.toFixed(1)}x)`;
+            }
+
+            fetch("/api/barrier_strength", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({strength: num})
+            });
+        }
+
+        function setBarrierPreset(val) {
+            updateBarrierSlider(val);
+        }
+
         function explorePrompt() {
             const p = document.getElementById("promptExploreInput").value;
             setPreset(p);
@@ -1149,6 +1379,16 @@ HTML_PAGE = """
                         '<span class="badge badge-success">VERIFIED & REACHED</span>' : '<span class="badge badge-warn">NAVIGATING</span>';
                     document.getElementById("telCols").innerText = d.collisions;
                     document.getElementById("telLatency").innerText = (d.latency_us ? d.latency_us.toFixed(1) : "109.0") + " us";
+
+                    // Sync Barrier Strength from server
+                    if (d.barrier_multiplier !== undefined && !isUserDraggingBarrier) {
+                        const bM = parseFloat(d.barrier_multiplier);
+                        window.currentBarrierStrength = bM;
+                        const s1 = document.getElementById("safetyBarrierSlider");
+                        const s2 = document.getElementById("tab1BarrierSlider");
+                        if (s1 && Math.abs(parseFloat(s1.value) - bM) > 0.1) s1.value = bM;
+                        if (s2 && Math.abs(parseFloat(s2.value) - bM) > 0.1) s2.value = bM;
+                    }
 
                     // Representation meters
                     if (d.clusters) {
@@ -1296,6 +1536,14 @@ def api_patching():
         sim_controller.set_patching(active)
     return jsonify({"status": "ok", "patching": active})
 
+@app.route("/api/barrier_strength", methods=["POST"])
+def api_barrier_strength():
+    data = request.get_json() or {}
+    val = float(data.get("strength", data.get("multiplier", 5.0)))
+    if sim_controller:
+        sim_controller.set_barrier_strength(val)
+    return jsonify({"status": "ok", "strength": sim_controller.barrier_multiplier if sim_controller else val})
+
 @app.route("/api/reset", methods=["POST"])
 def api_reset():
     if sim_controller:
@@ -1323,7 +1571,8 @@ def api_telemetry():
             "clusters": sim_controller.clusters,
             "active_behavior": sim_controller.active_behavior,
             "latents": sim_controller.current_latents,
-            "scenario": sim_controller.current_scenario
+            "scenario": sim_controller.current_scenario,
+            "barrier_multiplier": sim_controller.barrier_multiplier
         })
 
 @app.route("/api/model_architecture")

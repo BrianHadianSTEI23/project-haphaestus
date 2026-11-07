@@ -761,6 +761,7 @@ class MechanisticStudioBackend:
         hp = spec["linear_space"]["hyperplane"]
         w = hp["normal"]
         offset = hp["offset"]
+        barrier_mult = getattr(c, "barrier_multiplier", 5.0)
 
         candidate_points = []
         for i in range(16):
@@ -769,11 +770,13 @@ class MechanisticStudioBackend:
             is_risky = (i % 3 == 0 and c_clear > 0.35)
             pt_z2 = z2 + float(np.random.uniform(0.3, 0.9) if is_risky else np.random.uniform(-0.6, 0.1))
             val = w[0]*pt_z1 + w[1]*pt_z2 + w[2]*pt_z3 + offset
+            threshold = 0.5 if barrier_mult <= 0 else max(0.15, 0.5 / (barrier_mult / 2.5))
+            is_col = bool((val >= threshold or is_risky) if barrier_mult > 0 else False)
             candidate_points.append({
                 "x": round(pt_z1, 3),
                 "y": round(pt_z2, 3),
                 "z": round(pt_z3, 3),
-                "is_collision": bool(val >= 0.5 or is_risky),
+                "is_collision": is_col,
                 "barrier_val": round(float(torch.sigmoid(torch.tensor(val)).item()), 3),
                 "action": [round(float(c.current_action[0] + np.random.uniform(-0.1, 0.1)), 2),
                            round(float(c.current_action[1] + np.random.uniform(-0.1, 0.1)), 2),
@@ -819,6 +822,7 @@ class MechanisticStudioBackend:
             "linear_space_state": {
                 "current_z": [round(z1, 3), round(z2, 3), round(z3, 3)],
                 "hyperplane": hp,
+                "barrier_multiplier": barrier_mult,
                 "candidate_points": candidate_points
             },
             "transformations": transformations

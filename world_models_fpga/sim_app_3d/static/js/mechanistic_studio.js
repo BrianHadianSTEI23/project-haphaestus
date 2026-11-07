@@ -525,7 +525,13 @@ class MechanisticStudio {
         // Hyperplane: w1*x + w2*y + w3*z + offset = 0
         const hp = this.architectureSpec.linear_space.hyperplane || { normal: [0.8, 0.6, -0.1], offset: 0.3 };
         const [nx, ny, nz] = hp.normal;
-        const d = hp.offset;
+        
+        // Dynamic barrier strength multiplier
+        const bMult = (this.liveState && this.liveState.linear_space_state && this.liveState.linear_space_state.barrier_multiplier !== undefined) ?
+            this.liveState.linear_space_state.barrier_multiplier : (window.currentBarrierStrength !== undefined ? window.currentBarrierStrength : 5.0);
+        
+        // Modulate offset according to strength multiplier (expanding the safety barrier envelope)
+        const d = bMult > 0 ? (hp.offset + (bMult - 5.0) * 0.06) : hp.offset;
 
         // Draw 4 corners of hyperplane quad
         const s = 1.4;
@@ -543,18 +549,39 @@ class MechanisticStudio {
         ctx.lineTo(corners[3].x, corners[3].y);
         ctx.closePath();
 
-        // Shaded Barrier Surface
-        ctx.fillStyle = 'rgba(255, 51, 102, 0.18)';
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255, 51, 102, 0.85)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+        if (bMult <= 0.0) {
+            // Disabled / Ablated Barrier: Dim Dashed Outline
+            ctx.setLineDash([4, 4]);
+            ctx.fillStyle = 'rgba(100, 116, 139, 0.08)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.setLineDash([]);
 
-        // Label on Hyperplane
-        const center = project(0, -d / (ny || 1), 0);
-        ctx.fillStyle = '#ff3366';
-        ctx.font = 'bold 10px monospace';
-        ctx.fillText('SAFETY BARRIER HYPERPLANE B(s,a) = 0.5', center.x - 70, center.y - 10);
+            const center = project(0, -d / (ny || 1), 0);
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 10px monospace';
+            ctx.fillText('SAFETY BARRIER DISABLED (0.0x / ABLATED)', center.x - 90, center.y - 10);
+        } else {
+            // Active Proactive Barrier Force Field
+            const opacity = Math.min(0.38, 0.12 + (bMult / 10.0) * 0.22);
+            ctx.fillStyle = `rgba(255, 51, 102, ${opacity})`;
+            ctx.fill();
+            ctx.strokeStyle = bMult >= 5.0 ? 'rgba(255, 51, 102, 1.0)' : 'rgba(255, 51, 102, 0.7)';
+            ctx.lineWidth = bMult >= 5.0 ? 2.5 : 1.5;
+            ctx.shadowColor = '#ff3366';
+            ctx.shadowBlur = bMult >= 5.0 ? 12 : 6;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Label on Hyperplane
+            const center = project(0, -d / (ny || 1), 0);
+            ctx.fillStyle = '#ff3366';
+            ctx.font = 'bold 10px monospace';
+            const labelTxt = `SAFETY BARRIER B(s,a) = 0.5 [${bMult.toFixed(1)}x ${bMult >= 8.0 ? 'IMPENETRABLE' : (bMult >= 4.0 ? 'STRONG' : 'NOMINAL')}]`;
+            ctx.fillText(labelTxt, center.x - 85, center.y - 10);
+        }
     }
 
     drawLinearDistributions(ctx, project) {

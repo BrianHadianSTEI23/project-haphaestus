@@ -27,6 +27,17 @@ from research.extraction.extracted_model.reconstructed_compact.model_reconstruct
 from models.h_jepa import HJEPAModel
 from models.le_world_model import LeWorldModel
 
+ARENA_OBSTACLES = [
+    {"name": "red_box", "pos": np.array([1.1, 0.9]), "radius": 0.35},
+    {"name": "blue_cyl", "pos": np.array([-1.0, 1.2]), "radius": 0.26},
+    {"name": "green_cyl", "pos": np.array([1.2, -1.1]), "radius": 0.23},
+    {"name": "yellow_cyl", "pos": np.array([-1.2, -0.9]), "radius": 0.26},
+    {"name": "purple_box", "pos": np.array([0.0, 1.7]), "radius": 0.36},
+    {"name": "cyan_cyl", "pos": np.array([-0.2, -1.7]), "radius": 0.26},
+]
+ROBOT_RADIUS = 0.22
+WALL_BOUND = 2.45
+
 class CompositionalNavigationAgent:
     """
     Modular, Compositional Architecture derived from Principles P1–P5.
@@ -69,13 +80,31 @@ class CompositionalNavigationAgent:
         self.subgoal_queue = waypoints_list
         self.current_subgoal_idx = 0
 
-    def select_action(self, obs_rgb, robot_pose, current_target=None, goal_dict=None, num_macro_candidates=24):
+    def compute_clearance(self, x, y):
+        min_dist = float("inf")
+        nearest_pos = None
+        for obs in ARENA_OBSTACLES:
+            d = float(np.linalg.norm(np.array([x, y]) - obs["pos"]) - obs["radius"] - ROBOT_RADIUS)
+            if d < min_dist:
+                min_dist = d
+                nearest_pos = obs["pos"]
+        d_wall_x = float(WALL_BOUND - abs(x) - ROBOT_RADIUS)
+        d_wall_y = float(WALL_BOUND - abs(y) - ROBOT_RADIUS)
+        d_wall = min(d_wall_x, d_wall_y)
+        if d_wall < min_dist:
+            min_dist = d_wall
+            wall_x = WALL_BOUND if x > 0 else -WALL_BOUND
+            wall_y = WALL_BOUND if y > 0 else -WALL_BOUND
+            nearest_pos = np.array([wall_x if d_wall_x < d_wall_y else x, wall_y if d_wall_y <= d_wall_x else y])
+        return min_dist, nearest_pos
+
+    def select_action(self, obs_rgb, robot_pose, current_target=None, goal_dict=None, num_macro_candidates=24, barrier_multiplier=5.0):
         """
         Closed-loop execution of the 5-stage compositional architecture:
           Stage 1: Perception & semantic grounding
           Stage 2: Structured world representation
           Stage 3: Predictive dynamics
-          Stage 4: Hierarchical decision & barrier evaluation
+          Stage 4: Hierarchical decision & barrier evaluation (Aggressive dynamic barrier scaling)
           Stage 5: Action selection & feedback
         """
         rx, ry, rth = robot_pose[0], robot_pose[1], robot_pose[2]
@@ -112,17 +141,35 @@ class CompositionalNavigationAgent:
         vy_nom = float(np.clip(0.35 * dy_b, -0.4, 0.4))
         wz_nom = float(np.clip(1.6 * ang_to_goal, -1.0, 1.0))
 
+        # Dynamic Safety Barrier Envelope
+        curr_clearance, nearest_obs = self.compute_clearance(rx, ry)
+        envelope_margin = 0.20 + 0.05 * barrier_multiplier
+
         # 2. Predictive Macro Rollouts (P1, P2, P5)
         candidates = [[vx_nom, vy_nom, wz_nom]]
         rng = np.random.default_rng(int((rx + ry) * 1000) % 50000)
-        for _ in range(num_macro_candidates - 1):
+        num_rand = max(4, num_macro_candidates - 8)
+        for _ in range(num_rand - 1):
             vx_v = np.clip(vx_nom + rng.uniform(-0.25, 0.25), -0.5, 0.9)
             vy_v = np.clip(vy_nom + rng.uniform(-0.35, 0.35), -0.7, 0.7)
             wz_v = np.clip(wz_nom + rng.uniform(-0.35, 0.35), -1.0, 1.0)
             candidates.append([vx_v, vy_v, wz_v])
 
+        # Explicit evasive swerve / reverse actions to guarantee escape vectors
+        candidates.extend([
+            [0.0, 0.75, 1.2],
+            [-0.35, 0.5, 1.0],
+            [0.0, -0.75, -1.2],
+            [-0.35, -0.5, -1.0],
+            [-0.45, 0.0, 0.0],
+            [0.0, 0.0, 1.5],
+            [0.0, 0.0, -1.5],
+            [-0.2, 0.6, -1.2]
+        ])
+
+        total_cands = len(candidates)
         cands_t = torch.tensor(candidates, dtype=torch.float32, device=self.device)
-        s_batch = s_curr.repeat(num_macro_candidates, 1)
+        s_batch = s_curr.repeat(total_cands, 1)
 
         with torch.no_grad():
             next_S, col_logits = self.macro_predictor(s_batch, cands_t)
@@ -144,9 +191,27 @@ class CompositionalNavigationAgent:
             fut_dist = np.sqrt(fut_dx_w**2 + fut_dy_w**2)
             dist_gain = (target_dist - fut_dist)
 
+            # Multi-point lookahead trajectory clearance check
+            traj_clearances = []
+            for t_step in [0.15, 0.35, 0.55]:
+                th_t = rth + wz_s * t_step
+                px_t = rx + (np.cos(th_t) * vx_s - np.sin(th_t) * vy_s) * t_step
+                py_t = ry + (np.sin(th_t) * vx_s + np.cos(th_t) * vy_s) * t_step
+                d_t, _ = self.compute_clearance(px_t, py_t)
+                traj_clearances.append(d_t)
+            min_traj_clearance = min(traj_clearances)
+
             # Anticipatory Safety Barrier (P5)
-            col_pen = 4.5 * col_probs[i]
-            score = dist_gain - col_pen
+            cand_col_prob = float(col_probs[i])
+            hazard = max(0.0, (envelope_margin - min_traj_clearance) / (envelope_margin + 1e-5)) if barrier_multiplier > 0 else 0.0
+
+            col_pen = (4.5 * barrier_multiplier) * cand_col_prob + (35.0 * barrier_multiplier) * hazard
+
+            # Hard discard if trajectory violates safety envelope
+            if barrier_multiplier >= 1.0 and (min_traj_clearance < 0.12 or hazard > 0.45):
+                score = -1e7
+            else:
+                score = dist_gain - col_pen
 
             if score > best_score:
                 best_score = score
