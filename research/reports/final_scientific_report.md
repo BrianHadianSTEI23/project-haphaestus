@@ -125,45 +125,60 @@ Evaluating strictly identical 24 candidate action sequences of length $K=5$ over
 
 ---
 
-### Principle 2: Allocentric Landmark Map Priors & SE(2) Global Equivariance
+### Principle 2: Dynamic Visual Grounding, Task Conditioning, and the Visibility Constraint
 
 #### 1. Definition & Repair of Track B Confound (Finding E)
-Because Track B provided simulator-derived egocentric goal vectors $[d_x, d_y, \sin	heta, \cos	heta]$, previous agents could navigate without looking at camera images.
+Because Track B provided simulator-derived egocentric goal vectors $[d_x, d_y, \sin\theta, \cos\theta]$, previous agents could navigate without looking at camera images. Track C enforces pure first-person vision with zero simulator coordinates.
 
 #### 2. Pure Visual Navigation Ground Truth (`run_track_c_visual_grounding.py`)
 Evaluating strictly under $64\times 64\times 3$ RGB vision with zero simulator coordinates ($N=20$ episodes per suite, asserted physical surface clearance $\ge 0.05$m):
-- **Nominal Grounding:** H-JEPA achieves **20/20 (100.0%, 0.260m)** success, LeWM achieves **19/20 (95.0%)**, while Baseline achieves **8/20 (40.0%)**. Predictive world models provide the spatial memory required for vision-based navigation.
-- **Rigid SE(2) Global Transformations:** Across all rigid arena rotations preserving relative geometry (+90, 180, -90 deg), H-JEPA maintains **20/20 (100.0%)** success ($\Delta = 0.0\%, p = 1.0000$). Global rigid rotation latent cosine is 0.9745; however, egocentric camera yaw rotation drops latent cosine to 0.3450.
-- **Appearance Nuisance Breakdown:** Dark slate floor collapses success to **1/20 (5.0%)** ($\Delta = -95.0\%, p < 0.0001$), while 50% lighting dimming preserves **17/20 (85.0%)** success ($p = 0.2500$). Mutating target appearance reduces success to **14/20 (70.0%, $p = 0.0312$)**, whereas mutating distractor appearance preserves **20/20 (100.0%)**.
-- **Color Swap Semantics:** Swapping target and distractor visual colors while keeping the discrete categorical task token constant achieves **20/20 (100.0%)** success ($p = 1.0000$), proving the model routes goals by discrete categorical task tokens rather than dynamic color tracking.
-- **Allocentric Spatial Map Prior:** Physically relocating target and obstacle positions in MuJoCo collapses success to **1/20 (5.0%, 1.700m error, $p < 0.0001$)**. The agent navigates toward the memorized canonical coordinate, proving it formed an allocentric spatial layout prior.
-- **Layout Generalization:** Rejection-sampled configurations with asserted footprint clearance achieve **19/20 (95.0%)** success ($p = 1.0000$).
+- **Nominal Grounding:** H-JEPA achieves **20/20 (100.0%, 0.260m)** success, LeWM achieves **19/20 (95.0%, 0.315m)**, while Baseline achieves **8/20 (40.0%, 0.469m)**. Predictive world models provide the spatial representation required for vision-based navigation.
+- **Rigid SE(2) Global Transformations:** Across all rigid arena rotations preserving relative geometry (+90, 180, -90 deg), H-JEPA maintains **20/20 (100.0%)** success ($\Delta = 0.0\%, p = 1.0000$). Global rigid rotation latent cosine is 0.9745; however, egocentric camera yaw rotation drops latent cosine to 0.3450. Viewpoint preservation, not group-equivariant CNN kernels, underlies global rotational robustness.
+- **Appearance Nuisance Breakdown:** Dark slate floor collapses success to **1/20 (5.0%, 1.257m error, $p = 3.81 \times 10^{-6}$)**, while 50% lighting dimming preserves **17/20 (85.0%, 0.323m error)** success ($p = 0.2500$). Mutating target appearance reduces success to **14/20 (70.0%, 0.403m error, $p = 0.0312$)**, whereas mutating distractor appearance preserves **20/20 (100.0%, 0.260m error)**.
+- **Exact Pairwise Color Swap (Suite 3):** Swapping target and partner visual colors while keeping the discrete categorical task token constant achieves **17/20 (85.0%, 0.303m error)** success ($p = 0.2500$).
+- **Target-Only Relocation (Suite 4A):** Moving only the target object to a different arena slot drops success to **6/20 (30.0%)** with mean final error to eval waypoint of **1.033m** and distance to canonical waypoint of **1.057m** (initial dists: 0.566m and 0.594m). The robot moves farther from both waypoints; only 9/20 finish closer to canonical.
+- **Pairwise Relocation Swap (Suite 4C):** Physically swapping target and distractor positions simultaneously drops success to **1/20 (5.0%)**, with **1.700m** eval error and **0.646m** canonical distance (18/20 closer to canonical).
+- **Layout Generalization (Suite 5):** Rejection-sampled configurations with asserted footprint clearance achieve **19/20 (95.0%, 0.294m error)** success ($p = 1.0000$).
+
+#### 3. Mechanistic Disentanglement: Dynamic Grounding vs Token Map (`run_task_identity_visual_grounding.py`)
+Evaluating 6 controlled conditions ($N=30$ per condition) in Phase 3 reveals:
+- When target relocation is evaluated with **verified camera visibility** (target inside front frustum, visible pixels $\ge 15$), H-JEPA dynamically tracks the relocated target with **93.3% success (28/30)** and **0.257m** goal error ($p = 0.5000$, Holm-adjusted $p = 1.0000$ vs baseline). Dynamic visual grounding functions effectively when visual evidence is observable.
+- When the rendered RGB scene is held fixed and the task token is swapped, success collapses to **3.3% (1/30)** with **1.524m** error ($p = 3.73 \times 10^{-9}$, Holm-adjusted $p = 1.86 \times 10^{-8}$), proving the agent does not execute a blind feedforward semantic map from token alone.
+- Under visual/token conflict, success drops to **73.3% (22/30)** ($p = 0.0078$, Holm-adjusted $p = 0.03125$), confirming a causal interaction between visual latent features and categorical token embedding.
 
 ---
 
-### Principle 3: Falsification of Prospective Predictive Safety Barriers
+### Principle 3: Controller Goal Memory Decoupling (`run_goal_path_interventions.py`)
+- Egocentric goal memory (`_ego_goal_memory`), previous latent tracking, and fixed 0.65/0.35 blending are handwritten controller logic in `model_wrappers.py`, containing zero learned recurrent neural parameters in `HJEPAModel`.
+- Across 7 controlled memory interventions ($N=30$ matched episodes each), a pure visual controller (`visual_only`, 0% memory) achieves **96.7% success (29/30)** with **0.304m** error, matching the default blended controller (96.7%, 29/30, 0.301m error, $p = 1.0000$).
+- Corrupted memory (+0.50 Gaussian noise) and mismatched donor memory injection also achieve $\ge 96.7\%$ success ($p = 1.0000$). The agent's spatial behavior is driven by reactive visual grounding and world-model candidate scoring, not recurrent memory integration.
+
+---
+
+### Principle 4: Falsification of Prospective Predictive Safety Barriers
 
 #### 1. Control Barrier Function Reality Check (Finding F)
 Historical claims asserted that disabling the collision head caused a "+23.4%" collision surge and claimed formal Control Barrier Function (CBF) guarantees.
 To test this, `run_predictive_safety_benchmark.py` evaluated 5 matched conditions over 40 collision-critical episodes:
-- **Condition 1 (Intact Collision Head):** **70.0% collision rate** (27.5% success).
+- **Condition 1 (Intact Collision Head):** **70.0% collision rate** (27.5% success, 0.666m error).
 - **Condition 2 (Shuffled Collision Binding):** **70.0% collision rate** ($\Delta = 0.0\%, p = 1.0000$).
 - **Condition 3 (Collision Head Disabled):** **70.0% collision rate** ($\Delta = 0.0\%, p = 1.0000$).
-- **Condition 4 (Random Collision Predictor):** **70.0% collision rate** ($\Delta = 0.0\%, p = 1.0000$).
-- **Condition 5 (Oracle Physics Predictor):** **7.5% collision rate** ($\Delta = -62.5\%, p = 5.96 	imes 10^{-8}$).
+- **Condition 4 (Random Collision Predictor):** **57.5% collision rate** (15.0% success, $p = 0.0625$).
+- **Condition 5 (Oracle Physics Predictor):** **7.5% collision rate** ($\Delta = -62.5\%, p = 5.96 \times 10^{-8}$).
 
 #### 2. Offline vs Closed-Loop Disconnect
-- Offline prospective evaluation on the macro $K=5$ horizon showed near-perfect discrimination: AUROC = 1.0000, Brier score = 0.0003, ECE = 0.0041, False Negative Rate (@0.5) = 0.0%.
-- In closed-loop execution, neural collision predictions fail because by the time contact is predicted in the latent state, the vehicle's dynamic stopping horizon has already passed. Formal Control Barrier Function (CBF) claims are **completely falsified**. Prospective safety requires geometric clearance margins rather than contact-level neural prediction.
+- Offline prospective evaluation on the macro $K=5$ horizon showed near-perfect discrimination: AUROC = 1.0000, Brier score = 0.0003, ECE = 0.0041, False Negative Rate (@0.5) = 0.0%. However, clustered bootstrap 95% CI across 20 episode clusters is **[0.5, 1.0]**, reflecting sparse cluster events (18 positive collisions).
+- In closed-loop execution, neural collision predictions fail because discrete candidate penalty scoring provides a soft bias rather than certified spatial stopping boundaries. Formal Control Barrier Function (CBF) claims are **completely falsified**. Prospective safety requires geometric clearance margins rather than soft contact-level neural scoring.
 
 ---
 
 ### Mechanistic Circuit Analysis & Falsifications (Finding C, D, H)
 
-#### 1. Falsification of Modular Isolation & Discovery of Diffuse Population Code (C1)
+#### 1. Falsification of Modular Isolation (C1)
 - Under Track C pure observation on the pure object-grounding suite ($N=30$), targeted ablation of candidate top-8 dimensions `[24, 17, 7, 10, 2, 8, 27, 26]` drops navigation success by only **3.3%** (93.3% to 90.0%).
-- Compared against the mean drop across 30 matched random 8D subspace draws (**20.8% $\pm 14.5\%$**), C1 yields a negative selectivity gain of **-17.4%** ($z = -1.21, p = 0.9032$), falsifying modular linear circuit localization (`FALSIFIED_NON_SELECTIVE`).
-- However, genuine matched-donor activation patching ($z_{\text{rescue}} = z_{\text{recip}}(I - P) + z_{\text{donor}}P$) restores **93.3% success** (0.295m step goal error) vs mismatched donor **83.3% success** (0.668m step goal error). Offline donor patching rotates inferred body-frame goal vectors $[\widehat{dx}_b, \widehat{dy}_b]$ toward donor targets ($\cos = 0.9779 \pm 0.0356$, angular error 0.1430 rad vs $\cos = 0.9854 \pm 0.0078$ random). Perturbation diagnostics verify that C1 ablation removes 23.51% latent variance (Mahalanobis distance 94.991) matching random 8D projections ($23.99\% \pm 3.38\%$, Mahalanobis distance $94.322 \pm 25.492$). This proves goal vectors are causally mediated by visual latents via a **diffuse 32D population code**.
+- Compared against the mean drop across 30 matched random 8D subspace draws (**20.8% $\pm 14.8\%$**), C1 yields a negative selectivity gain of **-17.4%** ($z = -1.177, p = 0.9032$), falsifying modular linear circuit localization (`FALSIFIED_NON_SELECTIVE`).
+- Random 8D subspace patching achieves higher offline donor cosine (**0.9854 $\pm$ 0.0078**) than candidate C1 (**0.9779 $\pm$ 0.0356**), and random patch rescue (**90.9%**) is statistically indistinguishable from matched patch rescue (**93.3%**, $p = 0.6129$).
+- Therefore, C1 is falsified as a modular circuit, but it is **not** confirmed as a selective diffuse population code; it remains an **unresolved representation hypothesis**. Perturbation diagnostics confirm comparable variance removal (23.51% vs 23.99% $\pm$ 3.38%, Mahalanobis distance 94.991 vs 94.322).
 
 #### 2. Non-Modularity of Displacement, Risk, and Dynamics (C2, C3, C4)
 - Evaluating C2 (axis-aligned, rotated PCA, and multivariate regression) produces a **10.0% drop** (+4.7% selectivity gain over structured random 8D controls, $z = +0.62$, empirical $p = 0.5294$).

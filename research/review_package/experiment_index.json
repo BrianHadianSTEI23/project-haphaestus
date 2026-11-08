@@ -1,0 +1,177 @@
+{
+  "schema_version": "2.0",
+  "generated_at": "2026-11-08T08:24:00+00:00",
+  "branch": "fix/interpretability",
+  "checkpoint_catalog": [
+    {
+      "name": "hjepa_best.pt",
+      "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+      "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+    }
+  ],
+  "experiments": [
+    {
+      "experiment_id": "EXP_01_TASK_IDENTITY_VISUAL_GROUNDING",
+      "description": "Evaluates dynamic visual grounding vs canonical task-conditioned expectation across 6 controlled conditions (N=30 each), enforcing target visibility and logging fine-grained step traces.",
+      "script_path": "world_models_fpga/research/benchmarks/run_task_identity_visual_grounding.py",
+      "script_sha256": "1ba6ad4a52146a086dc54b1b88fd070603355d947ae7c7e7d1823113c601d28d",
+      "command_executed": "python world_models_fpga/research/benchmarks/run_task_identity_visual_grounding.py --episodes 30 --device cuda",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "random_seed": 8100,
+      "sample_size": 180,
+      "result_artifacts": [
+        {
+          "path": "world_models_fpga/research/benchmarks/results/task_identity_visual_grounding.json",
+          "sha256": "0034b16a746a9f656c79e0ca0e0ca58f50b06b2a445d99b9eb80aa4c0e4be2a3",
+          "type": "summary_json"
+        },
+        {
+          "path": "world_models_fpga/research/benchmarks/results/task_identity_visual_grounding_traces.npz",
+          "sha256": "a3c256c0383e0ecfe39eda5b7298a37484f8ac92c1a176975cc8d77e95c1f9a6",
+          "type": "numerical_traces_npz"
+        }
+      ],
+      "key_findings": {
+        "visible_target_relocation_success": 0.9333,
+        "same_rgb_changed_token_success": 0.0333,
+        "visual_token_conflict_success": 0.7333,
+        "target_appearance_success": 0.8667,
+        "distractor_relocation_success": 1.0000
+      }
+    },
+    {
+      "experiment_id": "EXP_02_GOAL_MEMORY_PATH_INTERVENTIONS",
+      "description": "Evaluates 7 controller-level memory interventions (full blended, visual only, memory reset, frozen memory, corrupted memory, matched donor, mismatched donor) across N=30 matched episodes.",
+      "script_path": "world_models_fpga/research/circuits/run_goal_path_interventions.py",
+      "script_sha256": "d9e288e2426897b0dd424dfb549d36a1d05ffcaf369bc196c1709ae2df91b8f2",
+      "command_executed": "python world_models_fpga/research/circuits/run_goal_path_interventions.py --episodes 30 --device cuda",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "random_seed": 7300,
+      "sample_size": 210,
+      "result_artifacts": [
+        {
+          "path": "world_models_fpga/research/circuits/results/goal_path_interventions.json",
+          "sha256": "9129984d51dbc01bdad6d1afe87f0c7374bfcfabfa9baa00c7300f7a49ff6b05",
+          "type": "summary_json"
+        }
+      ],
+      "key_findings": {
+        "full_blended_success": 0.9667,
+        "visual_only_success": 0.9667,
+        "memory_reset_success": 0.9333,
+        "corrupted_memory_success": 1.0000,
+        "mismatched_donor_success": 1.0000,
+        "p_value_vs_full_blended": 1.0000
+      }
+    },
+    {
+      "experiment_id": "EXP_03_PREDICTIVE_SAFETY_BENCHMARK",
+      "description": "Evaluates prospective collision head in closed-loop navigation (40 episodes) and offline calibration/discrimination with clustered bootstrap confidence intervals.",
+      "script_path": "world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py",
+      "script_sha256": "3e1560a9035b76ad8a1dcfde2dc9519d0d17cc1c05fa6deb20cefc0badbfd451",
+      "command_executed": "python world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py --episodes 40 --device cuda",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "random_seed": 42,
+      "sample_size": 40,
+      "result_artifacts": [
+        {
+          "path": "world_models_fpga/research/benchmarks/results/predictive_safety_benchmark.json",
+          "sha256": "c791d5f14fd98b6ca1305e2b6efd4820c15fedec6985ffd4ee7add021ce790af",
+          "type": "summary_json"
+        }
+      ],
+      "key_findings": {
+        "intact_collision_rate": 0.7000,
+        "shuffled_collision_rate": 0.7000,
+        "disabled_collision_rate": 0.7000,
+        "offline_auroc": 1.0000,
+        "clustered_bootstrap_auroc_ci95": [0.5, 1.0],
+        "brier_score": 0.000278,
+        "ece": 0.00408
+      }
+    },
+    {
+      "experiment_id": "EXP_04_MATCHED_TEMPORAL_CONTROLS",
+      "description": "Evaluates temporal hierarchy (Macro K=5 vs Micro K=5 vs Reactive vs Shuffled vs Random candidate selection) across 50 matched episodes with Holm-Bonferroni correction.",
+      "script_path": "world_models_fpga/research/benchmarks/run_matched_temporal_controls.py",
+      "script_sha256": "2804e53e311944acbe6b48485bd19c6deaebb5c91927f2c9f820889741d1c2c4",
+      "command_executed": "python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes 50 --device cuda",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "random_seed": 42,
+      "sample_size": 50,
+      "result_artifacts": [
+        {
+          "path": "world_models_fpga/research/benchmarks/results/matched_temporal_controls.json",
+          "sha256": "ca20b03ff40d6f99572c9e51f7a609d7dbc3fdd78afac58865526e29b115c9b3",
+          "type": "summary_json"
+        }
+      ],
+      "key_findings": {
+        "macro_k5_success": 0.4600,
+        "micro_k5_success": 0.5000,
+        "macro_vs_micro_p": 0.7266,
+        "macro_vs_random_selection_adj_p": 0.0117,
+        "macro_vs_shuffled_binding_adj_p": 0.1562
+      }
+    },
+    {
+      "experiment_id": "EXP_05_TRACK_C_VISUAL_GROUNDING",
+      "description": "Baseline Track C visual grounding suite evaluating nominal navigation, visual appearance shifts, physical relocation, layout generalization, and SE(2) global co-rotation.",
+      "script_path": "world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
+      "script_sha256": "ffa6fb1daca399e2dd5f883a47278e6c58f0350b7f23040452e7272cc16ef13d",
+      "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "random_seed": 42,
+      "sample_size": 20,
+      "result_artifacts": [
+        {
+          "path": "world_models_fpga/research/benchmarks/results/track_c_visual_grounding.json",
+          "sha256": "0c245fb92e8a2a0466935f41537d3e7ace680389e878c485341e36d9a34c02fe",
+          "type": "summary_json"
+        }
+      ],
+      "key_findings": {
+        "nominal_success": 1.0000,
+        "floor_shift_success": 0.0500,
+        "illumination_reduction_success": 0.8500,
+        "target_appearance_success": 0.7000,
+        "distractor_appearance_success": 1.0000,
+        "target_only_relocation_success": 0.3000,
+        "pairwise_swap_success": 0.0500,
+        "layout_generalization_success": 0.9500,
+        "global_rigid_rotation_cosine": 0.9745,
+        "egocentric_yaw_rotation_cosine": 0.3450
+      }
+    },
+    {
+      "experiment_id": "EXP_06_RIGOROUS_BEHAVIORAL_CIRCUITS",
+      "description": "Evaluates necessity ablation, sufficiency retention, matched donor patching, mismatched donor controls, random 8D subspace distributions, and perturbation diagnostics on candidate visual goal grounding circuit C1.",
+      "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+      "script_sha256": "628cc2f38a9d169ad908841dd3829724a21c4a7bee34423f0bf48966d2d02345",
+      "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --device cuda",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "random_seed": 42,
+      "sample_size": 30,
+      "result_artifacts": [
+        {
+          "path": "world_models_fpga/research/circuits/results/rigorous_behavioral_circuits.json",
+          "sha256": "88fc02a55bf52ef9c11d0c00a55c025424707a09578cf266a7d3b9e69f08035d",
+          "type": "summary_json"
+        }
+      ],
+      "key_findings": {
+        "clean_baseline_success": 0.9333,
+        "c1_ablation_success": 0.9000,
+        "random_8d_ablation_drop_mean": 0.2078,
+        "necessity_p_value": 0.9032,
+        "z_score_vs_random": -1.177,
+        "matched_donor_rescue_success": 0.9333,
+        "random_patch_rescue_mean": 0.9089,
+        "rescue_p_value": 0.6129,
+        "c1_donor_cosine": 0.9779,
+        "random_8d_donor_cosine": 0.9854,
+        "final_verdict": "FALSIFIED_NON_SELECTIVE"
+      }
+    }
+  ]
+}

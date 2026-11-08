@@ -239,8 +239,9 @@ def evaluate_closed_loop_safety_benchmark(
                     action_exec = np.clip(cands[best_idx, 0].cpu().numpy(), -1.0, 1.0)
 
                 elif cond == "cond_4_random_collision_predictor":
-                    # Random collision penalty sampled uniformly in [0, 1]
-                    rand_col = torch.rand(num_cands, device=device)
+                    # Random collision penalty sampled uniformly in [0, 1] using episode-specific deterministic RNG
+                    rand_vals = rng.uniform(0.0, 1.0, size=num_cands).astype(np.float32)
+                    rand_col = torch.as_tensor(rand_vals, device=device)
                     cost = rem_dist + 0.10 * prior_cost + 1.8 * rand_col
                     best_idx = int(torch.argmin(cost).item())
                     action_exec = np.clip(cands[best_idx, 0].cpu().numpy(), -1.0, 1.0)

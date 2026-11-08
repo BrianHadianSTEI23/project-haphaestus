@@ -126,6 +126,25 @@ class BaseAgentWrapper:
         self._prev_latent = None
         self._ego_goal_memory = None
         self.last_goal_diag = {}
+        # Fine-grained branch interceptor hooks for mechanistic circuit isolation
+        self.branch_interceptors = {
+            "task_id": None,          # Callable[[int], int] | None
+            "task_token": None,       # Callable[[torch.Tensor], torch.Tensor] | None
+            "visual_goal": None,      # Callable[[torch.Tensor], torch.Tensor] | None
+            "ego_disp": None,         # Callable[[torch.Tensor], torch.Tensor] | None
+            "memory_prev": None,      # Callable[[torch.Tensor], torch.Tensor] | None
+            "memory_updated": None,   # Callable[[torch.Tensor], torch.Tensor] | None
+            "blended_goal": None,     # Callable[[torch.Tensor], torch.Tensor] | None
+        }
+
+    def set_branch_interceptor(self, branch_name: str, fn):
+        if branch_name not in self.branch_interceptors:
+            raise KeyError(f"Unknown branch {branch_name!r}. Supported branches: {list(self.branch_interceptors.keys())}")
+        self.branch_interceptors[branch_name] = fn
+
+    def clear_branch_interceptors(self):
+        for k in self.branch_interceptors:
+            self.branch_interceptors[k] = None
 
     def reset(self):
         self._prev_latent = None
@@ -185,15 +204,35 @@ class BaselineAgent(BaseAgentWrapper):
 
         if self.track == "observation":
             spec = task_spec or {}
-            tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            raw_tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            tid = raw_tid
+            if self.branch_interceptors.get("task_id") is not None:
+                tid = self.branch_interceptors["task_id"](tid)
             t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
+            if self.branch_interceptors.get("task_token") is not None:
+                t_tensor = self.branch_interceptors["task_token"](t_tensor)
             goal_t = self.model.infer_goal_vec(z_vis, t_tensor)
+            if self.branch_interceptors.get("visual_goal") is not None:
+                goal_t = self.branch_interceptors["visual_goal"](goal_t)
+            self._last_vis_goal = goal_t
+            if self.branch_interceptors.get("blended_goal") is not None:
+                bg_fn = self.branch_interceptors["blended_goal"]
+                try:
+                    goal_t = bg_fn(goal_t, goal_t, None)
+                except TypeError:
+                    goal_t = bg_fn(goal_t)
         else:
             if goal_vec_body is None:
                 if robot_pose is None or target_pose is None:
                     raise ValueError("Track B requires goal_vec_body (or relative pose to compute it).")
                 goal_vec_body = compute_body_frame_goal_vec(robot_pose, target_pose)
             goal_t = torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
+            if self.branch_interceptors.get("blended_goal") is not None:
+                bg_fn = self.branch_interceptors["blended_goal"]
+                try:
+                    goal_t = bg_fn(goal_t, None, None)
+                except TypeError:
+                    goal_t = bg_fn(goal_t)
 
         actions, col_risk = self.model.forward_with_latent(z_vis, goal_t)
         act_np = np.clip(actions.squeeze(0).cpu().numpy(), -1.0, 1.0).astype(np.float32)
@@ -224,14 +263,29 @@ class LeWMAgent(BaseAgentWrapper):
     def _resolve_goal_vec(self, s_t: torch.Tensor, robot_pose, target_pose, task_spec, goal_vec_body) -> torch.Tensor:
         if self.track == "observation":
             spec = task_spec or {}
-            tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            raw_tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            tid = raw_tid
+            if self.branch_interceptors.get("task_id") is not None:
+                tid = self.branch_interceptors["task_id"](tid)
             t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
+            if self.branch_interceptors.get("task_token") is not None:
+                t_tensor = self.branch_interceptors["task_token"](t_tensor)
+
             vis_goal = self.model.infer_goal_vec(s_t, t_tensor)
+            if self.branch_interceptors.get("visual_goal") is not None:
+                vis_goal = self.branch_interceptors["visual_goal"](vis_goal)
+
             g_mem_prev = self._ego_goal_memory.clone() if self._ego_goal_memory is not None else None
             if self._prev_latent is not None and self._ego_goal_memory is not None:
-                # Update egocentric goal memory using decoded latent ego-motion between t-1 and t
-                realized_disp = self.model.predict_ego_displacement(self._prev_latent, s_t).squeeze(0)
                 mem = self._ego_goal_memory.clone()
+                if self.branch_interceptors.get("memory_prev") is not None:
+                    mem = self.branch_interceptors["memory_prev"](mem)
+
+                # Decoded latent ego-motion displacement
+                realized_disp = self.model.predict_ego_displacement(self._prev_latent, s_t).squeeze(0)
+                if self.branch_interceptors.get("ego_disp") is not None:
+                    realized_disp = self.branch_interceptors["ego_disp"](realized_disp)
+
                 dx_rem = mem[0] - realized_disp[0]
                 dy_rem = mem[1] - realized_disp[1]
                 dth = realized_disp[2]
@@ -239,19 +293,35 @@ class LeWMAgent(BaseAgentWrapper):
                 mem_dx = c * dx_rem + s * dy_rem
                 mem_dy = -s * dx_rem + c * dy_rem
                 mem_updated = torch.stack([mem_dx, mem_dy, mem[2], mem[3]]).unsqueeze(0)
+                if self.branch_interceptors.get("memory_updated") is not None:
+                    mem_updated = self.branch_interceptors["memory_updated"](mem_updated)
+
                 goal_t = 0.65 * vis_goal + 0.35 * mem_updated
             else:
                 realized_disp = torch.zeros(3, device=self.device)
                 mem_updated = vis_goal
                 goal_t = vis_goal
+
+            self._last_vis_goal = vis_goal
+            self._last_mem_updated = mem_updated
+            if self.branch_interceptors.get("blended_goal") is not None:
+                bg_fn = self.branch_interceptors["blended_goal"]
+                try:
+                    goal_t = bg_fn(goal_t, vis_goal, mem_updated)
+                except TypeError:
+                    goal_t = bg_fn(goal_t)
+
             self._prev_latent = s_t.detach()
             self._ego_goal_memory = goal_t.squeeze(0).detach()
             self.last_goal_diag = {
+                "raw_task_id": raw_tid,
+                "used_task_id": tid,
                 "g_visual_t": vis_goal.squeeze(0).detach().cpu().numpy(),
                 "g_memory_prev": g_mem_prev.cpu().numpy() if g_mem_prev is not None else None,
                 "delta_ego_t": realized_disp.detach().cpu().numpy(),
                 "g_memory_t": mem_updated.squeeze(0).detach().cpu().numpy(),
                 "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+                "active_interceptors": [k for k, v in self.branch_interceptors.items() if v is not None],
             }
             return goal_t
 
@@ -260,12 +330,21 @@ class LeWMAgent(BaseAgentWrapper):
                 raise ValueError("Track B requires goal_vec_body.")
             goal_vec_body = compute_body_frame_goal_vec(robot_pose, target_pose)
         goal_t = torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
+        if self.branch_interceptors.get("blended_goal") is not None:
+            bg_fn = self.branch_interceptors["blended_goal"]
+            try:
+                goal_t = bg_fn(goal_t, None, None)
+            except TypeError:
+                goal_t = bg_fn(goal_t)
         self.last_goal_diag = {
+            "raw_task_id": None,
+            "used_task_id": None,
             "g_visual_t": None,
             "g_memory_prev": None,
             "delta_ego_t": None,
             "g_memory_t": None,
             "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+            "active_interceptors": [k for k, v in self.branch_interceptors.items() if v is not None],
         }
         return goal_t
 
@@ -379,13 +458,28 @@ class HJEPAAgent(BaseAgentWrapper):
     def _resolve_goal_vec(self, s_t: torch.Tensor, robot_pose, target_pose, task_spec, goal_vec_body) -> torch.Tensor:
         if self.track == "observation":
             spec = task_spec or {}
-            tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            raw_tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+            tid = raw_tid
+            if self.branch_interceptors.get("task_id") is not None:
+                tid = self.branch_interceptors["task_id"](tid)
             t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
+            if self.branch_interceptors.get("task_token") is not None:
+                t_tensor = self.branch_interceptors["task_token"](t_tensor)
+
             vis_goal = self.model.infer_goal_vec(s_t, t_tensor)
+            if self.branch_interceptors.get("visual_goal") is not None:
+                vis_goal = self.branch_interceptors["visual_goal"](vis_goal)
+
             g_mem_prev = self._ego_goal_memory.clone() if self._ego_goal_memory is not None else None
             if self._prev_latent is not None and self._ego_goal_memory is not None:
-                realized_disp = self.model.predict_micro_displacement(self._prev_latent, s_t).squeeze(0)
                 mem = self._ego_goal_memory.clone()
+                if self.branch_interceptors.get("memory_prev") is not None:
+                    mem = self.branch_interceptors["memory_prev"](mem)
+
+                realized_disp = self.model.predict_micro_displacement(self._prev_latent, s_t).squeeze(0)
+                if self.branch_interceptors.get("ego_disp") is not None:
+                    realized_disp = self.branch_interceptors["ego_disp"](realized_disp)
+
                 dx_rem = mem[0] - realized_disp[0]
                 dy_rem = mem[1] - realized_disp[1]
                 dth = realized_disp[2]
@@ -393,19 +487,35 @@ class HJEPAAgent(BaseAgentWrapper):
                 mem_dx = c * dx_rem + s * dy_rem
                 mem_dy = -s * dx_rem + c * dy_rem
                 mem_updated = torch.stack([mem_dx, mem_dy, mem[2], mem[3]]).unsqueeze(0)
+                if self.branch_interceptors.get("memory_updated") is not None:
+                    mem_updated = self.branch_interceptors["memory_updated"](mem_updated)
+
                 goal_t = 0.65 * vis_goal + 0.35 * mem_updated
             else:
                 realized_disp = torch.zeros(3, device=self.device)
                 mem_updated = vis_goal
                 goal_t = vis_goal
+
+            self._last_vis_goal = vis_goal
+            self._last_mem_updated = mem_updated
+            if self.branch_interceptors.get("blended_goal") is not None:
+                bg_fn = self.branch_interceptors["blended_goal"]
+                try:
+                    goal_t = bg_fn(goal_t, vis_goal, mem_updated)
+                except TypeError:
+                    goal_t = bg_fn(goal_t)
+
             self._prev_latent = s_t.detach()
             self._ego_goal_memory = goal_t.squeeze(0).detach()
             self.last_goal_diag = {
+                "raw_task_id": raw_tid,
+                "used_task_id": tid,
                 "g_visual_t": vis_goal.squeeze(0).detach().cpu().numpy(),
                 "g_memory_prev": g_mem_prev.cpu().numpy() if g_mem_prev is not None else None,
                 "delta_ego_t": realized_disp.detach().cpu().numpy(),
                 "g_memory_t": mem_updated.squeeze(0).detach().cpu().numpy(),
                 "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+                "active_interceptors": [k for k, v in self.branch_interceptors.items() if v is not None],
             }
             return goal_t
 
@@ -414,12 +524,21 @@ class HJEPAAgent(BaseAgentWrapper):
                 raise ValueError("Track B requires goal_vec_body.")
             goal_vec_body = compute_body_frame_goal_vec(robot_pose, target_pose)
         goal_t = torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
+        if self.branch_interceptors.get("blended_goal") is not None:
+            bg_fn = self.branch_interceptors["blended_goal"]
+            try:
+                goal_t = bg_fn(goal_t, None, None)
+            except TypeError:
+                goal_t = bg_fn(goal_t)
         self.last_goal_diag = {
+            "raw_task_id": None,
+            "used_task_id": None,
             "g_visual_t": None,
             "g_memory_prev": None,
             "delta_ego_t": None,
             "g_memory_t": None,
             "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+            "active_interceptors": [k for k, v in self.branch_interceptors.items() if v is not None],
         }
         return goal_t
 

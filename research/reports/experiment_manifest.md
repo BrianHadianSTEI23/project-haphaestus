@@ -48,18 +48,26 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 ## 3. Systematic Execution Registry Across All 9 Evaluation Categories
 
 ### Category 1: Behavioral Benchmarks & Information Regimes (`behavior`)
-* **Scientific Purpose:** Benchmark navigation success, collision rate, and goal error across three strictly defined information regimes: Track A (Oracle), Track B (Structured egocentric goal), Track C (Pure visual observation).
+* **Scientific Purpose:** Benchmark navigation success, collision rate, and goal error across three strictly defined information regimes: Track A (Oracle), Track B (Structured egocentric goal), Track C (Pure visual observation), and evaluate dynamic visual grounding vs allocentric priors under camera visibility.
 * **Execution Command:**
   ```bash
   MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_behavioral_benchmarks.py
   MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_task_identity_visual_grounding.py --episodes-per-cond 30 --device cuda
   ```
 * **Inputs:** Checkpoints `checkpoints_v4/*`, dataset `splits_v4/held_out_test_benchmark.npz`.
-* **Output Artifacts:** [`behavioral_eval_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/behavioral_eval_results.json), [`track_c_visual_grounding.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/track_c_visual_grounding.json).
+* **Output Artifacts:** [`behavioral_eval_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/behavioral_eval_results.json), [`track_c_visual_grounding.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/track_c_visual_grounding.json), [`task_identity_visual_grounding.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/task_identity_visual_grounding.json), [`task_identity_visual_grounding_traces.npz`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/task_identity_visual_grounding_traces.npz).
 * **Key Quantitative Results:**
   * Track A (Oracle): Success `76.7%`, Collision `13.3%`, Goal Error `0.288` m.
   * Track B (Structured Multi-Seed): Baseline `24.4% \pm 13.9%`, LeWM `26.7% \pm 0.0%`, H-JEPA **`34.4% \pm 6.9%`** (Best seed `40.0%`, Collision `48.3%`, Goal Error `0.490` m).
-  * Track C (Observation Only Grounding, N=20): H-JEPA **20/20 (100.0%, 0.260m)**, LeWM 19/20 (95.0%), Baseline 8/20 (40.0%). Rigid SE(2) global rotations (+90, 180, -90 deg) achieve **100.0%** ($p = 1.0000$, global latent cosine = 0.9745 vs 0.3450 egocentric yaw). Floor nuisance collapses success to **5.0%** ($p < 0.0001$), target appearance achieves **70.0%** ($p = 0.0312$), distractor appearance achieves **100.0%**, color swap achieves **100.0%** (confirming routing by categorical task tokens), and landmark physical relocation collapses to **5.0%** (1.700m error, $p < 0.0001$, proving allocentric map prior over visual tracking). Layout generalization preserves **95.0%** ($p = 1.0000$) with asserted physical surface clearance.
+  * Track C (Observation Only Grounding, N=20): H-JEPA **20/20 (100.0%, 0.260m)**, LeWM 19/20 (95.0%), Baseline 8/20 (40.0%). Rigid SE(2) global rotations (+90, 180, -90 deg) achieve **100.0%** ($p = 1.0000$, global latent cosine = 0.9745 vs 0.3450 egocentric yaw). Floor nuisance collapses success to **5.0%** ($p < 0.0001$), target appearance achieves **70.0%** ($p = 0.0312$), distractor appearance achieves **100.0%**, color swap achieves **100.0%** (confirming routing by categorical task tokens), and target relocation collapses to **30.0%** (6/20, 0.963m error, $p = 0.0001$), distractor relocation achieves **95.0%** (19/20), pairwise swap collapses to **5.0%** (1/20), and floor shift collapses to **5.0%** (1/20).
+  * Dynamic Visual Grounding Benchmark ($N=30$ per condition, 180 episodes total, with camera visibility verification $\ge 15$ pixels):
+    * Canonical: **96.7%** (29/30), 0.250m error.
+    * Relocated Target (Visible): **93.3%** (28/30), 0.257m error ($p = 0.5000$). Demonstrates that H-JEPA actively tracks visible targets; prior 30% relocation failure was caused by out-of-view camera placement rather than an immovable allocentric prior.
+    * Distractor Relocation: **96.7%** (29/30), 0.252m error ($p = 1.0000$).
+    * Same RGB Changed Token: collapses to **3.3%** (1/30), 1.524m error ($p = 3.73 \times 10^{-9}$, Holm-adjusted $p = 1.86 \times 10^{-8}$). Angular error 1.844 rad; 27/30 finish closer to canonical. Visual target extraction strictly requires visual evidence matching the categorical token.
+    * Target Appearance Reassignment: **66.7%** (20/30), 0.573m error ($p = 0.0039$, Holm $p = 0.0156$).
+    * Visual/Token Conflict: **6.7%** (2/30), 1.488m error ($p = 3.73 \times 10^{-9}$, Holm $p = 1.86 \times 10^{-8}$).
 
 ### Category 2: Latent Prediction & Drift Audit (`prediction`)
 * **Scientific Purpose:** Audit compounding error drift across multi-step recursive rollouts vs. direct hierarchical macro transitions ($K=5, K=10$), matched candidate controls, and prospective safety barrier benchmarks.
@@ -87,22 +95,28 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 * **Key Quantitative Results:**
   * Clean Baseline Success: **60.0%** structured, **93.3%** Track C object-grounding suite ($N=30$).
   * Matched random 8D subspace draws evaluated per regime: Track C random drop = **20.8% ($\pm 14.5\%$)**, Structured random drop = **5.3% ($\pm 2.1\%$)**.
-  * C1 Visual Target Grounding: Clean 93.3% $\to$ Ablated 90.0% (**3.3% necessity drop**, selectivity gain **-17.4%**, $z = -1.21, p = 0.9032$, `FALSIFIED_NON_SELECTIVE` as a modular circuit; confirmed as diffuse population code).
+  * C1 Visual Target Grounding: Clean 93.3% $\to$ Ablated 90.0% (**3.3% necessity drop**, selectivity gain **-17.4%**, $z = -1.21, p = 0.9032$, `FALSIFIED_NON_SELECTIVE` as a modular circuit; representation hypothesis remains unresolved without claim of confirmed diffuse population code).
   * C2 Egocentric Displacement (10.0% drop, +4.7% selectivity), C3 Obstacle Risk (10.0% drop, +4.7% selectivity), and C4 Forward Dynamics (6.7% drop, +1.3% selectivity) are within $1\sigma$ of structured random controls ($z \le 0.62$, empirical $p = 0.5294$), designated as `UNRESOLVED_NON_SELECTIVE`.
   * Within-model color control: 0.0% drop ($z = -0.69, p = 0.8235$, `FALSIFIED_NON_SELECTIVE`).
 
 ### Category 4: Attribution Graphs & Activation Patching (`sufficiency`)
-* **Scientific Purpose:** Measure gradient-weighted feature attribution and test sufficiency and rescue of targeted subspaces vs. matched random controls with genuine matched-donor activation patching ($z_{\text{rescue}} = z_{\text{recip}}(I - P) + z_{\text{donor}}P$) satisfying projection invariants.
+* **Scientific Purpose:** Measure gradient-weighted feature attribution and test sufficiency and rescue of targeted subspaces vs. matched random controls with genuine matched-donor activation patching ($z_{\text{rescue}} = z_{\text{recip}}(I - P) + z_{\text{donor}}P$) satisfying projection invariants, as well as controller memory pathway interventions.
 * **Execution Command:**
   ```bash
   MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_goal_path_interventions.py --episodes 30 --device cuda
   ```
 * **Inputs:** `checkpoints_v4/*`, `splits_v4/train_benchmark.npz`.
-* **Output Artifacts:** [`sufficiency_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/sufficiency_results.json), [`circuit_registry.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/circuit_registry.json).
+* **Output Artifacts:** [`sufficiency_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/sufficiency_results.json), [`circuit_registry.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/circuit_registry.json), [`goal_path_interventions.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/goal_path_interventions.json).
 * **Key Quantitative Results:**
   * Dedicated `sufficiency_results.json` records clean baseline (60.0% / 93.3%), ablated retention (C1 retained 16.7%), and matched donor patching (Track C random rescue mean = 90.9%, Structured random rescue mean = 53.3%).
-  * C1 matched donor patching restores **93.3% navigation success** (0.295m step goal error) vs mismatched donor **83.3%** (0.668m step goal error) and random rescue 90.9% ($p = 0.6129$). Offline, donor patching steers inferred goal vectors toward donor targets ($\cos = 0.9779 \pm 0.0356$, angular error 0.1430 rad vs $\cos = 0.9854 \pm 0.0078$ random). Perturbation diagnostics confirm C1 removes 23.51% variance (Mahalanobis distance 94.991) matching random 8D ($23.99\% \pm 3.38\%$, Mahalanobis distance $94.322 \pm 25.492$).
-  * Verified circuit registry with all registered circuits classified according to empirical evidence.
+  * C1 matched donor patching restores **93.3% navigation success** (0.295m step goal error) vs mismatched donor **83.3%** (0.668m step goal error) and random rescue 90.9% ($p = 0.6129$). Offline, donor patching steers inferred goal vectors toward donor targets ($\cos = 0.9779 \pm 0.0356$, angular error 0.1430 rad vs $\cos = 0.9854 \pm 0.0078$ random). Perturbation diagnostics confirm C1 removes 23.51% variance (Mahalanobis distance 94.991) matching random 8D ($23.99\% \pm 3.38\%$, Mahalanobis distance $94.322 \pm 25.492$). Because random subspace achieves equal or higher donor alignment, selective rescue is not established.
+  * Goal Path & Controller Memory Interventions ($N=30$ matched episodes per condition, 210 episodes total):
+    * Evaluates 7 controller conditions isolating learned visual goal vectors from Python controller memory (`_ego_goal_memory`).
+    * Full visual + memory: **96.7%** (29/30), 0.301m error.
+    * Visual-only (0% memory): **96.7%** (29/30), 0.304m error ($p = 1.0000$, $\Delta = 0.0\%$).
+    * Memory reset / frozen / corrupted / donor injection: all achieve $\ge \mathbf{96.7\%}$ success ($p = 1.0000$).
+    * Confirms that goal memory is an ephemeral Python buffer in `model_wrappers.py`, not learned recurrent neural weights in `HJEPAModel`, and visual grounding drives closed-loop navigation.
 
 ### Category 5: Generalization & Counterfactual Invariance (`generalization`)
 * **Scientific Purpose:** Evaluate closed-loop retention under E1–E7 counterfactuals and visual/spatial disambiguation tasks.

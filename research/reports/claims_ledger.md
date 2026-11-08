@@ -73,10 +73,13 @@ Linear decodability ($R^2$, AUROC) is strictly classified as E1 observational co
   - Suite 2B (Isolated Illumination Nuisance): 50% ambient dimming preserves **17/20 (85.0%)** success ($\Delta = -15.0\%$, $p = 0.2500$).
   - Suite 2C1 (Target-Only Appearance Nuisance): Target appearance mutation yields **14/20 (70.0%)** success ($\Delta = -30.0\%$, $p = 0.0312$).
   - Suite 2C2 (Distractor-Only Appearance Nuisance): Distractor appearance mutation yields **20/20 (100.0%)** success ($\Delta = 0.0\%$, $p = 1.0000$).
-  - Suite 3 (Color Swap): Swapping target and distractor visual colors while keeping the categorical task token constant yields **20/20 (100.0%)** success ($\Delta = 0.0\%$, $p = 1.0000$), proving the agent routes by discrete categorical token rather than dynamic color parsing.
-  - Suite 4 (Physical Landmark Relocation): Physically swapping target object and partner obstacle positions in MuJoCo, recomputing waypoints, and verifying task agreement collapses success to **1/20 (5.0%)** ($\Delta = -95.0\%$, $p < 0.0001$, GoalErr: 1.700m). Robot steers toward nominal physical coordinates, proving an allocentric map prior over visual tracking.
+  - Suite 3 (Color Swap): Swapping target and partner visual colors while keeping the categorical task token constant yields **17/20 (85.0%)** success ($\Delta = -15.0\%$, $p = 0.2500$).
+  - Suite 4A (Target-Only Relocation): Moving target object while distractors remain canonical drops success to **6/20 (30.0%)** with mean final eval goal error **1.033m** and distance to canonical waypoint **1.057m** (initial dists: 0.566m and 0.594m; robot moves farther from both waypoints).
+  - Suite 4C (Pairwise Swap): Physically swapping target and distractor positions simultaneously yields **1/20 (5.0%)** success (GoalErr: 1.700m; 18/20 closer to canonical).
+  - Phase 3 Factorial Grounding (`run_task_identity_visual_grounding.py`): When target relocation is evaluated with **verified camera visibility** (visible pixels $\ge 15$), H-JEPA dynamically tracks the relocated target with **28/30 (93.3%)** success and **0.257m** goal error ($p = 0.5000$). When task token is swapped under fixed RGB, success collapses to **1/30 (3.3%)** with 1.524m error ($p = 3.73 \times 10^{-9}$), proving visual grounding is active and requires visual evidence.
+  - Phase 3 Goal Memory Interventions (`run_goal_path_interventions.py`): Goal memory is an ephemeral controller heuristic in `model_wrappers.py` (zero learned recurrent neural parameters in `HJEPAModel`). Pure visual control (`visual_only`, 0% memory) achieves **29/30 (96.7%)** success, matching default blended control (96.7%, $p = 1.0000$).
   - Suite 5 (Layout Generalization): Rejection-sampled configurations with asserted footprint clearance achieve **19/20 (95.0%)** success ($\Delta = -5.0\%$, $p = 1.0000$).
-  - Suite 6 (Rigid SE(2) Global Transformations): Preserving relative arena geometry (+90 deg, 180 deg, -90 deg) yields **20/20 (100.0%)** across all rotations ($\Delta = 0.0\%$, $p = 1.0000$). Global rigid rotation latent cosine is 0.9745, whereas egocentric camera yaw rotation drops latent cosine to 0.3450 ($R^2 < 0.20$ for linear equivariance operator $T_g$).
+  - Suite 6 (Rigid SE(2) Global Transformations): Preserving relative arena geometry (+90 deg, 180 deg, -90 deg) yields **20/20 (100.0%)** across all rotations ($\Delta = 0.0\%$, $p = 1.0000$). Global rigid rotation latent cosine is 0.9745, whereas egocentric camera yaw rotation drops latent cosine to 0.3450 ($R^2 < 0.20$ for linear equivariance operator $T_g$). Viewpoint preservation, not group-equivariant CNN filters, underlies rotational retention.
 * **Evidence Level:** **E3 (Generalized)**.
 * **Status:** `VERIFIED & CALIBRATED (SE(2) Equivariant & Allocentric Map Prior)`.
 
@@ -87,12 +90,12 @@ Linear decodability ($R^2$, AUROC) is strictly classified as E1 observational co
 * **Audit Investigation & Finding B & F Resolution:**
   - Previous claims asserted that disabling collision lookahead caused a "+23.4%" collision surge and claimed formal Control Barrier Function (CBF) guarantees.
 * **Repaired Empirical Protocol (`run_predictive_safety_benchmark.py`):**
-  - Offline prospective evaluation aligned to macro predictor's $K=5$ horizon: Brier score = 0.0003, ECE = 0.0041, AUROC = 1.0000, False Negative Rate (@0.5) = 0.0%.
+  - Offline prospective evaluation aligned to macro predictor's $K=5$ horizon: Brier score = 0.0003, ECE = 0.0041, AUROC = 1.0000 with clustered bootstrap 95% CI = [0.5, 1.0] across 20 episode clusters, False Negative Rate (@0.5) = 0.0%.
   - Closed loop evaluated across 40 collision-critical episodes with 24 candidate trajectories per step:
-    - Condition 1 (Intact Collision Head): **70.0% collision rate** (27.5% success).
+    - Condition 1 (Intact Collision Head): **70.0% collision rate** (27.5% success, 0.666m error).
     - Condition 2 (Shuffled Collision Binding): **70.0% collision rate** ($\Delta = 0.0\%$, McNemar $p = 1.0000$).
     - Condition 3 (Collision Head Disabled): **70.0% collision rate** ($\Delta = 0.0\%$, McNemar $p = 1.0000$).
-    - Condition 4 (Random Collision Predictor): **70.0% collision rate** ($\Delta = 0.0\%$, McNemar $p = 1.0000$).
+    - Condition 4 (Random Collision Predictor): **57.5% collision rate** (15.0% success, $\Delta = -12.5\%$, McNemar $p = 0.0625$).
     - Condition 5 (Oracle Physics Predictor): **7.5% collision rate** ($\Delta = -62.5\%$, McNemar $p = 5.96 \times 10^{-8}$).
   - Scientific Verdict: Neural collision predictions fail to prevent collisions in dense clutter because contact-level predictions occur after dynamic stopping horizons have passed. Formal CBF claims are **falsified**. Closed-loop safety requires geometric spatial margins rather than contact-level neural prediction.
 * **Evidence Level:** **E3 (Generalized)**.
