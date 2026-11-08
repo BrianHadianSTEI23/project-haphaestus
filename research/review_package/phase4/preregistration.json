@@ -1,0 +1,101 @@
+{
+  "preregistration_metadata": {
+    "protocol_version": "4.0.0-phase4-mechanistic-resolution",
+    "timestamp_utc": "2026-11-08T10:20:00Z",
+    "audit_baseline_commit": "8229f786309fb6d9ea669e8a783793c92ceca564",
+    "research_objective": "Discriminate among visual object binding, spatial association prior, and mixed non-linear decoding; identify what ego-motion memory actually computes."
+  },
+  "experiment_A_task_conditioned_binding": {
+    "sample_size": 100,
+    "statistical_unit": "independent_scene_pair",
+    "competing_hypotheses": [
+      {
+        "id": "H_A1_visual_object_binding",
+        "description": "Task identity cleanly selects one visible object from visual geometry, predicting egocentric vector to designated physical target.",
+        "falsification_condition": "A-correct or B-correct marginal accuracy not statistically superior to 50% chance (binomial p > 0.05) or dual-discrimination <= 25%."
+      },
+      {
+        "id": "H_A2_spatial_association_prior",
+        "description": "Task identity retrieves a learned canonical spatial expectation with minimal dependency on actual target physical coordinates.",
+        "confirmation_condition": "Interaction I ~ 0 and model g(z, e) = g_prior(e) fits held-out scenes better than visual selection."
+      },
+      {
+        "id": "H_A3_mixed_nonlinear_decoding",
+        "description": "Task token and visual latent interact through distributed non-linear MLP layers without implementing a clean object-selection operator.",
+        "confirmation_condition": "Nonlinear interaction I != 0, but prediction aligns poorly with physical object displacement, and general MLP fit achieves lowest held-out MSE."
+      }
+    ],
+    "confirmatory_metrics": [
+      "a_correct_rate",
+      "b_correct_rate",
+      "dual_discrimination_rate",
+      "mean_angular_shift_rad",
+      "interaction_magnitude_I",
+      "interaction_alignment_cosine",
+      "held_out_model_mse"
+    ],
+    "preregistered_statistical_tests": [
+      {
+        "test": "exact_binomial",
+        "null_hypothesis": "A-correct accuracy == 0.50 (chance level)",
+        "alpha": 0.05
+      },
+      {
+        "test": "exact_binomial",
+        "null_hypothesis": "B-correct accuracy == 0.50 (chance level)",
+        "alpha": 0.05
+      },
+      {
+        "test": "exact_binomial",
+        "null_hypothesis": "Dual-discrimination accuracy == 0.25 (chance level)",
+        "alpha": 0.05
+      },
+      {
+        "test": "paired_wilcoxon_signed_rank",
+        "null_hypothesis": "Held-out MSE of Additive Model == Held-out MSE of Selection Model",
+        "alpha": 0.05
+      }
+    ]
+  },
+  "experiment_B_internal_mechanistic_circuits": {
+    "sample_size": 50,
+    "statistical_unit": "scene_pair",
+    "layers_instrumented": [
+      "input_48d",
+      "layer1_pre_64d",
+      "layer1_post_relu_64d",
+      "layer2_pre_64d",
+      "layer2_post_relu_64d",
+      "raw_output_4d",
+      "postprocessed_goal_4d"
+    ],
+    "confirmatory_tests": [
+      "matched_vs_mismatched_donor_patching_transfer_effect",
+      "hidden_layer_selectivity_gain_over_random_subspace"
+    ]
+  },
+  "experiment_C_ego_memory_mechanism": {
+    "sample_size": 50,
+    "statistical_unit": "replay_trajectory",
+    "confirmatory_conditions": [
+      "cond_A_visual_only",
+      "cond_B_full_learned_memory",
+      "cond_C_frozen_initial_memory",
+      "cond_D_zeroed_ego_motion",
+      "cond_E_shuffled_ego_motion",
+      "cond_F_matched_donor_ego_motion",
+      "cond_G_mismatched_donor_ego_motion",
+      "cond_H_oracle_odometry"
+    ],
+    "primary_confirmatory_metric": "trajectory_mean_tracking_error_during_dropout_m",
+    "equivalence_margin_delta_m": 0.05,
+    "preregistered_statistical_family": [
+      "full_memory_vs_zeroed_ego_motion",
+      "full_memory_vs_frozen_memory",
+      "full_memory_vs_visual_only",
+      "full_memory_vs_oracle_odometry",
+      "full_memory_vs_shuffled_ego_motion"
+    ],
+    "multiplicity_correction": "Holm-Bonferroni"
+  }
+}
