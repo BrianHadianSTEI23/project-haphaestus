@@ -130,6 +130,8 @@ class BaseAgentWrapper:
         self.branch_interceptors = {
             "task_id": None,          # Callable[[int], int] | None
             "task_token": None,       # Callable[[torch.Tensor], torch.Tensor] | None
+            "task_embedding": None,   # Callable[[torch.Tensor], torch.Tensor] | None
+            "grounding_latent": None, # Callable[[torch.Tensor], torch.Tensor] | None
             "visual_goal": None,      # Callable[[torch.Tensor], torch.Tensor] | None
             "ego_disp": None,         # Callable[[torch.Tensor], torch.Tensor] | None
             "memory_prev": None,      # Callable[[torch.Tensor], torch.Tensor] | None
@@ -211,7 +213,19 @@ class BaselineAgent(BaseAgentWrapper):
             t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
             if self.branch_interceptors.get("task_token") is not None:
                 t_tensor = self.branch_interceptors["task_token"](t_tensor)
-            goal_t = self.model.infer_goal_vec(z_vis, t_tensor)
+
+            s_ground = z_vis
+            if self.branch_interceptors.get("grounding_latent") is not None:
+                s_ground = self.branch_interceptors["grounding_latent"](s_ground)
+
+            t_emb = self.model.task_embedding(t_tensor)
+            if self.branch_interceptors.get("task_embedding") is not None:
+                t_emb = self.branch_interceptors["task_embedding"](t_emb)
+
+            raw = self.model.grounding_head(torch.cat([s_ground, t_emb], dim=-1))
+            dx_dy = torch.clamp(raw[:, :2], -3.5, 3.5)
+            trig = torch.nn.functional.normalize(raw[:, 2:4] + 1e-6, dim=-1)
+            goal_t = torch.cat([dx_dy, trig], dim=-1)
             if self.branch_interceptors.get("visual_goal") is not None:
                 goal_t = self.branch_interceptors["visual_goal"](goal_t)
             self._last_vis_goal = goal_t
@@ -221,6 +235,15 @@ class BaselineAgent(BaseAgentWrapper):
                     goal_t = bg_fn(goal_t, goal_t, None)
                 except TypeError:
                     goal_t = bg_fn(goal_t)
+            self.last_goal_diag = {
+                "raw_task_id": raw_tid,
+                "used_task_id": tid,
+                "task_embedding": t_emb.squeeze(0).detach().cpu().numpy(),
+                "grounding_latent": s_ground.squeeze(0).detach().cpu().numpy(),
+                "g_visual_t": goal_t.squeeze(0).detach().cpu().numpy(),
+                "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+                "active_interceptors": [k for k, v in self.branch_interceptors.items() if v is not None],
+            }
         else:
             if goal_vec_body is None:
                 if robot_pose is None or target_pose is None:
@@ -271,7 +294,18 @@ class LeWMAgent(BaseAgentWrapper):
             if self.branch_interceptors.get("task_token") is not None:
                 t_tensor = self.branch_interceptors["task_token"](t_tensor)
 
-            vis_goal = self.model.infer_goal_vec(s_t, t_tensor)
+            s_ground = s_t
+            if self.branch_interceptors.get("grounding_latent") is not None:
+                s_ground = self.branch_interceptors["grounding_latent"](s_ground)
+
+            t_emb = self.model.task_embedding(t_tensor)
+            if self.branch_interceptors.get("task_embedding") is not None:
+                t_emb = self.branch_interceptors["task_embedding"](t_emb)
+
+            raw = self.model.grounding_head(torch.cat([s_ground, t_emb], dim=-1))
+            dx_dy = torch.clamp(raw[:, :2], -3.5, 3.5)
+            trig = torch.nn.functional.normalize(raw[:, 2:4] + 1e-6, dim=-1)
+            vis_goal = torch.cat([dx_dy, trig], dim=-1)
             if self.branch_interceptors.get("visual_goal") is not None:
                 vis_goal = self.branch_interceptors["visual_goal"](vis_goal)
 
@@ -316,6 +350,8 @@ class LeWMAgent(BaseAgentWrapper):
             self.last_goal_diag = {
                 "raw_task_id": raw_tid,
                 "used_task_id": tid,
+                "task_embedding": t_emb.squeeze(0).detach().cpu().numpy(),
+                "grounding_latent": s_ground.squeeze(0).detach().cpu().numpy(),
                 "g_visual_t": vis_goal.squeeze(0).detach().cpu().numpy(),
                 "g_memory_prev": g_mem_prev.cpu().numpy() if g_mem_prev is not None else None,
                 "delta_ego_t": realized_disp.detach().cpu().numpy(),
@@ -466,7 +502,18 @@ class HJEPAAgent(BaseAgentWrapper):
             if self.branch_interceptors.get("task_token") is not None:
                 t_tensor = self.branch_interceptors["task_token"](t_tensor)
 
-            vis_goal = self.model.infer_goal_vec(s_t, t_tensor)
+            s_ground = s_t
+            if self.branch_interceptors.get("grounding_latent") is not None:
+                s_ground = self.branch_interceptors["grounding_latent"](s_ground)
+
+            t_emb = self.model.task_embedding(t_tensor)
+            if self.branch_interceptors.get("task_embedding") is not None:
+                t_emb = self.branch_interceptors["task_embedding"](t_emb)
+
+            raw = self.model.grounding_head(torch.cat([s_ground, t_emb], dim=-1))
+            dx_dy = torch.clamp(raw[:, :2], -3.5, 3.5)
+            trig = torch.nn.functional.normalize(raw[:, 2:4] + 1e-6, dim=-1)
+            vis_goal = torch.cat([dx_dy, trig], dim=-1)
             if self.branch_interceptors.get("visual_goal") is not None:
                 vis_goal = self.branch_interceptors["visual_goal"](vis_goal)
 
@@ -510,6 +557,8 @@ class HJEPAAgent(BaseAgentWrapper):
             self.last_goal_diag = {
                 "raw_task_id": raw_tid,
                 "used_task_id": tid,
+                "task_embedding": t_emb.squeeze(0).detach().cpu().numpy(),
+                "grounding_latent": s_ground.squeeze(0).detach().cpu().numpy(),
                 "g_visual_t": vis_goal.squeeze(0).detach().cpu().numpy(),
                 "g_memory_prev": g_mem_prev.cpu().numpy() if g_mem_prev is not None else None,
                 "delta_ego_t": realized_disp.detach().cpu().numpy(),
