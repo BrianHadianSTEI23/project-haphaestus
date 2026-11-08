@@ -125,10 +125,12 @@ class BaseAgentWrapper:
         self.device = device
         self._prev_latent = None
         self._ego_goal_memory = None
+        self.last_goal_diag = {}
 
     def reset(self):
         self._prev_latent = None
         self._ego_goal_memory = None
+        self.last_goal_diag = {}
 
     def act(
         self,
@@ -225,6 +227,7 @@ class LeWMAgent(BaseAgentWrapper):
             tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
             t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
             vis_goal = self.model.infer_goal_vec(s_t, t_tensor)
+            g_mem_prev = self._ego_goal_memory.clone() if self._ego_goal_memory is not None else None
             if self._prev_latent is not None and self._ego_goal_memory is not None:
                 # Update egocentric goal memory using decoded latent ego-motion between t-1 and t
                 realized_disp = self.model.predict_ego_displacement(self._prev_latent, s_t).squeeze(0)
@@ -238,16 +241,33 @@ class LeWMAgent(BaseAgentWrapper):
                 mem_updated = torch.stack([mem_dx, mem_dy, mem[2], mem[3]]).unsqueeze(0)
                 goal_t = 0.65 * vis_goal + 0.35 * mem_updated
             else:
+                realized_disp = torch.zeros(3, device=self.device)
+                mem_updated = vis_goal
                 goal_t = vis_goal
             self._prev_latent = s_t.detach()
             self._ego_goal_memory = goal_t.squeeze(0).detach()
+            self.last_goal_diag = {
+                "g_visual_t": vis_goal.squeeze(0).detach().cpu().numpy(),
+                "g_memory_prev": g_mem_prev.cpu().numpy() if g_mem_prev is not None else None,
+                "delta_ego_t": realized_disp.detach().cpu().numpy(),
+                "g_memory_t": mem_updated.squeeze(0).detach().cpu().numpy(),
+                "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+            }
             return goal_t
 
         if goal_vec_body is None:
             if robot_pose is None or target_pose is None:
                 raise ValueError("Track B requires goal_vec_body.")
             goal_vec_body = compute_body_frame_goal_vec(robot_pose, target_pose)
-        return torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
+        goal_t = torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
+        self.last_goal_diag = {
+            "g_visual_t": None,
+            "g_memory_prev": None,
+            "delta_ego_t": None,
+            "g_memory_t": None,
+            "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+        }
+        return goal_t
 
     @torch.no_grad()
     def act(self, obs_rgb, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=None):
@@ -258,13 +278,22 @@ class LeWMAgent(BaseAgentWrapper):
         a_react = self.model.predict_reactive_action(s_t, goal_t)
         if self.ablation_mode == "reactive":
             _, col_logit = self.model.predict_next(s_t, a_react)
+            act_react = np.clip(a_react.squeeze(0).cpu().numpy(), -1.0, 1.0).astype(np.float32)
             return (
-                np.clip(a_react.squeeze(0).cpu().numpy(), -1.0, 1.0).astype(np.float32),
+                act_react,
                 {
                     "col_risk": float(torch.sigmoid(col_logit).item()),
                     "latent": s_t.squeeze(0).cpu().numpy(),
                     "track": self.track,
                     "ablation_mode": self.ablation_mode,
+                    "g_visual_t": self.last_goal_diag.get("g_visual_t"),
+                    "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
+                    "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
+                    "g_memory_t": self.last_goal_diag.get("g_memory_t"),
+                    "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+                    "a_react": a_react.squeeze(0).cpu().numpy(),
+                    "best_cand_idx": 0,
+                    "micro_action": act_react,
                 },
             )
 
@@ -314,6 +343,15 @@ class LeWMAgent(BaseAgentWrapper):
             "predicted_next_latent": next_s[best_idx].cpu().numpy(),
             "track": self.track,
             "ablation_mode": self.ablation_mode,
+            "g_visual_t": self.last_goal_diag.get("g_visual_t"),
+            "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
+            "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
+            "g_memory_t": self.last_goal_diag.get("g_memory_t"),
+            "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+            "a_react": a_react.squeeze(0).cpu().numpy(),
+            "best_cand_idx": best_idx,
+            "micro_action": best_act,
+            "pred_disp": pred_disp[best_idx].cpu().numpy(),
         }
 
 
@@ -344,6 +382,7 @@ class HJEPAAgent(BaseAgentWrapper):
             tid = encode_task_id(spec.get("target_key", ""), spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
             t_tensor = torch.tensor([tid], dtype=torch.long, device=self.device)
             vis_goal = self.model.infer_goal_vec(s_t, t_tensor)
+            g_mem_prev = self._ego_goal_memory.clone() if self._ego_goal_memory is not None else None
             if self._prev_latent is not None and self._ego_goal_memory is not None:
                 realized_disp = self.model.predict_micro_displacement(self._prev_latent, s_t).squeeze(0)
                 mem = self._ego_goal_memory.clone()
@@ -356,16 +395,33 @@ class HJEPAAgent(BaseAgentWrapper):
                 mem_updated = torch.stack([mem_dx, mem_dy, mem[2], mem[3]]).unsqueeze(0)
                 goal_t = 0.65 * vis_goal + 0.35 * mem_updated
             else:
+                realized_disp = torch.zeros(3, device=self.device)
+                mem_updated = vis_goal
                 goal_t = vis_goal
             self._prev_latent = s_t.detach()
             self._ego_goal_memory = goal_t.squeeze(0).detach()
+            self.last_goal_diag = {
+                "g_visual_t": vis_goal.squeeze(0).detach().cpu().numpy(),
+                "g_memory_prev": g_mem_prev.cpu().numpy() if g_mem_prev is not None else None,
+                "delta_ego_t": realized_disp.detach().cpu().numpy(),
+                "g_memory_t": mem_updated.squeeze(0).detach().cpu().numpy(),
+                "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+            }
             return goal_t
 
         if goal_vec_body is None:
             if robot_pose is None or target_pose is None:
                 raise ValueError("Track B requires goal_vec_body.")
             goal_vec_body = compute_body_frame_goal_vec(robot_pose, target_pose)
-        return torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
+        goal_t = torch.as_tensor(goal_vec_body, dtype=torch.float32, device=self.device).view(1, 4)
+        self.last_goal_diag = {
+            "g_visual_t": None,
+            "g_memory_prev": None,
+            "delta_ego_t": None,
+            "g_memory_t": None,
+            "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+        }
+        return goal_t
 
     def _build_macro_sequence_candidates(self, a_react: torch.Tensor, cand_1step: torch.Tensor) -> torch.Tensor:
         """
@@ -407,13 +463,21 @@ class HJEPAAgent(BaseAgentWrapper):
         a_react = self.model.predict_reactive_action(s_t, goal_t)
         if self.ablation_mode == "reactive":
             _, micro_col_logit = self.model.micro_predictor.forward_transition(s_t, a_react)
+            act_react = np.clip(a_react.squeeze(0).cpu().numpy(), -1.0, 1.0).astype(np.float32)
             return (
-                np.clip(a_react.squeeze(0).cpu().numpy(), -1.0, 1.0).astype(np.float32),
+                act_react,
                 {
                     "col_risk": float(torch.sigmoid(micro_col_logit).item()),
                     "latent": s_t.squeeze(0).cpu().numpy(),
                     "track": self.track,
                     "ablation_mode": self.ablation_mode,
+                    "g_visual_t": self.last_goal_diag.get("g_visual_t"),
+                    "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
+                    "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
+                    "g_memory_t": self.last_goal_diag.get("g_memory_t"),
+                    "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+                    "a_react": a_react.squeeze(0).cpu().numpy(),
+                    "micro_action": act_react,
                 },
             )
 
@@ -444,6 +508,15 @@ class HJEPAAgent(BaseAgentWrapper):
                 "latent": s_t.squeeze(0).cpu().numpy(),
                 "track": self.track,
                 "ablation_mode": self.ablation_mode,
+                "g_visual_t": self.last_goal_diag.get("g_visual_t"),
+                "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
+                "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
+                "g_memory_t": self.last_goal_diag.get("g_memory_t"),
+                "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+                "a_react": a_react.squeeze(0).cpu().numpy(),
+                "best_micro_idx": best_idx,
+                "micro_action": best_act,
+                "pred_micro_disp": pred_micro_disp[best_idx].cpu().numpy(),
             }
 
         # Tier 1: Macro Planning over K=5 steps
@@ -515,6 +588,19 @@ class HJEPAAgent(BaseAgentWrapper):
             "predicted_next_latent": next_s_m[best_micro_idx].cpu().numpy(),
             "track": self.track,
             "ablation_mode": self.ablation_mode,
+            "g_visual_t": self.last_goal_diag.get("g_visual_t"),
+            "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
+            "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
+            "g_memory_t": self.last_goal_diag.get("g_memory_t"),
+            "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+            "a_react": a_react.squeeze(0).cpu().numpy(),
+            "macro_cand_seqs": macro_seqs.cpu().numpy(),
+            "best_macro_idx": best_macro_idx,
+            "a_proposal": a_proposal.squeeze(0).cpu().numpy(),
+            "best_micro_idx": best_micro_idx,
+            "micro_action": best_act,
+            "pred_macro_disp": pred_macro_disp[best_macro_idx].cpu().numpy(),
+            "pred_micro_disp": pred_micro_disp[best_micro_idx].cpu().numpy(),
         }
 
 

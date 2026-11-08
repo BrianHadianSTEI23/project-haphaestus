@@ -233,14 +233,20 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
         init_pos = np.asarray(spec["initial_pose"], dtype=np.float32)
         obs, _ = env.reset(options={"initial_pos": (float(init_pos[0]), float(init_pos[1]), float(init_pos[2]))})
         final_wp = np.asarray(spec.get("waypoints", [init_pos])[-1], dtype=np.float32)
+        canonical_wp = np.asarray(spec.get("canonical_waypoint", final_wp), dtype=np.float32)
 
         if hasattr(agent, "reset"):
             agent.reset()
 
         collision_hit = False
+        collision_xy = None
         goal_reached = False
         prev_xy = init_pos[:2].copy()
         total_path = 0.0
+
+        trajectory_xy = [[float(init_pos[0]), float(init_pos[1])]]
+        step_dists_to_eval_wp = [float(np.linalg.norm(init_pos[:2] - final_wp[:2]))]
+        step_dists_to_canonical_wp = [float(np.linalg.norm(init_pos[:2] - canonical_wp[:2]))]
 
         for _ in range(max_steps):
             curr_pose = env.get_robot_pose()
@@ -260,20 +266,27 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
             step_res = env.step(act_np)
             obs = step_res[0]
             info = step_res[-1]
+            curr_xy = env.get_robot_pose()[:2]
+            trajectory_xy.append([float(curr_xy[0]), float(curr_xy[1])])
+            step_dists_to_eval_wp.append(float(np.linalg.norm(curr_xy - final_wp[:2])))
+            step_dists_to_canonical_wp.append(float(np.linalg.norm(curr_xy - canonical_wp[:2])))
+
             if info.get("collision", False):
                 collision_hit = True
-            curr_xy = env.get_robot_pose()[:2]
+                if collision_xy is None:
+                    collision_xy = [float(curr_xy[0]), float(curr_xy[1])]
             total_path += float(np.linalg.norm(curr_xy - prev_xy))
             prev_xy = curr_xy.copy()
 
         final_p = env.get_robot_pose()
-        final_err = float(np.linalg.norm(final_p[:2] - final_wp[:2]))
+        final_err_eval = float(np.linalg.norm(final_p[:2] - final_wp[:2]))
+        final_err_canonical = float(np.linalg.norm(final_p[:2] - canonical_wp[:2]))
         succ = bool(goal_reached and not collision_hit)
-        
+
         t_key = spec.get("target_key", "")
         t_pos = spec.get("obstacles", {}).get(t_key, {}).get("pos", [0.0, 0.0, 0.0])
         tid = encode_task_id(t_key, spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
-        
+
         records.append({
             "episode_id": spec.get("episode_id", "ep"),
             "target_key": t_key,
@@ -281,12 +294,20 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
             "target_physical_coordinates": [float(x) for x in t_pos],
             "task_token": int(tid),
             "instruction": spec.get("instruction", ""),
+            "initial_pose": [float(x) for x in init_pos],
+            "final_pose": [float(x) for x in final_p],
             "computed_waypoint": [float(x) for x in final_wp],
+            "canonical_waypoint": [float(x) for x in canonical_wp],
             "success": succ,
             "goal_reached": goal_reached,
             "collision": collision_hit,
-            "final_goal_error_m": final_err,
+            "collision_coordinates": collision_xy,
+            "final_goal_error_m": final_err_eval,
+            "final_dist_to_canonical_wp_m": final_err_canonical,
             "path_length_m": total_path,
+            "trajectory_xy": trajectory_xy,
+            "step_dists_to_eval_wp": step_dists_to_eval_wp,
+            "step_dists_to_canonical_wp": step_dists_to_canonical_wp,
         })
     env.close()
 
@@ -294,7 +315,8 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
     n_succ = sum(1 for r in records if r["success"])
     n_goal = sum(1 for r in records if r["goal_reached"])
     n_col = sum(1 for r in records if r["collision"])
-    mean_err = float(np.mean([r["final_goal_error_m"] for r in records]))
+    mean_err_eval = float(np.mean([r["final_goal_error_m"] for r in records]))
+    mean_err_canonical = float(np.mean([r["final_dist_to_canonical_wp_m"] for r in records]))
 
     return {
         "episodes_evaluated": n,
@@ -304,7 +326,8 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
         "goal_reached_rate": float(n_goal / max(1, n)),
         "collision_count": n_col,
         "collision_rate": float(n_col / max(1, n)),
-        "mean_final_goal_error_m": mean_err,
+        "mean_final_goal_error_m": mean_err_eval,
+        "mean_final_dist_to_canonical_wp_m": mean_err_canonical,
         "records": records,
     }
 
@@ -421,27 +444,28 @@ def main():
     pair_dist_app = _paired_contingency(nom_h_succ, dist_app_h_succ)
     print(f"  [H-JEPA Distractor App] Succ: {res_dist_app_h['success_count']}/{n_eps} ({res_dist_app_h['success_rate']*100:5.1f}%) | Delta: {pair_dist_app['mean_diff']*100:+5.1f}% [CI95: {pair_dist_app['ci95_low']*100:+5.1f}%, {pair_dist_app['ci95_high']*100:+5.1f}%] | p={pair_dist_app['mcnemar_exact_p_value']:.4f}")
 
-    # --- 3. Semantically Relevant Appearance: Color Swap vs Landmark Categorical Token ---
+    # --- 3. Semantically Relevant Appearance: Exact Pairwise Color Swap ---
     print("\n--- 3. Evaluating Color-Swap Semantics (Categorical Task Token vs Visual Color) ---")
     sem_specs = []
     for i in range(n_eps):
         spec = copy.deepcopy(nominal_specs[i])
         spec["episode_id"] = f"sem_color_{i:02d}"
-        # Swap colors between target and a distractor
         t_key = spec["target_key"]
         obs = spec.get("obstacles", {})
         other_keys = [k for k in obs.keys() if k != t_key]
         partner_key = other_keys[i % len(other_keys)]
-        
+
         t_geom = obs[t_key]["geom_name"]
         p_geom = obs[partner_key]["geom_name"]
-        
-        # Color swap: target receives partner's color, partner receives target's color
+        t_rgba = list(obs[t_key].get("rgba", [0.85, 0.2, 0.2, 1.0]))
+        p_rgba = list(obs[partner_key].get("rgba", [0.2, 0.4, 0.85, 1.0]))
+
+        # Exact bidirectional pairwise color swap
         spec["color_mutations"] = {
-            t_geom: [0.2, 0.4, 0.85, 1.0],
-            p_geom: [0.95, 0.85, 0.1, 1.0],
+            t_geom: p_rgba,
+            p_geom: t_rgba,
         }
-        # In Track C, agent is prompted with target_key. We evaluate whether agent steers to target_key's physical pos
+        spec["canonical_waypoint"] = list(nominal_specs[i]["waypoints"][-1])
         assert_task_spec_valid(spec)
         sem_specs.append(spec)
 
@@ -450,33 +474,106 @@ def main():
     pair_sem = _paired_contingency(nom_h_succ, sem_h_succ)
     print(f"  [H-JEPA Color Swap] Succ: {res_sem_h['success_count']}/{n_eps} ({res_sem_h['success_rate']*100:5.1f}%) | Delta: {pair_sem['mean_diff']*100:+5.1f}% [CI95: {pair_sem['ci95_low']*100:+5.1f}%, {pair_sem['ci95_high']*100:+5.1f}%] | p={pair_sem['mcnemar_exact_p_value']:.4f}")
 
-    # --- 4. Visual Geometry Grounding: Landmark Physical Rearrangement ---
-    print("\n--- 4. Evaluating Visual Geometry Grounding (Physical Landmark Relocation) ---")
-    rearrange_specs = []
+    # --- 4A. Visual Geometry Grounding: Target-Only Relocation (Distractors Canonical) ---
+    print("\n--- 4A. Evaluating Target-Only Relocation (Distractors Fixed at Canonical Positions) ---")
+    rearrange_4a_specs = []
     for i in range(n_eps):
         spec = copy.deepcopy(nominal_specs[i])
-        spec["episode_id"] = f"rearr_{i:02d}"
+        spec["episode_id"] = f"rearr_target_only_{i:02d}"
+        t_key = spec["target_key"]
+        canon_pos = spec["obstacles"][t_key]["pos"].copy()
+        canon_wp = list(nominal_specs[i]["waypoints"][-1])
+        spec["canonical_waypoint"] = canon_wp
+
+        rng_4a = np.random.default_rng(9100 + i)
+        valid = False
+        for _ in range(250):
+            cand_xy = rng_4a.uniform(-1.25, 1.25, size=2)
+            # Distance to distractors
+            if any(np.linalg.norm(cand_xy - np.array(o["pos"][:2])) < 0.65 for k, o in spec["obstacles"].items() if k != t_key):
+                continue
+            # Distance to robot initial pose
+            if np.linalg.norm(cand_xy - np.array(spec["initial_pose"][:2])) < 0.80:
+                continue
+            # Displacement from canonical target position
+            if np.linalg.norm(cand_xy - np.array(canon_pos[:2])) < 0.75:
+                continue
+            spec["obstacles"][t_key]["pos"][:2] = cand_xy
+            wp = get_waypoint_for_relation(spec["obstacles"][t_key]["pos"], spec.get("semantic_relation", "approach"), spec["initial_pose"], clearance=0.60)
+            spec["waypoints"] = [wp]
+            try:
+                assert_task_spec_valid(spec)
+                valid = True
+                rearrange_4a_specs.append(spec)
+                break
+            except AssertionError:
+                continue
+        assert valid, f"Could not generate geometrically valid target-only relocation for ep {i}"
+
+    res_rearr_4a_h = evaluate_suite_track_c(agent_h, rearrange_4a_specs)
+    rearr_4a_h_succ = [r["success"] for r in res_rearr_4a_h["records"]]
+    pair_rearr_4a = _paired_contingency(nom_h_succ, rearr_4a_h_succ)
+    print(f"  [H-JEPA Target-Only Reloc] Succ: {res_rearr_4a_h['success_count']}/{n_eps} ({res_rearr_4a_h['success_rate']*100:5.1f}%) | Delta: {pair_rearr_4a['mean_diff']*100:+5.1f}% | p={pair_rearr_4a['mcnemar_exact_p_value']:.4f} | EvalGoalErr: {res_rearr_4a_h['mean_final_goal_error_m']:.3f}m | CanonGoalErr: {res_rearr_4a_h['mean_final_dist_to_canonical_wp_m']:.3f}m")
+
+    # --- 4B. Visual Geometry Grounding: Distractor-Only Relocation Control (Target Canonical) ---
+    print("\n--- 4B. Evaluating Distractor-Only Relocation Control (Target Fixed at Canonical Position) ---")
+    rearrange_4b_specs = []
+    for i in range(n_eps):
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"rearr_dist_only_{i:02d}"
+        t_key = spec["target_key"]
+        canon_wp = list(nominal_specs[i]["waypoints"][-1])
+        spec["canonical_waypoint"] = canon_wp
+        spec["waypoints"] = [canon_wp]
+
+        rng_4b = np.random.default_rng(9300 + i)
+        valid = False
+        for _ in range(250):
+            spec_cand = copy.deepcopy(spec)
+            for k, o in spec_cand["obstacles"].items():
+                if k != t_key:
+                    delta = rng_4b.uniform(-0.30, 0.30, size=2)
+                    o["pos"][:2] = np.clip(o["pos"][:2] + delta, -1.60, 1.60)
+            try:
+                assert_task_spec_valid(spec_cand)
+                valid = True
+                rearrange_4b_specs.append(spec_cand)
+                break
+            except AssertionError:
+                continue
+        assert valid, f"Could not generate geometrically valid distractor-only relocation for ep {i}"
+
+    res_rearr_4b_h = evaluate_suite_track_c(agent_h, rearrange_4b_specs)
+    rearr_4b_h_succ = [r["success"] for r in res_rearr_4b_h["records"]]
+    pair_rearr_4b = _paired_contingency(nom_h_succ, rearr_4b_h_succ)
+    print(f"  [H-JEPA Distractor-Only Reloc] Succ: {res_rearr_4b_h['success_count']}/{n_eps} ({res_rearr_4b_h['success_rate']*100:5.1f}%) | Delta: {pair_rearr_4b['mean_diff']*100:+5.1f}% | p={pair_rearr_4b['mcnemar_exact_p_value']:.4f} | GoalErr: {res_rearr_4b_h['mean_final_goal_error_m']:.3f}m")
+
+    # --- 4C. Visual Geometry Grounding: Landmark Physical Swap (Pairwise Relocation) ---
+    print("\n--- 4C. Evaluating Landmark Physical Swap (Target-Distractor Pairwise Relocation) ---")
+    rearrange_4c_specs = []
+    for i in range(n_eps):
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"rearr_swap_{i:02d}"
         t_key = spec["target_key"]
         obs = spec.get("obstacles", {})
         other_keys = [k for k in obs.keys() if k != t_key]
         partner_key = other_keys[i % len(other_keys)]
 
-        # Physically swap positions of target object and partner obstacle
+        spec["canonical_waypoint"] = list(nominal_specs[i]["waypoints"][-1])
         pos_target = obs[t_key]["pos"].copy()
         pos_partner = obs[partner_key]["pos"].copy()
         obs[t_key]["pos"] = pos_partner
         obs[partner_key]["pos"] = pos_target
 
-        # Recompute valid approach waypoint with clearance in front of target's new position
         new_wp = get_waypoint_for_relation(obs[t_key]["pos"], spec.get("semantic_relation", "approach"), spec["initial_pose"], clearance=0.60)
         spec["waypoints"] = [new_wp]
         assert_task_spec_valid(spec)
-        rearrange_specs.append(spec)
+        rearrange_4c_specs.append(spec)
 
-    res_rearr_h = evaluate_suite_track_c(agent_h, rearrange_specs)
-    rearr_h_succ = [r["success"] for r in res_rearr_h["records"]]
-    pair_rearr = _paired_contingency(nom_h_succ, rearr_h_succ)
-    print(f"  [H-JEPA Rearrange] Succ: {res_rearr_h['success_count']}/{n_eps} ({res_rearr_h['success_rate']*100:5.1f}%) | Delta: {pair_rearr['mean_diff']*100:+5.1f}% [CI95: {pair_rearr['ci95_low']*100:+5.1f}%, {pair_rearr['ci95_high']*100:+5.1f}%] | p={pair_rearr['mcnemar_exact_p_value']:.4f} | GoalErr: {res_rearr_h['mean_final_goal_error_m']:.3f}m")
+    res_rearr_4c_h = evaluate_suite_track_c(agent_h, rearrange_4c_specs)
+    rearr_4c_h_succ = [r["success"] for r in res_rearr_4c_h["records"]]
+    pair_rearr_4c = _paired_contingency(nom_h_succ, rearr_4c_h_succ)
+    print(f"  [H-JEPA Pairwise Swap] Succ: {res_rearr_4c_h['success_count']}/{n_eps} ({res_rearr_4c_h['success_rate']*100:5.1f}%) | Delta: {pair_rearr_4c['mean_diff']*100:+5.1f}% | p={pair_rearr_4c['mcnemar_exact_p_value']:.4f} | EvalGoalErr: {res_rearr_4c_h['mean_final_goal_error_m']:.3f}m | CanonGoalErr: {res_rearr_4c_h['mean_final_dist_to_canonical_wp_m']:.3f}m")
 
     # --- 5. Layout Generalization: Randomized Obstacle Layouts ---
     print("\n--- 5. Evaluating Layout Generalization (Randomized Configurations) ---")
@@ -660,9 +757,21 @@ def main():
                 "results": res_sem_h,
                 "paired_contingency": pair_sem,
             },
+            "visual_geometry_target_only_relocation": {
+                "results": res_rearr_4a_h,
+                "paired_contingency": pair_rearr_4a,
+            },
+            "visual_geometry_distractor_only_relocation": {
+                "results": res_rearr_4b_h,
+                "paired_contingency": pair_rearr_4b,
+            },
+            "visual_geometry_pairwise_swap": {
+                "results": res_rearr_4c_h,
+                "paired_contingency": pair_rearr_4c,
+            },
             "visual_geometry_grounding": {
-                "results": res_rearr_h,
-                "paired_contingency": pair_rearr,
+                "results": res_rearr_4c_h,
+                "paired_contingency": pair_rearr_4c,
             },
             "layout_generalization": {
                 "results": res_rand_h,

@@ -883,6 +883,11 @@ def main():
             "max_steps": 45,
             "conditions": list(closed_loop_res["conditions"].keys()),
             "holm_bonferroni_family_size": len(closed_loop_res["holm_bonferroni_family"]),
+            "scientific_interpretation": {
+                "macro_vs_kinematic_heuristic": "Condition B (Macro K=5 Lookahead) achieves 46.0% success, identical to the straight-line kinematic unicycle heuristic (46.0%, p=1.0000). While lookahead provides computational speedup (0.371 ms vs 1.594 ms micro unrolling), it does not demonstrate unique behavioral superiority over the straight-line unicycle prior in this nominal navigation domain.",
+                "macro_vs_shuffled_binding": "Condition B (46.0%) vs Condition E (shuffled binding, 34.0%) yields unadjusted p=0.0703 and Holm-Bonferroni adjusted p=0.1562 (non-significant after controlling FWER at 0.05).",
+                "controller_scope": "This benchmark strictly isolates the candidate-scoring lookahead module across matched candidate sequences. The full HJEPAAgent additionally employs micro-policy refinement and stateful goal memory blending.",
+            },
         },
         "environment": {
             "python": sys.version.split()[0],

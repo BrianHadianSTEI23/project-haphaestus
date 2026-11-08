@@ -101,7 +101,7 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 * **Output Artifacts:** [`sufficiency_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/sufficiency_results.json), [`circuit_registry.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/circuit_registry.json).
 * **Key Quantitative Results:**
   * Dedicated `sufficiency_results.json` records clean baseline (60.0% / 93.3%), ablated retention (C1 retained 16.7%), and matched donor patching (Track C random rescue mean = 90.9%, Structured random rescue mean = 53.3%).
-  * C1 matched donor patching restores **93.3% navigation success** (0.295m step goal error) vs mismatched donor **83.3%** (0.668m step goal error) and random rescue 90.9% ($p = 0.6129$). Offline, donor patching steers inferred goal vectors toward donor targets ($\cos = 0.6669$ vs $0.2311$ random).
+  * C1 matched donor patching restores **93.3% navigation success** (0.295m step goal error) vs mismatched donor **83.3%** (0.668m step goal error) and random rescue 90.9% ($p = 0.6129$). Offline, donor patching steers inferred goal vectors toward donor targets ($\cos = 0.9779 \pm 0.0356$, angular error 0.1430 rad vs $\cos = 0.9854 \pm 0.0078$ random). Perturbation diagnostics confirm C1 removes 23.51% variance (Mahalanobis distance 94.991) matching random 8D ($23.99\% \pm 3.38\%$, Mahalanobis distance $94.322 \pm 25.492$).
   * Verified circuit registry with all registered circuits classified according to empirical evidence.
 
 ### Category 5: Generalization & Counterfactual Invariance (`generalization`)

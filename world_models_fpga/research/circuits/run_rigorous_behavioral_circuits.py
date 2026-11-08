@@ -164,6 +164,131 @@ def sample_random_subspaces(n_draws: int = 30, k: int = 8, dim: int = 32, seed: 
     return subspaces
 
 
+def compute_perturbation_diagnostics(latents: np.ndarray, proj: np.ndarray, mean_vec: np.ndarray | None = None) -> dict:
+    """
+    Computes distribution shift and perturbation diagnostics for an intervention:
+      - Latent norm ratio: ||z_abl|| / ||z_clean||
+      - Relative perturbation norm: ||z_abl - z_clean|| / ||z_clean||
+      - Perturbation magnitude: ||z_abl - z_clean||
+      - Fraction of total variance removed: trace(P Cov(z) P^T) / trace(Cov(z))
+      - Mean Mahalanobis distance of perturbation
+    """
+    z = np.asarray(latents, dtype=np.float32)
+    mu = np.mean(z, axis=0, keepdims=True) if mean_vec is None else np.asarray(mean_vec, dtype=np.float32).reshape(1, -1)
+    P = np.asarray(proj, dtype=np.float32)
+
+    z_centered = z - mu
+    z_abl = mu + (z_centered - (z_centered @ P))
+
+    norm_clean = np.linalg.norm(z, axis=-1) + 1e-8
+    norm_abl = np.linalg.norm(z_abl, axis=-1)
+    norm_ratio = float(np.mean(norm_abl / norm_clean))
+
+    delta = z_abl - z
+    delta_norm = float(np.mean(np.linalg.norm(delta, axis=-1)))
+    rel_delta_norm = float(np.mean(np.linalg.norm(delta, axis=-1) / norm_clean))
+
+    cov = np.cov(z_centered, rowvar=False)
+    total_var = float(np.trace(cov)) + 1e-8
+    subspace_var = float(np.trace(P @ cov @ P.T))
+    var_fraction_removed = float(subspace_var / total_var)
+
+    cov_pinv = np.linalg.pinv(cov + 1e-5 * np.eye(z.shape[1], dtype=np.float32))
+    maha_sq = np.sum((delta @ cov_pinv) * delta, axis=-1)
+    maha_dist = float(np.mean(np.sqrt(np.maximum(maha_sq, 0.0))))
+
+    return {
+        "norm_ratio": norm_ratio,
+        "delta_norm": delta_norm,
+        "relative_delta_norm": rel_delta_norm,
+        "variance_fraction_removed": var_fraction_removed,
+        "mean_mahalanobis_distance": maha_dist,
+    }
+
+
+def evaluate_offline_goal_steerability(
+    hjepa_model: HJEPAModel,
+    donor_bank: dict[str, list[torch.Tensor]],
+    proj: np.ndarray,
+    target_keys: list[str],
+    device: str = "cpu",
+    n_pairs: int = 50,
+) -> dict:
+    """
+    Evaluates offline goal-vector steerability under donor activation patching:
+      z_patched = z_recip (I - P) + z_donor P
+    Measures:
+      - Cosine similarity between inferred goal vector from z_patched and donor goal vector
+      - Angular error between inferred goal vector and donor goal vector
+      - Cosine similarity between z_patched goal vector and recipient original goal vector
+    """
+    P = torch.as_tensor(proj, dtype=torch.float32, device=device)
+    I = torch.eye(P.shape[0], dtype=torch.float32, device=device)
+    P_orth = I - P
+
+    cos_to_donor_list = []
+    cos_to_recip_list = []
+    ang_to_donor_list = []
+
+    pairs_evaluated = 0
+    for k in target_keys:
+        donors = donor_bank.get(k, [])
+        if len(donors) < 2:
+            continue
+        tid = encode_task_id(k, "approach", f"approach {k}")
+        tid_t = torch.tensor([tid], dtype=torch.long, device=device)
+
+        for i in range(len(donors)):
+            for j in range(len(donors)):
+                if i == j:
+                    continue
+                z_recip = donors[i].to(device).view(1, -1)
+                z_donor = donors[j].to(device).view(1, -1)
+
+                with torch.no_grad():
+                    g_recip = hjepa_model.infer_goal_vec(z_recip, tid_t)[0, :2]
+                    g_donor = hjepa_model.infer_goal_vec(z_donor, tid_t)[0, :2]
+
+                    z_patched = (z_recip @ P_orth) + (z_donor @ P)
+                    g_patched = hjepa_model.infer_goal_vec(z_patched, tid_t)[0, :2]
+
+                    norm_p = torch.norm(g_patched) + 1e-8
+                    norm_d = torch.norm(g_donor) + 1e-8
+                    norm_r = torch.norm(g_recip) + 1e-8
+
+                    cos_d = float(torch.dot(g_patched, g_donor) / (norm_p * norm_d))
+                    cos_r = float(torch.dot(g_patched, g_recip) / (norm_p * norm_r))
+
+                    ang_p = torch.atan2(g_patched[1], g_patched[0])
+                    ang_d = torch.atan2(g_donor[1], g_donor[0])
+                    ang_diff = float(torch.abs(ang_p - ang_d))
+                    if ang_diff > np.pi:
+                        ang_diff = float(2 * np.pi - ang_diff)
+
+                cos_to_donor_list.append(cos_d)
+                cos_to_recip_list.append(cos_r)
+                ang_to_donor_list.append(ang_diff)
+                pairs_evaluated += 1
+                if pairs_evaluated >= n_pairs:
+                    break
+            if pairs_evaluated >= n_pairs:
+                break
+        if pairs_evaluated >= n_pairs:
+            break
+
+    cos_d_arr = np.array(cos_to_donor_list, dtype=np.float64)
+    cos_r_arr = np.array(cos_to_recip_list, dtype=np.float64)
+    ang_d_arr = np.array(ang_to_donor_list, dtype=np.float64)
+
+    return {
+        "n_pairs": len(cos_d_arr),
+        "mean_cosine_to_donor": float(np.mean(cos_d_arr)) if len(cos_d_arr) > 0 else 0.0,
+        "std_cosine_to_donor": float(np.std(cos_d_arr, ddof=1)) if len(cos_d_arr) > 1 else 0.0,
+        "mean_cosine_to_recip": float(np.mean(cos_r_arr)) if len(cos_r_arr) > 0 else 0.0,
+        "mean_angular_error_to_donor_rad": float(np.mean(ang_d_arr)) if len(ang_d_arr) > 0 else 0.0,
+    }
+
+
 class SubspaceTransformHook:
     """
     Intervention hook for visual encoder latents supporting:
@@ -230,6 +355,7 @@ def evaluate_episodes_with_diagnostics(
     donor_bank: dict[str, list[torch.Tensor]] | None = None,
     hook_obj: SubspaceTransformHook | None = None,
     patch_type: str = "none",  # 'none', 'matched', 'mismatched', 'random_donor'
+    env: JetAutoEnv | None = None,
 ) -> dict:
     """
     Closed-loop MuJoCo evaluation with direct step-by-step diagnostic measurement:
@@ -238,10 +364,15 @@ def evaluate_episodes_with_diagnostics(
       - Action deviation
       - Navigation outcome
     """
-    env = JetAutoEnv()
+    should_close = False
+    if env is None:
+        env = JetAutoEnv()
+        should_close = True
     records = []
     step_goal_errs = []
     step_ang_errs = []
+    step_blend_errs = []
+    step_blend_angs = []
 
     for spec_idx, spec in enumerate(task_specs):
         env.restore_physical_baseline()
@@ -279,6 +410,8 @@ def evaluate_episodes_with_diagnostics(
 
         ep_goal_errs = []
         ep_ang_errs = []
+        ep_blend_errs = []
+        ep_blend_angs = []
 
         for step in range(max_steps):
             curr_pose = env.get_robot_pose()
@@ -316,9 +449,21 @@ def evaluate_episodes_with_diagnostics(
                     "semantic_relation": spec.get("semantic_relation", "approach"),
                     "instruction": spec.get("instruction", ""),
                 }
-                act_np, _ = agent.act(obs, robot_pose=None, target_pose=None, task_spec=public_spec, goal_vec_body=None)
+                act_np, act_info = agent.act(obs, robot_pose=None, target_pose=None, task_spec=public_spec, goal_vec_body=None)
             else:
-                act_np, _ = agent.act(obs, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=gt_goal_body)
+                act_np, act_info = agent.act(obs, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=gt_goal_body)
+
+            if act_info and "g_blended_t" in act_info and act_info["g_blended_t"] is not None:
+                g_blend = act_info["g_blended_t"]
+                disp_err_b = float(np.linalg.norm(g_blend[:2] - gt_goal_body[:2]))
+                blend_ang = float(np.arctan2(g_blend[1], g_blend[0]))
+                ang_diff_b = abs(blend_ang - gt_ang)
+                if ang_diff_b > np.pi:
+                    ang_diff_b = 2 * np.pi - ang_diff_b
+                ep_blend_errs.append(disp_err_b)
+                ep_blend_angs.append(ang_diff_b)
+                step_blend_errs.append(disp_err_b)
+                step_blend_angs.append(ang_diff_b)
 
             step_res = env.step(act_np)
             obs = step_res[0]
@@ -343,8 +488,11 @@ def evaluate_episodes_with_diagnostics(
             "path_length_m": total_path,
             "mean_step_goal_disp_error_m": float(np.mean(ep_goal_errs)) if len(ep_goal_errs) > 0 else 0.0,
             "mean_step_goal_angular_error_rad": float(np.mean(ep_ang_errs)) if len(ep_ang_errs) > 0 else 0.0,
+            "mean_step_blended_goal_disp_error_m": float(np.mean(ep_blend_errs)) if len(ep_blend_errs) > 0 else 0.0,
+            "mean_step_blended_goal_angular_error_rad": float(np.mean(ep_blend_angs)) if len(ep_blend_angs) > 0 else 0.0,
         })
-    env.close()
+    if should_close:
+        env.close()
 
     n = len(records)
     n_succ = sum(1 for r in records if r["success"])
@@ -360,6 +508,8 @@ def evaluate_episodes_with_diagnostics(
         "mean_goal_error": mean_err,
         "mean_step_goal_disp_error_m": float(np.mean(step_goal_errs)) if len(step_goal_errs) > 0 else 0.0,
         "mean_step_goal_angular_error_rad": float(np.mean(step_ang_errs)) if len(step_ang_errs) > 0 else 0.0,
+        "mean_step_blended_goal_disp_error_m": float(np.mean(step_blend_errs)) if len(step_blend_errs) > 0 else 0.0,
+        "mean_step_blended_goal_angular_error_rad": float(np.mean(step_blend_angs)) if len(step_blend_angs) > 0 else 0.0,
         "records": records,
     }
 
@@ -387,27 +537,41 @@ def main():
     print(f"  Random Subspace Draws: N = {args.n_rand} | Protocol: Matched Activation Patching")
     print("=================================================================")
 
-    # 1. Trajectory-Aware Discovery Sampling
-    print("\n--- 1. Discovering Candidate Latent Mechanisms (Trajectory-Aware Sampling) ---")
+    # 1. Trajectory-Aware Discovery Sampling (Strictly Adjacent Chronological Within-Episode Pairs)
+    print("\n--- 1. Discovering Candidate Latent Mechanisms (Chronological Trajectory Sampling) ---")
     tr_d = np.load(train_npz)
     ep_indices = tr_d["transition_episode_indices"]
     unique_eps = np.unique(ep_indices)
-    
-    # Sample balanced transitions across distinct episodes
+
+    # Sample balanced adjacent transition pairs (t, t+1) strictly within distinct episodes
     rng_disc = np.random.default_rng(42)
-    selected_indices = []
+    selected_t_indices = []
+    selected_t1_indices = []
     eps_to_sample = rng_disc.choice(unique_eps, size=min(150, len(unique_eps)), replace=False)
     for ep in eps_to_sample:
-        ep_idx_matches = np.where(ep_indices == ep)[0]
-        if len(ep_idx_matches) > 0:
-            sample_k = min(15, len(ep_idx_matches))
-            chosen = rng_disc.choice(ep_idx_matches, size=sample_k, replace=False)
-            selected_indices.extend(chosen)
-    selected_indices = np.array(selected_indices, dtype=np.int64)
-    n_tr = len(selected_indices)
-    print(f"  Sampled {n_tr} transitions across {len(eps_to_sample)} distinct training trajectories.")
+        ep_matches = np.sort(np.where(ep_indices == ep)[0])
+        valid_pairs = []
+        for idx in range(len(ep_matches) - 1):
+            i_curr = ep_matches[idx]
+            i_next = ep_matches[idx + 1]
+            if i_next == i_curr + 1:
+                valid_pairs.append((i_curr, i_next))
+        if len(valid_pairs) > 0:
+            sample_k = min(15, len(valid_pairs))
+            chosen_pair_indices = rng_disc.choice(len(valid_pairs), size=sample_k, replace=False)
+            for cp_idx in chosen_pair_indices:
+                t_idx, t1_idx = valid_pairs[cp_idx]
+                selected_t_indices.append(t_idx)
+                selected_t1_indices.append(t1_idx)
 
-    tr_rgb = torch.from_numpy(tr_d["rgb"][selected_indices]).permute(0, 3, 1, 2).float().to(args.device) / 255.0
+    selected_t_indices = np.array(selected_t_indices, dtype=np.int64)
+    selected_t1_indices = np.array(selected_t1_indices, dtype=np.int64)
+    n_tr = len(selected_t_indices)
+    print(f"  Sampled {n_tr} strictly adjacent chronological transition pairs (t, t+1) across {len(eps_to_sample)} trajectories.")
+
+    tr_rgb_t = torch.from_numpy(tr_d["rgb"][selected_t_indices]).permute(0, 3, 1, 2).float().to(args.device) / 255.0
+    tr_rgb_t1 = torch.from_numpy(tr_d["rgb"][selected_t1_indices]).permute(0, 3, 1, 2).float().to(args.device) / 255.0
+
     hjepa = HJEPAModel(latent_dim=32, stride_k=5, hidden_dim=64).to(args.device)
     hjepa.load_state_dict(torch.load(hjepa_path, map_location=args.device, weights_only=False), strict=False)
     hjepa.eval()
@@ -417,36 +581,39 @@ def main():
     lewm.eval()
 
     with torch.no_grad():
-        s_tr_h = hjepa.encode(tr_rgb).cpu().numpy()
-        s_tr_l = lewm.encode(tr_rgb).cpu().numpy()
+        s_tr_h = hjepa.encode(tr_rgb_t).cpu().numpy()
+        s_tr_h_next = hjepa.encode(tr_rgb_t1).cpu().numpy()
+        s_tr_l = lewm.encode(tr_rgb_t).cpu().numpy()
+        s_tr_l_next = lewm.encode(tr_rgb_t1).cpu().numpy()
 
     mean_h = np.mean(s_tr_h, axis=0)
     mean_l = np.mean(s_tr_l, axis=0)
 
-    tr_poses = tr_d["robot_pose"][selected_indices]
-    tr_goals = tr_d["grounded_goals"][selected_indices]
-    tr_cols = tr_d["collisions"][selected_indices].astype(np.float32)
+    tr_poses_t = tr_d["robot_pose"][selected_t_indices]
+    tr_poses_t1 = tr_d["robot_pose"][selected_t1_indices]
+    tr_goals = tr_d["grounded_goals"][selected_t_indices]
+    tr_cols = tr_d["collisions"][selected_t_indices].astype(np.float32)
 
-    # Ground-truth egocentric goal displacement targets [dx_b, dy_b]
-    dx = tr_goals[:, 0] - tr_poses[:, 0]
-    dy = tr_goals[:, 1] - tr_poses[:, 1]
-    th = tr_poses[:, 2]
-    c_th, s_th = np.cos(th), np.sin(th)
-    tr_gvecs_body = np.stack([c_th * dx + s_th * dy, -s_th * dx + c_th * dy], axis=-1)
+    # 1. C1 Ground-truth egocentric goal displacement targets [dx_b, dy_b] at step t
+    dx_g = tr_goals[:, 0] - tr_poses_t[:, 0]
+    dy_g = tr_goals[:, 1] - tr_poses_t[:, 1]
+    th_t = tr_poses_t[:, 2]
+    c_th, s_th = np.cos(th_t), np.sin(th_t)
+    tr_gvecs_body = np.stack([c_th * dx_g + s_th * dy_g, -s_th * dx_g + c_th * dy_g], axis=-1)
 
-    # True body-frame step displacement
-    step_dx = np.diff(tr_poses[:, 0], prepend=tr_poses[0:1, 0])
-    step_dy = np.diff(tr_poses[:, 1], prepend=tr_poses[0:1, 1])
+    # 2. C2 True body-frame step displacement from t to t+1
+    step_dx = tr_poses_t1[:, 0] - tr_poses_t[:, 0]
+    step_dy = tr_poses_t1[:, 1] - tr_poses_t[:, 1]
     step_dx_b = c_th * step_dx + s_th * step_dy
     step_dy_b = -s_th * step_dx + c_th * step_dy
     tr_step_disp_b = np.stack([step_dx_b, step_dy_b], axis=-1)
 
-    # Next state delta for forward transition
-    delta_s_h = np.diff(s_tr_h, axis=0, prepend=s_tr_h[0:1])
-    delta_s_l = np.diff(s_tr_l, axis=0, prepend=s_tr_l[0:1])
+    # 3. C4 Forward latent delta between adjacent steps (t, t+1)
+    delta_s_h = s_tr_h_next - s_tr_h
+    delta_s_l = s_tr_l_next - s_tr_l
 
-    # Unrelated control: target color / appearance variance (mean RGB channel values)
-    tr_color_nuisance = np.mean(tr_d["rgb"][selected_indices].astype(np.float32), axis=(1, 2))
+    # 4. Unrelated control: target color / appearance variance (mean RGB channel values)
+    tr_color_nuisance = np.mean(tr_d["rgb"][selected_t_indices].astype(np.float32), axis=(1, 2))
 
     # --- Discovery in H-JEPA Native Latent Space ---
     # C1: Visual Goal-Displacement Grounding Subspace ([dx_b, dy_b])
@@ -463,6 +630,22 @@ def main():
 
     # Sample matched random 8D subspaces
     rand_subspaces_h = sample_random_subspaces(n_draws=args.n_rand, k=8, dim=32, seed=42)
+
+    p_c1 = c1_sub_h["p_axis"]
+    dims_c1 = c1_sub_h["axis_dims"]
+
+    # Perturbation diagnostics on discovery latents
+    c1_pert = compute_perturbation_diagnostics(s_tr_h, p_c1, mean_h)
+    rand_perts = [compute_perturbation_diagnostics(s_tr_h, p, mean_h) for p in rand_subspaces_h]
+    mean_rand_var = float(np.mean([p["variance_fraction_removed"] for p in rand_perts]))
+    std_rand_var = float(np.std([p["variance_fraction_removed"] for p in rand_perts]))
+    mean_rand_maha = float(np.mean([p["mean_mahalanobis_distance"] for p in rand_perts]))
+    std_rand_maha = float(np.std([p["mean_mahalanobis_distance"] for p in rand_perts]))
+    mean_rand_norm_ratio = float(np.mean([p["norm_ratio"] for p in rand_perts]))
+
+    print(f"  [Perturbation Diagnostics]")
+    print(f"    C1:        Var Fraction = {c1_pert['variance_fraction_removed']*100:.2f}% | Maha Dist = {c1_pert['mean_mahalanobis_distance']:.3f} | Norm Ratio = {c1_pert['norm_ratio']:.3f}")
+    print(f"    Random 8D: Var Fraction = {mean_rand_var*100:.2f}% (+/- {std_rand_var*100:.2f}%) | Maha Dist = {mean_rand_maha:.3f} (+/- {std_rand_maha:.3f}) | Norm Ratio = {mean_rand_norm_ratio:.3f}")
 
     # 2. Pure Object-Grounding Evaluation Task Suite (N = args.episodes)
     print(f"\n--- 2. Building Pure Object-Grounding Evaluation Suite (N = {args.episodes}) ---")
@@ -494,10 +677,25 @@ def main():
     for k in TARGET_KEYS:
         print(f"  Donor bank [{k}]: {len(donor_bank[k])} matched donor latents.")
 
+    # 3B. Offline Goal-Vector Steerability Measurement
+    print("\n--- 3B. Evaluating Offline Goal-Vector Steerability under Donor Patching ---")
+    offline_steer_c1 = evaluate_offline_goal_steerability(hjepa, donor_bank, p_c1, TARGET_KEYS, device=args.device, n_pairs=50)
+    offline_steer_rands = [
+        evaluate_offline_goal_steerability(hjepa, donor_bank, p_r, TARGET_KEYS, device=args.device, n_pairs=50)["mean_cosine_to_donor"]
+        for p_r in rand_subspaces_h[:10]
+    ]
+    mean_offline_rand = float(np.mean(offline_steer_rands))
+    std_offline_rand = float(np.std(offline_steer_rands, ddof=1)) if len(offline_steer_rands) > 1 else 0.0
+
+    print(f"  [Offline Goal-Vector Steerability]")
+    print(f"    C1 Matched Donor Patching: cos = {offline_steer_c1['mean_cosine_to_donor']:.4f} (+/- {offline_steer_c1['std_cosine_to_donor']:.4f}) | Angular Err = {offline_steer_c1['mean_angular_error_to_donor_rad']:.4f} rad")
+    print(f"    Random 8D Subspace Control: cos = {mean_offline_rand:.4f} (+/- {std_offline_rand:.4f})")
+
     # 4. Clean Baseline Rollouts
     print("\n--- 4. Running Clean Baseline Rollouts ---")
-    clean_res_tc = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
-    clean_res_st = evaluate_episodes_with_diagnostics(agent_h_structured, task_specs, track="structured", max_steps=45)
+    shared_env = JetAutoEnv()
+    clean_res_tc = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45, env=shared_env)
+    clean_res_st = evaluate_episodes_with_diagnostics(agent_h_structured, task_specs, track="structured", max_steps=45, env=shared_env)
     print(f"  Clean Agent (Track C):     Success = {clean_res_tc['success_rate']*100:5.1f}% | Col = {clean_res_tc['collision_rate']*100:5.1f}% | GoalErr = {clean_res_tc['mean_goal_error']:.3f}m | StepGoalErr = {clean_res_tc['mean_step_goal_disp_error_m']:.3f}m")
     print(f"  Clean Agent (Structured): Success = {clean_res_st['success_rate']*100:5.1f}% | Col = {clean_res_st['collision_rate']*100:5.1f}% | GoalErr = {clean_res_st['mean_goal_error']:.3f}m")
 
@@ -511,14 +709,14 @@ def main():
     for r_idx, p_r in enumerate(rand_subspaces_h):
         # 1. Ablation (Necessity)
         with SubspaceTransformHook(agent_h_track_c.model, mode="ablate", proj=p_r, mean_vec=mean_h) as h_rand:
-            r_nec = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+            r_nec = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45, env=shared_env)
             drop = float(clean_res_tc["success_rate"] - r_nec["success_rate"])
             rand_tc_nec_drops.append(drop)
             rand_tc_goal_errs.append(r_nec["mean_step_goal_disp_error_m"])
 
         # 2. Retention (Sufficiency)
         with SubspaceTransformHook(agent_h_track_c.model, mode="retain", proj=p_r, mean_vec=mean_h) as h_rand:
-            r_suf = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+            r_suf = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45, env=shared_env)
             rand_tc_suf_scores.append(float(r_suf["success_rate"]))
 
         # 3. Patching across random subspace
@@ -526,9 +724,12 @@ def main():
         with hook_rand_patch:
             r_res = evaluate_episodes_with_diagnostics(
                 agent_h_track_c, task_specs, track="observation", max_steps=45,
-                donor_bank=donor_bank, hook_obj=hook_rand_patch, patch_type="matched"
+                donor_bank=donor_bank, hook_obj=hook_rand_patch, patch_type="matched", env=shared_env
             )
             rand_tc_res_scores.append(float(r_res["success_rate"]))
+
+        if (r_idx + 1) % 5 == 0 or r_idx == 0:
+            print(f"  [Random 8D draw {r_idx+1:02d}/{len(rand_subspaces_h)}] drop={drop*100:5.1f}% | suf={r_suf['success_rate']*100:5.1f}% | res={r_res['success_rate']*100:5.1f}%")
 
     mean_tc_nec = float(np.mean(rand_tc_nec_drops))
     std_tc_nec = float(np.std(rand_tc_nec_drops, ddof=1))
@@ -545,12 +746,12 @@ def main():
 
     # 6.1 Targeted Ablation (Necessity)
     with SubspaceTransformHook(agent_h_track_c.model, mode="ablate", proj=p_c1, mean_vec=mean_h):
-        c1_nec_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+        c1_nec_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45, env=shared_env)
     c1_nec_drop = float(clean_res_tc["success_rate"] - c1_nec_res["success_rate"])
 
     # 6.2 Targeted Retention (Sufficiency)
     with SubspaceTransformHook(agent_h_track_c.model, mode="retain", proj=p_c1, mean_vec=mean_h):
-        c1_suf_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+        c1_suf_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45, env=shared_env)
     c1_suf_score = float(c1_suf_res["success_rate"])
 
     # 6.3 Genuine Matched-Donor Activation Patching (Rescue)
@@ -558,7 +759,7 @@ def main():
     with hook_c1_matched:
         c1_matched_res = evaluate_episodes_with_diagnostics(
             agent_h_track_c, task_specs, track="observation", max_steps=45,
-            donor_bank=donor_bank, hook_obj=hook_c1_matched, patch_type="matched"
+            donor_bank=donor_bank, hook_obj=hook_c1_matched, patch_type="matched", env=shared_env
         )
     c1_matched_score = float(c1_matched_res["success_rate"])
 
@@ -567,14 +768,15 @@ def main():
     with hook_c1_mismatch:
         c1_mismatch_res = evaluate_episodes_with_diagnostics(
             agent_h_track_c, task_specs, track="observation", max_steps=45,
-            donor_bank=donor_bank, hook_obj=hook_c1_mismatch, patch_type="mismatched"
+            donor_bank=donor_bank, hook_obj=hook_c1_mismatch, patch_type="mismatched", env=shared_env
         )
     c1_mismatch_score = float(c1_mismatch_res["success_rate"])
 
     # 6.5 Within-Model Unrelated Control (Color Nuisance Subspace)
     with SubspaceTransformHook(agent_h_track_c.model, mode="ablate", proj=unrel_sub_h["p_axis"], mean_vec=mean_h):
-        unrel_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+        unrel_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45, env=shared_env)
     unrel_drop = float(clean_res_tc["success_rate"] - unrel_res["success_rate"])
+    shared_env.close()
 
     # Statistical Evaluation
     sel_gain_nec = float(c1_nec_drop - mean_tc_nec)
@@ -659,6 +861,24 @@ def main():
         "mismatched_donor_control": c1_mismatch_res,
         "unrelated_control_drop": unrel_drop,
         "selectivity_gain_vs_unrelated": sel_gain_unrel,
+        "perturbation_diagnostics": {
+            "c1_variance_fraction_removed": c1_pert["variance_fraction_removed"],
+            "c1_mahalanobis_distance": c1_pert["mean_mahalanobis_distance"],
+            "c1_norm_ratio": c1_pert["norm_ratio"],
+            "random_8d_variance_fraction_mean": mean_rand_var,
+            "random_8d_variance_fraction_std": std_rand_var,
+            "random_8d_mahalanobis_distance_mean": mean_rand_maha,
+            "random_8d_mahalanobis_distance_std": std_rand_maha,
+            "random_8d_norm_ratio_mean": mean_rand_norm_ratio,
+        },
+        "offline_goal_vector_steerability": {
+            "c1_mean_cosine_to_donor": offline_steer_c1["mean_cosine_to_donor"],
+            "c1_std_cosine_to_donor": offline_steer_c1["std_cosine_to_donor"],
+            "c1_mean_angular_error_to_donor_rad": offline_steer_c1["mean_angular_error_to_donor_rad"],
+            "random_8d_mean_cosine_to_donor": mean_offline_rand,
+            "random_8d_std_cosine_to_donor": std_offline_rand,
+            "n_pairs_evaluated": offline_steer_c1["n_pairs"],
+        },
         "final_verdict": verdict,
     }
 
@@ -725,6 +945,11 @@ def main():
                 "sufficiency_retained_success": c1_suf_score,
                 "matched_donor_rescue_success": c1_matched_score,
                 "mismatched_donor_success": c1_mismatch_score,
+                "offline_steerability_cosine": offline_steer_c1["mean_cosine_to_donor"],
+                "offline_steerability_random_cosine": mean_offline_rand,
+                "c1_variance_fraction_removed": c1_pert["variance_fraction_removed"],
+                "c1_mahalanobis_distance": c1_pert["mean_mahalanobis_distance"],
+                "random_8d_mahalanobis_distance_mean": mean_rand_maha,
                 "verdict": verdict,
             },
             "C2_step_displacement": {

@@ -396,9 +396,70 @@ def evaluate_offline_prediction_quality(
         col_probs_macro = torch.sigmoid(m_col_logits).squeeze(-1).cpu().numpy()
 
     metrics = compute_prediction_quality_metrics(col_probs_macro, gt_macro_cols, n_bins=10)
+    sample_eps = ep_idx[valid_starts]
+    metrics["clustered_bootstrap"] = compute_clustered_bootstrap_quality_metrics(sample_eps, col_probs_macro, gt_macro_cols, n_boot=1000)
     metrics["horizon_k"] = stride_k
     metrics["evaluated_samples"] = len(valid_starts)
     return metrics
+
+
+def compute_clustered_bootstrap_quality_metrics(
+    sample_episodes: np.ndarray,
+    probs: np.ndarray,
+    targets: np.ndarray,
+    n_boot: int = 1000,
+    seed: int = 42,
+) -> dict:
+    """Computes 95% confidence intervals using cluster bootstrap resampled at the episode level."""
+    unique_eps = np.unique(sample_episodes)
+    rng = np.random.default_rng(seed)
+
+    brier_boots = []
+    ece_boots = []
+    auroc_boots = []
+
+    ep_to_indices = {ep: np.where(sample_episodes == ep)[0] for ep in unique_eps}
+
+    for _ in range(n_boot):
+        boot_eps = rng.choice(unique_eps, size=len(unique_eps), replace=True)
+        boot_indices = np.concatenate([ep_to_indices[ep] for ep in boot_eps])
+        boot_probs = probs[boot_indices]
+        boot_targets = targets[boot_indices]
+
+        # Brier
+        brier_boots.append(float(np.mean((boot_probs - boot_targets) ** 2)))
+
+        # ECE (10 bins)
+        bin_boundaries = np.linspace(0.0, 1.0, 11)
+        ece = 0.0
+        n_tot = len(boot_probs)
+        for b in range(10):
+            low, high = bin_boundaries[b], bin_boundaries[b + 1]
+            in_b = (boot_probs >= low) & (boot_probs <= high if b == 9 else boot_probs < high)
+            n_b = np.sum(in_b)
+            if n_b > 0:
+                ece += (n_b / n_tot) * abs(float(np.mean(boot_targets[in_b])) - float(np.mean(boot_probs[in_b])))
+        ece_boots.append(ece)
+
+        # AUROC
+        desc = np.argsort(-boot_probs)
+        sorted_t = boot_targets[desc]
+        n_p = np.sum(sorted_t == 1.0)
+        n_n = np.sum(sorted_t == 0.0)
+        if n_p > 0 and n_n > 0:
+            ranks = np.arange(len(sorted_t), 0, -1)
+            u_stat = np.sum(ranks[sorted_t == 1.0]) - (n_p * (n_p + 1)) / 2.0
+            auroc_boots.append(float(u_stat / (n_p * n_n)))
+        else:
+            auroc_boots.append(0.5)
+
+    return {
+        "brier_ci95": [float(np.percentile(brier_boots, 2.5)), float(np.percentile(brier_boots, 97.5))],
+        "ece_ci95": [float(np.percentile(ece_boots, 2.5)), float(np.percentile(ece_boots, 97.5))],
+        "auroc_ci95": [float(np.percentile(auroc_boots, 2.5)), float(np.percentile(auroc_boots, 97.5))],
+        "cluster_episodes_count": int(len(unique_eps)),
+        "bootstrap_replicates": n_boot,
+    }
 
 
 def main():

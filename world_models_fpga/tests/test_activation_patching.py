@@ -92,3 +92,32 @@ def test_subspace_transform_hook_execution():
     with SubspaceTransformHook(model, mode="none"):
         z_none = model.encode(x)
         torch.testing.assert_close(z_none, z_orig)
+
+
+def test_subspace_transform_hook_with_real_hjepa_model():
+    """Verify SubspaceTransformHook properly intercepts HJEPAModel on 64x64 images."""
+    from models.h_jepa import HJEPAModel
+    model = HJEPAModel(latent_dim=32, stride_k=5, hidden_dim=64)
+    model.eval()
+
+    p_np = sample_random_subspaces(n_draws=1, k=8, dim=32, seed=999)[0]
+    P = torch.from_numpy(p_np).float()
+    P_orth = torch.eye(32) - P
+
+    x = torch.randn(2, 3, 64, 64)
+    with torch.no_grad():
+        z_orig = model.encode(x)
+
+    donor_vec = torch.randn(32)
+    hook = SubspaceTransformHook(model, mode="patch", proj=p_np, mean_vec=np.zeros(32), donor_vec=donor_vec)
+    with hook:
+        with torch.no_grad():
+            z_patched = model.encode(x)
+
+    # In target subspace: z_patched @ P matches donor @ P
+    donor_par = donor_vec.unsqueeze(0) @ P
+    torch.testing.assert_close(z_patched @ P, donor_par.repeat(2, 1), atol=1e-5, rtol=1e-5)
+
+    # In orthogonal complement: z_patched @ (I - P) matches z_orig @ (I - P)
+    torch.testing.assert_close(z_patched @ P_orth, z_orig @ P_orth, atol=1e-5, rtol=1e-5)
+

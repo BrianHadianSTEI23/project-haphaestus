@@ -76,3 +76,53 @@ def test_assert_task_spec_catches_inconsistent_instruction():
     spec["instruction"] = "navigate to the cyan cylinder"
     with pytest.raises(AssertionError):
         assert_task_spec_valid(spec)
+
+
+def test_waypoint_analytic_calculation_and_clearance():
+    """Verify analytic waypoint derivation, orientation toward target, and physical clearance."""
+    init_pose = np.array([0.0, -1.0, np.pi / 2], dtype=np.float32)
+    target_pos = np.array([0.0, 0.5, 0.35], dtype=np.float32)
+    clearance = 0.60
+
+    wp = get_waypoint_for_relation(target_pos, "approach", init_pose, clearance=clearance)
+
+    # 1. Distance from waypoint to target center must match clearance
+    dist_to_center = float(np.linalg.norm(wp[:2] - target_pos[:2]))
+    assert abs(dist_to_center - clearance) < 1e-4
+
+    # 2. Waypoint yaw must face directly toward the target
+    target_bearing = float(np.arctan2(target_pos[1] - wp[1], target_pos[0] - wp[0]))
+    ang_diff = abs(target_bearing - wp[2])
+    if ang_diff > np.pi:
+        ang_diff = 2 * np.pi - ang_diff
+    assert ang_diff < 1e-4, f"Robot yaw {wp[2]} does not face target bearing {target_bearing}"
+
+
+def test_true_pairwise_color_swap_invariants():
+    """Verify that bidirectional color mutations actually mutate geom RGBA in MuJoCo simulation."""
+    from env.amr_env import JetAutoEnv
+    env = JetAutoEnv()
+    spec = generate_task_specification("object_grounding", "easy", seed_idx=6100)
+    t_key = spec["target_key"]
+    obs = spec["obstacles"]
+    partner_key = [k for k in obs if k != t_key][0]
+
+    t_rgba = list(obs[t_key]["rgba"])
+    p_rgba = list(obs[partner_key]["rgba"])
+    t_geom = obs[t_key]["geom_name"]
+    p_geom = obs[partner_key]["geom_name"]
+
+    spec["color_mutations"] = {
+        t_geom: p_rgba,
+        p_geom: t_rgba,
+    }
+
+    env.apply_task_spec(spec)
+
+    t_gid = env.geometry_id(t_geom)
+    p_gid = env.geometry_id(p_geom)
+
+    np.testing.assert_allclose(env.model.geom_rgba[t_gid], p_rgba, atol=1e-4)
+    np.testing.assert_allclose(env.model.geom_rgba[p_gid], t_rgba, atol=1e-4)
+    env.close()
+
