@@ -1,0 +1,80 @@
+{
+  "manifest_version": "5.2.0",
+  "experiment_phase": "Phase 5.2: Mechanistic Selectivity and Cross-Context Revalidation",
+  "timestamp_utc": "2026-11-08T13:35:58.418930+00:00",
+  "git_commit": "bc568052e8be10fba4f4a466e913e3dbd8bb4fd6",
+  "git_branch": "fix/interpretability",
+  "environment": {
+    "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.13.16",
+    "mujoco": "3.17.0",
+    "rendering": "MUJOCO_GL=egl",
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 3050 OEM (8GB VRAM)"
+  },
+  "test_suite": {
+    "status": "PASSED",
+    "total_tests": 84,
+    "passed": 84,
+    "failed": 0,
+    "duration_seconds": 28.3,
+    "log_file": "research/review_package/phase5_2/test_run.log"
+  },
+  "provenance_hashes": {
+    "world_models_fpga/research/circuits/run_task_conditioned_circuits_v5_2.py": "d085fd901f77c59987399913ba73f4a14693362e9ac4c8ac9a439ba3ba870b2f",
+    "world_models_fpga/research/circuits/run_ego_memory_reanalysis_v5_2.py": "c05fcce30beae8a6d52e8ab3ba6efdfcbe76cd51fc7d75fb272f2d1dbd1b3a76",
+    "world_models_fpga/research/circuits/run_task_conditioned_circuits_v5.py": "e80278c2c42274e49af7a103365a19d8512740d983289a065e45c24408e432cf",
+    "world_models_fpga/research/circuits/run_ego_memory_mechanism_v5.py": "b83ebc4b56bf47cb911152ca61ba3b88bd8a22c4012bea3e06d6c75597322cbb",
+    "world_models_fpga/research/benchmarks/run_task_conditioned_binding_v5.py": "bec8587c6a29e4fba58d7788d8863d6489580dadcb405faf26a5e62ec96190d8",
+    "world_models_fpga/tests/test_task_conditioned_circuits_v5_2.py": "d96598165feb768bbfb7fb56b6220f6ca4e58401bca81e745500bd74f54a339e",
+    "world_models_fpga/tests/test_ego_memory_reanalysis_v5_2.py": "31350a58e48a9203d1ae0ac098104f968219c3affb1831d0beff5ec74e6b1bbd",
+    "world_models_fpga/checkpoints_v4/hjepa_best.pt": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v4_activations.jsonl": "378f8561d8587444a21e9bcb1d4524c96e431078b0a70aad242fcfda12478f62",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_summary.json": "cbe7f3af343c46c37ec8044dc12d82b5059d972ee3d32e98ad87733862b27c33",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_pairs.jsonl": "99c283288f64c552b999cd49f71479d28656ff8d9737ab3b91b69ce61cc4cd75",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_scene_specs.jsonl": "5edfcf5d8e1638b9e624ea7fb796ab87a951ce88ef81b5244af339c9d7f34337",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_schema.md": "e96900e8782e8f4cab350453b9b1ee8814e9b716d3a163eeeab1ee8d815be202",
+    "world_models_fpga/research/circuits/results/ego_memory_reanalysis_v5_2_summary.json": "4a498dd281ede129c4c8132089f0fd00c55443495c28c86995a20bd1a6c39b52",
+    "world_models_fpga/research/circuits/results/ego_memory_reanalysis_v5_2_schema.md": "fcd20a62040d6ef231f1d59b265e02566b2f9bc15a1942238d44b0c1645d81b9",
+    "research/review_package/phase5_2/test_run.log": "e8913f362f00636452ebed44f8cf214a0954ea5d399dc4f342b80761c58592bb",
+    "research/review_package/phase5_2/README.md": "3a2332f4431fa24270d0daec70735f02227152edf2e283ae06d72b7eca69b62c",
+    "research/review_package/phase5_2/forensic_audit.md": "79f92b499291c7a27b08e9f0fc2d388b004103735d4e67513f01ac750c0f6084",
+    "research/review_package/phase5_2/protocol_deviations.md": "c8ae968f406568b69d3bc0aff0ded7fe02fbe73b8e4374cd5f843f2c4882e62b",
+    "research/review_package/phase5_2/data_dictionary.md": "58411aa00d6112ecf2aab5dbde16239e3971d96b0f00117bd52881e1f89b7a4a",
+    "research/review_package/phase5_2/revised_claims_ledger.csv": "3a1f956bbb3f22481fc953b2aa80199dbf2a7c2fb9979313bfc2a373d76067d8",
+    "research/review_package/phase5_2/unresolved_hypotheses.md": "0e5faf8c085f6bcf819f64e8daa8361ebb7c4cf598ee0c200d42c4b67b2dfbcd",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_interventions.jsonl.gz": "0d170edb4f4ba1eeeaa6839b63bc90ce4ea41c4c808cd752da7ce8f64a75f938"
+  },
+  "key_results": {
+    "circuit_norm_matched_selectivity": {
+      "evaluation_pairs": 60,
+      "nominal_pairs": 30,
+      "illumination_shift_pairs": 30,
+      "total_intervention_records": 482400,
+      "layer1_k8_transfer_candidate": 0.34027738707752453,
+      "layer1_k8_transfer_norm_matched": 0.43044003369286654,
+      "layer1_k8_transfer_dimension_matched": 0.12011160494488043,
+      "layer1_k8_paired_diff_norm_matched": -0.09016264661534203,
+      "layer1_k8_p_adj_norm_matched": 1.0,
+      "layer2_k8_transfer_candidate": 0.3435265451302368,
+      "layer2_k8_transfer_norm_matched": 0.28294689203612505,
+      "layer2_k8_transfer_dimension_matched": 0.12744469813381631,
+      "layer2_k8_paired_diff_norm_matched": 0.06057965309411184,
+      "layer2_k8_p_adj_norm_matched": 0.5154508104038942,
+      "layer2_k32_paired_diff_norm_matched": 0.06145235164066418,
+      "layer2_k32_p_adj_norm_matched": 0.011684702493190946
+    },
+    "ego_memory_reanalysis": {
+      "n_trajectories": 50,
+      "action_scalar_r2_clean": 0.2517797350883484,
+      "action_vector_r2_clean": 0.4324383534184708,
+      "sensor_scalar_r2_clean": 0.010432380251586437,
+      "sensor_vector_r2_clean": -1.9195035284713002,
+      "action_hold_mean_error_m": 0.5490098095014692,
+      "within_traj_shuffled_mean_error_m": 0.5564659471808933,
+      "cross_traj_shuffled_mean_error_m": 0.5704130404666067,
+      "action_hold_vs_within_traj_paired_diff_m": -0.0074561376794241374,
+      "action_hold_vs_within_traj_p_value": 0.00040780244127436305
+    }
+  }
+}

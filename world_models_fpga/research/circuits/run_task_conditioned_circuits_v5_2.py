@@ -1366,7 +1366,7 @@ def run_task_conditioned_circuits_v5_2(
      - `condition`: `candidate`, `norm_matched_random`, or `dimension_matched_random`.
      - `draw_id`: 0 for candidate; 0..99 for random draws.
      - `units`: List of intervened unit indices.
-     - `subset_norm`: Task-induced activation perturbation norm sqrt(sum_{i in U} (delta h_i)^2).
+     - `subset_norm`: Task-induced activation perturbation norm sqrt(sum((delta h_i)^2)).
      - `norm_diff_abs`: |N_rand - N_cand|.
      - `norm_diff_rel`: |N_rand - N_cand| / N_cand.
      - `is_within_tolerance`: True if relative norm error <= 0.05 (5%).

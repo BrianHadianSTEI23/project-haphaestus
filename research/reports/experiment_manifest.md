@@ -247,3 +247,39 @@ All 9 evaluation categories are registered in the machine-readable manifest:
 }
 ```
 Every recorded entry contains explicit `git_commit`, `dataset_sha256`, `checkpoint_sha256`, `environment`, and complete raw metric dictionaries verified by cryptographic byte hash.
+
+---
+
+## 5. Phase 5.2 Mechanistic Selectivity & Ego-Motion Reanalysis Benchmarks
+
+### Benchmark 1: Task-Conditioned Circuit Selectivity & Norm-Matched Controls (`task_conditioned_circuits_v5_2`)
+* **Scientific Purpose:** Determine whether the candidate task-sensitive hidden-unit subspaces identified in Phase 5.1 are genuinely selective causal mechanisms or activation-magnitude artefacts.
+* **Execution Command:**
+  ```bash
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_task_conditioned_circuits_v5_2.py --device cuda
+  ```
+* **Inputs:** `checkpoints_v4/hjepa_best.pt`, `task_conditioned_circuits_v4_activations.jsonl` (discovery split pairs 0..24).
+* **Output Artifacts:**
+  * Summary JSON: [`task_conditioned_circuits_v5_2_summary.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_summary.json)
+  * Pairs JSONL: [`task_conditioned_circuits_v5_2_pairs.jsonl`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_pairs.jsonl) ($N=60$ independent pairs)
+  * Scene Specs JSONL: [`task_conditioned_circuits_v5_2_scene_specs.jsonl`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_scene_specs.jsonl)
+  * Interventions JSONL: [`task_conditioned_circuits_v5_2_interventions.jsonl`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_interventions.jsonl) ($482,400$ complete records)
+  * Schema Markdown: [`task_conditioned_circuits_v5_2_schema.md`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_schema.md)
+* **Key Quantitative Results:**
+  * Candidate vs Dimension-Matched Random: Confirmed significant across layers ($k=8$: Layer 1 $\Delta = +0.220, p=1.23 \times 10^{-4}$; Layer 2 $\Delta = +0.216, p=3.41 \times 10^{-8}$).
+  * Candidate vs Activation-Norm-Matched Random: Layer 1 advantage disappears ($\Delta = -0.090, p_{\text{adj}} = 1.0000$), disconfirming Layer 1 circuit selectivity. Layer 2 retains modest positive margins ($\Delta \approx +0.06$ to $+0.08$), but at small $k \in \{4, 8, 16\}$ margins fail Holm-Bonferroni correction ($p_{\text{adj}} > 0.05$). Only at $k=32$ does significance survive ($p_{\text{adj}} = 0.0117$).
+
+### Benchmark 2: Ego-Motion Memory Reanalysis & Sensitivity Testing (`ego_memory_reanalysis_v5_2`)
+* **Scientific Purpose:** Decouple scalar magnitude regression $R^2$ from 2D vector coordinate variance explained $R^2$, and evaluate within-trajectory temporal action order sensitivity.
+* **Execution Command:**
+  ```bash
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_ego_memory_reanalysis_v5_2.py --device cuda
+  ```
+* **Inputs:** `checkpoints_v4/hjepa_best.pt`, `amr_arena.xml`.
+* **Output Artifacts:**
+  * Summary JSON: [`ego_memory_reanalysis_v5_2_summary.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/ego_memory_reanalysis_v5_2_summary.json)
+  * Schema Markdown: [`ego_memory_reanalysis_v5_2_schema.md`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/ego_memory_reanalysis_v5_2_schema.md)
+* **Key Quantitative Results:**
+  * Clean Transitions ($N=950$): Action Scalar $R^2 = 0.2518$, 2D Vector $R^2 = 0.4324$, Angular $d\theta$ $R^2 = 0.6802$, Translation MAE $= 0.0143$ m. Sensor head 2D Vector $R^2 = -1.9195$.
+  * Within-Trajectory Time-Shuffled Action Control: Action Hold ($0.5490$ m) vs Within-Trajectory Shuffled Hold ($0.5565$ m) paired difference $\Delta = -0.0075$ m ($-7.5$ mm), Wilcoxon one-sided $p = 4.08 \times 10^{-4}$, sign-flip $p = 4.30 \times 10^{-4}$. Action Hold vs Oracle Hold ($0.5392$ m) equivalent within $0.05$ m margin (TOST $p = 6.85 \times 10^{-7}$).
+
