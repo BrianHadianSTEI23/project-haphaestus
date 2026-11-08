@@ -8,6 +8,7 @@
 .Xil/
 *.jou
 *.log
+!research/review_package/*.log
 vivado*.backup.*
 
 # Simulation binary outputs and waveforms

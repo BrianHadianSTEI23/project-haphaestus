@@ -11,6 +11,78 @@
   ],
   "experiments": [
     {
+      "experiment_id": "EXP_01B_TASK_IDENTITY_VISUAL_GROUNDING_V2",
+      "description": "Controlled task-identity and dynamic visual grounding v2 with initial waypoint distance >= 0.60m, physical target relocation >= 0.75m, post-action evaluation, and paired same-RGB token contrasts with both targets visible.",
+      "script_path": "world_models_fpga/research/benchmarks/run_task_identity_visual_grounding_v2.py",
+      "script_sha256": "9984c76438ca676c91da16986e88398aaee3bef0643ae04972384e9c3c10e6dd",
+      "source_git_commit": "e50c194c2edc311002646e73a56b8432e8534e96",
+      "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_task_identity_visual_grounding_v2.py --episodes-per-cond 30 --device cuda",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "environment_model_sha256": "0e655e50a8119de6402a5f041369c4728d7d2d9cf4bd8bc4bf8a9a582653bb51",
+      "random_seed": 8100,
+      "sample_size": 180,
+      "result_artifacts": [
+        {
+          "path": "world_models_fpga/research/benchmarks/results/task_identity_visual_grounding_v2.json",
+          "sha256": "ec74f2086fe8ccbdcd8d016737f68bf0d9b39b40fbcb575ae4e28a6537854083",
+          "type": "summary_json"
+        },
+        {
+          "path": "world_models_fpga/research/benchmarks/results/task_identity_visual_grounding_v2_traces.npz",
+          "sha256": "5181c4ceee954f540138dc1f8942c2e1b14afc032770f84ac6e7280f73f8e625",
+          "type": "numerical_traces_npz"
+        }
+      ],
+      "key_findings": {
+        "visible_target_relocation_success": 0.7333,
+        "visible_target_relocation_path_length_median_m": 0.4884,
+        "visible_target_relocation_init_dist_mean_m": 0.7697,
+        "same_rgb_paired_token_A_success": 0.6667,
+        "same_rgb_paired_token_B_success": 0.7000,
+        "same_rgb_mean_angular_shift_rad": 0.8686,
+        "visual_token_conflict_success": 0.8667,
+        "target_appearance_success": 0.9667,
+        "distractor_relocation_success": 1.0000
+      }
+    },
+    {
+      "experiment_id": "EXP_02B_GOAL_MEMORY_STRESS_TESTS_V2",
+      "description": "Evaluates 9 controller memory and ego-motion conditions under temporary visual occlusion/dropout (steps 5..15) with post-action evaluation, exact McNemar tests, bootstrap CIs, and non-inferiority margins.",
+      "script_path": "world_models_fpga/research/circuits/run_goal_memory_stress_tests_v2.py",
+      "script_sha256": "dca68860d85817fde62446cd07fdf598c0a48992518e22cc6dbc43afa12c6119",
+      "source_git_commit": "44bcc0da7182720df2aa0e98316652f8758bd718",
+      "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_goal_memory_stress_tests_v2.py --episodes 30 --device cuda",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "environment_model_sha256": "0e655e50a8119de6402a5f041369c4728d7d2d9cf4bd8bc4bf8a9a582653bb51",
+      "random_seed": 8300,
+      "sample_size": 270,
+      "result_artifacts": [
+        {
+          "path": "world_models_fpga/research/circuits/results/goal_memory_stress_tests_v2.json",
+          "sha256": "cfa696f0ef983ef30abe7fefa6b77d4f5095efe7d74df07029cc2ad2941c0b5d",
+          "type": "summary_json"
+        },
+        {
+          "path": "world_models_fpga/research/circuits/results/goal_memory_stress_tests_v2_traces.npz",
+          "sha256": "f915eb04a36de084c9d629c933c07362c60fd16a540a289e073059e2ce341cbf",
+          "type": "numerical_traces_npz"
+        }
+      ],
+      "key_findings": {
+        "full_visual_and_memory_success": 0.8000,
+        "visual_only_success": 0.8333,
+        "occlusion_window_visual_only_error_increase_m": 0.0973,
+        "occlusion_window_wilcoxon_p": 3.79e-06,
+        "frozen_memory_success": 1.0000,
+        "corrupted_memory_success": 0.9333,
+        "zeroed_ego_motion_success": 0.8000,
+        "perturbed_ego_motion_success": 0.8333,
+        "matched_donor_memory_success": 0.9667,
+        "mismatched_donor_memory_success": 0.9000,
+        "non_inferior_at_margin_0_10": true
+      }
+    },
+    {
       "experiment_id": "EXP_01_TASK_IDENTITY_VISUAL_GROUNDING",
       "description": "Evaluates dynamic visual grounding vs canonical task-conditioned expectation across 6 controlled conditions (N=30 each), enforcing target visibility and logging fine-grained step traces.",
       "script_path": "world_models_fpga/research/benchmarks/run_task_identity_visual_grounding.py",

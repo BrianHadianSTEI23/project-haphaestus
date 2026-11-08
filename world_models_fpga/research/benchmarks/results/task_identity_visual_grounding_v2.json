@@ -1,0 +1,204 @@
+{
+  "experiment_metadata": {
+    "source_git_commit": "44bcc0da7182720df2aa0e98316652f8758bd718",
+    "script_path": "world_models_fpga/research/benchmarks/run_task_identity_visual_grounding_v2.py",
+    "script_sha256": "9984c76438ca676c91da16986e88398aaee3bef0643ae04972384e9c3c10e6dd",
+    "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_task_identity_visual_grounding_v2.py --episodes-per-cond 30 --device cuda",
+    "execution_timestamp": "2026-11-08T09:22:36.667001+00:00",
+    "working_tree_clean": true,
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "environment_model_sha256": "0e655e50a8119de6402a5f041369c4728d7d2d9cf4bd8bc4bf8a9a582653bb51",
+    "configuration_sha256": "c40339fe9e8906a19f51f563f162f007f680b7e85487781d2196a16c05194e17",
+    "random_seeds": [
+      8100,
+      9101,
+      10102,
+      11103,
+      13105,
+      14106
+    ],
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "mujoco_version": "3.17.0",
+    "device": "cuda"
+  },
+  "rejection_sampling_log": {
+    "canonical_relocation_distance_too_small (< 0.75m)": 571,
+    "arena_bounds_violation": 962,
+    "obstacle_clearance_violation (< 0.50m)": 15,
+    "two_target_separation_too_small (< 0.52m)": 5,
+    "distractor_clearance_violation": 15
+  },
+  "conditions": {
+    "cond_1_canonical_baseline": {
+      "n_episodes_evaluated": 30,
+      "n_valid_outside_threshold": 30,
+      "success_count": 30,
+      "success_rate": 1.0,
+      "mean_initial_distance_m": 0.587045767903328,
+      "min_initial_distance_m": 0.48638901114463806,
+      "mean_path_length_m": 0.2700195886194706,
+      "median_path_length_m": 0.2608006168156862,
+      "mean_final_eval_error_m": 0.3278944214185079,
+      "median_final_eval_error_m": 0.32820048928260803,
+      "mean_initial_visible_pixels": 1206.6,
+      "mean_step_vis_disp_error_m": 0.3037709314376116,
+      "mean_step_vis_ang_error_rad": 0.24078508503735066,
+      "closer_to_canonical_count": 0,
+      "closer_to_canonical_rate": 0.0
+    },
+    "cond_2_relocated_target_visible": {
+      "n_episodes_evaluated": 30,
+      "n_valid_outside_threshold": 30,
+      "success_count": 22,
+      "success_rate": 0.7333333333333333,
+      "mean_initial_distance_m": 0.7696912582270268,
+      "min_initial_distance_m": 0.6656636561930509,
+      "mean_path_length_m": 0.7064757197552051,
+      "median_path_length_m": 0.4884388046339154,
+      "mean_final_eval_error_m": 0.6515305171410243,
+      "median_final_eval_error_m": 0.34330102801322937,
+      "mean_initial_visible_pixels": 1001.0666666666667,
+      "mean_step_vis_disp_error_m": 0.7536197026570638,
+      "mean_step_vis_ang_error_rad": 0.9429242817064126,
+      "closer_to_canonical_count": 8,
+      "closer_to_canonical_rate": 0.26666666666666666
+    },
+    "cond_3_distractor_only_reloc": {
+      "n_episodes_evaluated": 30,
+      "n_valid_outside_threshold": 30,
+      "success_count": 30,
+      "success_rate": 1.0,
+      "mean_initial_distance_m": 0.587045767903328,
+      "min_initial_distance_m": 0.48638901114463806,
+      "mean_path_length_m": 0.2699479475617409,
+      "median_path_length_m": 0.2608006168156862,
+      "mean_final_eval_error_m": 0.3278191417455673,
+      "median_final_eval_error_m": 0.32873357832431793,
+      "mean_initial_visible_pixels": 1206.6,
+      "mean_step_vis_disp_error_m": 0.305363113557299,
+      "mean_step_vis_ang_error_rad": 0.23806571053961914,
+      "closer_to_canonical_count": 0,
+      "closer_to_canonical_rate": 0.0
+    },
+    "cond_4a_same_rgb_token_A": {
+      "n_episodes_evaluated": 30,
+      "n_valid_outside_threshold": 30,
+      "success_count": 20,
+      "success_rate": 0.6666666666666666,
+      "mean_initial_distance_m": 0.7524522438443335,
+      "min_initial_distance_m": 0.6532690164076896,
+      "mean_path_length_m": 0.779500371866925,
+      "median_path_length_m": 0.5553337205201387,
+      "mean_final_eval_error_m": 0.4968138893445333,
+      "median_final_eval_error_m": 0.3473079055547714,
+      "mean_initial_visible_pixels": 1055.9333333333334,
+      "mean_step_vis_disp_error_m": 0.6276022215684255,
+      "mean_step_vis_ang_error_rad": 0.9818786655863126,
+      "closer_to_canonical_count": 17,
+      "closer_to_canonical_rate": 0.5666666666666667
+    },
+    "cond_4b_same_rgb_token_B": {
+      "n_episodes_evaluated": 30,
+      "n_valid_outside_threshold": 30,
+      "success_count": 21,
+      "success_rate": 0.7,
+      "mean_initial_distance_m": 0.7612567453227055,
+      "min_initial_distance_m": 0.6522060661927038,
+      "mean_path_length_m": 0.7122763027650459,
+      "median_path_length_m": 0.5035713901743293,
+      "mean_final_eval_error_m": 0.4829817473888397,
+      "median_final_eval_error_m": 0.34467001259326935,
+      "mean_initial_visible_pixels": 1042.4333333333334,
+      "mean_step_vis_disp_error_m": 0.6132272203763326,
+      "mean_step_vis_ang_error_rad": 0.9139310851693153,
+      "closer_to_canonical_count": 20,
+      "closer_to_canonical_rate": 0.6666666666666666
+    },
+    "cond_5_visual_token_conflict_factorial": {
+      "n_episodes_evaluated": 30,
+      "n_valid_outside_threshold": 30,
+      "success_count": 26,
+      "success_rate": 0.8666666666666667,
+      "mean_initial_distance_m": 0.7575129466626929,
+      "min_initial_distance_m": 0.6506067751369695,
+      "mean_path_length_m": 0.4771344086388126,
+      "median_path_length_m": 0.49109289376065135,
+      "mean_final_eval_error_m": 0.37118319372336067,
+      "median_final_eval_error_m": 0.3409182280302048,
+      "mean_initial_visible_pixels": 1006.8666666666667,
+      "mean_step_vis_disp_error_m": 0.48428113882740337,
+      "mean_step_vis_ang_error_rad": 0.6565311258037885,
+      "closer_to_canonical_count": 19,
+      "closer_to_canonical_rate": 0.6333333333333333
+    },
+    "cond_6_target_appearance_reassigned": {
+      "n_episodes_evaluated": 30,
+      "n_valid_outside_threshold": 30,
+      "success_count": 29,
+      "success_rate": 0.9666666666666667,
+      "mean_initial_distance_m": 0.587045767903328,
+      "min_initial_distance_m": 0.48638901114463806,
+      "mean_path_length_m": 0.3066721888414274,
+      "median_path_length_m": 0.26781165413558483,
+      "mean_final_eval_error_m": 0.3408542493979136,
+      "median_final_eval_error_m": 0.3353721499443054,
+      "mean_initial_visible_pixels": 1206.6,
+      "mean_step_vis_disp_error_m": 0.37765604828794797,
+      "mean_step_vis_ang_error_rad": 0.4356512596209844,
+      "closer_to_canonical_count": 0,
+      "closer_to_canonical_rate": 0.0
+    }
+  },
+  "planned_comparisons": {
+    "relocated_vs_canonical": {
+      "mcnemar_n10": 8,
+      "mcnemar_n01": 0,
+      "mcnemar_unadjusted_p": 0.0078125,
+      "error_diff_mean_m": 0.3236360957225164,
+      "error_diff_95ci": [
+        0.131404371286432,
+        0.5480663608511289
+      ],
+      "wilcoxon_stat": 76.0,
+      "wilcoxon_unadjusted_p": 0.0007978975772857666,
+      "mcnemar_holm_adjusted_p": 0.03125
+    },
+    "same_rgb_paired_token_contrast": {
+      "n_identical_pairs_verified": 30,
+      "token_A_success_rate": 0.6666666666666666,
+      "token_B_success_rate": 0.7,
+      "mean_angular_vector_shift_rad": 0.8686175201505587,
+      "correct_target_discrimination_count": 6,
+      "correct_target_discrimination_rate": 0.2
+    },
+    "distractor_reloc_vs_canonical": {
+      "mcnemar_n10": 0,
+      "mcnemar_n01": 0,
+      "mcnemar_unadjusted_p": 1.0,
+      "mcnemar_holm_adjusted_p": 1.0
+    },
+    "visual_token_conflict_vs_canonical": {
+      "mcnemar_n10": 4,
+      "mcnemar_n01": 0,
+      "mcnemar_unadjusted_p": 0.125,
+      "mcnemar_holm_adjusted_p": 0.375
+    },
+    "appearance_reassigned_vs_canonical": {
+      "mcnemar_n10": 1,
+      "mcnemar_n01": 0,
+      "mcnemar_unadjusted_p": 1.0,
+      "mcnemar_holm_adjusted_p": 1.0
+    }
+  },
+  "limitations": [
+    "Evaluated on front-facing 60-degree FOV camera; visible target tracking does not generalize to omnidirectional search without active camera rotation.",
+    "Visual/token binding is evaluated within the 6 canonical object categories and requires adequate spatial separation between candidates.",
+    "Appearance mutations alter RGBA and scale but preserve primitive MuJoCo geometry types (box and cylinder)."
+  ],
+  "scientific_interpretation": {
+    "relocation_validity": "With initial waypoint distance >= 0.60m and post-action distance evaluation, navigation requires active locomotion and cannot succeed trivially.",
+    "task_token_binding": "Condition 4 establishes whether the inferred visual goal vector redirects toward a newly designated object when both objects are simultaneously visible in an identical RGB observation.",
+    "visual_saliency_tradeoff": "Condition 5 tests whether categorical task tokens dominate or interact with low-level visual saliency when resolving goal candidates."
+  }
+}

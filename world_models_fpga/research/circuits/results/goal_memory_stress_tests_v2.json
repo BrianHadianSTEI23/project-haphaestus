@@ -1,0 +1,334 @@
+{
+  "experiment_metadata": {
+    "source_git_commit": "44bcc0da7182720df2aa0e98316652f8758bd718",
+    "script_path": "world_models_fpga/research/circuits/run_goal_memory_stress_tests_v2.py",
+    "script_sha256": "dca68860d85817fde62446cd07fdf598c0a48992518e22cc6dbc43afa12c6119",
+    "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_goal_memory_stress_tests_v2.py --episodes 30 --device cuda",
+    "execution_timestamp": "2026-11-08T09:20:58.651776+00:00",
+    "working_tree_clean": true,
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "environment_model_sha256": "0e655e50a8119de6402a5f041369c4728d7d2d9cf4bd8bc4bf8a9a582653bb51",
+    "configuration_sha256": "eaf2a3021627497d6544538a575d59741837123c4ba1ae25857d6a250e7dc0af",
+    "random_seeds": [
+      8300,
+      9301
+    ],
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "mujoco_version": "3.17.0",
+    "device": "cuda"
+  },
+  "conditions": {
+    "cond_1_full_visual_and_memory": {
+      "n_episodes": 30,
+      "success_count": 24,
+      "success_rate": 0.8,
+      "mean_final_error_m": 0.4149768799543381,
+      "median_final_error_m": 0.3426436185836792,
+      "mean_path_length_m": 0.44206000737225015,
+      "mean_step_goal_error_m": 0.5144583468635877,
+      "mean_occlusion_window_goal_error_m": 0.6476867541670799,
+      "mean_occlusion_window_angular_error_rad": 1.0626378317674001
+    },
+    "cond_2_visual_only": {
+      "n_episodes": 30,
+      "success_count": 25,
+      "success_rate": 0.8333333333333334,
+      "mean_final_error_m": 0.405259441335996,
+      "median_final_error_m": 0.341784343123436,
+      "mean_path_length_m": 0.4268274607757727,
+      "mean_step_goal_error_m": 0.5472501521309217,
+      "mean_occlusion_window_goal_error_m": 0.744987619916598,
+      "mean_occlusion_window_angular_error_rad": 1.1756086096167564
+    },
+    "cond_3_memory_reset_step": {
+      "n_episodes": 30,
+      "success_count": 25,
+      "success_rate": 0.8333333333333334,
+      "mean_final_error_m": 0.43356471657752993,
+      "median_final_error_m": 0.3374527543783188,
+      "mean_path_length_m": 0.4626537867045651,
+      "mean_step_goal_error_m": 0.4332635015249252,
+      "mean_occlusion_window_goal_error_m": 0.5669464046756426,
+      "mean_occlusion_window_angular_error_rad": 1.2660428422192733
+    },
+    "cond_4_frozen_memory": {
+      "n_episodes": 30,
+      "success_count": 30,
+      "success_rate": 1.0,
+      "mean_final_error_m": 0.3359285275141398,
+      "median_final_error_m": 0.3359416276216507,
+      "mean_path_length_m": 0.29890334702407323,
+      "mean_step_goal_error_m": 0.4126874255637328,
+      "mean_occlusion_window_goal_error_m": 0.4903155798713366,
+      "mean_occlusion_window_angular_error_rad": 0.8307107716798783
+    },
+    "cond_5_corrupted_memory": {
+      "n_episodes": 30,
+      "success_count": 28,
+      "success_rate": 0.9333333333333333,
+      "mean_final_error_m": 0.37921483218669894,
+      "median_final_error_m": 0.33537521958351135,
+      "mean_path_length_m": 0.38762791850604117,
+      "mean_step_goal_error_m": 0.5481937895218532,
+      "mean_occlusion_window_goal_error_m": 0.6847543279329936,
+      "mean_occlusion_window_angular_error_rad": 1.1691552817821502
+    },
+    "cond_6_zeroed_ego_motion": {
+      "n_episodes": 30,
+      "success_count": 24,
+      "success_rate": 0.8,
+      "mean_final_error_m": 0.4171862711509069,
+      "median_final_error_m": 0.34166552126407623,
+      "mean_path_length_m": 0.4269528100499883,
+      "mean_step_goal_error_m": 0.49673326934377354,
+      "mean_occlusion_window_goal_error_m": 0.6290353231132031,
+      "mean_occlusion_window_angular_error_rad": 1.021454236532251
+    },
+    "cond_7_perturbed_ego_motion": {
+      "n_episodes": 30,
+      "success_count": 25,
+      "success_rate": 0.8333333333333334,
+      "mean_final_error_m": 0.41128009557724,
+      "median_final_error_m": 0.34190841019153595,
+      "mean_path_length_m": 0.4269893422645206,
+      "mean_step_goal_error_m": 0.5173948228359222,
+      "mean_occlusion_window_goal_error_m": 0.6433263316750526,
+      "mean_occlusion_window_angular_error_rad": 1.059947812060515
+    },
+    "cond_8_matched_donor_memory": {
+      "n_episodes": 30,
+      "success_count": 29,
+      "success_rate": 0.9666666666666667,
+      "mean_final_error_m": 0.34861320356527964,
+      "median_final_error_m": 0.33865974843502045,
+      "mean_path_length_m": 0.3133452307743331,
+      "mean_step_goal_error_m": 0.4158720384041468,
+      "mean_occlusion_window_goal_error_m": 0.5013137037555376,
+      "mean_occlusion_window_angular_error_rad": 0.8893327593803406
+    },
+    "cond_9_mismatched_donor_memory": {
+      "n_episodes": 30,
+      "success_count": 27,
+      "success_rate": 0.9,
+      "mean_final_error_m": 0.40033822059631347,
+      "median_final_error_m": 0.335700586438179,
+      "mean_path_length_m": 0.37306492729112506,
+      "mean_step_goal_error_m": 0.38536428958177565,
+      "mean_occlusion_window_goal_error_m": 0.43828655655185383,
+      "mean_occlusion_window_angular_error_rad": 0.8210563227534294
+    }
+  },
+  "planned_comparisons": {
+    "cond_2_visual_only_vs_full_memory": {
+      "mcnemar_n10": 0,
+      "mcnemar_n01": 1,
+      "mcnemar_unadjusted_p": 1.0,
+      "final_error_diff_mean_m": -0.009717438618342083,
+      "final_error_diff_95ci": [
+        -0.047756494159499806,
+        0.03751204267144201
+      ],
+      "occl_error_diff_mean_m": 0.09730086574951807,
+      "occl_error_diff_95ci": [
+        0.062458856627345086,
+        0.13352801306794088
+      ],
+      "occl_wilcoxon_stat": 30.0,
+      "occl_wilcoxon_unadjusted_p": 3.7904828786849976e-06,
+      "success_rate_diff": 0.033333333333333326,
+      "success_rate_diff_95ci": [
+        0.0,
+        0.1
+      ],
+      "non_inferiority_margin": 0.1,
+      "non_inferior_at_margin": true,
+      "mcnemar_holm_adjusted_p": 1.0
+    },
+    "cond_3_memory_reset_step_vs_full_memory": {
+      "mcnemar_n10": 1,
+      "mcnemar_n01": 2,
+      "mcnemar_unadjusted_p": 1.0,
+      "final_error_diff_mean_m": 0.018587836623191835,
+      "final_error_diff_95ci": [
+        -0.03814670962591965,
+        0.08483034931123255
+      ],
+      "occl_error_diff_mean_m": -0.08074034949143728,
+      "occl_error_diff_95ci": [
+        -0.1367365831012527,
+        -0.026378530363241854
+      ],
+      "occl_wilcoxon_stat": 117.0,
+      "occl_wilcoxon_unadjusted_p": 0.016431212425231934,
+      "success_rate_diff": 0.033333333333333326,
+      "success_rate_diff_95ci": [
+        -0.06666666666666667,
+        0.13333333333333333
+      ],
+      "non_inferiority_margin": 0.1,
+      "non_inferior_at_margin": true,
+      "mcnemar_holm_adjusted_p": 1.0
+    },
+    "cond_4_frozen_memory_vs_full_memory": {
+      "mcnemar_n10": 0,
+      "mcnemar_n01": 6,
+      "mcnemar_unadjusted_p": 0.03125,
+      "final_error_diff_mean_m": -0.07904835244019827,
+      "final_error_diff_95ci": [
+        -0.14892237496872743,
+        -0.021178574586908038
+      ],
+      "occl_error_diff_mean_m": -0.1573711742957433,
+      "occl_error_diff_95ci": [
+        -0.22308786507695913,
+        -0.09876485361407204
+      ],
+      "occl_wilcoxon_stat": 32.0,
+      "occl_wilcoxon_unadjusted_p": 5.144625902175903e-06,
+      "success_rate_diff": 0.19999999999999996,
+      "success_rate_diff_95ci": [
+        0.06666666666666667,
+        0.3333333333333333
+      ],
+      "non_inferiority_margin": 0.1,
+      "non_inferior_at_margin": true,
+      "mcnemar_holm_adjusted_p": 0.25
+    },
+    "cond_5_corrupted_memory_vs_full_memory": {
+      "mcnemar_n10": 0,
+      "mcnemar_n01": 4,
+      "mcnemar_unadjusted_p": 0.125,
+      "final_error_diff_mean_m": -0.03576204776763916,
+      "final_error_diff_95ci": [
+        -0.07765106081962585,
+        -0.0010768750806649573
+      ],
+      "occl_error_diff_mean_m": 0.037067573765913645,
+      "occl_error_diff_95ci": [
+        -0.025055314165850478,
+        0.10437771528959273
+      ],
+      "occl_wilcoxon_stat": 180.0,
+      "occl_wilcoxon_unadjusted_p": 0.28936620615422726,
+      "success_rate_diff": 0.1333333333333333,
+      "success_rate_diff_95ci": [
+        0.03333333333333333,
+        0.26666666666666666
+      ],
+      "non_inferiority_margin": 0.1,
+      "non_inferior_at_margin": true,
+      "mcnemar_holm_adjusted_p": 0.75
+    },
+    "cond_6_zeroed_ego_motion_vs_full_memory": {
+      "mcnemar_n10": 0,
+      "mcnemar_n01": 0,
+      "mcnemar_unadjusted_p": 1.0,
+      "final_error_diff_mean_m": 0.002209391196568807,
+      "final_error_diff_95ci": [
+        -0.010841667478283246,
+        0.016776251941919323
+      ],
+      "occl_error_diff_mean_m": -0.018651431053876878,
+      "occl_error_diff_95ci": [
+        -0.05648001244291662,
+        0.004732083876927679
+      ],
+      "occl_wilcoxon_stat": 210.0,
+      "occl_wilcoxon_unadjusted_p": 0.6554384250193834,
+      "success_rate_diff": 0.0,
+      "success_rate_diff_95ci": [
+        0.0,
+        0.0
+      ],
+      "non_inferiority_margin": 0.1,
+      "non_inferior_at_margin": true,
+      "mcnemar_holm_adjusted_p": 1.0
+    },
+    "cond_7_perturbed_ego_motion_vs_full_memory": {
+      "mcnemar_n10": 0,
+      "mcnemar_n01": 1,
+      "mcnemar_unadjusted_p": 1.0,
+      "final_error_diff_mean_m": -0.0036967843770980835,
+      "final_error_diff_95ci": [
+        -0.0375908941278855,
+        0.03353889015813667
+      ],
+      "occl_error_diff_mean_m": -0.004360422492027283,
+      "occl_error_diff_95ci": [
+        -0.03751746783653894,
+        0.024159486802915724
+      ],
+      "occl_wilcoxon_stat": 202.0,
+      "occl_wilcoxon_unadjusted_p": 0.5425279382616282,
+      "success_rate_diff": 0.033333333333333326,
+      "success_rate_diff_95ci": [
+        0.0,
+        0.1
+      ],
+      "non_inferiority_margin": 0.1,
+      "non_inferior_at_margin": true,
+      "mcnemar_holm_adjusted_p": 1.0
+    },
+    "cond_8_matched_donor_memory_vs_full_memory": {
+      "mcnemar_n10": 0,
+      "mcnemar_n01": 5,
+      "mcnemar_unadjusted_p": 0.0625,
+      "final_error_diff_mean_m": -0.06636367638905843,
+      "final_error_diff_95ci": [
+        -0.12965633479257424,
+        -0.017433711017171543
+      ],
+      "occl_error_diff_mean_m": -0.14637305041154225,
+      "occl_error_diff_95ci": [
+        -0.210045624623696,
+        -0.08979457382112742
+      ],
+      "occl_wilcoxon_stat": 2.0,
+      "occl_wilcoxon_unadjusted_p": 2.3517985308333274e-05,
+      "success_rate_diff": 0.16666666666666663,
+      "success_rate_diff_95ci": [
+        0.03333333333333333,
+        0.3
+      ],
+      "non_inferiority_margin": 0.1,
+      "non_inferior_at_margin": true,
+      "mcnemar_holm_adjusted_p": 0.4375
+    },
+    "cond_9_mismatched_donor_memory_vs_full_memory": {
+      "mcnemar_n10": 0,
+      "mcnemar_n01": 3,
+      "mcnemar_unadjusted_p": 0.25,
+      "final_error_diff_mean_m": -0.014638659358024598,
+      "final_error_diff_95ci": [
+        -0.07066956433157125,
+        0.04674031520883241
+      ],
+      "occl_error_diff_mean_m": -0.2094001976152261,
+      "occl_error_diff_95ci": [
+        -0.298723304408292,
+        -0.13304653052861493
+      ],
+      "occl_wilcoxon_stat": 5.0,
+      "occl_wilcoxon_unadjusted_p": 1.862645149230957e-08,
+      "success_rate_diff": 0.09999999999999998,
+      "success_rate_diff_95ci": [
+        0.0,
+        0.2
+      ],
+      "non_inferiority_margin": 0.1,
+      "non_inferior_at_margin": true,
+      "mcnemar_holm_adjusted_p": 1.0
+    }
+  },
+  "limitations": [
+    "Occlusion is evaluated as a controlled 10-step camera observation blackout (steps 5..15); physical occluder geometry was not moved into line-of-sight dynamically.",
+    "Controller memory blending uses fixed 0.65/0.35 weights rather than adaptive visual uncertainty weighting.",
+    "Ego-motion displacement uses micro_ego_head on consecutive latents without privileged odometry."
+  ],
+  "scientific_interpretation": {
+    "controller_memory_role": "Evaluates whether controller memory maintains egocentric target direction during periods of sensory deprivation.",
+    "learned_ego_motion_contribution": "Condition 6 and 7 isolate the causal contribution of the learned latent displacement predictor from the geometric state update.",
+    "statistical_equivalence_note": "A p-value of 1.0 does not imply equivalence; explicit non-inferiority margins with paired bootstrap CIs are reported."
+  }
+}

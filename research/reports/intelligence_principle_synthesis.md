@@ -4,6 +4,10 @@
 **Repository:** `BrianHadianSTEI23/project-haphaestus`  
 **Branch:** `fix/interpretability`  
 **Primary Artifacts:**  
+- `world_models_fpga/research/benchmarks/results/task_identity_visual_grounding_v2.json`  
+- `world_models_fpga/research/benchmarks/results/task_identity_visual_grounding_v2_traces.npz`  
+- `world_models_fpga/research/circuits/results/goal_memory_stress_tests_v2.json`  
+- `world_models_fpga/research/circuits/results/goal_memory_stress_tests_v2_traces.npz`  
 - `world_models_fpga/research/benchmarks/results/task_identity_visual_grounding.json`  
 - `world_models_fpga/research/benchmarks/results/task_identity_visual_grounding_traces.npz`  
 - `world_models_fpga/research/circuits/results/goal_path_interventions.json`  
@@ -21,10 +25,10 @@ Project Hephaestus investigates the computational mechanisms through which an au
 Through fine-grained causal interventions, branch isolation, and counterfactual testing, we have derived an empirically verified, falsification-tested account of the computation performed by the Hierarchical Joint-Embedding Predictive Architecture (H-JEPA).
 
 ### Central Empirical Findings:
-1. **Dynamic Visual Grounding is Active and Saliency-Constrained:**
-   When an intended physical target is relocated to a novel arena position while remaining within the robot camera field of view, H-JEPA dynamically tracks and reaches the relocated target with **93.3% success (28/30)** and **0.257m** final goal error ($p = 0.5000$ vs nominal baseline). When the visual scene is held fixed and the task token is swapped, success collapses to **3.3% (1/30)** with **1.524m** error ($p = 3.73 \times 10^{-9}$, Holm-adjusted $p = 1.86 \times 10^{-8}$). H-JEPA does not execute a blind feedforward semantic map from token alone; dynamic visual target extraction requires visual evidence matching the categorical token.
-2. **Goal Memory is a Controller Heuristic, Not Learned Neural Memory:**
-   Egocentric goal memory (`_ego_goal_memory`), previous latent tracking, and fixed 0.65/0.35 blending are handwritten controller logic in `model_wrappers.py`, containing zero learned recurrent parameters in `HJEPAModel`. Across 7 controlled memory interventions, a pure visual controller (`visual_only`, 0% memory) achieves **96.7% success (29/30)**, matching the default blended controller (96.7%, $p = 1.0000$). Navigation does not depend on controller memory integration.
+1. **Dynamic Visual Grounding is Active, Saliency-Constrained, and Locomotion-Requiring (v2):**
+   When the target relocation is controlled to guarantee initial waypoint distance $\ge 0.60$m (mean 0.770m, min 0.666m) and physical relocation $\ge 0.75$m with post-action evaluation, H-JEPA achieves **73.3% success (22/30)** and **median path length 0.488m** (mean 0.706m). This eliminates the v1 initial-distance confound where 21/30 episodes started inside the 0.35m goal threshold (path length 0.018m). True locomotion is confirmed, though success shows statistically significant degradation relative to canonical baseline (100.0%, McNemar $p = 0.0078$, Holm-adjusted $p = 0.03125$). When the visual scene is held fixed and the task token is swapped under single-object visibility, navigation collapses to **3.3% (1/30)** with **1.524m** error ($p = 3.73 \times 10^{-9}$). In paired scenes where candidate objects A and B are simultaneously visible in identical RGB frames, changing task token rotates the inferred goal vector by **$0.869$ rad ($49.8^\circ$)**, driving **66.7% / 70.0%** success with **20.0%** dual discrimination.
+2. **Controller Goal Memory Causally Preserves Tracking Under Sensory Deprivation (v2):**
+   Egocentric goal memory (`_ego_goal_memory`), previous latent tracking, and fixed 0.65/0.35 blending are handwritten controller logic in `model_wrappers.py`, utilizing learned 2D `micro_ego_head` displacements. Under continuous vision, pure visual control (`visual_only`) matches blended control (96.7% vs 96.7%, $\Delta = 0.0\%$). However, under a temporary 10-step camera blackout (steps 5..15), **visual-only control incurs a statistically significant increase in tracking error ($+0.097$m higher error, 95% CI $[0.062, 0.134]$, Wilcoxon $p = 3.79 \times 10^{-6}$)** compared to the blended controller. Final navigation success upon restoration recovers to **83.3%** (non-inferior within $\delta=0.10$ margin to full memory 80.0%). Controller memory causally preserves heading during sensory deprivation.
 3. **C1 Subspace Falsification (Unresolved Representation Hypothesis):**
    Targeted ablation of candidate 8D subspace C1 produces a minor 3.3% drop (93.3% $\rightarrow$ 90.0%, $p = 0.9032$ vs random 8D drop of 20.8% $\pm$ 14.8%, $z = -1.177$). Random 8D subspace patching achieves higher offline donor cosine (0.9854) than candidate C1 (0.9779), and random patch rescue (90.9%) is indistinguishable from matched patch rescue (93.3%, $p = 0.6129$). C1 is falsified as a modular circuit. Because random projections achieve parity, this does not confirm a selective diffuse population code; C1 remains an unresolved representation hypothesis.
 4. **Prospective Collision Filter Falsification:**
@@ -68,33 +72,36 @@ Through fine-grained causal interventions, branch isolation, and counterfactual 
 ### Hypothesis H2 — Dynamic Visual Grounding vs Task-Conditioned Canonical Expectation
 > *Hypothesis:* Does H-JEPA dynamically ground the current physical location of a target from RGB observations, or does it predominantly retrieve a task-conditioned canonical spatial expectation?
 
-- **Empirical Results (Phase 3 Factorial Experiment, $N=30$ per condition):**
-  1. **Canonical Baseline (Cond 1):** 30/30 (100.0%) success, 0.289m final error, visual goal angular error 0.244 rad.
-  2. **Relocated Target with Verified Visibility (Cond 2):** 28/30 (**93.3% success**), **0.257m final error**, only 2/30 closer to canonical ($p = 0.5000$, Holm-adjusted $p = 1.0000$).
-  3. **Distractor-Only Relocation (Cond 3):** 30/30 (100.0%) success, 0.289m final error ($p = 1.0000$).
-  4. **Same RGB, Changed Task Token (Cond 4):** 1/30 (**3.3% success**), **1.524m final error**, 27/30 closer to canonical ($p = 3.73 \times 10^{-9}$, Holm-adjusted $p = 1.86 \times 10^{-8}$). Visual goal angular error jumps to 1.844 rad.
-  5. **Target Appearance Reassigned (Cond 5):** 26/30 (86.7%) success, 0.336m error ($p = 0.1250$, Holm-adjusted $p = 0.3750$).
-  6. **Visual / Token Conflict (Cond 6):** 22/30 (73.3%) success, 0.384m error ($p = 0.0078$, Holm-adjusted $p = 0.03125$).
-- **Scientific Resolution:** **CONFIRMED DYNAMIC VISUAL GROUNDING (BOUNDED BY VISUAL SALIENCY).**
-  - When the target is physically relocated within the camera field of view, the agent dynamically grounds the object and navigates to its actual location (93.3% success), refuting the claim that the agent is bound to canonical training coordinates.
-  - The agent does not execute a blind feedforward semantic map from token alone: when the token is swapped under a fixed RGB scene, navigation fails (3.3% success), proving that goal generation requires visual saliency evidence matching the categorical token.
+- **Empirical Results (Phase 3 v2 Controlled Grounding, $N=30$ per condition):**
+  1. **Canonical Baseline (Cond 1):** 30/30 (100.0%) success, 0.328m final error, initial distance 0.587m, path length 0.270m.
+  2. **Relocated Target with Guaranteed Minimum Distance (Cond 2):** 22/30 (**73.3% success**), 0.652m final error (median 0.343m), initial distance 0.770m (min 0.666m), median path length **0.488m** (mean 0.706m). Eliminates initial distance confound. Degrades significantly vs canonical ($p = 0.0078$, Holm-adjusted $p = 0.03125$).
+  3. **Distractor-Only Relocation (Cond 3):** 30/30 (100.0%) success, 0.328m final error ($p = 1.0000$).
+  4. **Dual-Visible Identical RGB, Token A (Cond 4a):** 20/30 (66.7%) success, 0.497m error, median path 0.555m.
+  5. **Dual-Visible Identical RGB, Token B (Cond 4b):** 21/30 (70.0%) success, 0.483m error, median path 0.504m. Changing only the task token rotates the inferred visual goal vector by **$0.869$ rad ($49.8^\circ$)** on the identical visual latent. Strict dual discrimination is achieved in **20.0% (6/30)** of episodes.
+  6. **Visual / Token Conflict Factorial (Cond 5):** 26/30 (86.7%) success, 0.371m error ($p = 0.1250$, Holm-adjusted $p = 0.3750$).
+  7. **Target Appearance Reassigned (Cond 6):** 29/30 (96.7%) success, 0.341m error ($p = 1.0000$).
+- **Scientific Resolution:** **CONFIRMED DYNAMIC VISUAL GROUNDING (LOCOMOTION VERIFIED, SALIENCY-CONSTRAINED).**
+  - When the target is physically relocated within the camera field of view with guaranteed initial distance ($\ge 0.60$m), the agent performs genuine locomotion (median path 0.488m) to reach the relocated target (73.3% success). The prior 93.3% figure in v1 was inflated by 21/30 episodes starting within the goal threshold.
+  - In paired scenes where candidate objects A and B are simultaneously visible in identical RGB frames, changing only the task token rotates the inferred goal vector by $49.8^\circ$, proving task tokens steer visual goal inference, but compete with spatial priors (20% dual discrimination rate).
 
 ---
 
-### Hypothesis H3 — Controller Goal Memory vs Learned Recurrent State
+### Hypothesis H3 — Controller Goal Memory vs Learned Recurrent State Under Occlusion
 > *Hypothesis:* Does the agent's spatial navigation depend causally on temporal goal memory integration, and does memory represent a learned recurrent neural mechanism?
 
-- **Empirical Results (Phase 3 Memory Interventions, $N=30$ per condition):**
-  1. `cond_1_full_blended` (default controller, 0.65 visual + 0.35 memory): 29/30 (96.7%) success, 0.301m error.
-  2. `cond_2_visual_only` (pure visual grounding, 0% memory): 29/30 (**96.7% success**), **0.304m error** ($p = 1.0000$, $\Delta = 0.0\%$).
-  3. `cond_3_memory_reset_step` (memory zeroed every step): 28/30 (93.3%) success, 0.320m error ($p = 1.0000$).
-  4. `cond_4_frozen_memory` (memory frozen at $t=0$ state): 29/30 (96.7%) success, 0.293m error ($p = 1.0000$).
-  5. `cond_5_corrupted_memory` (Gaussian noise injected into memory): 30/30 (100.0%) success, 0.298m error ($p = 1.0000$).
-  6. `cond_6_matched_donor_memory`: 30/30 (100.0%) success, 0.292m error ($p = 1.0000$).
-  7. `cond_7_mismatched_donor_memory`: 30/30 (100.0%) success, 0.290m error ($p = 1.0000$).
-- **Scientific Resolution:** **CONFIRMED CONTROLLER HEURISTIC (NON-ESSENTIAL).**
-  - Goal memory is an ephemeral Python controller buffer in `model_wrappers.py`, not a learned recurrent neural parameter in `HJEPAModel`.
-  - Closed-loop navigation does not depend on memory integration; pure visual grounding achieves exact parity with default blending.
+- **Empirical Results (Phase 3 v2 Memory Stress Tests Under 10-Step Sensory Blackout, $N=30$ matched episodes):**
+  1. `cond_1_full_visual_and_memory` (default controller, 0.65 visual + 0.35 memory): 24/30 (80.0%) success, occlusion window error 0.648m.
+  2. `cond_2_visual_only` (pure visual grounding, 0% memory): 25/30 (**83.3% success**), occlusion window error **0.745m**. During the 10-step sensory blackout (steps 5..15), **visual-only control incurs $+0.097$m higher tracking error** (95% CI $[0.062, 0.134]$m, Wilcoxon $p = 3.79 \times 10^{-6}$) vs full memory. After vision is restored, final navigation success recovers to 83.3% (non-inferior within $\delta=0.10$ margin to full memory 80.0%).
+  3. `cond_3_memory_reset_step`: 25/30 (83.3%) success, occlusion error 0.567m.
+  4. `cond_4_frozen_memory`: 30/30 (100.0%) success, occlusion error 0.490m.
+  5. `cond_5_corrupted_memory` (+0.50 Gaussian noise): 28/30 (93.3%) success, occlusion error 0.685m.
+  6. `cond_6_zeroed_ego_motion`: 24/30 (80.0%) success, occlusion error 0.629m.
+  7. `cond_7_perturbed_ego_motion`: 25/30 (83.3%) success, occlusion error 0.643m.
+  8. `cond_8_matched_donor_memory`: 29/30 (96.7%) success, occlusion error 0.501m.
+  9. `cond_9_mismatched_donor_memory`: 27/30 (90.0%) success, occlusion error 0.438m.
+- **Scientific Resolution:** **CONTROLLER HEURISTIC CAUSALLY MAINTAINS OCCLUSION TRACKING.**
+  - Goal memory is an ephemeral Python controller buffer in `model_wrappers.py` utilizing learned 2D `micro_ego_head` displacements; zero learned recurrent state in `HJEPAModel`.
+  - While visual-only achieves parity under continuous vision, controller memory provides a statistically significant tracking benefit during temporary sensory blackout ($+0.097$m error increase when omitted, $p = 3.79 \times 10^{-6}$). Final navigation recovers once vision is restored.
 
 ---
 
@@ -142,11 +149,11 @@ Through fine-grained causal interventions, branch isolation, and counterfactual 
 
 ## 4. Reconciled Computational Principles of Embodied Spatial Intelligence
 
-### Principle 1: Saliency-Gated Visual Grounding
-Task-conditioned visual goal grounding requires matching physical visual evidence. When the target object is visible in the camera field of view, the visual encoder and grounding head dynamically compute egocentric displacement (93.3% success). Categorical task tokens cannot redirect navigation in the absence of corresponding visual saliency features (3.3% success under token swap, $p < 10^{-8}$).
+### Principle 1: Saliency-Gated Visual Grounding & Locomotion Calibration
+Task-conditioned visual goal grounding requires matching physical visual evidence. When the target object is visible in the camera field of view and initial distance is properly controlled ($\ge 0.60$m), the visual encoder and grounding head dynamically compute egocentric displacement driving genuine locomotion (73.3% success, median path 0.488m), showing calibrated degradation vs canonical baseline ($p = 0.03125$). Categorical task tokens interact causally with visual saliency to rotate goal vectors ($49.8^\circ$ shift under identical RGB frames), but cannot steer navigation when visual evidence is completely absent (3.3% success under token swap, $p < 10^{-8}$).
 
-### Principle 2: Controller Memory Decoupling
-Temporal goal integration implemented as a controller-level vector differencing heuristic contributes zero marginal spatial information over instantaneous reactive visual grounding in observable environments (pure visual controller achieves identical 96.7% success, $p = 1.0000$).
+### Principle 2: Controller Memory Decoupling & Occlusion Buffer
+Temporal goal integration implemented as a controller-level vector accumulator paired with learned `micro_ego_head` displacements contributes zero marginal spatial information over instantaneous reactive visual grounding in continuously observable environments (pure visual controller achieves identical 96.7% success, $p = 1.0000$). However, during temporary visual blackout, controller memory causally preserves egocentric tracking (+0.097m error penalty if omitted, $p = 3.79 \times 10^{-6}$), acting as an ephemeral dead-reckoning bridge until visual observations resume.
 
 ### Principle 3: Kinematic Equivalence of Macro Lookahead
 In rigid, low-slip holonomic domains, action-conditioned latent forward prediction is functionally equivalent to deterministic kinematic unicycle projection ($p = 1.0000$). Learned predictive lookahead provides no marginal utility over geometric extrapolation unless non-linear contact dynamics or wheel slip are present.
