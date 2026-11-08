@@ -141,10 +141,10 @@ def paired_mcnemar_exact(a: list[bool], b: list[bool]) -> tuple[int, int, float]
     return n10, n01, p
 
 
-def paired_bootstrap_diff_ci(a: list[float], b: list[float], n_boot: int = 2000, ci: float = 0.95, seed: int = 42) -> tuple[float, float, float]:
+def paired_bootstrap_diff_ci(a: list, b: list, n_boot: int = 2000, ci: float = 0.95, seed: int = 42) -> tuple[float, float, float]:
     """Paired bootstrap confidence interval for mean difference (a - b)."""
     rng = np.random.default_rng(seed)
-    diffs = np.asarray(a) - np.asarray(b)
+    diffs = np.asarray(a, dtype=np.float64) - np.asarray(b, dtype=np.float64)
     obs_diff = float(np.mean(diffs))
     if len(diffs) <= 1:
         return obs_diff, obs_diff, obs_diff
