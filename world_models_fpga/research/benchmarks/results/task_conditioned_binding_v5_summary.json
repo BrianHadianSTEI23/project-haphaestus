@@ -135,7 +135,7 @@
       "p_value_negative_alignment_h1_cos_lt_0": 0.999850001499985,
       "p_value_two_sided_h1_abs_cos_gt_0": 0.00043999560004399956
     },
-    "mechanistic_conclusion": "Mechanism 3: Mixed nonlinear interaction. The interaction vector diverges by ~113 deg from the physical target swap (cosine -0.314), refuting both independent additive task bias and clean dynamic visual binding."
+    "mechanistic_conclusion": "Mechanism 3: Mixed nonlinear interaction. The interaction vector diverges by 66.9 deg (95% CI: [55.3, 78.9] deg) from physical target swap with positive cosine alignment of +0.3140 (95% CI: [0.1508, 0.4693], sign-flip p_pos = 0.00016, p_two = 0.00044). Above-null target binding was not demonstrated (observed dual rate 16.0% vs null mean 19.5%, p_one_sided = 0.9890). Historical same-category instance claim is invalidated and architecturally unsupported by encode_task_id(). Bilinear and nonlinear surrogate fits indicate context-dependent input-output relationships rather than a literal bilinear circuit."
   },
   "grouped_cross_validation": {
     "stratification": "Target-pair configuration stratified grouped 5-fold CV",

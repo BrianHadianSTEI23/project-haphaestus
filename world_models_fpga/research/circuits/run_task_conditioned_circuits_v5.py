@@ -573,12 +573,13 @@ def run_task_conditioned_circuits_v5(
         },
         "heldout_causal_interventions": intervention_summaries,
         "mechanistic_conclusion": (
-            "Distributed Representation with Overlapping Subspaces. "
-            "Layer 1 (PR=7.63/64) and Layer 2 (PR=5.96/64) exhibit low effective dimensionality, "
-            "concentrated in leading principal components. However, causal sufficiency scales smoothly with "
-            "dimension k without step-function localization (Layer 2: k=4 -> 11.3%, k=16 -> 40.0%, k=32 -> 63.8%, k=64 -> 100.0%). "
-            "Top-k candidate units do not significantly outperform dimension- and norm-matched random controls (all Holm-adjusted p > 0.05). "
-            "Modular subcircuits are definitively falsified; spatial task conditioning is mediated by a distributed, low-dimensional population code."
+            "Low Effective Dimensionality and Candidate Unit Advantage over Dimension-Matched Controls. "
+            "Discovery split reveals low effective dimensionality (Layer 1 PR=7.63/64, Layer 2 PR=5.96/64). "
+            "On held-out split, top-k candidate units significantly outperform dimension-matched random controls "
+            "at k=4, 8, 16, 32 in both layers (e.g., Layer 1 k=8 Holm-adjusted p = 3.58e-07; Layer 2 k=8 Holm-adjusted p = 6.03e-05). "
+            "Crucially, the random controls used in v5 were dimension-matched, not activation-norm-matched. "
+            "Because candidate units have larger task-induced activation changes, whether this represents selective causal "
+            "mediation or an activation-magnitude effect requires norm-matched revalidation (Phase 5.2)."
         ),
     }
 

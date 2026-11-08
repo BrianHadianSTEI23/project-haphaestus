@@ -94,8 +94,8 @@ The learned sensor head achieves virtually zero explanatory power over the zero 
 - Intermediate activations in the grounding head exhibit low effective dimensionality:
   - Layer 1: Participation Ratio $= 7.63 / 64$ ($80\%$ variance in 8 dimensions).
   - Layer 2: Participation Ratio $= 5.96 / 64$ ($80\%$ variance in 6 dimensions).
-- Causal ablation of candidate "task-specific" units shows monotonic scaling with dimension count $k$, but candidate units do **not** outperform random dimension-matched subsets after Holm-Bonferroni correction ($p > 0.05$ across all tests).
-- Modularity is formally falsified; task routing is implemented as a distributed low-dimensional subspace rotation rather than localized modular circuits.
+- Causal sufficiency of candidate task-sensitive units shows monotonic scaling with dimension count $k$. Candidate units significantly outperform dimension-matched random subsets at $k \in \{4, 8, 16, 32\}$ (e.g. Layer 2 $k=8$: candidate $38.6\%$ vs random $12.2\%$, $p_{\text{adj}} = 6.03 \times 10^{-5}$).
+- Crucially, the random controls in v5 were only dimension-matched, not activation-norm-matched. Candidate units possess larger task-induced activation change norms by construction. The central unresolved hypothesis is whether this advantage represents genuine circuit selectivity or merely an activation-magnitude effect.
 
 ### 5.2 Unresolved Hypothesis
 *What training objective or architectural regularizer is necessary and sufficient to force an embodied spatial network to develop disentangled, modular circuits rather than distributed low-dimensional subspaces?*
