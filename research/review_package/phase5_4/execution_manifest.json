@@ -1,0 +1,119 @@
+{
+  "manifest_version": "1.0",
+  "phase": "Phase 5.4 Ground-Truth Spatial Grounding & Causal Intervention Reanalysis",
+  "execution_commit": "7d2d7611c970915c029c68eaf38067b860ad9f7e",
+  "timestamp_utc": "2026-11-08T15:22:43Z",
+  "environment": {
+    "os": "Linux 6.8.0-138-generic",
+    "python": "3.13.16",
+    "pytorch": "2.1.0",
+    "mujoco": "3.17.0",
+    "device": "cuda (NVIDIA GeForce RTX 3050 Laptop GPU)"
+  },
+  "file_hashes": {
+    "checkpoint": {
+      "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+      "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+    },
+    "hjepa_model_definition": {
+      "path": "world_models_fpga/models/h_jepa.py",
+      "sha256": "1dbfa8f2f8799c0e376b8c1455f64f7f36d4ec03e1aae139031e44d66e33514b"
+    },
+    "baseline_policy": {
+      "path": "world_models_fpga/models/baseline_policy.py",
+      "sha256": "114ab44c55809d6546f276bacd8662348299f5ae81271fbfc8ed22022b844ffe"
+    },
+    "model_wrappers": {
+      "path": "world_models_fpga/research/benchmarks/model_wrappers.py",
+      "sha256": "827670f371ac425cbc55e02209b0b8a37b19624d19855fff3ea69590c8f9e05d"
+    },
+    "amr_env": {
+      "path": "world_models_fpga/env/amr_env.py",
+      "sha256": "a877c025719be495a5fcd0501fc7ae375ee62696317724d4332cfd47cf1bc252"
+    },
+    "phase5_2_scene_specs": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_scene_specs.jsonl",
+      "sha256": "5edfcf5d8e1638b9e624ea7fb796ab87a951ce88ef81b5244af339c9d7f34337"
+    },
+    "phase5_3_activations": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_activations.jsonl",
+      "sha256": "1a8a922840cb0ecf5495cd7a470629ca37f7a40714f83d510bb495be7b650428"
+    },
+    "phase5_3_pairs": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_pairs.jsonl",
+      "sha256": "5d9a0dc8abad2a6c6a78a762004f383eeb4f94a0aa427217f33d4a9e95e5eead"
+    },
+    "phase5_3_interventions_gz": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_interventions.jsonl.gz",
+      "sha256": "d57fee1c39717ddb061626ae63fbe657fe2a1e5fc70d6922bf3214b2b77ece0f"
+    },
+    "phase5_3_summary": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_summary.json",
+      "sha256": "1b28eb8b9a2e5a47fd1adad149deb2b8cddfd5fbb722e303e1a5b53c44f9394d"
+    },
+    "phase5_4_benchmark_source": {
+      "path": "world_models_fpga/research/circuits/run_task_conditioned_circuits_v5_4_ground_truth_reanalysis.py",
+      "sha256": "52393827bfa65513b77cd17c575b94ecc1caaccf66c709b4bff5a491f1ff4118"
+    },
+    "phase5_4_unit_tests": {
+      "path": "world_models_fpga/tests/test_task_conditioned_circuits_v5_4_ground_truth.py",
+      "sha256": "99d358e104f59e2a235797240aaf5f5f1059365379e503060e8c7861c890d1f9"
+    },
+    "summary_json": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_ground_truth_summary.json",
+      "sha256": "43a8f7fead08e1512fd50c996fdce71fefc84efa00465856b81e9f12703b8a53"
+    },
+    "scene_metrics_jsonl": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_scene_metrics.jsonl",
+      "sha256": "e5a039aac72da608e02c1173b1ac8673d716d97b1c08e5a7fb1f5176c22ecff5"
+    },
+    "intervention_metrics_gz": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_intervention_metrics.jsonl.gz",
+      "sha256": "711d9f74450540b49706fd3a817809855f4968953bd5543cfbcb50f5827a249e"
+    },
+    "schema_md": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_schema.md",
+      "sha256": "4ad6d0f832f79c85ca5c12b7e526f032e13b1086bcbfddb2266e7e01e0664102"
+    },
+    "review_readme": {
+      "path": "research/review_package/phase5_4/README.md",
+      "sha256": "40ecfbc91208fdd2428202226c6e268d549264cdaa2b31c6b536df4358ea35fd"
+    },
+    "review_forensic_audit": {
+      "path": "research/review_package/phase5_4/forensic_audit.md",
+      "sha256": "b2cee0713d9894e6ffdc223f439fb13a8471a97bf4462d23d25ae53e0a1b5fee"
+    },
+    "review_data_dictionary": {
+      "path": "research/review_package/phase5_4/data_dictionary.md",
+      "sha256": "05eb4cec7e3e5f2418bea4488da45f1c0fa011e59e05121fc0bd989ae3f40609"
+    },
+    "review_protocol_deviations": {
+      "path": "research/review_package/phase5_4/protocol_deviations.md",
+      "sha256": "2e7c0b5c2fe8180946d9c25bf2da289a12aebb032512dcda77674640a6f254bd"
+    },
+    "review_revised_claims_ledger": {
+      "path": "research/review_package/phase5_4/revised_claims_ledger.csv",
+      "sha256": "afa266fa39123fcb9f0048f27addb72cfd3851b5a8f4ab68cdfafd205ce37fc1"
+    },
+    "review_unresolved_hypotheses": {
+      "path": "research/review_package/phase5_4/unresolved_hypotheses.md",
+      "sha256": "57bf00962bb215d0bd8fb4f6c30edab4303f3cba0d1952fa5506aecbf0b5e505"
+    },
+    "review_test_run_log": {
+      "path": "research/review_package/phase5_4/test_run.log",
+      "sha256": "fe93e8a22d20a078d8cc2321dd0222bc39d5f66ef754e48966627eafce290199"
+    },
+    "report_claims_ledger": {
+      "path": "research/reports/claims_ledger.md",
+      "sha256": "7d49c8f2676124d5c3b477f9918f7c4f4af4337dadddc4cc01b08f2a6c20de05"
+    },
+    "report_intelligence_principle_synthesis": {
+      "path": "research/reports/intelligence_principle_synthesis.md",
+      "sha256": "2f5d96352427cd700975825dc9daed59ebc7415aed966f2cba55927ad8878e85"
+    },
+    "report_final_scientific_report": {
+      "path": "research/reports/final_scientific_report.md",
+      "sha256": "2b3aebc499966b07f63e3aa79e9b9919cab14796e7624d49ec698af43f63d844"
+    }
+  }
+}
