@@ -1,8 +1,9 @@
 {
   "execution_metadata": {
-    "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
-    "execution_timestamp": "2026-11-08T00:20:57.616048+00:00",
-    "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+    "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30",
+    "execution_timestamp": "2026-11-08T01:54:09.466506+00:00",
+    "git_commit": "d377d99aaae8f78240f22159d69a6d8682a50b78",
+    "working_tree_clean": true,
     "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
     "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
     "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -21,17 +22,10 @@
     ],
     "random_seed": 42,
     "configuration": {
-      "episodes": 20,
-      "random_draws": 30,
-      "evaluated_circuits": [
-        "C1_target_grounding",
-        "C2_axis_aligned",
-        "C2_rotated_pca",
-        "C2_multivariate_reg",
-        "C3_obstacle_risk",
-        "C4_action_dynamics",
-        "C5_hierarchical_subgoal"
-      ]
+      "episodes": 30,
+      "n_random_subspace_draws": 30,
+      "subspace_dimension": 8,
+      "max_steps": 45
     },
     "environment": {
       "python": "3.13.16",
@@ -39,196 +33,139 @@
       "device": "cuda"
     }
   },
-  "methodology": "Train-split discovery with closed-loop MuJoCo evaluation on high-success task suite (>= 50%) against 30 random 8D subspace draws and unrelated within-model controls.",
-  "circuits": [
-    {
-      "circuit_id": "C1_target_grounding",
-      "name": "Target Grounding & Relative Goal Subspace",
-      "latent_dimensions": [
+  "registry": {
+    "C1_target_grounding_track_c": {
+      "circuit_name": "C1 Visual Target Grounding (Track C Observation)",
+      "dimensions": [
         31,
         23,
         19,
         8,
-        0,
         10,
+        0,
         28,
         12
       ],
-      "behavioral_clean_success": 0.6499999761581421,
-      "behavioral_clean_ci95": 0.21447169068421668,
-      "behavioral_ablated_success": 0.5,
-      "behavioral_necessity_drop": 0.1499999761581421,
-      "behavioral_necessity_ci95": 0.1605589159182188,
-      "behavioral_necessity_random8_drop": 0.1099999725818634,
-      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
-      "behavioral_necessity_selectivity": 0.040000003576278684,
-      "behavioral_sufficiency_score": 0.5,
-      "behavioral_sufficiency_ci95": 0.22482742964535027,
-      "behavioral_sufficiency_random8_score": 0.525,
-      "behavioral_sufficiency_selectivity": -0.025000000000000022,
-      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+      "necessity_drop": 0.23333333432674408,
+      "random_control_drop": 0.06333335240681966,
+      "selectivity_gain": 0.16999998191992444,
+      "sufficiency_score": 0.2666666805744171,
+      "rescue_score": 0.2666666805744171,
+      "verdict": "SELECTIVE_CAUSAL_CIRCUIT"
     },
-    {
-      "circuit_id": "C2_axis_aligned",
-      "name": "C2 Egocentric Displacement (Axis-Aligned)",
-      "latent_dimensions": [
-        17,
-        30,
-        23,
-        16,
-        4,
-        13,
-        22,
-        2
-      ],
-      "behavioral_clean_success": 0.6499999761581421,
-      "behavioral_clean_ci95": 0.21447169068421668,
-      "behavioral_ablated_success": 0.5,
-      "behavioral_necessity_drop": 0.1499999761581421,
-      "behavioral_necessity_ci95": 0.1605589159182188,
-      "behavioral_necessity_random8_drop": 0.1099999725818634,
-      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
-      "behavioral_necessity_selectivity": 0.040000003576278684,
-      "behavioral_sufficiency_score": 0.5,
-      "behavioral_sufficiency_ci95": 0.22482742964535027,
-      "behavioral_sufficiency_random8_score": 0.525,
-      "behavioral_sufficiency_selectivity": -0.025000000000000022,
-      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
-    },
-    {
-      "circuit_id": "C2_rotated_pca",
-      "name": "C2 Egocentric Displacement (Rotated PCA Subspace)",
-      "latent_dimensions": [
-        17,
-        30,
-        23,
-        16,
-        4,
-        13,
-        22,
-        2
-      ],
-      "behavioral_clean_success": 0.6499999761581421,
-      "behavioral_clean_ci95": 0.21447169068421668,
-      "behavioral_ablated_success": 0.5,
-      "behavioral_necessity_drop": 0.1499999761581421,
-      "behavioral_necessity_ci95": 0.1605589159182188,
-      "behavioral_necessity_random8_drop": 0.1099999725818634,
-      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
-      "behavioral_necessity_selectivity": 0.040000003576278684,
-      "behavioral_sufficiency_score": 0.6499999761581421,
-      "behavioral_sufficiency_ci95": 0.21447169068421668,
-      "behavioral_sufficiency_random8_score": 0.525,
-      "behavioral_sufficiency_selectivity": 0.12499997615814207,
-      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
-    },
-    {
-      "circuit_id": "C2_multivariate_reg",
-      "name": "C2 Egocentric Displacement (Multivariate Regression)",
-      "latent_dimensions": [
-        17,
-        30,
-        23,
-        16,
-        4,
-        13,
-        22,
-        2
-      ],
-      "behavioral_clean_success": 0.6499999761581421,
-      "behavioral_clean_ci95": 0.21447169068421668,
-      "behavioral_ablated_success": 0.5,
-      "behavioral_necessity_drop": 0.1499999761581421,
-      "behavioral_necessity_ci95": 0.1605589159182188,
-      "behavioral_necessity_random8_drop": 0.1099999725818634,
-      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
-      "behavioral_necessity_selectivity": 0.040000003576278684,
-      "behavioral_sufficiency_score": 0.5,
-      "behavioral_sufficiency_ci95": 0.22482742964535027,
-      "behavioral_sufficiency_random8_score": 0.525,
-      "behavioral_sufficiency_selectivity": -0.025000000000000022,
-      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
-    },
-    {
-      "circuit_id": "C3_obstacle_risk",
-      "name": "Obstacle Proximity & Collision Risk Subspace",
-      "latent_dimensions": [
+    "C2_axis_aligned": {
+      "circuit_name": "C2 Ego Step Displacement (Axis-Aligned Top-8)",
+      "dimensions": [
         11,
-        5,
-        1,
-        16,
-        9,
-        13,
-        20,
-        10
-      ],
-      "behavioral_clean_success": 0.6499999761581421,
-      "behavioral_clean_ci95": 0.21447169068421668,
-      "behavioral_ablated_success": 0.5,
-      "behavioral_necessity_drop": 0.1499999761581421,
-      "behavioral_necessity_ci95": 0.1605589159182188,
-      "behavioral_necessity_random8_drop": 0.1099999725818634,
-      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
-      "behavioral_necessity_selectivity": 0.040000003576278684,
-      "behavioral_sufficiency_score": 0.5,
-      "behavioral_sufficiency_ci95": 0.22482742964535027,
-      "behavioral_sufficiency_random8_score": 0.525,
-      "behavioral_sufficiency_selectivity": -0.025000000000000022,
-      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
-    },
-    {
-      "circuit_id": "C4_action_dynamics",
-      "name": "Action-Conditioned Forward Dynamics Subspace",
-      "latent_dimensions": [
-        30,
+        28,
         25,
-        3,
-        8,
+        20,
+        1,
         24,
-        29,
-        2,
-        27
+        19,
+        23
       ],
-      "behavioral_clean_success": 0.6499999761581421,
-      "behavioral_clean_ci95": 0.21447169068421668,
-      "behavioral_ablated_success": 0.6000000238418579,
-      "behavioral_necessity_drop": 0.04999995231628418,
-      "behavioral_necessity_ci95": 0.2237004669603287,
-      "behavioral_necessity_random8_drop": 0.1099999725818634,
-      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
-      "behavioral_necessity_selectivity": -0.060000020265579226,
-      "behavioral_sufficiency_score": 0.5,
-      "behavioral_sufficiency_ci95": 0.22482742964535027,
-      "behavioral_sufficiency_random8_score": 0.525,
-      "behavioral_sufficiency_selectivity": -0.025000000000000022,
-      "causal_status": "FALSIFIED_NON_SELECTIVE"
+      "necessity_drop": 0.10000002384185791,
+      "random_control_drop": 0.06333335240681966,
+      "selectivity_gain": 0.03666667143503825,
+      "sufficiency_score": 0.5,
+      "rescue_score": 0.5,
+      "verdict": "UNRESOLVED_NON_SELECTIVE"
     },
-    {
-      "circuit_id": "C5_hierarchical_subgoal",
-      "name": "Hierarchical Macro-Micro Coupling Subspace",
-      "latent_dimensions": [
+    "C2_rotated_pca": {
+      "circuit_name": "C2 Ego Step Displacement (Rotated PCA Subspace)",
+      "dimensions": [
+        11,
+        28,
+        25,
+        20,
+        1,
+        24,
+        19,
+        23
+      ],
+      "necessity_drop": 0.10000002384185791,
+      "random_control_drop": 0.06333335240681966,
+      "selectivity_gain": 0.03666667143503825,
+      "sufficiency_score": 0.5,
+      "rescue_score": 0.5,
+      "verdict": "UNRESOLVED_NON_SELECTIVE"
+    },
+    "C2_multivariate_reg": {
+      "circuit_name": "C2 Ego Step Displacement (Multivariate Regression)",
+      "dimensions": [
+        11,
+        28,
+        25,
+        20,
+        1,
+        24,
+        19,
+        23
+      ],
+      "necessity_drop": 0.10000002384185791,
+      "random_control_drop": 0.06333335240681966,
+      "selectivity_gain": 0.03666667143503825,
+      "sufficiency_score": 0.5,
+      "rescue_score": 0.5,
+      "verdict": "UNRESOLVED_NON_SELECTIVE"
+    },
+    "C3_obstacle_risk_hjepa": {
+      "circuit_name": "C3 Obstacle Collision Risk (H-JEPA Native Space)",
+      "dimensions": [
         28,
         11,
         19,
-        24,
         25,
         31,
-        1,
-        23
+        24,
+        23,
+        1
       ],
-      "behavioral_clean_success": 0.6499999761581421,
-      "behavioral_clean_ci95": 0.21447169068421668,
-      "behavioral_ablated_success": 0.5,
-      "behavioral_necessity_drop": 0.1499999761581421,
-      "behavioral_necessity_ci95": 0.1605589159182188,
-      "behavioral_necessity_random8_drop": 0.1099999725818634,
-      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
-      "behavioral_necessity_selectivity": 0.040000003576278684,
-      "behavioral_sufficiency_score": 0.5,
-      "behavioral_sufficiency_ci95": 0.22482742964535027,
-      "behavioral_sufficiency_random8_score": 0.525,
-      "behavioral_sufficiency_selectivity": -0.025000000000000022,
-      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+      "necessity_drop": 0.10000002384185791,
+      "random_control_drop": 0.06333335240681966,
+      "selectivity_gain": 0.03666667143503825,
+      "sufficiency_score": 0.5,
+      "rescue_score": 0.5,
+      "verdict": "UNRESOLVED_NON_SELECTIVE"
+    },
+    "C4_forward_dynamics_hjepa": {
+      "circuit_name": "C4 Forward Dynamics Transition Delta (H-JEPA Native Space)",
+      "dimensions": [
+        26,
+        28,
+        18,
+        25,
+        6,
+        2,
+        19,
+        9
+      ],
+      "necessity_drop": 0.06666666269302368,
+      "random_control_drop": 0.06333335240681966,
+      "selectivity_gain": 0.003333310286204025,
+      "sufficiency_score": 0.5,
+      "rescue_score": 0.5,
+      "verdict": "UNRESOLVED_NON_SELECTIVE"
+    },
+    "Unrelated_Color_Control": {
+      "circuit_name": "Within-Model Unrelated Control (Color Nuisance)",
+      "dimensions": [
+        25,
+        14,
+        27,
+        16,
+        6,
+        15,
+        1,
+        5
+      ],
+      "necessity_drop": 0.0,
+      "random_control_drop": 0.06333335240681966,
+      "selectivity_gain": -0.06333335240681966,
+      "sufficiency_score": 0.5,
+      "rescue_score": 0.5,
+      "verdict": "FALSIFIED_NON_SELECTIVE"
     }
-  ]
+  }
 }
