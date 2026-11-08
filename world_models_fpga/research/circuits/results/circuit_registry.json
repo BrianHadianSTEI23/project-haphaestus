@@ -1,19 +1,19 @@
 {
   "schema_version": "2.0",
-  "last_updated": "2026-11-08T05:07:05.228982+00:00",
-  "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+  "last_updated": "2026-11-08T07:06:37.952244+00:00",
+  "git_commit": "3df2a6bdc7d5a3e54b6c75cc46d014b7a4883690",
   "circuits": {
     "C1_goal_vector_grounding": {
       "name": "C1 Visual Goal-Displacement Grounding Subspace ([dx_b, dy_b])",
       "subspace_dimensions": [
         24,
         17,
-        7,
         10,
-        2,
+        7,
         8,
-        27,
-        26
+        2,
+        26,
+        27
       ],
       "discovery_target": "Body-frame goal displacement [dx_b, dy_b] in H-JEPA native latent space",
       "evaluation_regime": "Track C (pure visual observation, zero simulator coordinates)",
@@ -21,26 +21,31 @@
       "clean_success_rate": 0.9333333333333333,
       "ablated_success_rate": 0.9,
       "necessity_drop": 0.033333333333333326,
-      "random_control_drop": 0.2077777777777778,
-      "selectivity_gain": -0.17444444444444449,
+      "random_control_drop": 0.20777777777777778,
+      "selectivity_gain": -0.17444444444444446,
       "empirical_p_value_necessity": 0.9032258064516129,
-      "z_score": -1.2067938037458328,
+      "z_score": -1.1769584919910092,
       "sufficiency_retained_success": 0.16666666666666666,
       "matched_donor_rescue_success": 0.9333333333333333,
       "mismatched_donor_success": 0.8333333333333334,
+      "offline_steerability_cosine": 0.9779305684566498,
+      "offline_steerability_random_cosine": 0.9853997946977614,
+      "c1_variance_fraction_removed": 0.23510946113151798,
+      "c1_mahalanobis_distance": 94.99109808559675,
+      "random_8d_mahalanobis_distance_mean": 94.322160741766,
       "verdict": "FALSIFIED_NON_SELECTIVE"
     },
     "C2_step_displacement": {
       "name": "C2 Egocentric Step Displacement (Axis-Aligned Top-8)",
       "subspace_dimensions": [
-        11,
-        7,
-        20,
-        10,
+        28,
+        26,
+        31,
+        19,
+        16,
         0,
-        9,
-        12,
-        24
+        8,
+        13
       ],
       "evaluation_regime": "Track B (structured goal vector)",
       "clean_success_rate": 1.0,
@@ -64,14 +69,14 @@
     "C4_forward_dynamics": {
       "name": "C4 Forward Dynamics Delta",
       "subspace_dimensions": [
-        9,
-        7,
+        31,
         15,
-        30,
-        0,
-        21,
+        9,
         11,
-        10
+        21,
+        7,
+        5,
+        26
       ],
       "evaluation_regime": "Track B (structured goal vector)",
       "verdict": "UNRESOLVED_NON_SELECTIVE"

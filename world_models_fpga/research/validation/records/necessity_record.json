@@ -3,11 +3,11 @@
   "evaluation": "necessity",
   "provenance_status": "INDEPENDENTLY_EXECUTED",
   "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda",
-  "execution_timestamp": "2026-11-08T05:07:05.041615+00:00",
-  "source_git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+  "execution_timestamp": "2026-11-08T07:06:37.731075+00:00",
+  "source_git_commit": "3df2a6bdc7d5a3e54b6c75cc46d014b7a4883690",
   "working_tree_clean": true,
   "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
-  "script_sha256": "93c7ad89d764bc355b3389488113edb932e9099625ad4f850739423f21f3392b",
+  "script_sha256": "628cc2f38a9d169ad908841dd3829724a21c4a7bee34423f0bf48966d2d02345",
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
   "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
   "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -39,7 +39,7 @@
     "device": "cuda"
   },
   "result_artifact_path": "world_models_fpga/research/circuits/results/necessity_results.json",
-  "result_artifact_sha256": "1febc7362c9408adc7bb7e2fc659017ebf75f854fdb84628c2c861f63b41bba2",
+  "result_artifact_sha256": "72a8701b410d0f6c895bf98a0d33db8b945f5b8189149dc643d374679c3c5c0f",
   "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
   "config": {
     "episodes": 30,
@@ -49,15 +49,15 @@
     "max_steps": 45,
     "protocol": "Genuine Matched-Donor Activation Patching"
   },
-  "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+  "git_commit": "3df2a6bdc7d5a3e54b6c75cc46d014b7a4883690",
   "seed": 42,
   "results": {
     "execution_metadata": {
       "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
-      "script_sha256": "93c7ad89d764bc355b3389488113edb932e9099625ad4f850739423f21f3392b",
+      "script_sha256": "628cc2f38a9d169ad908841dd3829724a21c4a7bee34423f0bf48966d2d02345",
       "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda",
-      "execution_timestamp": "2026-11-08T05:07:05.041615+00:00",
-      "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+      "execution_timestamp": "2026-11-08T07:06:37.731075+00:00",
+      "git_commit": "3df2a6bdc7d5a3e54b6c75cc46d014b7a4883690",
       "working_tree_clean": true,
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
       "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
@@ -95,18 +95,18 @@
       "dimensions": [
         24,
         17,
-        7,
         10,
-        2,
+        7,
         8,
-        27,
-        26
+        2,
+        26,
+        27
       ],
       "clean_success_rate": 0.9333333333333333,
       "ablated_success_rate": 0.9,
       "necessity_drop": 0.033333333333333326,
-      "random_control_drop": 0.2077777777777778,
-      "selectivity_gain": -0.17444444444444449,
+      "random_control_drop": 0.20777777777777778,
+      "selectivity_gain": -0.17444444444444446,
       "empirical_p_value": 0.9032258064516129,
       "verdict": "FALSIFIED_NON_SELECTIVE",
       "records": [
@@ -116,10 +116,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.24345920979976654,
-          "path_length_m": 0.3685180153697729,
-          "mean_step_goal_disp_error_m": 0.06025957282293926,
-          "mean_step_goal_angular_error_rad": 0.09595341624861414
+          "final_goal_error_m": 0.2433832734823227,
+          "path_length_m": 0.3684111498296261,
+          "mean_step_goal_disp_error_m": 0.06082035042345524,
+          "mean_step_goal_angular_error_rad": 0.09912731193683365,
+          "mean_step_blended_goal_disp_error_m": 0.06168378872627562,
+          "mean_step_blended_goal_angular_error_rad": 0.09657573496753519
         },
         {
           "episode_id": "c1_eval_obj_01",
@@ -127,10 +129,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.23630468547344208,
-          "path_length_m": 0.3013876471668482,
-          "mean_step_goal_disp_error_m": 0.10820425190031528,
-          "mean_step_goal_angular_error_rad": 0.08312738561071456
+          "final_goal_error_m": 0.23765255510807037,
+          "path_length_m": 0.2997961491346359,
+          "mean_step_goal_disp_error_m": 0.109088933467865,
+          "mean_step_goal_angular_error_rad": 0.08562774350866675,
+          "mean_step_blended_goal_disp_error_m": 0.11130195707082749,
+          "mean_step_blended_goal_angular_error_rad": 0.08691225019283592
         },
         {
           "episode_id": "c1_eval_obj_02",
@@ -138,10 +142,12 @@
           "success": false,
           "goal_reached": false,
           "collision": false,
-          "final_goal_error_m": 0.8194011449813843,
-          "path_length_m": 0.8200102050323039,
-          "mean_step_goal_disp_error_m": 0.7634679330719842,
-          "mean_step_goal_angular_error_rad": 1.6480568229324288
+          "final_goal_error_m": 0.9230490922927856,
+          "path_length_m": 0.9952814569696784,
+          "mean_step_goal_disp_error_m": 0.7971768683857388,
+          "mean_step_goal_angular_error_rad": 2.1495387910140886,
+          "mean_step_blended_goal_disp_error_m": 0.8021040883329179,
+          "mean_step_blended_goal_angular_error_rad": 2.150874062301819
         },
         {
           "episode_id": "c1_eval_obj_03",
@@ -149,10 +155,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.22297099232673645,
-          "path_length_m": 0.3746284730732441,
-          "mean_step_goal_disp_error_m": 0.12786016520112753,
-          "mean_step_goal_angular_error_rad": 0.034155934205045924
+          "final_goal_error_m": 0.22269831597805023,
+          "path_length_m": 0.37487439811229706,
+          "mean_step_goal_disp_error_m": 0.1258530132472515,
+          "mean_step_goal_angular_error_rad": 0.03419307110016234,
+          "mean_step_blended_goal_disp_error_m": 0.1331234024837613,
+          "mean_step_blended_goal_angular_error_rad": 0.042066136662469944
         },
         {
           "episode_id": "c1_eval_obj_04",
@@ -160,10 +168,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.23100897669792175,
-          "path_length_m": 0.37571174278855324,
-          "mean_step_goal_disp_error_m": 0.7723201910654703,
-          "mean_step_goal_angular_error_rad": 0.30408363577185404
+          "final_goal_error_m": 0.23045577108860016,
+          "path_length_m": 0.37629829347133636,
+          "mean_step_goal_disp_error_m": 0.772752046585083,
+          "mean_step_goal_angular_error_rad": 0.3025427710575362,
+          "mean_step_blended_goal_disp_error_m": 0.7582740253872342,
+          "mean_step_blended_goal_angular_error_rad": 0.3372906083758507
         },
         {
           "episode_id": "c1_eval_obj_05",
@@ -171,10 +181,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.24019977450370789,
-          "path_length_m": 0.30687115900218487,
-          "mean_step_goal_disp_error_m": 0.4309974866253989,
-          "mean_step_goal_angular_error_rad": 0.42783402119364056
+          "final_goal_error_m": 0.23930461704730988,
+          "path_length_m": 0.3075408209115267,
+          "mean_step_goal_disp_error_m": 0.42731613346508573,
+          "mean_step_goal_angular_error_rad": 0.4299404296491827,
+          "mean_step_blended_goal_disp_error_m": 0.42041381767817904,
+          "mean_step_blended_goal_angular_error_rad": 0.444680747709104
         },
         {
           "episode_id": "c1_eval_obj_06",
@@ -182,10 +194,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.2251620888710022,
-          "path_length_m": 0.37191776745021343,
-          "mean_step_goal_disp_error_m": 0.05589014732024886,
-          "mean_step_goal_angular_error_rad": 0.1194477394561876
+          "final_goal_error_m": 0.22506345808506012,
+          "path_length_m": 0.371777955442667,
+          "mean_step_goal_disp_error_m": 0.057389471933922985,
+          "mean_step_goal_angular_error_rad": 0.12288807027719238,
+          "mean_step_blended_goal_disp_error_m": 0.06012422659180381,
+          "mean_step_blended_goal_angular_error_rad": 0.1159103207967498
         },
         {
           "episode_id": "c1_eval_obj_07",
@@ -193,10 +207,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.24809078872203827,
-          "path_length_m": 0.311051644384861,
-          "mean_step_goal_disp_error_m": 0.1377807565033436,
-          "mean_step_goal_angular_error_rad": 0.20027397982776166
+          "final_goal_error_m": 0.24749386310577393,
+          "path_length_m": 0.3119406420737505,
+          "mean_step_goal_disp_error_m": 0.14395488500595094,
+          "mean_step_goal_angular_error_rad": 0.22311711236834525,
+          "mean_step_blended_goal_disp_error_m": 0.149223992228508,
+          "mean_step_blended_goal_angular_error_rad": 0.2317016415297985
         },
         {
           "episode_id": "c1_eval_obj_08",
@@ -204,10 +220,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.2442973554134369,
-          "path_length_m": 0.40478039905428886,
-          "mean_step_goal_disp_error_m": 0.15655236691236496,
-          "mean_step_goal_angular_error_rad": 0.2561520273900694
+          "final_goal_error_m": 0.24315685033798218,
+          "path_length_m": 0.40592859126627445,
+          "mean_step_goal_disp_error_m": 0.15501401159498426,
+          "mean_step_goal_angular_error_rad": 0.2507824172369308,
+          "mean_step_blended_goal_disp_error_m": 0.15957561797565883,
+          "mean_step_blended_goal_angular_error_rad": 0.26661550915903515
         },
         {
           "episode_id": "c1_eval_obj_09",
@@ -215,10 +233,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.21454520523548126,
-          "path_length_m": 0.4236405957490206,
-          "mean_step_goal_disp_error_m": 0.12294196089108785,
-          "mean_step_goal_angular_error_rad": 0.0403958122478798
+          "final_goal_error_m": 0.2142101675271988,
+          "path_length_m": 0.4239729754626751,
+          "mean_step_goal_disp_error_m": 0.12121610343456268,
+          "mean_step_goal_angular_error_rad": 0.04040338272979069,
+          "mean_step_blended_goal_disp_error_m": 0.12920082443290287,
+          "mean_step_blended_goal_angular_error_rad": 0.03924447287701898
         },
         {
           "episode_id": "c1_eval_obj_10",
@@ -226,10 +246,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.24892865121364594,
-          "path_length_m": 0.3578664530068636,
-          "mean_step_goal_disp_error_m": 0.7929690347777473,
-          "mean_step_goal_angular_error_rad": 0.21773529259694946
+          "final_goal_error_m": 0.24813590943813324,
+          "path_length_m": 0.3586528580635786,
+          "mean_step_goal_disp_error_m": 0.793031824959649,
+          "mean_step_goal_angular_error_rad": 0.21634558546874258,
+          "mean_step_blended_goal_disp_error_m": 0.7800793449083964,
+          "mean_step_blended_goal_angular_error_rad": 0.22993510423435104
         },
         {
           "episode_id": "c1_eval_obj_11",
@@ -237,10 +259,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.24252110719680786,
-          "path_length_m": 0.4656701609492302,
-          "mean_step_goal_disp_error_m": 0.45279494615701527,
-          "mean_step_goal_angular_error_rad": 0.6779992987330143
+          "final_goal_error_m": 0.2407234013080597,
+          "path_length_m": 0.4663950800895691,
+          "mean_step_goal_disp_error_m": 0.4489189684391022,
+          "mean_step_goal_angular_error_rad": 0.6786553521568959,
+          "mean_step_blended_goal_disp_error_m": 0.44881022434968215,
+          "mean_step_blended_goal_angular_error_rad": 0.6852856559249071
         },
         {
           "episode_id": "c1_eval_obj_12",
@@ -248,10 +272,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.23165972530841827,
-          "path_length_m": 0.36683209985494614,
-          "mean_step_goal_disp_error_m": 0.06526859959756787,
-          "mean_step_goal_angular_error_rad": 0.12812029087746685
+          "final_goal_error_m": 0.23155315220355988,
+          "path_length_m": 0.3667297139763832,
+          "mean_step_goal_disp_error_m": 0.06601195960220965,
+          "mean_step_goal_angular_error_rad": 0.12945900806649166,
+          "mean_step_blended_goal_disp_error_m": 0.060956760394302284,
+          "mean_step_blended_goal_angular_error_rad": 0.11072229881855575
         },
         {
           "episode_id": "c1_eval_obj_13",
@@ -259,10 +285,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.23255759477615356,
-          "path_length_m": 0.31935842894017696,
-          "mean_step_goal_disp_error_m": 0.12510346695780755,
-          "mean_step_goal_angular_error_rad": 0.06814079731702805
+          "final_goal_error_m": 0.23240303993225098,
+          "path_length_m": 0.3195091709494591,
+          "mean_step_goal_disp_error_m": 0.12556337490677832,
+          "mean_step_goal_angular_error_rad": 0.06972358897328376,
+          "mean_step_blended_goal_disp_error_m": 0.1218237191438675,
+          "mean_step_blended_goal_angular_error_rad": 0.050158615410327914
         },
         {
           "episode_id": "c1_eval_obj_14",
@@ -270,10 +298,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.24961823225021362,
-          "path_length_m": 0.3441347163170576,
-          "mean_step_goal_disp_error_m": 0.23360691964626312,
-          "mean_step_goal_angular_error_rad": 0.44265278428792953
+          "final_goal_error_m": 0.2487335056066513,
+          "path_length_m": 0.33727506920695305,
+          "mean_step_goal_disp_error_m": 0.22754675708711147,
+          "mean_step_goal_angular_error_rad": 0.431042960844934,
+          "mean_step_blended_goal_disp_error_m": 0.22061996720731258,
+          "mean_step_blended_goal_angular_error_rad": 0.4208579882979393
         },
         {
           "episode_id": "c1_eval_obj_15",
@@ -281,10 +311,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.23833750188350677,
-          "path_length_m": 0.31923563219606876,
-          "mean_step_goal_disp_error_m": 0.15347144100815058,
-          "mean_step_goal_angular_error_rad": 0.3162899654125795
+          "final_goal_error_m": 0.2366178333759308,
+          "path_length_m": 0.32011944614350796,
+          "mean_step_goal_disp_error_m": 0.15481265354901552,
+          "mean_step_goal_angular_error_rad": 0.3219395017949864,
+          "mean_step_blended_goal_disp_error_m": 0.1458406439051032,
+          "mean_step_blended_goal_angular_error_rad": 0.275872147991322
         },
         {
           "episode_id": "c1_eval_obj_16",
@@ -292,10 +324,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.2290826439857483,
-          "path_length_m": 0.35546454787254333,
-          "mean_step_goal_disp_error_m": 0.8056768708758884,
-          "mean_step_goal_angular_error_rad": 0.2243710549341308
+          "final_goal_error_m": 0.2281939685344696,
+          "path_length_m": 0.35638160817325115,
+          "mean_step_goal_disp_error_m": 0.8049589527977837,
+          "mean_step_goal_angular_error_rad": 0.22443218984537655,
+          "mean_step_blended_goal_disp_error_m": 0.7914722760518392,
+          "mean_step_blended_goal_angular_error_rad": 0.23856832376784748
         },
         {
           "episode_id": "c1_eval_obj_17",
@@ -303,10 +337,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.21108274161815643,
-          "path_length_m": 0.25837671756744385,
-          "mean_step_goal_disp_error_m": 0.4328507383664449,
-          "mean_step_goal_angular_error_rad": 0.33070148155093193
+          "final_goal_error_m": 0.2107001543045044,
+          "path_length_m": 0.2587108965963125,
+          "mean_step_goal_disp_error_m": 0.42804232239723206,
+          "mean_step_goal_angular_error_rad": 0.33010473909477395,
+          "mean_step_blended_goal_disp_error_m": 0.4160988430182139,
+          "mean_step_blended_goal_angular_error_rad": 0.3518518836547931
         },
         {
           "episode_id": "c1_eval_obj_18",
@@ -314,10 +350,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.24166320264339447,
-          "path_length_m": 0.41075106896460056,
-          "mean_step_goal_disp_error_m": 0.07307393103837967,
-          "mean_step_goal_angular_error_rad": 0.11757353879511356
+          "final_goal_error_m": 0.24554678797721863,
+          "path_length_m": 0.40493451431393623,
+          "mean_step_goal_disp_error_m": 0.0730458574059109,
+          "mean_step_goal_angular_error_rad": 0.12291415703172485,
+          "mean_step_blended_goal_disp_error_m": 0.06828923337161541,
+          "mean_step_blended_goal_angular_error_rad": 0.11474716958279411
         },
         {
           "episode_id": "c1_eval_obj_19",
@@ -325,10 +363,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.23535498976707458,
-          "path_length_m": 0.28740110155195,
-          "mean_step_goal_disp_error_m": 0.21552758067846298,
-          "mean_step_goal_angular_error_rad": 0.5460592187941075
+          "final_goal_error_m": 0.23362337052822113,
+          "path_length_m": 0.2925996342673898,
+          "mean_step_goal_disp_error_m": 0.21766065508127214,
+          "mean_step_goal_angular_error_rad": 0.5613584876060486,
+          "mean_step_blended_goal_disp_error_m": 0.21915968507528305,
+          "mean_step_blended_goal_angular_error_rad": 0.5574777066707611
         },
         {
           "episode_id": "c1_eval_obj_20",
@@ -336,10 +376,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.21667402982711792,
-          "path_length_m": 0.31915281154215336,
-          "mean_step_goal_disp_error_m": 0.10694026148744992,
-          "mean_step_goal_angular_error_rad": 0.060796125791966915
+          "final_goal_error_m": 0.21299020946025848,
+          "path_length_m": 0.3237951286137104,
+          "mean_step_goal_disp_error_m": 0.10436303594282695,
+          "mean_step_goal_angular_error_rad": 0.0789444682055286,
+          "mean_step_blended_goal_disp_error_m": 0.09603795781731606,
+          "mean_step_blended_goal_angular_error_rad": 0.06669889350554772
         },
         {
           "episode_id": "c1_eval_obj_21",
@@ -347,10 +389,12 @@
           "success": false,
           "goal_reached": false,
           "collision": true,
-          "final_goal_error_m": 0.9622055292129517,
-          "path_length_m": 1.324551141820848,
-          "mean_step_goal_disp_error_m": 0.7491552184025446,
-          "mean_step_goal_angular_error_rad": 2.3000521560636273
+          "final_goal_error_m": 0.9210958480834961,
+          "path_length_m": 1.3425633953884244,
+          "mean_step_goal_disp_error_m": 0.7415130365226004,
+          "mean_step_goal_angular_error_rad": 2.2521945704260866,
+          "mean_step_blended_goal_disp_error_m": 0.7368188788493474,
+          "mean_step_blended_goal_angular_error_rad": 2.246874401891172
         },
         {
           "episode_id": "c1_eval_obj_22",
@@ -358,10 +402,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.21857662498950958,
-          "path_length_m": 0.3308969493955374,
-          "mean_step_goal_disp_error_m": 0.7510809004306793,
-          "mean_step_goal_angular_error_rad": 0.4064841083018109
+          "final_goal_error_m": 0.21817587316036224,
+          "path_length_m": 0.33129910193383694,
+          "mean_step_goal_disp_error_m": 0.750463031232357,
+          "mean_step_goal_angular_error_rad": 0.40646612460841425,
+          "mean_step_blended_goal_disp_error_m": 0.7369261607527733,
+          "mean_step_blended_goal_angular_error_rad": 0.4368724059604574
         },
         {
           "episode_id": "c1_eval_obj_23",
@@ -369,10 +415,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.21190045773983002,
-          "path_length_m": 0.3083739336580038,
-          "mean_step_goal_disp_error_m": 0.4542464315891266,
-          "mean_step_goal_angular_error_rad": 0.1622439157217741
+          "final_goal_error_m": 0.21189305186271667,
+          "path_length_m": 0.30838090367615223,
+          "mean_step_goal_disp_error_m": 0.447677310023989,
+          "mean_step_goal_angular_error_rad": 0.16303620553974593,
+          "mean_step_blended_goal_disp_error_m": 0.4344719818660191,
+          "mean_step_blended_goal_angular_error_rad": 0.1747312034879412
         },
         {
           "episode_id": "c1_eval_obj_24",
@@ -380,10 +428,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.2399151474237442,
-          "path_length_m": 0.47521579824388027,
-          "mean_step_goal_disp_error_m": 0.06402650848031044,
-          "mean_step_goal_angular_error_rad": 0.1007966131770185
+          "final_goal_error_m": 0.23975668847560883,
+          "path_length_m": 0.4750891476869583,
+          "mean_step_goal_disp_error_m": 0.06351293064653873,
+          "mean_step_goal_angular_error_rad": 0.10159236249247831,
+          "mean_step_blended_goal_disp_error_m": 0.05938422014670713,
+          "mean_step_blended_goal_angular_error_rad": 0.0957108467368276
         },
         {
           "episode_id": "c1_eval_obj_25",
@@ -391,10 +441,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.2483644187450409,
-          "path_length_m": 0.36067332327365875,
-          "mean_step_goal_disp_error_m": 0.1588947596875104,
-          "mean_step_goal_angular_error_rad": 0.07947389527478001
+          "final_goal_error_m": 0.23754945397377014,
+          "path_length_m": 0.378236161544919,
+          "mean_step_goal_disp_error_m": 0.17048058907190958,
+          "mean_step_goal_angular_error_rad": 0.1541590114745001,
+          "mean_step_blended_goal_disp_error_m": 0.16472683598597845,
+          "mean_step_blended_goal_angular_error_rad": 0.11910957004874945
         },
         {
           "episode_id": "c1_eval_obj_26",
@@ -402,10 +454,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.2443958818912506,
-          "path_length_m": 0.3631758261471987,
-          "mean_step_goal_disp_error_m": 0.21035799011588097,
-          "mean_step_goal_angular_error_rad": 0.3048348519951105
+          "final_goal_error_m": 0.2292250692844391,
+          "path_length_m": 0.37500475719571114,
+          "mean_step_goal_disp_error_m": 0.19358602911233902,
+          "mean_step_goal_angular_error_rad": 0.27891713939607143,
+          "mean_step_blended_goal_disp_error_m": 0.1945794504135847,
+          "mean_step_blended_goal_angular_error_rad": 0.2997029349207878
         },
         {
           "episode_id": "c1_eval_obj_27",
@@ -413,10 +467,12 @@
           "success": false,
           "goal_reached": false,
           "collision": false,
-          "final_goal_error_m": 0.8297935724258423,
-          "path_length_m": 1.3943006955087185,
-          "mean_step_goal_disp_error_m": 0.6435388194190131,
-          "mean_step_goal_angular_error_rad": 2.112770685983678
+          "final_goal_error_m": 0.8331752419471741,
+          "path_length_m": 1.389214949682355,
+          "mean_step_goal_disp_error_m": 0.6415474977758195,
+          "mean_step_goal_angular_error_rad": 2.112401598465196,
+          "mean_step_blended_goal_disp_error_m": 0.6359286137753063,
+          "mean_step_blended_goal_angular_error_rad": 2.1065265667633892
         },
         {
           "episode_id": "c1_eval_obj_28",
@@ -424,10 +480,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.2330787628889084,
-          "path_length_m": 0.31849618442356586,
-          "mean_step_goal_disp_error_m": 0.7695166170597076,
-          "mean_step_goal_angular_error_rad": 0.34028779561049305
+          "final_goal_error_m": 0.23237325251102448,
+          "path_length_m": 0.31922716833651066,
+          "mean_step_goal_disp_error_m": 0.7698898911476135,
+          "mean_step_goal_angular_error_rad": 0.3405683020246215,
+          "mean_step_blended_goal_disp_error_m": 0.7573244720697403,
+          "mean_step_blended_goal_angular_error_rad": 0.36637578887166455
         },
         {
           "episode_id": "c1_eval_obj_29",
@@ -435,10 +493,12 @@
           "success": true,
           "goal_reached": true,
           "collision": false,
-          "final_goal_error_m": 0.22640055418014526,
-          "path_length_m": 0.41422618739306927,
-          "mean_step_goal_disp_error_m": 0.48659690883424545,
-          "mean_step_goal_angular_error_rad": 0.1642593712442451
+          "final_goal_error_m": 0.22039785981178284,
+          "path_length_m": 0.4220041800290346,
+          "mean_step_goal_disp_error_m": 0.4817277557320065,
+          "mean_step_goal_angular_error_rad": 0.1534583398865329,
+          "mean_step_blended_goal_disp_error_m": 0.48612630036142135,
+          "mean_step_blended_goal_angular_error_rad": 0.16018549808197552
         }
       ]
     }
