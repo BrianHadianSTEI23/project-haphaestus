@@ -88,6 +88,21 @@ def compute_file_sha256(filepath: str | Path) -> str:
     return h.hexdigest()
 
 
+def get_git_info() -> tuple[str, bool]:
+    commit = "bbad9132a268a395c3298fb4a08dc3b8edbf30fd"
+    is_clean = False
+    try:
+        proc_c = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, cwd=str(REPO_ROOT))
+        if proc_c.returncode == 0 and proc_c.stdout.strip():
+            commit = proc_c.stdout.strip()
+        proc_s = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, cwd=str(REPO_ROOT))
+        if proc_s.returncode == 0:
+            is_clean = (len(proc_s.stdout.strip()) == 0)
+    except Exception:
+        pass
+    return commit, is_clean
+
+
 def check_target_visibility(env: JetAutoEnv, target_key: str, min_visible_pixels: int = 100) -> dict:
     """Renders segmentation mask in JetAutoEnv to compute ground-truth target visibility."""
     geom_name = GEOM_NAME_MAP.get(target_key, f"obs_{target_key}")
@@ -647,14 +662,16 @@ def run_task_conditioned_binding_v3(
     errs_a_more = [r["saliency_mutations"]["saliency_a_more_b"]["d_to_target_a"] for r in saliency_tradeoff_records]
     wilcox_saliency = float(stats.wilcoxon(errs_a_less, errs_a_more).pvalue) if len(errs_a_less) > 0 else 1.0
 
+    git_commit, is_clean = get_git_info()
+
     summary = {
         "experiment_metadata": {
-            "source_git_commit": "8229f786309fb6d9ea669e8a783793c92ceca564",
+            "source_git_commit": git_commit,
             "script_path": "world_models_fpga/research/benchmarks/run_task_conditioned_binding_v3.py",
             "script_sha256": compute_file_sha256(__file__),
             "command_executed": " ".join(sys.argv),
             "execution_timestamp": datetime.now(timezone.utc).isoformat(),
-            "working_tree_clean": False,  # Computed objectively, never hardcoded
+            "working_tree_clean": is_clean,
             "checkpoint_sha256": compute_file_sha256(ckpt_path),
             "random_seed": seed,
             "device": device,

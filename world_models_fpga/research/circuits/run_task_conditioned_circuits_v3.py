@@ -55,6 +55,7 @@ from research.benchmarks.run_task_conditioned_binding_v3 import (
     generate_dual_visible_scene_pair,
     check_target_visibility,
     compute_file_sha256,
+    get_git_info,
 )
 
 
@@ -317,14 +318,16 @@ def run_task_conditioned_circuits_v3(
     wilcox_l2_vs_rand = float(stats.wilcoxon(layer2_donor_transfers, random_control_transfers).pvalue)
     wilcox_nec_top_vs_rand = float(stats.wilcoxon(layer1_necessity_drops, random_necessity_drops).pvalue)
 
+    git_commit, is_clean = get_git_info()
+
     summary = {
         "experiment_metadata": {
-            "source_git_commit": "8229f786309fb6d9ea669e8a783793c92ceca564",
+            "source_git_commit": git_commit,
             "script_path": "world_models_fpga/research/circuits/run_task_conditioned_circuits_v3.py",
             "script_sha256": compute_file_sha256(__file__),
             "command_executed": " ".join(sys.argv),
             "execution_timestamp": datetime.now(timezone.utc).isoformat(),
-            "working_tree_clean": False,
+            "working_tree_clean": is_clean,
             "checkpoint_sha256": compute_file_sha256(ckpt_path),
             "random_seed": seed,
             "device": device,
