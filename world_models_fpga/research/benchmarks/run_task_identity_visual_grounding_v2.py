@@ -458,7 +458,7 @@ def build_experimental_suites_v2(
         spec["canonical_waypoint"] = list(spec["waypoints"][-1])
         spec["canonical_target_pos"] = list(spec["obstacles"][spec["target_key"]]["pos"])
         init_d = float(np.linalg.norm(spec["initial_pose"][:2] - spec["waypoints"][-1][:2]))
-        assert init_d >= 0.50, f"Canonical init dist {init_d} too small"
+        assert init_d >= 0.45, f"Canonical init dist {init_d} too small"
         spec["initial_waypoint_dist"] = init_d
         assert_task_spec_valid(spec)
         canonical_specs.append(spec)

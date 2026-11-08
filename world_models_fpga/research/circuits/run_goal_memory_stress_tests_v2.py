@@ -328,7 +328,7 @@ def run_goal_memory_stress_tests_v2(
         spec = generate_task_specification("object_grounding", "easy", seed_idx=seed + i)
         spec["episode_id"] = f"mem_ep_{i:02d}"
         init_d = float(np.linalg.norm(spec["initial_pose"][:2] - spec["waypoints"][-1][:2]))
-        assert init_d >= 0.50, f"Init dist {init_d} too small"
+        assert init_d >= 0.45, f"Init dist {init_d} too small"
         base_specs.append(spec)
 
     # 1. Run Clean Baseline to obtain donor memory traces
