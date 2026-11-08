@@ -1,8 +1,9 @@
 {
   "execution_metadata": {
-    "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
-    "execution_timestamp": "2026-11-08T00:22:21.592256+00:00",
-    "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+    "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda",
+    "execution_timestamp": "2026-11-08T01:44:49.383290+00:00",
+    "git_commit": "ac30ad52e52ca077068e051aaa8c821e3b4bb19f",
+    "working_tree_clean": true,
     "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
     "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
     "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -26,28 +27,30 @@
     ],
     "random_seed": 42,
     "configuration": {
-      "track": "Track C (observation only, zero simulator coordinates)",
-      "episodes_per_suite": 15,
+      "track": "Track C (pure observation, zero simulator coordinates)",
+      "episodes_per_suite": 20,
       "max_steps": 50
     },
     "environment": {
-      "python": "3.13.16",
-      "torch": "2.14.1+cu126",
-      "device": "cuda"
+      "platform": "linux",
+      "torch_version": "2.14.1+cu126",
+      "cuda_available": true
     }
   },
-  "track_c_nominal": {
-    "H-JEPA": {
-      "episodes_evaluated": 15,
-      "success_count": 15,
+  "summary": {
+    "hjepa_nominal": {
+      "episodes_evaluated": 20,
+      "success_count": 20,
       "success_rate": 1.0,
-      "goal_reached_count": 15,
+      "goal_reached_count": 20,
       "goal_reached_rate": 1.0,
       "collision_count": 0,
       "collision_rate": 0.0,
-      "mean_final_goal_error_m": 0.2592318783203761,
+      "mean_final_goal_error_m": 0.2597386367619038,
       "records": [
         {
+          "episode_id": "nom_00",
+          "target_key": "purple_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -55,6 +58,8 @@
           "path_length_m": 0.29426534101366997
         },
         {
+          "episode_id": "nom_01",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -62,6 +67,8 @@
           "path_length_m": 0.2898850664496422
         },
         {
+          "episode_id": "nom_02",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -69,6 +76,8 @@
           "path_length_m": 0.40545734763145447
         },
         {
+          "episode_id": "nom_03",
+          "target_key": "red_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -76,6 +85,8 @@
           "path_length_m": 0.3640882056206465
         },
         {
+          "episode_id": "nom_04",
+          "target_key": "blue_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -83,6 +94,8 @@
           "path_length_m": 0.4072859399020672
         },
         {
+          "episode_id": "nom_05",
+          "target_key": "green_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -90,6 +103,8 @@
           "path_length_m": 0.4234086759388447
         },
         {
+          "episode_id": "nom_06",
+          "target_key": "purple_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -97,6 +112,8 @@
           "path_length_m": 0.2700986545532942
         },
         {
+          "episode_id": "nom_07",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -104,6 +121,8 @@
           "path_length_m": 0.2843781132251024
         },
         {
+          "episode_id": "nom_08",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -111,6 +130,8 @@
           "path_length_m": 0.321967251598835
         },
         {
+          "episode_id": "nom_09",
+          "target_key": "red_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -118,6 +139,8 @@
           "path_length_m": 0.3508102912455797
         },
         {
+          "episode_id": "nom_10",
+          "target_key": "blue_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -125,6 +148,8 @@
           "path_length_m": 0.3747387658804655
         },
         {
+          "episode_id": "nom_11",
+          "target_key": "green_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -132,6 +157,8 @@
           "path_length_m": 0.2978315446525812
         },
         {
+          "episode_id": "nom_12",
+          "target_key": "purple_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -139,6 +166,8 @@
           "path_length_m": 0.4404900223016739
         },
         {
+          "episode_id": "nom_13",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -146,25 +175,74 @@
           "path_length_m": 0.3555134292691946
         },
         {
+          "episode_id": "nom_14",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
           "final_goal_error_m": 0.24255751073360443,
           "path_length_m": 0.28128477931022644
+        },
+        {
+          "episode_id": "nom_15",
+          "target_key": "red_box",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2749899923801422,
+          "path_length_m": 0.312977259978652
+        },
+        {
+          "episode_id": "nom_16",
+          "target_key": "blue_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2538827955722809,
+          "path_length_m": 0.38747978769242764
+        },
+        {
+          "episode_id": "nom_17",
+          "target_key": "green_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2431330382823944,
+          "path_length_m": 0.4305859748274088
+        },
+        {
+          "episode_id": "nom_18",
+          "target_key": "purple_box",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.26489242911338806,
+          "path_length_m": 0.25786883383989334
+        },
+        {
+          "episode_id": "nom_19",
+          "target_key": "cyan_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2693963050842285,
+          "path_length_m": 0.2211355622857809
         }
       ]
     },
-    "LeWM": {
-      "episodes_evaluated": 15,
-      "success_count": 14,
-      "success_rate": 0.9333333333333333,
-      "goal_reached_count": 14,
-      "goal_reached_rate": 0.9333333333333333,
+    "lewm_nominal": {
+      "episodes_evaluated": 20,
+      "success_count": 19,
+      "success_rate": 0.95,
+      "goal_reached_count": 19,
+      "goal_reached_rate": 0.95,
       "collision_count": 0,
       "collision_rate": 0.0,
-      "mean_final_goal_error_m": 0.33050983945528667,
+      "mean_final_goal_error_m": 0.314700211584568,
       "records": [
         {
+          "episode_id": "nom_00",
+          "target_key": "purple_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -172,6 +250,8 @@
           "path_length_m": 0.2706637103110552
         },
         {
+          "episode_id": "nom_01",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -179,6 +259,8 @@
           "path_length_m": 0.30228577367961407
         },
         {
+          "episode_id": "nom_02",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -186,6 +268,8 @@
           "path_length_m": 0.41813125647604465
         },
         {
+          "episode_id": "nom_03",
+          "target_key": "red_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -193,6 +277,8 @@
           "path_length_m": 0.3751476751640439
         },
         {
+          "episode_id": "nom_04",
+          "target_key": "blue_cylinder",
           "success": false,
           "goal_reached": false,
           "collision": false,
@@ -200,6 +286,8 @@
           "path_length_m": 1.8971217144280672
         },
         {
+          "episode_id": "nom_05",
+          "target_key": "green_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -207,6 +295,8 @@
           "path_length_m": 0.47878493182361126
         },
         {
+          "episode_id": "nom_06",
+          "target_key": "purple_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -214,6 +304,8 @@
           "path_length_m": 0.2878031022846699
         },
         {
+          "episode_id": "nom_07",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -221,6 +313,8 @@
           "path_length_m": 0.28696579299867153
         },
         {
+          "episode_id": "nom_08",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -228,6 +322,8 @@
           "path_length_m": 0.30427058413624763
         },
         {
+          "episode_id": "nom_09",
+          "target_key": "red_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -235,6 +331,8 @@
           "path_length_m": 0.33041491359472275
         },
         {
+          "episode_id": "nom_10",
+          "target_key": "blue_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -242,6 +340,8 @@
           "path_length_m": 0.3825382497161627
         },
         {
+          "episode_id": "nom_11",
+          "target_key": "green_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -249,6 +349,8 @@
           "path_length_m": 0.3008306547999382
         },
         {
+          "episode_id": "nom_12",
+          "target_key": "purple_box",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -256,6 +358,8 @@
           "path_length_m": 0.43420227617025375
         },
         {
+          "episode_id": "nom_13",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -263,25 +367,74 @@
           "path_length_m": 0.3582955561578274
         },
         {
+          "episode_id": "nom_14",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
           "final_goal_error_m": 0.26516732573509216,
           "path_length_m": 0.25736744329333305
+        },
+        {
+          "episode_id": "nom_15",
+          "target_key": "red_box",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2702721655368805,
+          "path_length_m": 0.3278992064297199
+        },
+        {
+          "episode_id": "nom_16",
+          "target_key": "blue_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2786340117454529,
+          "path_length_m": 0.5792855452746153
+        },
+        {
+          "episode_id": "nom_17",
+          "target_key": "green_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.25711315870285034,
+          "path_length_m": 0.4642483126372099
+        },
+        {
+          "episode_id": "nom_18",
+          "target_key": "purple_box",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2655766010284424,
+          "path_length_m": 0.26706237718462944
+        },
+        {
+          "episode_id": "nom_19",
+          "target_key": "cyan_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.26476070284843445,
+          "path_length_m": 0.22809605300426483
         }
       ]
     },
-    "Baseline": {
-      "episodes_evaluated": 15,
-      "success_count": 7,
-      "success_rate": 0.4666666666666667,
-      "goal_reached_count": 7,
-      "goal_reached_rate": 0.4666666666666667,
-      "collision_count": 1,
-      "collision_rate": 0.06666666666666667,
-      "mean_final_goal_error_m": 0.4769332349300385,
+    "baseline_nominal": {
+      "episodes_evaluated": 20,
+      "success_count": 8,
+      "success_rate": 0.4,
+      "goal_reached_count": 8,
+      "goal_reached_rate": 0.4,
+      "collision_count": 2,
+      "collision_rate": 0.1,
+      "mean_final_goal_error_m": 0.46879299730062485,
       "records": [
         {
+          "episode_id": "nom_00",
+          "target_key": "purple_box",
           "success": false,
           "goal_reached": false,
           "collision": true,
@@ -289,6 +442,8 @@
           "path_length_m": 0.8523526749340817
         },
         {
+          "episode_id": "nom_01",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -296,6 +451,8 @@
           "path_length_m": 0.3033436881378293
         },
         {
+          "episode_id": "nom_02",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -303,6 +460,8 @@
           "path_length_m": 0.4107877742499113
         },
         {
+          "episode_id": "nom_03",
+          "target_key": "red_box",
           "success": false,
           "goal_reached": false,
           "collision": false,
@@ -310,6 +469,8 @@
           "path_length_m": 0.404468409367837
         },
         {
+          "episode_id": "nom_04",
+          "target_key": "blue_cylinder",
           "success": false,
           "goal_reached": false,
           "collision": false,
@@ -317,6 +478,8 @@
           "path_length_m": 0.7711291667073965
         },
         {
+          "episode_id": "nom_05",
+          "target_key": "green_cylinder",
           "success": false,
           "goal_reached": false,
           "collision": false,
@@ -324,6 +487,8 @@
           "path_length_m": 1.4533630479127169
         },
         {
+          "episode_id": "nom_06",
+          "target_key": "purple_box",
           "success": false,
           "goal_reached": false,
           "collision": false,
@@ -331,6 +496,8 @@
           "path_length_m": 1.0007538106292486
         },
         {
+          "episode_id": "nom_07",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -338,6 +505,8 @@
           "path_length_m": 0.2733333455398679
         },
         {
+          "episode_id": "nom_08",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -345,6 +514,8 @@
           "path_length_m": 0.2950491327792406
         },
         {
+          "episode_id": "nom_09",
+          "target_key": "red_box",
           "success": false,
           "goal_reached": false,
           "collision": false,
@@ -352,6 +523,8 @@
           "path_length_m": 0.3665557757485658
         },
         {
+          "episode_id": "nom_10",
+          "target_key": "blue_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -359,6 +532,8 @@
           "path_length_m": 0.3708806801587343
         },
         {
+          "episode_id": "nom_11",
+          "target_key": "green_cylinder",
           "success": false,
           "goal_reached": false,
           "collision": false,
@@ -366,6 +541,8 @@
           "path_length_m": 1.428711712360382
         },
         {
+          "episode_id": "nom_12",
+          "target_key": "purple_box",
           "success": false,
           "goal_reached": false,
           "collision": false,
@@ -373,6 +550,8 @@
           "path_length_m": 0.9494122331961989
         },
         {
+          "episode_id": "nom_13",
+          "target_key": "cyan_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
@@ -380,67 +559,1476 @@
           "path_length_m": 0.34696800354868174
         },
         {
+          "episode_id": "nom_14",
+          "target_key": "yellow_cylinder",
           "success": true,
           "goal_reached": true,
           "collision": false,
           "final_goal_error_m": 0.2776618003845215,
           "path_length_m": 0.24483519652858377
+        },
+        {
+          "episode_id": "nom_15",
+          "target_key": "red_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.32468870282173157,
+          "path_length_m": 0.43637356138788164
+        },
+        {
+          "episode_id": "nom_16",
+          "target_key": "blue_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.41915011405944824,
+          "path_length_m": 0.7552420161664486
+        },
+        {
+          "episode_id": "nom_17",
+          "target_key": "green_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.5453073382377625,
+          "path_length_m": 0.9498074562288821
+        },
+        {
+          "episode_id": "nom_18",
+          "target_key": "purple_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": true,
+          "final_goal_error_m": 0.6742607951164246,
+          "path_length_m": 0.8438192922621965
+        },
+        {
+          "episode_id": "nom_19",
+          "target_key": "cyan_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.25845447182655334,
+          "path_length_m": 0.23044483177363873
         }
       ]
-    }
-  },
-  "color_mutations": {
-    "irrelevant_floor_shift": {
-      "success_rate": 0.8666666666666667,
-      "success_count": 13,
-      "total_episodes": 15,
-      "retention_rate": 0.8666666666666667
     },
-    "relevant_target_mutation": {
-      "success_rate": 0.9333333333333333,
-      "success_count": 14,
-      "total_episodes": 15,
-      "retention_rate": 0.9333333333333333
+    "appearance_nuisance": {
+      "results": {
+        "episodes_evaluated": 20,
+        "success_count": 1,
+        "success_rate": 0.05,
+        "goal_reached_count": 1,
+        "goal_reached_rate": 0.05,
+        "collision_count": 2,
+        "collision_rate": 0.1,
+        "mean_final_goal_error_m": 1.2149144679307937,
+        "records": [
+          {
+            "episode_id": "nuisance_00",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.5522170066833496,
+            "path_length_m": 1.2334194676950574
+          },
+          {
+            "episode_id": "nuisance_01",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.8126955032348633,
+            "path_length_m": 0.8518196623772383
+          },
+          {
+            "episode_id": "nuisance_02",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.4743839502334595,
+            "path_length_m": 0.9944259356707335
+          },
+          {
+            "episode_id": "nuisance_03",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.272064208984375,
+            "path_length_m": 0.8965548351407051
+          },
+          {
+            "episode_id": "nuisance_04",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.9327173829078674,
+            "path_length_m": 1.0620638206601143
+          },
+          {
+            "episode_id": "nuisance_05",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.4634507894515991,
+            "path_length_m": 1.421431869152002
+          },
+          {
+            "episode_id": "nuisance_06",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.8066799640655518,
+            "path_length_m": 1.4758733953349292
+          },
+          {
+            "episode_id": "nuisance_07",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.7854857444763184,
+            "path_length_m": 0.9250430651009083
+          },
+          {
+            "episode_id": "nuisance_08",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.3479944467544556,
+            "path_length_m": 0.9679749542847276
+          },
+          {
+            "episode_id": "nuisance_09",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.2483398914337158,
+            "path_length_m": 0.8765923040919006
+          },
+          {
+            "episode_id": "nuisance_10",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.0561285018920898,
+            "path_length_m": 1.1341605046764016
+          },
+          {
+            "episode_id": "nuisance_11",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2776365876197815,
+            "path_length_m": 0.2862170822918415
+          },
+          {
+            "episode_id": "nuisance_12",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.6784025430679321,
+            "path_length_m": 1.2743540918454528
+          },
+          {
+            "episode_id": "nuisance_13",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.0877643823623657,
+            "path_length_m": 0.9385935668833554
+          },
+          {
+            "episode_id": "nuisance_14",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.343819260597229,
+            "path_length_m": 0.9588141180574894
+          },
+          {
+            "episode_id": "nuisance_15",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.2404346466064453,
+            "path_length_m": 0.8767688823863864
+          },
+          {
+            "episode_id": "nuisance_16",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.9259611368179321,
+            "path_length_m": 1.068953400477767
+          },
+          {
+            "episode_id": "nuisance_17",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.4682073593139648,
+            "path_length_m": 1.3268920870032161
+          },
+          {
+            "episode_id": "nuisance_18",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.778120517730713,
+            "path_length_m": 1.4129428314045072
+          },
+          {
+            "episode_id": "nuisance_19",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.7457855343818665,
+            "path_length_m": 0.911560739390552
+          }
+        ]
+      },
+      "paired_contingency": {
+        "n11_both_success": 1,
+        "n00_both_fail": 0,
+        "n10_nom_succ_mut_fail": 19,
+        "n01_nom_fail_mut_succ": 0,
+        "discordant_count": 19,
+        "mcnemar_exact_p_value": 3.814697265625e-06,
+        "mean_diff": -0.949999988079071,
+        "ci95_low": -1.0,
+        "ci95_high": -0.8500000238418579
+      }
     },
-    "affordance_appearance_factorization_supported": false
-  },
-  "landmark_rearrangement": {
-    "success_rate": 0.0,
-    "success_count": 0,
-    "total_episodes": 15,
-    "retention_rate": 0.0,
-    "mean_goal_error_m": 2.220147887865702
-  },
-  "se2_rotations": {
-    "rot_+45deg": {
-      "episodes": 6,
-      "success_count": 0,
-      "success_rate": 0.0,
-      "mean_goal_error_m": 1.1198037068049114
+    "semantically_relevant_appearance": {
+      "results": {
+        "episodes_evaluated": 20,
+        "success_count": 0,
+        "success_rate": 0.0,
+        "goal_reached_count": 0,
+        "goal_reached_rate": 0.0,
+        "collision_count": 13,
+        "collision_rate": 0.65,
+        "mean_final_goal_error_m": 1.7777865052223205,
+        "records": [
+          {
+            "episode_id": "sem_color_00",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.2438161373138428,
+            "path_length_m": 0.9253233199124224
+          },
+          {
+            "episode_id": "sem_color_01",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 2.2275748252868652,
+            "path_length_m": 0.6142871957272291
+          },
+          {
+            "episode_id": "sem_color_02",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.6198986768722534,
+            "path_length_m": 1.1514423955777602
+          },
+          {
+            "episode_id": "sem_color_03",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.0949084758758545,
+            "path_length_m": 0.8926032951567322
+          },
+          {
+            "episode_id": "sem_color_04",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.5945000648498535,
+            "path_length_m": 1.8707746379077435
+          },
+          {
+            "episode_id": "sem_color_05",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 3.2868144512176514,
+            "path_length_m": 1.4355816406896338
+          },
+          {
+            "episode_id": "sem_color_06",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.303881049156189,
+            "path_length_m": 1.1363626282545738
+          },
+          {
+            "episode_id": "sem_color_07",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 2.1953518390655518,
+            "path_length_m": 0.6620408345479518
+          },
+          {
+            "episode_id": "sem_color_08",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.6302419900894165,
+            "path_length_m": 1.0954271279570094
+          },
+          {
+            "episode_id": "sem_color_09",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.9984256029129028,
+            "path_length_m": 0.7514252887649491
+          },
+          {
+            "episode_id": "sem_color_10",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.4433104991912842,
+            "path_length_m": 1.1577430856996216
+          },
+          {
+            "episode_id": "sem_color_11",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.9017493724823,
+            "path_length_m": 1.1031024546755361
+          },
+          {
+            "episode_id": "sem_color_12",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.2241415977478027,
+            "path_length_m": 1.1403130691905972
+          },
+          {
+            "episode_id": "sem_color_13",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 2.222368001937866,
+            "path_length_m": 0.7129020462743938
+          },
+          {
+            "episode_id": "sem_color_14",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.6274335384368896,
+            "path_length_m": 1.1103216592455283
+          },
+          {
+            "episode_id": "sem_color_15",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.049828052520752,
+            "path_length_m": 0.7914805397831515
+          },
+          {
+            "episode_id": "sem_color_16",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.41124987602233887,
+            "path_length_m": 1.3779437269549817
+          },
+          {
+            "episode_id": "sem_color_17",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.9289710521698,
+            "path_length_m": 1.1281536350725219
+          },
+          {
+            "episode_id": "sem_color_18",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.3249459266662598,
+            "path_length_m": 1.0479348969238345
+          },
+          {
+            "episode_id": "sem_color_19",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 2.2263190746307373,
+            "path_length_m": 0.5958515622187406
+          }
+        ]
+      },
+      "paired_contingency": {
+        "n11_both_success": 0,
+        "n00_both_fail": 0,
+        "n10_nom_succ_mut_fail": 20,
+        "n01_nom_fail_mut_succ": 0,
+        "discordant_count": 20,
+        "mcnemar_exact_p_value": 1.9073486328125e-06,
+        "mean_diff": -1.0,
+        "ci95_low": -1.0,
+        "ci95_high": -1.0
+      }
     },
-    "rot_-45deg": {
-      "episodes": 6,
-      "success_count": 1,
-      "success_rate": 0.16666666666666666,
-      "mean_goal_error_m": 1.001564343770345
+    "visual_geometry_grounding": {
+      "results": {
+        "episodes_evaluated": 20,
+        "success_count": 0,
+        "success_rate": 0.0,
+        "goal_reached_count": 0,
+        "goal_reached_rate": 0.0,
+        "collision_count": 16,
+        "collision_rate": 0.8,
+        "mean_final_goal_error_m": 1.64833844602108,
+        "records": [
+          {
+            "episode_id": "rearr_00",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.9498529434204102,
+            "path_length_m": 0.9253233199124224
+          },
+          {
+            "episode_id": "rearr_01",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 2.1657161712646484,
+            "path_length_m": 0.6142871957272291
+          },
+          {
+            "episode_id": "rearr_02",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.573239803314209,
+            "path_length_m": 1.271971258598569
+          },
+          {
+            "episode_id": "rearr_03",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.44600170850753784,
+            "path_length_m": 1.0676524733062251
+          },
+          {
+            "episode_id": "rearr_04",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.673730731010437,
+            "path_length_m": 1.0950332928914577
+          },
+          {
+            "episode_id": "rearr_05",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.307427406311035,
+            "path_length_m": 1.4355816406896338
+          },
+          {
+            "episode_id": "rearr_06",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.8955716490745544,
+            "path_length_m": 1.1363626282545738
+          },
+          {
+            "episode_id": "rearr_07",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 2.2360103130340576,
+            "path_length_m": 0.6620408345479518
+          },
+          {
+            "episode_id": "rearr_08",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.5908544063568115,
+            "path_length_m": 1.0243375699992612
+          },
+          {
+            "episode_id": "rearr_09",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.4447190761566162,
+            "path_length_m": 1.0065152883853443
+          },
+          {
+            "episode_id": "rearr_10",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.681978464126587,
+            "path_length_m": 1.0288955483410973
+          },
+          {
+            "episode_id": "rearr_11",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.9747955799102783,
+            "path_length_m": 1.1031024546755361
+          },
+          {
+            "episode_id": "rearr_12",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.9682210683822632,
+            "path_length_m": 1.1403130691905972
+          },
+          {
+            "episode_id": "rearr_13",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 2.2229790687561035,
+            "path_length_m": 0.7129020462743938
+          },
+          {
+            "episode_id": "rearr_14",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.4695465564727783,
+            "path_length_m": 1.1247466441673168
+          },
+          {
+            "episode_id": "rearr_15",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.5593299865722656,
+            "path_length_m": 1.1566206216157298
+          },
+          {
+            "episode_id": "rearr_16",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 1.6830544471740723,
+            "path_length_m": 1.3031840163748711
+          },
+          {
+            "episode_id": "rearr_17",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 2.048450469970703,
+            "path_length_m": 1.1281536350725219
+          },
+          {
+            "episode_id": "rearr_18",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.8769126534461975,
+            "path_length_m": 1.0479348969238345
+          },
+          {
+            "episode_id": "rearr_19",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 2.198376417160034,
+            "path_length_m": 0.5958515622187406
+          }
+        ]
+      },
+      "paired_contingency": {
+        "n11_both_success": 0,
+        "n00_both_fail": 0,
+        "n10_nom_succ_mut_fail": 20,
+        "n01_nom_fail_mut_succ": 0,
+        "discordant_count": 20,
+        "mcnemar_exact_p_value": 1.9073486328125e-06,
+        "mean_diff": -1.0,
+        "ci95_low": -1.0,
+        "ci95_high": -1.0
+      }
     },
-    "rot_+90deg": {
-      "episodes": 6,
-      "success_count": 3,
-      "success_rate": 0.5,
-      "mean_goal_error_m": 0.8486761897802353
+    "layout_generalization": {
+      "results": {
+        "episodes_evaluated": 20,
+        "success_count": 0,
+        "success_rate": 0.0,
+        "goal_reached_count": 0,
+        "goal_reached_rate": 0.0,
+        "collision_count": 12,
+        "collision_rate": 0.6,
+        "mean_final_goal_error_m": 0.6802742913365364,
+        "records": [
+          {
+            "episode_id": "rand_layout_00",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.5698683857917786,
+            "path_length_m": 1.1690689891693182
+          },
+          {
+            "episode_id": "rand_layout_01",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.8314483165740967,
+            "path_length_m": 0.7098032997455448
+          },
+          {
+            "episode_id": "rand_layout_02",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.4221954345703125,
+            "path_length_m": 1.5664795428747311
+          },
+          {
+            "episode_id": "rand_layout_03",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.5941141247749329,
+            "path_length_m": 0.904283496318385
+          },
+          {
+            "episode_id": "rand_layout_04",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.9239826798439026,
+            "path_length_m": 2.102144882082939
+          },
+          {
+            "episode_id": "rand_layout_05",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.3053882122039795,
+            "path_length_m": 1.805212315171957
+          },
+          {
+            "episode_id": "rand_layout_06",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.4958399534225464,
+            "path_length_m": 1.248321883729659
+          },
+          {
+            "episode_id": "rand_layout_07",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 1.5814567804336548,
+            "path_length_m": 1.0444761412218213
+          },
+          {
+            "episode_id": "rand_layout_08",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.4915461838245392,
+            "path_length_m": 1.2518641649148776
+          },
+          {
+            "episode_id": "rand_layout_09",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.7449765801429749,
+            "path_length_m": 1.1780753676212044
+          },
+          {
+            "episode_id": "rand_layout_10",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.7741360664367676,
+            "path_length_m": 2.1380579378455877
+          },
+          {
+            "episode_id": "rand_layout_11",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.41447189450263977,
+            "path_length_m": 0.9531620707857655
+          },
+          {
+            "episode_id": "rand_layout_12",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.4957452118396759,
+            "path_length_m": 1.3215367742814124
+          },
+          {
+            "episode_id": "rand_layout_13",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.806159496307373,
+            "path_length_m": 0.7945783792529255
+          },
+          {
+            "episode_id": "rand_layout_14",
+            "target_key": "yellow_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.48613935708999634,
+            "path_length_m": 0.9813869437039102
+          },
+          {
+            "episode_id": "rand_layout_15",
+            "target_key": "red_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.6944961547851562,
+            "path_length_m": 1.145990110013372
+          },
+          {
+            "episode_id": "rand_layout_16",
+            "target_key": "blue_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.4378949701786041,
+            "path_length_m": 1.2794800295960158
+          },
+          {
+            "episode_id": "rand_layout_17",
+            "target_key": "green_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.38586854934692383,
+            "path_length_m": 1.0088792991882656
+          },
+          {
+            "episode_id": "rand_layout_18",
+            "target_key": "purple_box",
+            "success": false,
+            "goal_reached": false,
+            "collision": true,
+            "final_goal_error_m": 0.3097958266735077,
+            "path_length_m": 1.081830362440087
+          },
+          {
+            "episode_id": "rand_layout_19",
+            "target_key": "cyan_cylinder",
+            "success": false,
+            "goal_reached": false,
+            "collision": false,
+            "final_goal_error_m": 0.8399616479873657,
+            "path_length_m": 0.5283819483593106
+          }
+        ]
+      },
+      "paired_contingency": {
+        "n11_both_success": 0,
+        "n00_both_fail": 0,
+        "n10_nom_succ_mut_fail": 20,
+        "n01_nom_fail_mut_succ": 0,
+        "discordant_count": 20,
+        "mcnemar_exact_p_value": 1.9073486328125e-06,
+        "mean_diff": -1.0,
+        "ci95_low": -1.0,
+        "ci95_high": -1.0
+      }
     },
-    "rot_-90deg": {
-      "episodes": 6,
-      "success_count": 0,
-      "success_rate": 0.0,
-      "mean_goal_error_m": 1.0086100349823635
-    },
-    "rot_+180deg": {
-      "episodes": 6,
-      "success_count": 2,
-      "success_rate": 0.3333333333333333,
-      "mean_goal_error_m": 0.753823940952619
+    "se2_rigid_transformations": {
+      "rot_+90deg": {
+        "success_count": 20,
+        "success_rate": 1.0,
+        "mean_goal_error_m": 0.257213044911623,
+        "paired_stats": {
+          "n11_both_success": 20,
+          "n00_both_fail": 0,
+          "n10_nom_succ_mut_fail": 0,
+          "n01_nom_fail_mut_succ": 0,
+          "discordant_count": 0,
+          "mcnemar_exact_p_value": 1.0,
+          "mean_diff": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "records": [
+          {
+            "episode_id": "se2_+90_00",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.26378172636032104,
+            "path_length_m": 0.27939976565539837
+          },
+          {
+            "episode_id": "se2_+90_01",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.25012001395225525,
+            "path_length_m": 0.3091134950518608
+          },
+          {
+            "episode_id": "se2_+90_02",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2569984495639801,
+            "path_length_m": 0.42444954067468643
+          },
+          {
+            "episode_id": "se2_+90_03",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2538266181945801,
+            "path_length_m": 0.38024560548365116
+          },
+          {
+            "episode_id": "se2_+90_04",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2794469892978668,
+            "path_length_m": 0.3972346018999815
+          },
+          {
+            "episode_id": "se2_+90_05",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.23772229254245758,
+            "path_length_m": 0.441527409479022
+          },
+          {
+            "episode_id": "se2_+90_06",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.27268117666244507,
+            "path_length_m": 0.26980006136000156
+          },
+          {
+            "episode_id": "se2_+90_07",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.25785839557647705,
+            "path_length_m": 0.2901234347373247
+          },
+          {
+            "episode_id": "se2_+90_08",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.24460887908935547,
+            "path_length_m": 0.3280253056436777
+          },
+          {
+            "episode_id": "se2_+90_09",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.25896593928337097,
+            "path_length_m": 0.3347693867981434
+          },
+          {
+            "episode_id": "se2_+90_10",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2549990117549896,
+            "path_length_m": 0.3719160035252571
+          },
+          {
+            "episode_id": "se2_+90_11",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2778926193714142,
+            "path_length_m": 0.33464954048395157
+          },
+          {
+            "episode_id": "se2_+90_12",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2549860179424286,
+            "path_length_m": 0.44405461847782135
+          },
+          {
+            "episode_id": "se2_+90_13",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.27655985951423645,
+            "path_length_m": 0.3367283269762993
+          },
+          {
+            "episode_id": "se2_+90_14",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2605149447917938,
+            "path_length_m": 0.2618165295571089
+          },
+          {
+            "episode_id": "se2_+90_15",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.24384039640426636,
+            "path_length_m": 0.3435955233871937
+          },
+          {
+            "episode_id": "se2_+90_16",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.23165719211101532,
+            "path_length_m": 0.41119557060301304
+          },
+          {
+            "episode_id": "se2_+90_17",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2530142068862915,
+            "path_length_m": 0.42011441104114056
+          },
+          {
+            "episode_id": "se2_+90_18",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2440744787454605,
+            "path_length_m": 0.28013131208717823
+          },
+          {
+            "episode_id": "se2_+90_19",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2707116901874542,
+            "path_length_m": 0.2177092805504799
+          }
+        ]
+      },
+      "rot_+180deg": {
+        "success_count": 20,
+        "success_rate": 1.0,
+        "mean_goal_error_m": 0.2597362130880356,
+        "paired_stats": {
+          "n11_both_success": 20,
+          "n00_both_fail": 0,
+          "n10_nom_succ_mut_fail": 0,
+          "n01_nom_fail_mut_succ": 0,
+          "discordant_count": 0,
+          "mcnemar_exact_p_value": 1.0,
+          "mean_diff": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "records": [
+          {
+            "episode_id": "se2_+180_00",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2505451738834381,
+            "path_length_m": 0.29426548071205616
+          },
+          {
+            "episode_id": "se2_+180_01",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.27144941687583923,
+            "path_length_m": 0.28988621942698956
+          },
+          {
+            "episode_id": "se2_+180_02",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2740704417228699,
+            "path_length_m": 0.4054575748741627
+          },
+          {
+            "episode_id": "se2_+180_03",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2716819941997528,
+            "path_length_m": 0.36407990753650665
+          },
+          {
+            "episode_id": "se2_+180_04",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2684221863746643,
+            "path_length_m": 0.4073077514767647
+          },
+          {
+            "episode_id": "se2_+180_05",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.252673864364624,
+            "path_length_m": 0.42340701073408127
+          },
+          {
+            "episode_id": "se2_+180_06",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2790336608886719,
+            "path_length_m": 0.27009844593703747
+          },
+          {
+            "episode_id": "se2_+180_07",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2634793519973755,
+            "path_length_m": 0.28438248857855797
+          },
+          {
+            "episode_id": "se2_+180_08",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2507290542125702,
+            "path_length_m": 0.3219680208712816
+          },
+          {
+            "episode_id": "se2_+180_09",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2446824610233307,
+            "path_length_m": 0.350812079384923
+          },
+          {
+            "episode_id": "se2_+180_10",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2568965256214142,
+            "path_length_m": 0.3747387658804655
+          },
+          {
+            "episode_id": "se2_+180_11",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2467796951532364,
+            "path_length_m": 0.2978422660380602
+          },
+          {
+            "episode_id": "se2_+180_12",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.25786924362182617,
+            "path_length_m": 0.4404908213764429
+          },
+          {
+            "episode_id": "se2_+180_13",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2575586438179016,
+            "path_length_m": 0.3555160854011774
+          },
+          {
+            "episode_id": "se2_+180_14",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2425554096698761,
+            "path_length_m": 0.281286858022213
+          },
+          {
+            "episode_id": "se2_+180_15",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.27499037981033325,
+            "path_length_m": 0.31297691725194454
+          },
+          {
+            "episode_id": "se2_+180_16",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.25388216972351074,
+            "path_length_m": 0.387480391189456
+          },
+          {
+            "episode_id": "se2_+180_17",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.24313820898532867,
+            "path_length_m": 0.4305845517665148
+          },
+          {
+            "episode_id": "se2_+180_18",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.26489242911338806,
+            "path_length_m": 0.25786883756518364
+          },
+          {
+            "episode_id": "se2_+180_19",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2693939507007599,
+            "path_length_m": 0.22113788314163685
+          }
+        ]
+      },
+      "rot_-90deg": {
+        "success_count": 20,
+        "success_rate": 1.0,
+        "mean_goal_error_m": 0.25721093490719793,
+        "paired_stats": {
+          "n11_both_success": 20,
+          "n00_both_fail": 0,
+          "n10_nom_succ_mut_fail": 0,
+          "n01_nom_fail_mut_succ": 0,
+          "discordant_count": 0,
+          "mcnemar_exact_p_value": 1.0,
+          "mean_diff": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "records": [
+          {
+            "episode_id": "se2_-90_00",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2637804448604584,
+            "path_length_m": 0.27939959429204464
+          },
+          {
+            "episode_id": "se2_-90_01",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2501203119754791,
+            "path_length_m": 0.3091132026165724
+          },
+          {
+            "episode_id": "se2_-90_02",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2569747865200043,
+            "path_length_m": 0.42447918839752674
+          },
+          {
+            "episode_id": "se2_-90_03",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2538261115550995,
+            "path_length_m": 0.380246177315712
+          },
+          {
+            "episode_id": "se2_-90_04",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2794460654258728,
+            "path_length_m": 0.39723452366888523
+          },
+          {
+            "episode_id": "se2_-90_05",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.237723708152771,
+            "path_length_m": 0.44152465648949146
+          },
+          {
+            "episode_id": "se2_-90_06",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.272681325674057,
+            "path_length_m": 0.2698001004755497
+          },
+          {
+            "episode_id": "se2_-90_07",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.25785836577415466,
+            "path_length_m": 0.29012337885797024
+          },
+          {
+            "episode_id": "se2_-90_08",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.24460887908935547,
+            "path_length_m": 0.3280252944678068
+          },
+          {
+            "episode_id": "se2_-90_09",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.25896695256233215,
+            "path_length_m": 0.3347684219479561
+          },
+          {
+            "episode_id": "se2_-90_10",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.25503188371658325,
+            "path_length_m": 0.3718871772289276
+          },
+          {
+            "episode_id": "se2_-90_11",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.27790313959121704,
+            "path_length_m": 0.3346435483545065
+          },
+          {
+            "episode_id": "se2_-90_12",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2549847960472107,
+            "path_length_m": 0.44405416399240494
+          },
+          {
+            "episode_id": "se2_-90_13",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2765229344367981,
+            "path_length_m": 0.33676398918032646
+          },
+          {
+            "episode_id": "se2_-90_14",
+            "target_key": "yellow_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2605149745941162,
+            "path_length_m": 0.2618164960294962
+          },
+          {
+            "episode_id": "se2_-90_15",
+            "target_key": "red_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.24384096264839172,
+            "path_length_m": 0.3435949292033911
+          },
+          {
+            "episode_id": "se2_-90_16",
+            "target_key": "blue_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.23164869844913483,
+            "path_length_m": 0.4111973699182272
+          },
+          {
+            "episode_id": "se2_-90_17",
+            "target_key": "green_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.2529970109462738,
+            "path_length_m": 0.42013561725616455
+          },
+          {
+            "episode_id": "se2_-90_18",
+            "target_key": "purple_box",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.24407467246055603,
+            "path_length_m": 0.28013138473033905
+          },
+          {
+            "episode_id": "se2_-90_19",
+            "target_key": "cyan_cylinder",
+            "success": true,
+            "goal_reached": true,
+            "collision": false,
+            "final_goal_error_m": 0.270712673664093,
+            "path_length_m": 0.21770818904042244
+          }
+        ]
+      }
     }
   }
 }

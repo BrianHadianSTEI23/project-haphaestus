@@ -37,6 +37,7 @@ sys.path.insert(0, str(repo_root))
 sys.path.insert(0, str(pkg_root))
 
 import numpy as np
+import mujoco
 import torch
 import torch.nn.functional as F
 from scipy.stats import wilcoxon, binom
