@@ -421,6 +421,7 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
 
     candidate_mapping = [
         ("behavior", [
+            base_dir / "research/benchmarks/results/predictive_safety_benchmark.json",
             base_dir / "research/benchmarks/results/behavioral_eval_results.json",
             base_dir / "research/benchmarks/behavioral/behavioral_results.json",
         ]),
