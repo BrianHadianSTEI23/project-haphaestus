@@ -264,12 +264,26 @@ def train_models(args: argparse.Namespace) -> dict:
                         meta_payload = json.load(f)
                     with hist_json_path.open() as f:
                         history = json.load(f)
-                    best_epoch = meta_payload["best_epoch"]
-                    best_value = meta_payload["validation_loss"]
-                    checksum = meta_payload["sha256"]
-                    print(f"[Seed {seed}] {name:<8} | Reusing verified checkpoint: {seed_ckpt_path.name} (Val Loss: {best_value:.4f})", flush=True)
-                except Exception:
+                    
+                    # Strictly verify actual file hash against stored metadata
+                    actual_hash = _sha256(seed_ckpt_path)
+                    stored_hash = meta_payload.get("sha256")
+                    meta_cfg = meta_payload.get("training_config", {})
+                    train_ds_meta = meta_cfg.get("train_dataset", {})
+                    curr_train_sha = _sha256(Path(args.train_npz))
+                    
+                    if actual_hash == stored_hash and train_ds_meta.get("sha256") == curr_train_sha:
+                        best_epoch = meta_payload["best_epoch"]
+                        best_value = meta_payload["validation_loss"]
+                        checksum = actual_hash
+                        print(f"[Seed {seed}] {name:<8} | Reusing verified checkpoint: {seed_ckpt_path.name} (Val Loss: {best_value:.4f}, SHA: {checksum[:8]}...)", flush=True)
+                    else:
+                        print(f"[Seed {seed}] {name:<8} | Checkpoint hash or dataset mismatch; re-training...", flush=True)
+                        best_epoch = None
+                except Exception as e:
+                    print(f"[Seed {seed}] {name:<8} | Failed to verify checkpoint ({e}); re-training...", flush=True)
                     meta_payload = None
+                    best_epoch = None
 
             if best_epoch is None:
                 for epoch in range(1, args.epochs + 1):
@@ -283,8 +297,6 @@ def train_models(args: argparse.Namespace) -> dict:
                         best_value, best_epoch = value, epoch
                         # Save raw state_dict for seamless downstream loading
                         torch.save(model.state_dict(), seed_ckpt_path)
-                        if seed == seeds[0]:
-                            torch.save(model.state_dict(), default_ckpt_path)
                 print(f"[Seed {seed}] {name:<8} | Best Epoch: {best_epoch:2d} | Val Loss: {best_value:.4f} | Final Train Loss: {history[-1]['train']['loss_total']:.4f}", flush=True)
 
                 checksum = _sha256(seed_ckpt_path)
@@ -299,9 +311,13 @@ def train_models(args: argparse.Namespace) -> dict:
                 }
                 hist_json_path.write_text(json.dumps(history, indent=2) + "\n")
                 meta_json_path.write_text(json.dumps(meta_payload, indent=2) + "\n")
-                if seed == seeds[0]:
-                    (out_dir / f"{name}_history.json").write_text(json.dumps(history, indent=2) + "\n")
-                    (out_dir / f"{name}_best.metadata.json").write_text(json.dumps(meta_payload, indent=2) + "\n")
+
+            # Always ensure primary seed (seeds[0]) canonical aliases are bit-identical and up to date
+            if seed == seeds[0]:
+                import shutil
+                shutil.copy2(seed_ckpt_path, default_ckpt_path)
+                (out_dir / f"{name}_history.json").write_text(json.dumps(history, indent=2) + "\n")
+                (out_dir / f"{name}_best.metadata.json").write_text(json.dumps(meta_payload, indent=2) + "\n")
 
             seed_results[name] = {
                 "seed": seed,

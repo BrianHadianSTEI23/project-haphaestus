@@ -8,7 +8,8 @@
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
   "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
   "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-  "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+  "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+  "checkpoints": [],
   "random_seed": 42,
   "configuration": {
     "capabilities": 6,
@@ -28,8 +29,8 @@
     "python_version": "3.13.16",
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
   },
-  "result_artifact_path": "research/benchmarks/results/behavioral_eval_results.json",
-  "result_artifact_sha256": "06369d4b76ccbc8df20fb1144ee2c6e66940015bb2a6dc52b81eee4975c4210f",
+  "result_artifact_path": "world_models_fpga/research/benchmarks/results/behavioral_eval_results.json",
+  "result_artifact_sha256": "09cc29bf25f914eda1c57545b77f90e6a7174473c65a6a2335568305a0422174",
   "provenance_notes": "Independently executed with verified embedded execution metadata.",
   "config": {
     "capabilities": 6,
@@ -1011,7 +1012,7 @@
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
       "random_seed": 42,
       "configuration": {
         "capabilities": 6,

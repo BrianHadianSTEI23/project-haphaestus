@@ -9,6 +9,7 @@
   "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
   "checkpoint_path": "world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_compact_best.pt",
   "checkpoint_sha256": "18ddc0711856f2ef77e6748846a39568cc5a5aa8750941b493fc024d7f8121c0",
+  "checkpoints": [],
   "random_seed": 42,
   "configuration": {
     "precision": "Q8.8_signed_fixed_point",
@@ -19,7 +20,7 @@
     "python_version": "3.13.16",
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
   },
-  "result_artifact_path": "research/hardware/hardware_equivalence_results.json",
+  "result_artifact_path": "world_models_fpga/research/hardware/hardware_equivalence_results.json",
   "result_artifact_sha256": "1bc6b4117f5c043b030dc6a31b1786b306d36329e90c4c1498ebd801843b5cc9",
   "provenance_notes": "Independently executed with verified embedded execution metadata.",
   "config": {

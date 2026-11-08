@@ -1,0 +1,109 @@
+{
+  "execution_metadata": {
+    "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+    "execution_timestamp": "2026-11-08T00:20:57.616048+00:00",
+    "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+    "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
+    "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
+    "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "checkpoints": [
+      {
+        "name": "hjepa_best.pt",
+        "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+        "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+      },
+      {
+        "name": "lewm_best.pt",
+        "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+        "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+      }
+    ],
+    "random_seed": 42,
+    "configuration": {
+      "episodes": 20,
+      "random_draws": 30,
+      "evaluated_circuits": [
+        "C1_target_grounding",
+        "C2_axis_aligned",
+        "C2_rotated_pca",
+        "C2_multivariate_reg",
+        "C3_obstacle_risk",
+        "C4_action_dynamics",
+        "C5_hierarchical_subgoal"
+      ]
+    },
+    "environment": {
+      "python": "3.13.16",
+      "torch": "2.14.1+cu126",
+      "device": "cuda"
+    }
+  },
+  "evaluation": "necessity",
+  "clean_baseline_success_rate": 0.6499999761581421,
+  "circuits": {
+    "C1_target_grounding": {
+      "clean_success": 0.6499999761581421,
+      "ablated_success": 0.5,
+      "necessity_drop": 0.1499999761581421,
+      "random_control_drop": 0.1099999725818634,
+      "unrelated_control_drop": 0.1499999761581421,
+      "selectivity": 0.040000003576278684,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    "C2_axis_aligned": {
+      "clean_success": 0.6499999761581421,
+      "ablated_success": 0.5,
+      "necessity_drop": 0.1499999761581421,
+      "random_control_drop": 0.1099999725818634,
+      "unrelated_control_drop": 0.1499999761581421,
+      "selectivity": 0.040000003576278684,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    "C2_rotated_pca": {
+      "clean_success": 0.6499999761581421,
+      "ablated_success": 0.5,
+      "necessity_drop": 0.1499999761581421,
+      "random_control_drop": 0.1099999725818634,
+      "unrelated_control_drop": 0.1499999761581421,
+      "selectivity": 0.040000003576278684,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    "C2_multivariate_reg": {
+      "clean_success": 0.6499999761581421,
+      "ablated_success": 0.5,
+      "necessity_drop": 0.1499999761581421,
+      "random_control_drop": 0.1099999725818634,
+      "unrelated_control_drop": 0.1499999761581421,
+      "selectivity": 0.040000003576278684,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    "C3_obstacle_risk": {
+      "clean_success": 0.6499999761581421,
+      "ablated_success": 0.5,
+      "necessity_drop": 0.1499999761581421,
+      "random_control_drop": 0.1099999725818634,
+      "unrelated_control_drop": 0.1499999761581421,
+      "selectivity": 0.040000003576278684,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    "C4_action_dynamics": {
+      "clean_success": 0.6499999761581421,
+      "ablated_success": 0.6000000238418579,
+      "necessity_drop": 0.04999995231628418,
+      "random_control_drop": 0.1099999725818634,
+      "unrelated_control_drop": 0.1499999761581421,
+      "selectivity": -0.060000020265579226,
+      "causal_status": "FALSIFIED_NON_SELECTIVE"
+    },
+    "C5_hierarchical_subgoal": {
+      "clean_success": 0.6499999761581421,
+      "ablated_success": 0.5,
+      "necessity_drop": 0.1499999761581421,
+      "random_control_drop": 0.1099999725818634,
+      "unrelated_control_drop": 0.1499999761581421,
+      "selectivity": 0.040000003576278684,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    }
+  }
+}

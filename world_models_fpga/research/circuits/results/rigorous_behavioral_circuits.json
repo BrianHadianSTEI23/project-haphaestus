@@ -1,0 +1,233 @@
+{
+  "execution_metadata": {
+    "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+    "execution_timestamp": "2026-11-08T00:20:57.616048+00:00",
+    "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+    "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
+    "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
+    "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "checkpoints": [
+      {
+        "name": "hjepa_best.pt",
+        "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+        "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+      },
+      {
+        "name": "lewm_best.pt",
+        "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+        "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+      }
+    ],
+    "random_seed": 42,
+    "configuration": {
+      "episodes": 20,
+      "random_draws": 30,
+      "evaluated_circuits": [
+        "C1_target_grounding",
+        "C2_axis_aligned",
+        "C2_rotated_pca",
+        "C2_multivariate_reg",
+        "C3_obstacle_risk",
+        "C4_action_dynamics",
+        "C5_hierarchical_subgoal"
+      ]
+    },
+    "environment": {
+      "python": "3.13.16",
+      "torch": "2.14.1+cu126",
+      "device": "cuda"
+    }
+  },
+  "circuits": [
+    {
+      "circuit_id": "C1_target_grounding",
+      "name": "Target Grounding & Relative Goal Subspace",
+      "latent_dimensions": [
+        31,
+        23,
+        19,
+        8,
+        0,
+        10,
+        28,
+        12
+      ],
+      "behavioral_clean_success": 0.6499999761581421,
+      "behavioral_clean_ci95": 0.21447169068421668,
+      "behavioral_ablated_success": 0.5,
+      "behavioral_necessity_drop": 0.1499999761581421,
+      "behavioral_necessity_ci95": 0.1605589159182188,
+      "behavioral_necessity_random8_drop": 0.1099999725818634,
+      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
+      "behavioral_necessity_selectivity": 0.040000003576278684,
+      "behavioral_sufficiency_score": 0.5,
+      "behavioral_sufficiency_ci95": 0.22482742964535027,
+      "behavioral_sufficiency_random8_score": 0.525,
+      "behavioral_sufficiency_selectivity": -0.025000000000000022,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    {
+      "circuit_id": "C2_axis_aligned",
+      "name": "C2 Egocentric Displacement (Axis-Aligned)",
+      "latent_dimensions": [
+        17,
+        30,
+        23,
+        16,
+        4,
+        13,
+        22,
+        2
+      ],
+      "behavioral_clean_success": 0.6499999761581421,
+      "behavioral_clean_ci95": 0.21447169068421668,
+      "behavioral_ablated_success": 0.5,
+      "behavioral_necessity_drop": 0.1499999761581421,
+      "behavioral_necessity_ci95": 0.1605589159182188,
+      "behavioral_necessity_random8_drop": 0.1099999725818634,
+      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
+      "behavioral_necessity_selectivity": 0.040000003576278684,
+      "behavioral_sufficiency_score": 0.5,
+      "behavioral_sufficiency_ci95": 0.22482742964535027,
+      "behavioral_sufficiency_random8_score": 0.525,
+      "behavioral_sufficiency_selectivity": -0.025000000000000022,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    {
+      "circuit_id": "C2_rotated_pca",
+      "name": "C2 Egocentric Displacement (Rotated PCA Subspace)",
+      "latent_dimensions": [
+        17,
+        30,
+        23,
+        16,
+        4,
+        13,
+        22,
+        2
+      ],
+      "behavioral_clean_success": 0.6499999761581421,
+      "behavioral_clean_ci95": 0.21447169068421668,
+      "behavioral_ablated_success": 0.5,
+      "behavioral_necessity_drop": 0.1499999761581421,
+      "behavioral_necessity_ci95": 0.1605589159182188,
+      "behavioral_necessity_random8_drop": 0.1099999725818634,
+      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
+      "behavioral_necessity_selectivity": 0.040000003576278684,
+      "behavioral_sufficiency_score": 0.6499999761581421,
+      "behavioral_sufficiency_ci95": 0.21447169068421668,
+      "behavioral_sufficiency_random8_score": 0.525,
+      "behavioral_sufficiency_selectivity": 0.12499997615814207,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    {
+      "circuit_id": "C2_multivariate_reg",
+      "name": "C2 Egocentric Displacement (Multivariate Regression)",
+      "latent_dimensions": [
+        17,
+        30,
+        23,
+        16,
+        4,
+        13,
+        22,
+        2
+      ],
+      "behavioral_clean_success": 0.6499999761581421,
+      "behavioral_clean_ci95": 0.21447169068421668,
+      "behavioral_ablated_success": 0.5,
+      "behavioral_necessity_drop": 0.1499999761581421,
+      "behavioral_necessity_ci95": 0.1605589159182188,
+      "behavioral_necessity_random8_drop": 0.1099999725818634,
+      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
+      "behavioral_necessity_selectivity": 0.040000003576278684,
+      "behavioral_sufficiency_score": 0.5,
+      "behavioral_sufficiency_ci95": 0.22482742964535027,
+      "behavioral_sufficiency_random8_score": 0.525,
+      "behavioral_sufficiency_selectivity": -0.025000000000000022,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    {
+      "circuit_id": "C3_obstacle_risk",
+      "name": "Obstacle Proximity & Collision Risk Subspace",
+      "latent_dimensions": [
+        11,
+        5,
+        1,
+        16,
+        9,
+        13,
+        20,
+        10
+      ],
+      "behavioral_clean_success": 0.6499999761581421,
+      "behavioral_clean_ci95": 0.21447169068421668,
+      "behavioral_ablated_success": 0.5,
+      "behavioral_necessity_drop": 0.1499999761581421,
+      "behavioral_necessity_ci95": 0.1605589159182188,
+      "behavioral_necessity_random8_drop": 0.1099999725818634,
+      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
+      "behavioral_necessity_selectivity": 0.040000003576278684,
+      "behavioral_sufficiency_score": 0.5,
+      "behavioral_sufficiency_ci95": 0.22482742964535027,
+      "behavioral_sufficiency_random8_score": 0.525,
+      "behavioral_sufficiency_selectivity": -0.025000000000000022,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    },
+    {
+      "circuit_id": "C4_action_dynamics",
+      "name": "Action-Conditioned Forward Dynamics Subspace",
+      "latent_dimensions": [
+        30,
+        25,
+        3,
+        8,
+        24,
+        29,
+        2,
+        27
+      ],
+      "behavioral_clean_success": 0.6499999761581421,
+      "behavioral_clean_ci95": 0.21447169068421668,
+      "behavioral_ablated_success": 0.6000000238418579,
+      "behavioral_necessity_drop": 0.04999995231628418,
+      "behavioral_necessity_ci95": 0.2237004669603287,
+      "behavioral_necessity_random8_drop": 0.1099999725818634,
+      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
+      "behavioral_necessity_selectivity": -0.060000020265579226,
+      "behavioral_sufficiency_score": 0.5,
+      "behavioral_sufficiency_ci95": 0.22482742964535027,
+      "behavioral_sufficiency_random8_score": 0.525,
+      "behavioral_sufficiency_selectivity": -0.025000000000000022,
+      "causal_status": "FALSIFIED_NON_SELECTIVE"
+    },
+    {
+      "circuit_id": "C5_hierarchical_subgoal",
+      "name": "Hierarchical Macro-Micro Coupling Subspace",
+      "latent_dimensions": [
+        28,
+        11,
+        19,
+        24,
+        25,
+        31,
+        1,
+        23
+      ],
+      "behavioral_clean_success": 0.6499999761581421,
+      "behavioral_clean_ci95": 0.21447169068421668,
+      "behavioral_ablated_success": 0.5,
+      "behavioral_necessity_drop": 0.1499999761581421,
+      "behavioral_necessity_ci95": 0.1605589159182188,
+      "behavioral_necessity_random8_drop": 0.1099999725818634,
+      "behavioral_necessity_unrelated_drop": 0.1499999761581421,
+      "behavioral_necessity_selectivity": 0.040000003576278684,
+      "behavioral_sufficiency_score": 0.5,
+      "behavioral_sufficiency_ci95": 0.22482742964535027,
+      "behavioral_sufficiency_random8_score": 0.525,
+      "behavioral_sufficiency_selectivity": -0.025000000000000022,
+      "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+    }
+  ]
+}

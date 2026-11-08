@@ -246,6 +246,22 @@ class JetAutoEnv(gym.Env):
 
         return obs, reward, terminated, truncated, info
 
+    def step_physics(self, action):
+        """Pure physics step without offscreen camera rendering, for fast MPC candidate evaluation."""
+        action = np.clip(action, -1.0, 1.0)
+        vx_cmd = float(action[0] * self.vx_limit)
+        vy_cmd = float(action[1] * self.vy_limit)
+        wz_cmd = float(action[2] * self.wz_limit)
+        theta = float(self.data.qpos[self.jz_id])
+        vx_world = np.cos(theta) * vx_cmd - np.sin(theta) * vy_cmd
+        vy_world = np.sin(theta) * vx_cmd + np.cos(theta) * vy_cmd
+        self.data.ctrl[0] = vx_world
+        self.data.ctrl[1] = vy_world
+        self.data.ctrl[2] = wz_cmd
+        for _ in range(self.frame_skip):
+            mujoco.mj_step(self.model, self.data)
+        return self._check_collision()
+
     def render_observation(self):
         """Renders first-person onboard Astra camera view (64x64x3)."""
         self.fp_renderer.update_scene(self.data, camera="front_cam")

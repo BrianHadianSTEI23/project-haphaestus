@@ -1,0 +1,446 @@
+{
+  "execution_metadata": {
+    "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
+    "execution_timestamp": "2026-11-08T00:22:21.592256+00:00",
+    "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+    "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
+    "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+    "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "checkpoints": [
+      {
+        "name": "hjepa_best.pt",
+        "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+        "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+      },
+      {
+        "name": "lewm_best.pt",
+        "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+        "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+      },
+      {
+        "name": "baseline_best.pt",
+        "path": "world_models_fpga/checkpoints_v4/baseline_best.pt",
+        "sha256": "6debd5f887cc24de01f55f479a358d742c5f4efc554dd5d991e27ed432680b66"
+      }
+    ],
+    "random_seed": 42,
+    "configuration": {
+      "track": "Track C (observation only, zero simulator coordinates)",
+      "episodes_per_suite": 15,
+      "max_steps": 50
+    },
+    "environment": {
+      "python": "3.13.16",
+      "torch": "2.14.1+cu126",
+      "device": "cuda"
+    }
+  },
+  "track_c_nominal": {
+    "H-JEPA": {
+      "episodes_evaluated": 15,
+      "success_count": 15,
+      "success_rate": 1.0,
+      "goal_reached_count": 15,
+      "goal_reached_rate": 1.0,
+      "collision_count": 0,
+      "collision_rate": 0.0,
+      "mean_final_goal_error_m": 0.2592318783203761,
+      "records": [
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.25055140256881714,
+          "path_length_m": 0.29426534101366997
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2714506685733795,
+          "path_length_m": 0.2898850664496422
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.27407050132751465,
+          "path_length_m": 0.40545734763145447
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2716725170612335,
+          "path_length_m": 0.3640882056206465
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.26845014095306396,
+          "path_length_m": 0.4072859399020672
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2526722252368927,
+          "path_length_m": 0.4234086759388447
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.27903375029563904,
+          "path_length_m": 0.2700986545532942
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.26348376274108887,
+          "path_length_m": 0.2843781132251024
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.25072982907295227,
+          "path_length_m": 0.321967251598835
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.24468420445919037,
+          "path_length_m": 0.3508102912455797
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2568965256214142,
+          "path_length_m": 0.3747387658804655
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.24679042398929596,
+          "path_length_m": 0.2978315446525812
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.25787338614463806,
+          "path_length_m": 0.4404900223016739
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2575613260269165,
+          "path_length_m": 0.3555134292691946
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.24255751073360443,
+          "path_length_m": 0.28128477931022644
+        }
+      ]
+    },
+    "LeWM": {
+      "episodes_evaluated": 15,
+      "success_count": 14,
+      "success_rate": 0.9333333333333333,
+      "goal_reached_count": 14,
+      "goal_reached_rate": 0.9333333333333333,
+      "collision_count": 0,
+      "collision_rate": 0.0,
+      "mean_final_goal_error_m": 0.33050983945528667,
+      "records": [
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.27917224168777466,
+          "path_length_m": 0.2706637103110552
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2639032006263733,
+          "path_length_m": 0.30228577367961407
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.27090758085250854,
+          "path_length_m": 0.41813125647604465
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2734319269657135,
+          "path_length_m": 0.3751476751640439
+        },
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 1.2279292345046997,
+          "path_length_m": 1.8971217144280672
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2505997121334076,
+          "path_length_m": 0.47878493182361126
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.26949819922447205,
+          "path_length_m": 0.2878031022846699
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.263586163520813,
+          "path_length_m": 0.28696579299867153
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2689569592475891,
+          "path_length_m": 0.30427058413624763
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.27574092149734497,
+          "path_length_m": 0.33041491359472275
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2609142065048218,
+          "path_length_m": 0.3825382497161627
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.26448148488998413,
+          "path_length_m": 0.3008306547999382
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2606116831302643,
+          "path_length_m": 0.43420227617025375
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.26274675130844116,
+          "path_length_m": 0.3582955561578274
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.26516732573509216,
+          "path_length_m": 0.25736744329333305
+        }
+      ]
+    },
+    "Baseline": {
+      "episodes_evaluated": 15,
+      "success_count": 7,
+      "success_rate": 0.4666666666666667,
+      "goal_reached_count": 7,
+      "goal_reached_rate": 0.4666666666666667,
+      "collision_count": 1,
+      "collision_rate": 0.06666666666666667,
+      "mean_final_goal_error_m": 0.4769332349300385,
+      "records": [
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": true,
+          "final_goal_error_m": 0.6336172223091125,
+          "path_length_m": 0.8523526749340817
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.25809428095817566,
+          "path_length_m": 0.3033436881378293
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2732435464859009,
+          "path_length_m": 0.4107877742499113
+        },
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.3110172152519226,
+          "path_length_m": 0.404468409367837
+        },
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.41809526085853577,
+          "path_length_m": 0.7711291667073965
+        },
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.8396427631378174,
+          "path_length_m": 1.4533630479127169
+        },
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.9358167052268982,
+          "path_length_m": 1.0007538106292486
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2759881913661957,
+          "path_length_m": 0.2733333455398679
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2785436511039734,
+          "path_length_m": 0.2950491327792406
+        },
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.3109554052352905,
+          "path_length_m": 0.3665557757485658
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.27918386459350586,
+          "path_length_m": 0.3708806801587343
+        },
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.8840424418449402,
+          "path_length_m": 1.428711712360382
+        },
+        {
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.9102398157119751,
+          "path_length_m": 0.9494122331961989
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2678563594818115,
+          "path_length_m": 0.34696800354868174
+        },
+        {
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2776618003845215,
+          "path_length_m": 0.24483519652858377
+        }
+      ]
+    }
+  },
+  "color_mutations": {
+    "irrelevant_floor_shift": {
+      "success_rate": 0.8666666666666667,
+      "success_count": 13,
+      "total_episodes": 15,
+      "retention_rate": 0.8666666666666667
+    },
+    "relevant_target_mutation": {
+      "success_rate": 0.9333333333333333,
+      "success_count": 14,
+      "total_episodes": 15,
+      "retention_rate": 0.9333333333333333
+    },
+    "affordance_appearance_factorization_supported": false
+  },
+  "landmark_rearrangement": {
+    "success_rate": 0.0,
+    "success_count": 0,
+    "total_episodes": 15,
+    "retention_rate": 0.0,
+    "mean_goal_error_m": 2.220147887865702
+  },
+  "se2_rotations": {
+    "rot_+45deg": {
+      "episodes": 6,
+      "success_count": 0,
+      "success_rate": 0.0,
+      "mean_goal_error_m": 1.1198037068049114
+    },
+    "rot_-45deg": {
+      "episodes": 6,
+      "success_count": 1,
+      "success_rate": 0.16666666666666666,
+      "mean_goal_error_m": 1.001564343770345
+    },
+    "rot_+90deg": {
+      "episodes": 6,
+      "success_count": 3,
+      "success_rate": 0.5,
+      "mean_goal_error_m": 0.8486761897802353
+    },
+    "rot_-90deg": {
+      "episodes": 6,
+      "success_count": 0,
+      "success_rate": 0.0,
+      "mean_goal_error_m": 1.0086100349823635
+    },
+    "rot_+180deg": {
+      "episodes": 6,
+      "success_count": 2,
+      "success_rate": 0.3333333333333333,
+      "mean_goal_error_m": 0.753823940952619
+    }
+  }
+}

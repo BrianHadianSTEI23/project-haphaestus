@@ -112,11 +112,33 @@ def get_system_environment() -> dict:
     return env
 
 
+def _resolve_repo_file(repo_root: Path, base_dir: Path, p_str: str) -> Path:
+    p = Path(p_str)
+    if p.is_absolute():
+        return p
+    if (repo_root / p).exists():
+        return repo_root / p
+    if (base_dir / p).exists():
+        return base_dir / p
+    if p_str.startswith("world_models_fpga/"):
+        stripped = p_str[len("world_models_fpga/"):]
+        if (base_dir / stripped).exists():
+            return base_dir / stripped
+        if (repo_root / stripped).exists():
+            return repo_root / stripped
+    return repo_root / p
+
+
 def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
     records = []
     independently_executed = []
     legacy_unverified = []
     rejected_records = []
+    seen_executed_artifacts = set()
+
+    this_file = Path(__file__).resolve()
+    base_dir = this_file.parents[2]
+    repo_root = this_file.parents[3]
 
     for path in sorted(Path(records_dir).glob("*.json")):
         try:
@@ -128,12 +150,10 @@ def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
         # Check required fields
         missing = REQUIRED_CORE_FIELDS - set(item)
         if missing:
-            # Check legacy format compatibility
             legacy_missing = {"config", "git_commit", "dataset_sha256", "checkpoint_sha256", "seed", "environment", "results"} - set(item)
             if legacy_missing:
                 rejected_records.append({"file": str(path), "reason": f"Missing core fields: {sorted(missing)}"})
                 continue
-            # Upgrade legacy record on the fly with warning
             item["provenance_status"] = item.get("provenance_status", "LEGACY_UNVERIFIED")
             item["record_id"] = item.get("record_id", f"LEGACY-{item.get('evaluation', 'UNKNOWN')}")
             item["command_executed"] = item.get("command_executed", "UNKNOWN_LEGACY_INVOCATION")
@@ -146,18 +166,63 @@ def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
             item["result_artifact_path"] = item.get("result_artifact_path", "UNKNOWN")
             item["result_artifact_sha256"] = item.get("result_artifact_sha256", "UNKNOWN")
 
+        # --- Strict Cryptographic On-Disk Verification ---
+        ds_file = _resolve_repo_file(repo_root, base_dir, item.get("dataset_path", ""))
+        ckpt_file = _resolve_repo_file(repo_root, base_dir, item.get("checkpoint_path", ""))
+        art_file = _resolve_repo_file(repo_root, base_dir, item.get("result_artifact_path", ""))
+
+        provenance_errors = []
+        if not ds_file.exists():
+            provenance_errors.append(f"dataset_path not found: {ds_file}")
+        elif _digest(ds_file) != item.get("dataset_sha256"):
+            provenance_errors.append(f"dataset_sha256 mismatch (actual={_digest(ds_file)[:8]}.., declared={str(item.get('dataset_sha256'))[:8]}..)")
+
+        if not ckpt_file.exists():
+            provenance_errors.append(f"checkpoint_path not found: {ckpt_file}")
+        elif _digest(ckpt_file) != item.get("checkpoint_sha256"):
+            provenance_errors.append(f"checkpoint_sha256 mismatch (actual={_digest(ckpt_file)[:8]}.., declared={str(item.get('checkpoint_sha256'))[:8]}..)")
+
+        # Verify any additional multi-seed checkpoints if present
+        for ck_item in item.get("checkpoints", []):
+            p_c = _resolve_repo_file(repo_root, base_dir, ck_item.get("path", ""))
+            if not p_c.exists() or _digest(p_c) != ck_item.get("sha256"):
+                provenance_errors.append(f"multi-seed checkpoint mismatch: {ck_item.get('name')}")
+
+        if not art_file.exists():
+            provenance_errors.append(f"result_artifact_path not found: {art_file}")
+        elif _digest(art_file) != item.get("result_artifact_sha256"):
+            provenance_errors.append(f"result_artifact_sha256 mismatch (actual={_digest(art_file)[:8]}.., declared={str(item.get('result_artifact_sha256'))[:8]}..)")
+
+        status = item.get("provenance_status")
+        art_key = str(art_file.resolve())
+
+        # Disallow duplicate artifact reuse claiming independent execution
+        if status == "INDEPENDENTLY_EXECUTED":
+            if art_key in seen_executed_artifacts:
+                provenance_errors.append(f"Duplicate artifact claimed for independent execution: {art_file.name}. Must use dedicated evaluation artifact or be labeled REUSED_VERIFIED.")
+            else:
+                seen_executed_artifacts.add(art_key)
+
+        if provenance_errors:
+            rejected_records.append({
+                "file": str(path),
+                "record_id": item.get("record_id"),
+                "status_was": status,
+                "reasons": provenance_errors,
+            })
+            item["provenance_status"] = "REJECTED"
+            item["provenance_errors"] = provenance_errors
+            status = "REJECTED"
+
         item["record_path"] = str(path)
         item["record_sha256"] = _digest(path)
         records.append(item)
 
-        status = item.get("provenance_status")
         eval_name = item.get("evaluation")
         if status == "INDEPENDENTLY_EXECUTED":
             independently_executed.append(eval_name)
         elif status == "LEGACY_UNVERIFIED":
             legacy_unverified.append(eval_name)
-        else:
-            rejected_records.append({"file": str(path), "reason": f"Invalid or rejected status: {status}"})
 
     observed_evals = {r.get("evaluation") for r in records if r.get("evaluation")}
     missing_evals = sorted(REQUIRED_EVALUATIONS - observed_evals)
@@ -175,6 +240,7 @@ def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
         conclusion = (
             f"INCOMPLETE PROVENANCE: {len(set(independently_executed))}/9 categories independently executed. "
             f"{len(set(legacy_unverified))} categories are legacy unverified. "
+            f"{len(rejected_records)} rejected records. "
             f"{len(missing_evals)} categories missing. Systematic re-execution required."
         )
 
@@ -192,7 +258,6 @@ def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
     destination = Path(output)
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(manifest, indent=2) + "\n")
-    return manifest
     return manifest
 
 
@@ -324,21 +389,19 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             base_dir / "research/benchmarks/behavioral/behavioral_results.json",
         ]),
         ("prediction", [
+            base_dir / "research/benchmarks/results/matched_temporal_controls.json",
             base_dir / "research/benchmarks/behavioral/latent_prediction_audit.json",
             base_dir / "research/benchmarks/audit_latent_predictions.json",
         ]),
         ("necessity", [
+            base_dir / "research/circuits/results/necessity_results.json",
             base_dir / "research/circuits/results/circuit_registry.json",
             base_dir / "research/circuits/ablation_results/ablation_matrix.json",
-            base_dir / "research/circuits/necessity_tests/necessity_scores.json",
-            base_dir / "research/circuits/ablation/ablation_results.json",
         ]),
         ("sufficiency", [
+            base_dir / "research/circuits/results/sufficiency_results.json",
             base_dir / "research/circuits/results/circuit_registry.json",
             base_dir / "research/circuits/attribution_graphs/attribution_graphs.json",
-            base_dir / "research/circuits/results/activation_patching_results.json",
-            base_dir / "research/circuits/sufficiency_tests/sufficiency_scores.json",
-            base_dir / "research/circuits/attribution/attribution_graphs.json",
         ]),
         ("generalization", [
             base_dir / "research/benchmarks/results/generalization_eval_results.json",
@@ -360,6 +423,8 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
         ]),
     ]
 
+    repo_root = base_dir.parent if base_dir.name == "world_models_fpga" else base_dir
+
     for eval_name, candidates in candidate_mapping:
         src_path = next((p for p in candidates if p.exists()), None)
         if src_path is None:
@@ -375,25 +440,31 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             ts = meta.get("execution_timestamp", datetime.datetime.now(datetime.timezone.utc).isoformat())
             src_commit = meta.get("git_commit")
             ds_path = meta.get("dataset_path", "unknown")
-            ds_sha = meta.get("dataset_sha256", "unknown")
+            ds_file = _resolve_repo_file(repo_root, base_dir, ds_path)
+            ds_sha = _digest(ds_file) if ds_file.exists() else meta.get("dataset_sha256", "unknown")
             ckpt_path = meta.get("checkpoint_path", "unknown")
-            ckpt_sha = meta.get("checkpoint_sha256", "unknown")
+            ckpt_file = _resolve_repo_file(repo_root, base_dir, ckpt_path)
+            ckpt_sha = _digest(ckpt_file) if ckpt_file.exists() else meta.get("checkpoint_sha256", "unknown")
             seed = int(meta.get("random_seed", 42))
             cfg = meta.get("configuration", {})
             env = meta.get("environment", sys_env)
+            checkpoints_list = meta.get("checkpoints", [])
             notes = "Independently executed with verified embedded execution metadata."
         else:
             status = "LEGACY_UNVERIFIED"
             cmd_exec = "UNKNOWN_HISTORICAL_RUN"
             ts = "UNKNOWN_HISTORICAL_TIMESTAMP"
             src_commit = "UNVERIFIED_PRE_AUDIT_COMMIT"
-            ds_path = "world_models_fpga/research/datasets/splits_v3/held_out_test_benchmark.npz"
-            ds_sha = _digest(base_dir / ds_path)
-            ckpt_path = "world_models_fpga/checkpoints_v3/hjepa_best.pt"
-            ckpt_sha = _digest(base_dir / ckpt_path)
+            ds_path = "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz"
+            ds_file = _resolve_repo_file(repo_root, base_dir, ds_path)
+            ds_sha = _digest(ds_file)
+            ckpt_path = "world_models_fpga/checkpoints_v4/hjepa_best.pt"
+            ckpt_file = _resolve_repo_file(repo_root, base_dir, ckpt_path)
+            ckpt_sha = _digest(ckpt_file)
             seed = 42
             cfg = {"source_artifact": str(src_path.relative_to(base_dir))}
             env = sys_env
+            checkpoints_list = []
             notes = "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol."
 
         record = {
@@ -407,10 +478,11 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             "dataset_sha256": ds_sha,
             "checkpoint_path": ckpt_path,
             "checkpoint_sha256": ckpt_sha,
+            "checkpoints": checkpoints_list,
             "random_seed": seed,
             "configuration": cfg,
             "environment": env,
-            "result_artifact_path": str(src_path.relative_to(base_dir)),
+            "result_artifact_path": str(src_path.relative_to(repo_root)),
             "result_artifact_sha256": art_sha,
             "provenance_notes": notes,
             # Legacy compatibility fields

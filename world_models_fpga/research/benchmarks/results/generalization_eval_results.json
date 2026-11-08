@@ -5726,7 +5726,7 @@
     "dataset_path": "world_models_fpga/research/datasets/splits_v4/counterfactual_suite.npz",
     "dataset_sha256": "0d1516dcb86d3a856149148e97d5ba24c4553f5232beec253f0f5e29c921db47",
     "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-    "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
     "random_seed": 42,
     "configuration": {
       "counterfactuals": [

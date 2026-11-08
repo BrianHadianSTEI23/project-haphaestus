@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "manifest_generated_at": "2026-11-07T17:44:32.179556+00:00",
+  "manifest_generated_at": "2026-11-08T00:34:45.165761+00:00",
   "total_records": 9,
   "independently_executed_evaluations": [
     "architecture_reconstruction",
@@ -29,6 +29,7 @@
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_compact_best.pt",
       "checkpoint_sha256": "18ddc0711856f2ef77e6748846a39568cc5a5aa8750941b493fc024d7f8121c0",
+      "checkpoints": [],
       "random_seed": 42,
       "configuration": {
         "models": [
@@ -42,7 +43,7 @@
         "python_version": "3.13.16",
         "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
       },
-      "result_artifact_path": "research/extraction/comparison/three_model_comparison.json",
+      "result_artifact_path": "world_models_fpga/research/extraction/comparison/three_model_comparison.json",
       "result_artifact_sha256": "5e5aca75de5df8d0cbbe14d46bde2e147c4556b4305a383b9f7e46c22bc5ca7e",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
@@ -136,7 +137,7 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/architecture_reconstruction_record.json",
-      "record_sha256": "7da01daf29d027d49e9496836d942fc863f6893527bc3caefd2211fc0dc60606"
+      "record_sha256": "5d3281a855d6c80d1921d8731eca464f378db7bd9a363086ed3cc535534a0ca7"
     },
     {
       "record_id": "REC-BEHAVIOR-001",
@@ -148,7 +149,8 @@
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "checkpoints": [],
       "random_seed": 42,
       "configuration": {
         "capabilities": 6,
@@ -168,8 +170,8 @@
         "python_version": "3.13.16",
         "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
       },
-      "result_artifact_path": "research/benchmarks/results/behavioral_eval_results.json",
-      "result_artifact_sha256": "06369d4b76ccbc8df20fb1144ee2c6e66940015bb2a6dc52b81eee4975c4210f",
+      "result_artifact_path": "world_models_fpga/research/benchmarks/results/behavioral_eval_results.json",
+      "result_artifact_sha256": "09cc29bf25f914eda1c57545b77f90e6a7174473c65a6a2335568305a0422174",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
         "capabilities": 6,
@@ -1151,7 +1153,7 @@
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
           "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-          "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+          "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
           "random_seed": 42,
           "configuration": {
             "capabilities": 6,
@@ -1174,7 +1176,7 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/behavior_record.json",
-      "record_sha256": "43ab729a7b7703aa46a044ad6e6a3efc34481b4a80e9bb005d17bd0959ed9fbe"
+      "record_sha256": "b5f54dadc71574521a07c67564fef9ee6da54ab9bee8caffc973073fbd8f1c19"
     },
     {
       "record_id": "REC-COMPOSITIONALITY-001",
@@ -1186,7 +1188,8 @@
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "checkpoints": [],
       "random_seed": 42,
       "configuration": {
         "tasks": [
@@ -1201,8 +1204,8 @@
         "python_version": "3.13.16",
         "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
       },
-      "result_artifact_path": "research/synthesis/experiment_c_novel_composition/novel_composition_results.json",
-      "result_artifact_sha256": "9c1ae1a6ecdf76682521290086886fcfb6472afbbdaba8e2ffa0f20cb541d912",
+      "result_artifact_path": "world_models_fpga/research/synthesis/experiment_c_novel_composition/novel_composition_results.json",
+      "result_artifact_sha256": "2bb522c94ffd5506038b87a2dea70da9c87068a4366b9022a4c38f1061933bf2",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
         "tasks": [
@@ -1422,7 +1425,7 @@
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
           "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-          "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+          "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
           "random_seed": 42,
           "configuration": {
             "tasks": [
@@ -1440,7 +1443,7 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/compositionality_record.json",
-      "record_sha256": "09d487167ed52b2ac4b8d05434336b693fd8fd0ac425cab998ac2fe6cd347224"
+      "record_sha256": "57a7cddd96468ae1487eb75755172a5024c7ad04706b505b10342b7a4aaf60c7"
     },
     {
       "record_id": "REC-GENERALIZATION-001",
@@ -1452,7 +1455,8 @@
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/counterfactual_suite.npz",
       "dataset_sha256": "0d1516dcb86d3a856149148e97d5ba24c4553f5232beec253f0f5e29c921db47",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "checkpoints": [],
       "random_seed": 42,
       "configuration": {
         "counterfactuals": [
@@ -1471,8 +1475,8 @@
         "python_version": "3.13.16",
         "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
       },
-      "result_artifact_path": "research/benchmarks/results/generalization_eval_results.json",
-      "result_artifact_sha256": "2eb1e4b8a0b811fd6adc834e7154dd0fc32bd701b46e73e5bb057d4c903b53da",
+      "result_artifact_path": "world_models_fpga/research/benchmarks/results/generalization_eval_results.json",
+      "result_artifact_sha256": "302ef911b0ccf960de4d3cfb03930857bd5d189f5287f4cd03db29f2bda4a9b9",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
         "counterfactuals": [
@@ -7217,7 +7221,7 @@
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/counterfactual_suite.npz",
           "dataset_sha256": "0d1516dcb86d3a856149148e97d5ba24c4553f5232beec253f0f5e29c921db47",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-          "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+          "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
           "random_seed": 42,
           "configuration": {
             "counterfactuals": [
@@ -7239,7 +7243,7 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/generalization_record.json",
-      "record_sha256": "7e54f1e045e5439dc62f80fd072c479698c9c15c6ef44689e3d9c18cb9bb4fab"
+      "record_sha256": "2cdd0a4679ffe32a43f30ab30d822a7e251768304eb0c4c41b74daa844208d33"
     },
     {
       "record_id": "REC-HARDWARE_EQUIVALENCE-001",
@@ -7252,6 +7256,7 @@
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/research/extraction/extracted_model/reconstructed_compact/reconstructed_compact_best.pt",
       "checkpoint_sha256": "18ddc0711856f2ef77e6748846a39568cc5a5aa8750941b493fc024d7f8121c0",
+      "checkpoints": [],
       "random_seed": 42,
       "configuration": {
         "precision": "Q8.8_signed_fixed_point",
@@ -7262,7 +7267,7 @@
         "python_version": "3.13.16",
         "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
       },
-      "result_artifact_path": "research/hardware/hardware_equivalence_results.json",
+      "result_artifact_path": "world_models_fpga/research/hardware/hardware_equivalence_results.json",
       "result_artifact_sha256": "1bc6b4117f5c043b030dc6a31b1786b306d36329e90c4c1498ebd801843b5cc9",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
@@ -7325,821 +7330,1132 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/hardware_equivalence_record.json",
-      "record_sha256": "e86723015c59a53df07bdbbd6ecb8ef225d47afd155cc15c9421813aad90474b"
+      "record_sha256": "f808e0f63e6314cafb6889b2a10336c38f9c525c59498ce1b2d2a6e15b676d96"
     },
     {
       "record_id": "REC-NECESSITY-001",
       "evaluation": "necessity",
       "provenance_status": "INDEPENDENTLY_EXECUTED",
-      "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/test_necessity_sufficiency.py",
-      "execution_timestamp": "2026-11-07T17:32:19.346650+00:00",
-      "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
-      "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
-      "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+      "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+      "execution_timestamp": "2026-11-08T00:20:57.616048+00:00",
+      "source_git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
+      "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "checkpoints": [
+        {
+          "name": "hjepa_best.pt",
+          "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+          "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+        },
+        {
+          "name": "lewm_best.pt",
+          "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+          "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+        }
+      ],
       "random_seed": 42,
       "configuration": {
-        "circuits": [
-          "C1",
-          "C2",
-          "C3",
-          "C4",
-          "C5"
-        ],
-        "subspace_dim": 8,
-        "control_dim": 8,
-        "threshold": 0.2
+        "episodes": 20,
+        "random_draws": 30,
+        "evaluated_circuits": [
+          "C1_target_grounding",
+          "C2_axis_aligned",
+          "C2_rotated_pca",
+          "C2_multivariate_reg",
+          "C3_obstacle_risk",
+          "C4_action_dynamics",
+          "C5_hierarchical_subgoal"
+        ]
       },
       "environment": {
-        "python_version": "3.13.16",
-        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+        "python": "3.13.16",
+        "torch": "2.14.1+cu126",
+        "device": "cuda"
       },
-      "result_artifact_path": "research/circuits/results/circuit_registry.json",
-      "result_artifact_sha256": "297323c77efd1034e8b85b745a486005cbb858436b9d3292e6a877df456c94a6",
+      "result_artifact_path": "world_models_fpga/research/circuits/results/necessity_results.json",
+      "result_artifact_sha256": "e774f070f835b9f7829410fec3a997d49e70d162cab81797c28a4c64fb2ba89a",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
-        "circuits": [
-          "C1",
-          "C2",
-          "C3",
-          "C4",
-          "C5"
-        ],
-        "subspace_dim": 8,
-        "control_dim": 8,
-        "threshold": 0.2
+        "episodes": 20,
+        "random_draws": 30,
+        "evaluated_circuits": [
+          "C1_target_grounding",
+          "C2_axis_aligned",
+          "C2_rotated_pca",
+          "C2_multivariate_reg",
+          "C3_obstacle_risk",
+          "C4_action_dynamics",
+          "C5_hierarchical_subgoal"
+        ]
       },
-      "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+      "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
       "seed": 42,
       "results": {
-        "total_discovered_circuits": 5,
-        "verified_circuits": 4,
-        "methodology": "Train-split top-8 subspace discovery (multi-output R2/correlation) evaluated on held_out_test_benchmark for representation necessity/sufficiency, and in closed-loop MuJoCo navigation for behavioral necessity/sufficiency against matched k=8 random and unrelated subspace controls (zero hardcoded constants).",
-        "circuits": [
-          {
-            "circuit_id": "C1_target_grounding",
-            "name": "Target Grounding & Relative Goal Subspace",
-            "models_present": [
-              "Baseline",
-              "LeWM",
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "encoder.conv2",
-              "encoder.conv3",
-              "encoder.fc",
-              "policy_head"
-            ],
-            "latent_dimensions": [
-              8,
-              30,
-              20,
-              18,
-              19,
-              9,
-              10,
-              11
-            ],
-            "representation_necessity_score": 0.545943021774292,
-            "representation_necessity_ci95": 0.017648433094038282,
-            "representation_necessity_random8_control": 0.27936744689941406,
-            "representation_sufficiency_score": 0.3050781488418579,
-            "representation_sufficiency_ci95": 0.01395858020942221,
-            "representation_sufficiency_random8_control": 0.1882893592119217,
-            "representation_selectivity_necessity": 0.26657557487487793,
-            "representation_selectivity_sufficiency": 0.11678878962993622,
-            "behavioral_clean_success": 1.0,
-            "behavioral_clean_ci95": 0.0,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 1.0,
-            "behavioral_sufficiency_ci95": 0.0,
-            "behavioral_sufficiency_random8_control": 1.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.3129139542579651,
-            "cross_context_generalization": 1.0,
-            "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "interpretation_notes": "Visual-goal subspace; visual encoder carries low isolated necessity when explicit body-frame goal_vec is provided in Track B, but becomes necessary in Track C."
-          },
-          {
-            "circuit_id": "C2_egocentric_transformation",
-            "name": "Egocentric Body-Frame Displacement Subspace",
-            "models_present": [
-              "LeWM",
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "encoder.fc",
-              "micro_predictor.dyn_fc1",
-              "micro_ego_head"
-            ],
-            "latent_dimensions": [
-              5,
-              31,
-              17,
-              23,
-              29,
-              8,
-              7,
-              6
-            ],
-            "representation_necessity_score": 0.5152860283851624,
-            "representation_necessity_ci95": 0.017515167969183818,
-            "representation_necessity_random8_control": 0.8149835467338562,
-            "representation_sufficiency_score": 0.060727156698703766,
-            "representation_sufficiency_ci95": 0.006986469466287525,
-            "representation_sufficiency_random8_control": 0.3455495238304138,
-            "representation_selectivity_necessity": -0.29969751834869385,
-            "representation_selectivity_sufficiency": -0.28482236713171005,
-            "behavioral_clean_success": 0.4000000059604645,
-            "behavioral_clean_ci95": 0.3200666692713856,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 1.0,
-            "behavioral_sufficiency_ci95": 0.3200666692713856,
-            "behavioral_sufficiency_random8_control": 1.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.0839424803853035,
-            "cross_context_generalization": 1.0,
-            "verification_status": "FALSIFIED_NON_SELECTIVE",
-            "causal_status": "FALSIFIED_NON_SELECTIVE",
-            "interpretation_notes": "Encodes 1-step body-frame heading and displacement from visual latent transitions. Multi-output target correlation avoids constant-norm collapse."
-          },
-          {
-            "circuit_id": "C3_obstacle_collision_detection",
-            "name": "Obstacle Proximity & Collision Risk Subspace",
-            "models_present": [
-              "LeWM",
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "encoder.conv3",
-              "encoder.conv4",
-              "pred_fc1",
-              "col_fc",
-              "state_col_head"
-            ],
-            "latent_dimensions": [
-              26,
-              17,
-              23,
-              8,
-              14,
-              12,
-              10,
-              0
-            ],
-            "representation_necessity_score": 0.46779561042785645,
-            "representation_necessity_ci95": 0.03271521766369489,
-            "representation_necessity_random8_control": 0.32610711455345154,
-            "representation_sufficiency_score": 0.23751921951770782,
-            "representation_sufficiency_ci95": 0.016273299296105572,
-            "representation_sufficiency_random8_control": 0.31380224227905273,
-            "representation_selectivity_necessity": 0.1416884958744049,
-            "representation_selectivity_sufficiency": -0.07628302276134491,
-            "behavioral_clean_success": 0.0,
-            "behavioral_clean_ci95": 0.0,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 1.0,
-            "behavioral_sufficiency_ci95": 0.2613333343411723,
-            "behavioral_sufficiency_random8_control": 1.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.25907060503959656,
-            "cross_context_generalization": 1.0,
-            "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "interpretation_notes": "Predicts impending collision risk from visual latent state and candidate action. Ablation specifically increases collision rate on obstacle tasks."
-          },
-          {
-            "circuit_id": "C4_action_conditioned_transition",
-            "name": "Action-Conditioned Residual Transition Circuit",
-            "models_present": [
-              "LeWM",
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "pred_fc1",
-              "pred_fc2",
-              "pred_delta",
-              "micro_predictor.dyn_fc1",
-              "micro_predictor.delta_head"
-            ],
-            "latent_dimensions": [
-              11,
-              1,
-              29,
-              13,
-              10,
-              5,
-              22,
-              17
-            ],
-            "representation_necessity_score": 0.5795601010322571,
-            "representation_necessity_ci95": 0.012639858384878041,
-            "representation_necessity_random8_control": 0.4520717263221741,
-            "representation_sufficiency_score": 0.10741255432367325,
-            "representation_sufficiency_ci95": 0.006133225786621288,
-            "representation_sufficiency_random8_control": 0.06110341474413872,
-            "representation_selectivity_necessity": 0.127488374710083,
-            "representation_selectivity_sufficiency": 0.04630913957953453,
-            "behavioral_clean_success": 0.0,
-            "behavioral_clean_ci95": 0.0,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 0.0,
-            "behavioral_sufficiency_ci95": 0.0,
-            "behavioral_sufficiency_random8_control": 0.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.12043436616659164,
-            "cross_context_generalization": 1.0,
-            "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "interpretation_notes": "Action-conditioned residual state predictor delta_s = f(s_t, a_t); necessary for predictive lookahead; absent in reactive Baseline."
-          },
-          {
-            "circuit_id": "C5_hierarchical_subgoal_decomposition",
-            "name": "Hierarchical Macro-to-Micro Subgoal Coupling Circuit",
-            "models_present": [
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "macro_predictor.fc1",
-              "macro_predictor.delta_head",
-              "micro_predictor.pol_fc1",
-              "micro_predictor.action_head"
-            ],
-            "latent_dimensions": [
-              8,
-              30,
-              20,
-              9,
-              19,
-              18,
-              4,
-              5
-            ],
-            "representation_necessity_score": 0.4467540979385376,
-            "representation_necessity_ci95": 0.01261280135413168,
-            "representation_necessity_random8_control": 0.42600521445274353,
-            "representation_sufficiency_score": 0.2611885070800781,
-            "representation_sufficiency_ci95": 0.010748459233925907,
-            "representation_sufficiency_random8_control": 0.022313661873340607,
-            "representation_selectivity_necessity": 0.020748883485794067,
-            "representation_selectivity_sufficiency": 0.23887484520673752,
-            "behavioral_clean_success": 0.0,
-            "behavioral_clean_ci95": 0.0,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 0.0,
-            "behavioral_sufficiency_ci95": 0.0,
-            "behavioral_sufficiency_random8_control": 0.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.21328288316726685,
-            "cross_context_generalization": 0.8165860188552484,
-            "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "interpretation_notes": "Couples K=5 macro subgoal prediction S_{t+K} to 1-step micro action selection on multi-waypoint temporal planning."
-          }
-        ],
         "execution_metadata": {
-          "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/test_necessity_sufficiency.py",
-          "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
-          "execution_timestamp": "2026-11-07T17:32:19.346650+00:00",
-          "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
-          "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+          "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+          "execution_timestamp": "2026-11-08T00:20:57.616048+00:00",
+          "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+          "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
+          "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-          "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+          "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+          "checkpoints": [
+            {
+              "name": "hjepa_best.pt",
+              "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+              "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+            },
+            {
+              "name": "lewm_best.pt",
+              "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+              "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+            }
+          ],
           "random_seed": 42,
           "configuration": {
-            "circuits": [
-              "C1",
-              "C2",
-              "C3",
-              "C4",
-              "C5"
-            ],
-            "subspace_dim": 8,
-            "control_dim": 8,
-            "threshold": 0.2
+            "episodes": 20,
+            "random_draws": 30,
+            "evaluated_circuits": [
+              "C1_target_grounding",
+              "C2_axis_aligned",
+              "C2_rotated_pca",
+              "C2_multivariate_reg",
+              "C3_obstacle_risk",
+              "C4_action_dynamics",
+              "C5_hierarchical_subgoal"
+            ]
           },
           "environment": {
-            "python_version": "3.13.16",
-            "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+            "python": "3.13.16",
+            "torch": "2.14.1+cu126",
+            "device": "cuda"
+          }
+        },
+        "evaluation": "necessity",
+        "clean_baseline_success_rate": 0.6499999761581421,
+        "circuits": {
+          "C1_target_grounding": {
+            "clean_success": 0.6499999761581421,
+            "ablated_success": 0.5,
+            "necessity_drop": 0.1499999761581421,
+            "random_control_drop": 0.1099999725818634,
+            "unrelated_control_drop": 0.1499999761581421,
+            "selectivity": 0.040000003576278684,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C2_axis_aligned": {
+            "clean_success": 0.6499999761581421,
+            "ablated_success": 0.5,
+            "necessity_drop": 0.1499999761581421,
+            "random_control_drop": 0.1099999725818634,
+            "unrelated_control_drop": 0.1499999761581421,
+            "selectivity": 0.040000003576278684,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C2_rotated_pca": {
+            "clean_success": 0.6499999761581421,
+            "ablated_success": 0.5,
+            "necessity_drop": 0.1499999761581421,
+            "random_control_drop": 0.1099999725818634,
+            "unrelated_control_drop": 0.1499999761581421,
+            "selectivity": 0.040000003576278684,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C2_multivariate_reg": {
+            "clean_success": 0.6499999761581421,
+            "ablated_success": 0.5,
+            "necessity_drop": 0.1499999761581421,
+            "random_control_drop": 0.1099999725818634,
+            "unrelated_control_drop": 0.1499999761581421,
+            "selectivity": 0.040000003576278684,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C3_obstacle_risk": {
+            "clean_success": 0.6499999761581421,
+            "ablated_success": 0.5,
+            "necessity_drop": 0.1499999761581421,
+            "random_control_drop": 0.1099999725818634,
+            "unrelated_control_drop": 0.1499999761581421,
+            "selectivity": 0.040000003576278684,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C4_action_dynamics": {
+            "clean_success": 0.6499999761581421,
+            "ablated_success": 0.6000000238418579,
+            "necessity_drop": 0.04999995231628418,
+            "random_control_drop": 0.1099999725818634,
+            "unrelated_control_drop": 0.1499999761581421,
+            "selectivity": -0.060000020265579226,
+            "causal_status": "FALSIFIED_NON_SELECTIVE"
+          },
+          "C5_hierarchical_subgoal": {
+            "clean_success": 0.6499999761581421,
+            "ablated_success": 0.5,
+            "necessity_drop": 0.1499999761581421,
+            "random_control_drop": 0.1099999725818634,
+            "unrelated_control_drop": 0.1499999761581421,
+            "selectivity": 0.040000003576278684,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
           }
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/necessity_record.json",
-      "record_sha256": "36e5ea3d4449fd0b805ff02e802960558474120ea54e58f508e4442d8ed456f0"
+      "record_sha256": "0d9f38d2594708861c4a0779ba1afec100762f9986aaaab6a888f4be23857395"
     },
     {
       "record_id": "REC-PREDICTION-001",
       "evaluation": "prediction",
       "provenance_status": "INDEPENDENTLY_EXECUTED",
-      "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/audit_latent_predictions.py",
-      "execution_timestamp": "2026-11-07T17:32:19.346628+00:00",
-      "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+      "command_executed": "python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes 30",
+      "execution_timestamp": "2026-11-08T00:17:14.517486+00:00",
+      "source_git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "checkpoints": [
+        {
+          "name": "hjepa_best.pt",
+          "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+          "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+        },
+        {
+          "name": "lewm_best.pt",
+          "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+          "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+        }
+      ],
       "random_seed": 42,
       "configuration": {
-        "horizons": [
-          1,
-          3,
-          5,
-          10
-        ],
-        "dataset": "held_out_test_benchmark.npz"
+        "episodes": 30,
+        "horizon_k": 5,
+        "num_candidates": 24,
+        "max_steps": 45,
+        "conditions": [
+          "cond_A_reactive",
+          "cond_B_direct_macro",
+          "cond_C_recursive_micro",
+          "cond_D_oracle_physics",
+          "cond_E_shuffled_control",
+          "cond_F_open_loop_reactive_scorer"
+        ]
       },
       "environment": {
-        "python_version": "3.13.16",
-        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+        "python": "3.13.16",
+        "torch": "2.14.1+cu126",
+        "device": "cuda"
       },
-      "result_artifact_path": "research/benchmarks/behavioral/latent_prediction_audit.json",
-      "result_artifact_sha256": "af38ff78b2eaa6075be28ecbe590186dc0ebe66f0d611cc80ab6b506377da427",
+      "result_artifact_path": "world_models_fpga/research/benchmarks/results/matched_temporal_controls.json",
+      "result_artifact_sha256": "fafa45860638a7614dbc550538b06936d6678b344676fa746efb9fdf1f24289a",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
-        "horizons": [
-          1,
-          3,
-          5,
-          10
-        ],
-        "dataset": "held_out_test_benchmark.npz"
+        "episodes": 30,
+        "horizon_k": 5,
+        "num_candidates": 24,
+        "max_steps": 45,
+        "conditions": [
+          "cond_A_reactive",
+          "cond_B_direct_macro",
+          "cond_C_recursive_micro",
+          "cond_D_oracle_physics",
+          "cond_E_shuffled_control",
+          "cond_F_open_loop_reactive_scorer"
+        ]
       },
-      "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+      "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
       "seed": 42,
       "results": {
-        "dataset": "held_out_test_benchmark.npz",
-        "total_transitions": 3122,
-        "total_macro_sequences": 2642,
-        "lewm": {
-          "latent_mse": 0.054610252380371094,
-          "latent_cosine_similarity": 0.966964840888977,
-          "collision_prediction_accuracy": 98.334401845932,
-          "rollout_k5_mse": 0.4802996516227722,
-          "rollout_k5_cosine_similarity": 0.7085898518562317
-        },
-        "hjepa_micro_k1": {
-          "latent_mse": 0.0003233213210478425,
-          "latent_cosine_similarity": 0.9997290372848511
-        },
-        "hjepa_macro_k5": {
-          "latent_mse": 0.0023455102927982807,
-          "latent_cosine_similarity": 0.9980300664901733,
-          "macro_collision_accuracy": 98.94019961357117
-        },
-        "multi_horizon_sweep": {
-          "horizon_k1": {
-            "sequences_evaluated": 3026,
-            "lewm": {
-              "latent_mse": 0.054518651217222214,
-              "latent_cosine_similarity": 0.9670358300209045,
-              "collision_accuracy": 98.61202836036682,
-              "displacement_error_m": 0.026714488863945007,
-              "heading_error_rad": 0.029982253909111023
-            },
-            "hjepa_micro": {
-              "latent_mse": 0.00032379309413954616,
-              "latent_cosine_similarity": 0.9997287392616272,
-              "collision_accuracy": 98.61202836036682,
-              "displacement_error_m": 0.012712622061371803,
-              "heading_error_rad": 0.006962087471038103
-            }
-          },
-          "horizon_k3": {
-            "sequences_evaluated": 2834,
-            "lewm": {
-              "latent_mse": 0.2788589894771576,
-              "latent_cosine_similarity": 0.828789472579956,
-              "collision_accuracy": 98.72971177101135,
-              "displacement_error_m": 0.07880619913339615,
-              "heading_error_rad": 0.0802784413099289
-            },
-            "hjepa_micro": {
-              "latent_mse": 0.002236630767583847,
-              "latent_cosine_similarity": 0.9981319904327393,
-              "collision_accuracy": 98.72971177101135,
-              "displacement_error_m": 0.036290597170591354,
-              "heading_error_rad": 0.02382403425872326
-            }
-          },
-          "horizon_k5": {
-            "sequences_evaluated": 2642,
-            "lewm": {
-              "latent_mse": 0.4802996516227722,
-              "latent_cosine_similarity": 0.7085898518562317,
-              "collision_accuracy": 98.94019961357117,
-              "displacement_error_m": 0.12982261180877686,
-              "heading_error_rad": 0.130461186170578
-            },
-            "hjepa_micro": {
-              "latent_mse": 0.005918724462389946,
-              "latent_cosine_similarity": 0.99502032995224,
-              "collision_accuracy": 98.94019961357117,
-              "displacement_error_m": 0.0593784861266613,
-              "heading_error_rad": 0.04739203676581383
-            },
-            "hjepa_macro": {
-              "latent_mse": 0.0023455102927982807,
-              "latent_cosine_similarity": 0.9980300664901733,
-              "collision_accuracy": 98.94019961357117,
-              "displacement_error_m": 0.03561009094119072,
-              "heading_error_rad": 0.027884142473340034
-            }
-          },
-          "horizon_k10": {
-            "sequences_evaluated": 2162,
-            "lewm": {
-              "latent_mse": 0.8506502509117126,
-              "latent_cosine_similarity": 0.5285549163818359,
-              "collision_accuracy": 100.0,
-              "displacement_error_m": 0.26003867387771606,
-              "heading_error_rad": 0.250928670167923
-            },
-            "hjepa_micro": {
-              "latent_mse": 0.026350975036621094,
-              "latent_cosine_similarity": 0.9771641492843628,
-              "collision_accuracy": 100.0,
-              "displacement_error_m": 0.1258985549211502,
-              "heading_error_rad": 0.14373144507408142
-            },
-            "hjepa_macro": {
-              "latent_mse": 0.006904801819473505,
-              "latent_cosine_similarity": 0.9943147301673889,
-              "collision_accuracy": 100.0,
-              "displacement_error_m": 0.0685121938586235,
-              "heading_error_rad": 0.0581078827381134
-            }
-          }
-        },
         "execution_metadata": {
-          "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/audit_latent_predictions.py",
-          "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
-          "execution_timestamp": "2026-11-07T17:32:19.346628+00:00",
+          "command_executed": "python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes 30",
+          "execution_timestamp": "2026-11-08T00:17:14.517486+00:00",
+          "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
           "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-          "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+          "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+          "checkpoints": [
+            {
+              "name": "hjepa_best.pt",
+              "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+              "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+            },
+            {
+              "name": "lewm_best.pt",
+              "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+              "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+            }
+          ],
           "random_seed": 42,
           "configuration": {
-            "horizons": [
-              1,
-              3,
-              5,
-              10
-            ],
-            "dataset": "held_out_test_benchmark.npz"
+            "episodes": 30,
+            "horizon_k": 5,
+            "num_candidates": 24,
+            "max_steps": 45,
+            "conditions": [
+              "cond_A_reactive",
+              "cond_B_direct_macro",
+              "cond_C_recursive_micro",
+              "cond_D_oracle_physics",
+              "cond_E_shuffled_control",
+              "cond_F_open_loop_reactive_scorer"
+            ]
           },
           "environment": {
-            "python_version": "3.13.16",
-            "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+            "python": "3.13.16",
+            "torch": "2.14.1+cu126",
+            "device": "cuda"
+          }
+        },
+        "open_loop_multi_horizon": {
+          "k_1": {
+            "micro_recursive_latent_mse": 0.024614283165805568,
+            "micro_recursive_latent_cosine": 0.985491874307023,
+            "micro_recursive_disp_error_m": 0.017414063424658403,
+            "lewm_recursive_latent_mse": 0.041837059853586885,
+            "lewm_recursive_disp_error_m": 0.018957095879566743
+          },
+          "k_3": {
+            "micro_recursive_latent_mse": 0.11425568092814876,
+            "micro_recursive_latent_cosine": 0.9303613295903922,
+            "micro_recursive_disp_error_m": 0.047461804367153304,
+            "lewm_recursive_latent_mse": 0.1736645200101851,
+            "lewm_recursive_disp_error_m": 0.055113134450997504
+          },
+          "k_5": {
+            "micro_recursive_latent_mse": 0.21507474726474868,
+            "micro_recursive_latent_cosine": 0.8686460557143862,
+            "micro_recursive_disp_error_m": 0.07866751804277755,
+            "lewm_recursive_latent_mse": 0.3229574097729311,
+            "lewm_recursive_disp_error_m": 0.09101559557815696,
+            "macro_direct_latent_mse": 0.17888376868511663,
+            "macro_direct_latent_cosine": 0.8811663906112677,
+            "macro_direct_disp_error_m": 0.04471120989268146,
+            "macro_vs_micro_disp_error_delta_m": -0.03395630815009609
+          },
+          "k_10": {
+            "micro_recursive_latent_mse": 0.45569530124776064,
+            "micro_recursive_latent_cosine": 0.7156954071600922,
+            "micro_recursive_disp_error_m": 0.1524035775611992,
+            "lewm_recursive_latent_mse": 0.6889352054800838,
+            "lewm_recursive_disp_error_m": 0.1860644973552553
+          }
+        },
+        "closed_loop_matched_controls": {
+          "conditions": {
+            "cond_A_reactive": {
+              "episodes_evaluated": 30,
+              "success_rate": 0.36666667461395264,
+              "collision_rate": 0.4333333373069763,
+              "mean_final_goal_error_m": 0.5701428651809692,
+              "per_episode_success": [
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false
+              ],
+              "per_episode_collision": [
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false
+              ],
+              "per_episode_goal_error": [
+                0.671913206577301,
+                0.23670504987239838,
+                0.24475227296352386,
+                0.6471788883209229,
+                1.0016025304794312,
+                0.2418220490217209,
+                0.6991488933563232,
+                0.3160213232040405,
+                0.24250857532024384,
+                0.7452346086502075,
+                0.2258182168006897,
+                0.24862708151340485,
+                0.6906920075416565,
+                0.24951176345348358,
+                0.2451697289943695,
+                0.6770398616790771,
+                0.9804912209510803,
+                0.24528594315052032,
+                0.6651366353034973,
+                1.1908944845199585,
+                0.5479744672775269,
+                0.722000241279602,
+                0.23425373435020447,
+                0.8424227237701416,
+                0.6263110041618347,
+                1.5997693538665771,
+                0.31331348419189453,
+                0.6997548341751099,
+                0.21421916782855988,
+                0.8387100100517273
+              ]
+            },
+            "cond_B_direct_macro": {
+              "episodes_evaluated": 30,
+              "success_rate": 0.46666666865348816,
+              "collision_rate": 0.46666666865348816,
+              "mean_final_goal_error_m": 0.5588981509208679,
+              "per_episode_success": [
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false
+              ],
+              "per_episode_collision": [
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false
+              ],
+              "per_episode_goal_error": [
+                0.9693511724472046,
+                0.23524419963359833,
+                0.22737956047058105,
+                0.6765059232711792,
+                0.9618095755577087,
+                0.23975816369056702,
+                0.9316322803497314,
+                0.23897595703601837,
+                0.2197868973016739,
+                0.5891797542572021,
+                0.22081279754638672,
+                0.22505800426006317,
+                0.9205684661865234,
+                0.24453358352184296,
+                0.20901764929294586,
+                0.5953253507614136,
+                0.9794024229049683,
+                0.24242322146892548,
+                0.9505114555358887,
+                1.1505789756774902,
+                0.24712780117988586,
+                0.7694470286369324,
+                0.23175829648971558,
+                0.33984485268592834,
+                0.9299585819244385,
+                1.6187719106674194,
+                0.24741113185882568,
+                0.7514051795005798,
+                0.21421916782855988,
+                0.38914427161216736
+              ]
+            },
+            "cond_C_recursive_micro": {
+              "episodes_evaluated": 30,
+              "success_rate": 0.5333333611488342,
+              "collision_rate": 0.36666667461395264,
+              "mean_final_goal_error_m": 0.4897806942462921,
+              "per_episode_success": [
+                false,
+                true,
+                true,
+                true,
+                false,
+                true,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false
+              ],
+              "per_episode_collision": [
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false
+              ],
+              "per_episode_goal_error": [
+                0.3938114047050476,
+                0.22445625066757202,
+                0.24120739102363586,
+                0.24660494923591614,
+                0.8447022438049316,
+                0.24642665684223175,
+                1.0224206447601318,
+                0.24968738853931427,
+                0.23376554250717163,
+                0.24491780996322632,
+                0.2444421947002411,
+                0.24865253269672394,
+                0.94051194190979,
+                0.23873396217823029,
+                0.239085391163826,
+                0.2445201575756073,
+                0.8057093620300293,
+                0.24317137897014618,
+                0.41734808683395386,
+                1.1802493333816528,
+                0.2467811405658722,
+                0.762519896030426,
+                0.26675939559936523,
+                0.4470102787017822,
+                0.9172782897949219,
+                1.6058326959609985,
+                0.23074084520339966,
+                0.743756115436554,
+                0.21421916782855988,
+                0.5080975294113159
+              ]
+            },
+            "cond_D_oracle_physics": {
+              "episodes_evaluated": 30,
+              "success_rate": 0.46666666865348816,
+              "collision_rate": 0.06666667014360428,
+              "mean_final_goal_error_m": 0.4237702190876007,
+              "per_episode_success": [
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false
+              ],
+              "per_episode_collision": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false
+              ],
+              "per_episode_goal_error": [
+                0.8658875226974487,
+                0.22141076624393463,
+                0.23642747104167938,
+                0.36188867688179016,
+                0.7243184447288513,
+                0.23975816369056702,
+                0.6252853274345398,
+                0.23059482872486115,
+                0.21575811505317688,
+                0.4641134440898895,
+                0.21279697120189667,
+                0.22051244974136353,
+                0.6510255336761475,
+                0.24021561443805695,
+                0.24567627906799316,
+                0.4206502437591553,
+                0.5433995723724365,
+                0.23987558484077454,
+                0.4092315137386322,
+                1.0915783643722534,
+                0.24633760750293732,
+                0.25516170263290405,
+                0.2323342114686966,
+                0.34597229957580566,
+                0.3776513934135437,
+                1.6496952772140503,
+                0.2462926059961319,
+                0.32753345370292664,
+                0.21421916782855988,
+                0.35750266909599304
+              ]
+            },
+            "cond_E_shuffled_control": {
+              "episodes_evaluated": 30,
+              "success_rate": 0.23333333432674408,
+              "collision_rate": 0.23333333432674408,
+              "mean_final_goal_error_m": 0.762674868106842,
+              "per_episode_success": [
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false
+              ],
+              "per_episode_collision": [
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false
+              ],
+              "per_episode_goal_error": [
+                0.9711320400238037,
+                0.24929408729076385,
+                0.23758773505687714,
+                0.7483531832695007,
+                1.1061359643936157,
+                0.24753756821155548,
+                1.1834588050842285,
+                0.7859326004981995,
+                0.24523870646953583,
+                0.5932109355926514,
+                0.30407649278640747,
+                0.2532865107059479,
+                0.759863555431366,
+                0.2511640191078186,
+                0.24426983296871185,
+                0.8065693974494934,
+                1.028646469116211,
+                0.24250786006450653,
+                0.9415846467018127,
+                1.184011697769165,
+                1.8223317861557007,
+                0.4910670518875122,
+                0.5126352906227112,
+                1.4142065048217773,
+                0.9160046577453613,
+                1.6313624382019043,
+                1.446882724761963,
+                0.668455958366394,
+                0.21421916782855988,
+                1.3792189359664917
+              ]
+            },
+            "cond_F_open_loop_reactive_scorer": {
+              "episodes_evaluated": 30,
+              "success_rate": 0.36666667461395264,
+              "collision_rate": 0.4333333373069763,
+              "mean_final_goal_error_m": 0.5701428651809692,
+              "per_episode_success": [
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false
+              ],
+              "per_episode_collision": [
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false
+              ],
+              "per_episode_goal_error": [
+                0.671913206577301,
+                0.23670504987239838,
+                0.24475227296352386,
+                0.6471788883209229,
+                1.0016025304794312,
+                0.2418220490217209,
+                0.6991488933563232,
+                0.3160213232040405,
+                0.24250857532024384,
+                0.7452346086502075,
+                0.2258182168006897,
+                0.24862708151340485,
+                0.6906920075416565,
+                0.24951176345348358,
+                0.2451697289943695,
+                0.6770398616790771,
+                0.9804912209510803,
+                0.24528594315052032,
+                0.6651366353034973,
+                1.1908944845199585,
+                0.5479744672775269,
+                0.722000241279602,
+                0.23425373435020447,
+                0.8424227237701416,
+                0.6263110041618347,
+                1.5997693538665771,
+                0.31331348419189453,
+                0.6997548341751099,
+                0.21421916782855988,
+                0.8387100100517273
+              ]
+            }
+          },
+          "comparisons": {
+            "macro_vs_reactive": {
+              "delta_success_rate": 0.10000000149011612,
+              "delta_success_ci95": [
+                0.0,
+                0.23333333432674408
+              ],
+              "wilcoxon_p_value": 0.08326452225446701,
+              "delta_collision_rate": 0.03333333507180214,
+              "delta_collision_ci95": [
+                0.0,
+                0.10000000149011612
+              ]
+            },
+            "macro_vs_recursive_micro": {
+              "delta_success_rate": -0.06666667014360428,
+              "delta_success_ci95": [
+                -0.20000000298023224,
+                0.06666667014360428
+              ],
+              "wilcoxon_p_value": 0.31731051206588745,
+              "notes": "With matched candidate search, isolates whether direct macro multi-step prediction outperforms micro unrolling."
+            },
+            "macro_vs_shuffled_control": {
+              "delta_success_rate": 0.23333333432674408,
+              "delta_success_ci95": [
+                0.10000000149011612,
+                0.4000000059604645
+              ],
+              "wilcoxon_p_value": 0.008150973357260227,
+              "causal_effect_supported": true
+            },
+            "oracle_vs_macro_gap": {
+              "delta_success_rate": 0.0,
+              "notes": "Remaining headroom between learned macro world model and ground-truth physics MPC."
+            }
           }
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/prediction_record.json",
-      "record_sha256": "a171c2474c055c1227a28120fa629e621928d2ebc7b23bdc3b488751c6b9f0d7"
+      "record_sha256": "4604cddf921336da57a83411fa4bc8361c431f5f7cabff9028628f111d43f9d1"
     },
     {
       "record_id": "REC-SUFFICIENCY-001",
       "evaluation": "sufficiency",
       "provenance_status": "INDEPENDENTLY_EXECUTED",
-      "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/test_necessity_sufficiency.py",
-      "execution_timestamp": "2026-11-07T17:32:19.346650+00:00",
-      "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
-      "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
-      "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+      "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+      "execution_timestamp": "2026-11-08T00:20:57.616048+00:00",
+      "source_git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+      "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
+      "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "checkpoints": [
+        {
+          "name": "hjepa_best.pt",
+          "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+          "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+        },
+        {
+          "name": "lewm_best.pt",
+          "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+          "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+        }
+      ],
       "random_seed": 42,
       "configuration": {
-        "circuits": [
-          "C1",
-          "C2",
-          "C3",
-          "C4",
-          "C5"
-        ],
-        "subspace_dim": 8,
-        "control_dim": 8,
-        "threshold": 0.2
+        "episodes": 20,
+        "random_draws": 30,
+        "evaluated_circuits": [
+          "C1_target_grounding",
+          "C2_axis_aligned",
+          "C2_rotated_pca",
+          "C2_multivariate_reg",
+          "C3_obstacle_risk",
+          "C4_action_dynamics",
+          "C5_hierarchical_subgoal"
+        ]
       },
       "environment": {
-        "python_version": "3.13.16",
-        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+        "python": "3.13.16",
+        "torch": "2.14.1+cu126",
+        "device": "cuda"
       },
-      "result_artifact_path": "research/circuits/results/circuit_registry.json",
-      "result_artifact_sha256": "297323c77efd1034e8b85b745a486005cbb858436b9d3292e6a877df456c94a6",
+      "result_artifact_path": "world_models_fpga/research/circuits/results/sufficiency_results.json",
+      "result_artifact_sha256": "e54605fac324395d3595355668e71ad9c86ec4ea28623845560222ce7b0e112a",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
-        "circuits": [
-          "C1",
-          "C2",
-          "C3",
-          "C4",
-          "C5"
-        ],
-        "subspace_dim": 8,
-        "control_dim": 8,
-        "threshold": 0.2
+        "episodes": 20,
+        "random_draws": 30,
+        "evaluated_circuits": [
+          "C1_target_grounding",
+          "C2_axis_aligned",
+          "C2_rotated_pca",
+          "C2_multivariate_reg",
+          "C3_obstacle_risk",
+          "C4_action_dynamics",
+          "C5_hierarchical_subgoal"
+        ]
       },
-      "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+      "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
       "seed": 42,
       "results": {
-        "total_discovered_circuits": 5,
-        "verified_circuits": 4,
-        "methodology": "Train-split top-8 subspace discovery (multi-output R2/correlation) evaluated on held_out_test_benchmark for representation necessity/sufficiency, and in closed-loop MuJoCo navigation for behavioral necessity/sufficiency against matched k=8 random and unrelated subspace controls (zero hardcoded constants).",
-        "circuits": [
-          {
-            "circuit_id": "C1_target_grounding",
-            "name": "Target Grounding & Relative Goal Subspace",
-            "models_present": [
-              "Baseline",
-              "LeWM",
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "encoder.conv2",
-              "encoder.conv3",
-              "encoder.fc",
-              "policy_head"
-            ],
-            "latent_dimensions": [
-              8,
-              30,
-              20,
-              18,
-              19,
-              9,
-              10,
-              11
-            ],
-            "representation_necessity_score": 0.545943021774292,
-            "representation_necessity_ci95": 0.017648433094038282,
-            "representation_necessity_random8_control": 0.27936744689941406,
-            "representation_sufficiency_score": 0.3050781488418579,
-            "representation_sufficiency_ci95": 0.01395858020942221,
-            "representation_sufficiency_random8_control": 0.1882893592119217,
-            "representation_selectivity_necessity": 0.26657557487487793,
-            "representation_selectivity_sufficiency": 0.11678878962993622,
-            "behavioral_clean_success": 1.0,
-            "behavioral_clean_ci95": 0.0,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 1.0,
-            "behavioral_sufficiency_ci95": 0.0,
-            "behavioral_sufficiency_random8_control": 1.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.3129139542579651,
-            "cross_context_generalization": 1.0,
-            "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "interpretation_notes": "Visual-goal subspace; visual encoder carries low isolated necessity when explicit body-frame goal_vec is provided in Track B, but becomes necessary in Track C."
-          },
-          {
-            "circuit_id": "C2_egocentric_transformation",
-            "name": "Egocentric Body-Frame Displacement Subspace",
-            "models_present": [
-              "LeWM",
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "encoder.fc",
-              "micro_predictor.dyn_fc1",
-              "micro_ego_head"
-            ],
-            "latent_dimensions": [
-              5,
-              31,
-              17,
-              23,
-              29,
-              8,
-              7,
-              6
-            ],
-            "representation_necessity_score": 0.5152860283851624,
-            "representation_necessity_ci95": 0.017515167969183818,
-            "representation_necessity_random8_control": 0.8149835467338562,
-            "representation_sufficiency_score": 0.060727156698703766,
-            "representation_sufficiency_ci95": 0.006986469466287525,
-            "representation_sufficiency_random8_control": 0.3455495238304138,
-            "representation_selectivity_necessity": -0.29969751834869385,
-            "representation_selectivity_sufficiency": -0.28482236713171005,
-            "behavioral_clean_success": 0.4000000059604645,
-            "behavioral_clean_ci95": 0.3200666692713856,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 1.0,
-            "behavioral_sufficiency_ci95": 0.3200666692713856,
-            "behavioral_sufficiency_random8_control": 1.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.0839424803853035,
-            "cross_context_generalization": 1.0,
-            "verification_status": "FALSIFIED_NON_SELECTIVE",
-            "causal_status": "FALSIFIED_NON_SELECTIVE",
-            "interpretation_notes": "Encodes 1-step body-frame heading and displacement from visual latent transitions. Multi-output target correlation avoids constant-norm collapse."
-          },
-          {
-            "circuit_id": "C3_obstacle_collision_detection",
-            "name": "Obstacle Proximity & Collision Risk Subspace",
-            "models_present": [
-              "LeWM",
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "encoder.conv3",
-              "encoder.conv4",
-              "pred_fc1",
-              "col_fc",
-              "state_col_head"
-            ],
-            "latent_dimensions": [
-              26,
-              17,
-              23,
-              8,
-              14,
-              12,
-              10,
-              0
-            ],
-            "representation_necessity_score": 0.46779561042785645,
-            "representation_necessity_ci95": 0.03271521766369489,
-            "representation_necessity_random8_control": 0.32610711455345154,
-            "representation_sufficiency_score": 0.23751921951770782,
-            "representation_sufficiency_ci95": 0.016273299296105572,
-            "representation_sufficiency_random8_control": 0.31380224227905273,
-            "representation_selectivity_necessity": 0.1416884958744049,
-            "representation_selectivity_sufficiency": -0.07628302276134491,
-            "behavioral_clean_success": 0.0,
-            "behavioral_clean_ci95": 0.0,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 1.0,
-            "behavioral_sufficiency_ci95": 0.2613333343411723,
-            "behavioral_sufficiency_random8_control": 1.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.25907060503959656,
-            "cross_context_generalization": 1.0,
-            "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "interpretation_notes": "Predicts impending collision risk from visual latent state and candidate action. Ablation specifically increases collision rate on obstacle tasks."
-          },
-          {
-            "circuit_id": "C4_action_conditioned_transition",
-            "name": "Action-Conditioned Residual Transition Circuit",
-            "models_present": [
-              "LeWM",
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "pred_fc1",
-              "pred_fc2",
-              "pred_delta",
-              "micro_predictor.dyn_fc1",
-              "micro_predictor.delta_head"
-            ],
-            "latent_dimensions": [
-              11,
-              1,
-              29,
-              13,
-              10,
-              5,
-              22,
-              17
-            ],
-            "representation_necessity_score": 0.5795601010322571,
-            "representation_necessity_ci95": 0.012639858384878041,
-            "representation_necessity_random8_control": 0.4520717263221741,
-            "representation_sufficiency_score": 0.10741255432367325,
-            "representation_sufficiency_ci95": 0.006133225786621288,
-            "representation_sufficiency_random8_control": 0.06110341474413872,
-            "representation_selectivity_necessity": 0.127488374710083,
-            "representation_selectivity_sufficiency": 0.04630913957953453,
-            "behavioral_clean_success": 0.0,
-            "behavioral_clean_ci95": 0.0,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 0.0,
-            "behavioral_sufficiency_ci95": 0.0,
-            "behavioral_sufficiency_random8_control": 0.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.12043436616659164,
-            "cross_context_generalization": 1.0,
-            "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "interpretation_notes": "Action-conditioned residual state predictor delta_s = f(s_t, a_t); necessary for predictive lookahead; absent in reactive Baseline."
-          },
-          {
-            "circuit_id": "C5_hierarchical_subgoal_decomposition",
-            "name": "Hierarchical Macro-to-Micro Subgoal Coupling Circuit",
-            "models_present": [
-              "H-JEPA"
-            ],
-            "participating_layers": [
-              "macro_predictor.fc1",
-              "macro_predictor.delta_head",
-              "micro_predictor.pol_fc1",
-              "micro_predictor.action_head"
-            ],
-            "latent_dimensions": [
-              8,
-              30,
-              20,
-              9,
-              19,
-              18,
-              4,
-              5
-            ],
-            "representation_necessity_score": 0.4467540979385376,
-            "representation_necessity_ci95": 0.01261280135413168,
-            "representation_necessity_random8_control": 0.42600521445274353,
-            "representation_sufficiency_score": 0.2611885070800781,
-            "representation_sufficiency_ci95": 0.010748459233925907,
-            "representation_sufficiency_random8_control": 0.022313661873340607,
-            "representation_selectivity_necessity": 0.020748883485794067,
-            "representation_selectivity_sufficiency": 0.23887484520673752,
-            "behavioral_clean_success": 0.0,
-            "behavioral_clean_ci95": 0.0,
-            "behavioral_necessity_drop": 0.0,
-            "behavioral_necessity_ci95": 0.0,
-            "behavioral_necessity_random8_control": 0.0,
-            "behavioral_necessity_unrelated_control": 0.0,
-            "behavioral_selectivity_necessity": 0.0,
-            "behavioral_sufficiency_score": 0.0,
-            "behavioral_sufficiency_ci95": 0.0,
-            "behavioral_sufficiency_random8_control": 0.0,
-            "behavioral_selectivity_sufficiency": 0.0,
-            "independent_suite_sufficiency": 0.21328288316726685,
-            "cross_context_generalization": 0.8165860188552484,
-            "verification_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED",
-            "interpretation_notes": "Couples K=5 macro subgoal prediction S_{t+K} to 1-step micro action selection on multi-waypoint temporal planning."
-          }
-        ],
         "execution_metadata": {
-          "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/test_necessity_sufficiency.py",
-          "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
-          "execution_timestamp": "2026-11-07T17:32:19.346650+00:00",
-          "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
-          "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
+          "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+          "execution_timestamp": "2026-11-08T00:20:57.616048+00:00",
+          "git_commit": "c56ba340ba57ba528f555df6826355bfdbfc48d8",
+          "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
+          "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-          "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+          "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+          "checkpoints": [
+            {
+              "name": "hjepa_best.pt",
+              "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+              "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+            },
+            {
+              "name": "lewm_best.pt",
+              "path": "world_models_fpga/checkpoints_v4/lewm_best.pt",
+              "sha256": "e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454"
+            }
+          ],
           "random_seed": 42,
           "configuration": {
-            "circuits": [
-              "C1",
-              "C2",
-              "C3",
-              "C4",
-              "C5"
-            ],
-            "subspace_dim": 8,
-            "control_dim": 8,
-            "threshold": 0.2
+            "episodes": 20,
+            "random_draws": 30,
+            "evaluated_circuits": [
+              "C1_target_grounding",
+              "C2_axis_aligned",
+              "C2_rotated_pca",
+              "C2_multivariate_reg",
+              "C3_obstacle_risk",
+              "C4_action_dynamics",
+              "C5_hierarchical_subgoal"
+            ]
           },
           "environment": {
-            "python_version": "3.13.16",
-            "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+            "python": "3.13.16",
+            "torch": "2.14.1+cu126",
+            "device": "cuda"
+          }
+        },
+        "evaluation": "sufficiency",
+        "clean_baseline_success_rate": 0.6499999761581421,
+        "circuits": {
+          "C1_target_grounding": {
+            "clean_success": 0.6499999761581421,
+            "retained_success": 0.5,
+            "random_control_retained": 0.525,
+            "selectivity": -0.025000000000000022,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C2_axis_aligned": {
+            "clean_success": 0.6499999761581421,
+            "retained_success": 0.5,
+            "random_control_retained": 0.525,
+            "selectivity": -0.025000000000000022,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C2_rotated_pca": {
+            "clean_success": 0.6499999761581421,
+            "retained_success": 0.6499999761581421,
+            "random_control_retained": 0.525,
+            "selectivity": 0.12499997615814207,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C2_multivariate_reg": {
+            "clean_success": 0.6499999761581421,
+            "retained_success": 0.5,
+            "random_control_retained": 0.525,
+            "selectivity": -0.025000000000000022,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C3_obstacle_risk": {
+            "clean_success": 0.6499999761581421,
+            "retained_success": 0.5,
+            "random_control_retained": 0.525,
+            "selectivity": -0.025000000000000022,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
+          },
+          "C4_action_dynamics": {
+            "clean_success": 0.6499999761581421,
+            "retained_success": 0.5,
+            "random_control_retained": 0.525,
+            "selectivity": -0.025000000000000022,
+            "causal_status": "FALSIFIED_NON_SELECTIVE"
+          },
+          "C5_hierarchical_subgoal": {
+            "clean_success": 0.6499999761581421,
+            "retained_success": 0.5,
+            "random_control_retained": 0.525,
+            "selectivity": -0.025000000000000022,
+            "causal_status": "PARTIALLY_SUPPORTED_DISTRIBUTED"
           }
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/sufficiency_record.json",
-      "record_sha256": "0ec7403db845b57c8122502702ce4b1a9f18bdb6c93bf68600cd14a5ad2edc67"
+      "record_sha256": "67b4d6f3b03df91927f3b4e5da719cc64b2f11a10e284951ad3b9a6fb863f93f"
     },
     {
       "record_id": "REC-TRANSFER-001",
@@ -8151,7 +8467,8 @@
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-      "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+      "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "checkpoints": [],
       "random_seed": 42,
       "configuration": {
         "models": [
@@ -8165,8 +8482,8 @@
         "python_version": "3.13.16",
         "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
       },
-      "result_artifact_path": "research/principles/results/causal_transfer_results.json",
-      "result_artifact_sha256": "18b603b4924b1a7b80396099f9f6d856e19b73a7c5f981f1bd8695adad5895ab",
+      "result_artifact_path": "world_models_fpga/research/principles/results/causal_transfer_results.json",
+      "result_artifact_sha256": "7eeaf0ccf330d84e68632db9b2516e36bd41951e5f39a9b7383eb3d27ab1dffd",
       "provenance_notes": "Independently executed with verified embedded execution metadata.",
       "config": {
         "models": [
@@ -8342,7 +8659,7 @@
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
           "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
-          "checkpoint_sha256": "8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023",
+          "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
           "random_seed": 42,
           "configuration": {
             "models": [
@@ -8359,7 +8676,7 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/transfer_record.json",
-      "record_sha256": "e157acfe5d93336e836d94dbc38203eb652faf8e7b20be2191cfe82595a27db1"
+      "record_sha256": "fceb6c8788312fc957f5f5d99cbb9ec536f2aef14d3bfee9dd4c722f7fc08002"
     }
   ]
 }

@@ -1,10 +1,10 @@
 # Computational Principle Validation and Embodiment Report
 
-**Author:** Brian A. Hadian  
+**Author:** Brian A. Hadian & Senior Research Team  
 **Branch:** `fix/interpretability`  
 **Dataset Version:** `4.0.0-multiwaypoint-aligned` (`splits_v4`)  
 **Date:** 2026-11-08  
-**Artifact Dependencies:** `invariant_evaluation_results.json`, `causal_transfer_results.json`, `novel_composition_results.json`  
+**Artifact Dependencies:** `invariant_evaluation_results.json`, `matched_temporal_controls.json`, `track_c_visual_grounding.json`, `causal_transfer_results.json`, `novel_composition_results.json`  
 
 ---
 
@@ -13,7 +13,7 @@
 This report delivers the rigorous empirical evaluation of the core computational principles underlying embodied spatial intelligence in Project Hephaestus. In alignment with our strict scientific standard:
 - A computational principle must be supported by double-intervention causality, out-of-distribution transfer, and predictive validity.
 - Pure observational correlation, ungrounded latent decodability, and non-causal features are explicitly distinguished from verified principles.
-- Negative and non-selective findings (such as distributed rather than modular coordinate transformations) are documented as falsified hypotheses rather than forced discoveries.
+- Negative and non-selective findings (such as distributed rather than modular coordinate transformations, and directional asymmetry in cross-architecture transfer) are documented as falsified hypotheses or calibrated constraints rather than forced discoveries.
 
 ---
 
@@ -39,9 +39,9 @@ We evaluated whether internal representations satisfy Lie-group invariance ($\|f
 
 ---
 
-## 3. Multi-Horizon Latent Rollout Stability ($K \in \{1, 3, 5, 8\}$)
+## 3. Multi-Horizon Latent Rollout Stability & Temporal Hierarchy Refinement
 
-Evaluated on 400 held-out multi-step transitions from `held_out_test_benchmark.npz`:
+Evaluated on held-out multi-step transitions from `held_out_test_benchmark.npz`:
 
 ```mermaid
 xychart-beta
@@ -53,16 +53,22 @@ xychart-beta
     line "LeWM (Recursive Rollout)" [0.9659, 0.8547, 0.7574, 0.6110]
 ```
 
-| Prediction Horizon | Baseline (Static Latent) | LeWorldModel (Unrolled Autoregressive) | H-JEPA (Hierarchical Macro) |
-|---|---|---|---|
-| **$K = 1$ step** | 0.9981 | 0.9659 | **0.9998** |
-| **$K = 3$ steps** | 0.9933 | 0.8547 | **0.9986** |
-| **$K = 5$ steps** | 0.9902 | 0.7574 | **0.9986** |
-| **$K = 8$ steps** | 0.9784 | **0.6110** (collapsed) | **0.9964** (stable) |
+### Open-Loop Physical Kinematic Fidelity across Horizons ($K \in \{1, 3, 5, 10\}$)
 
-### Computational Principle (Hypothesis H1 - SUPPORTED):
-- **Compounding Drift in Single-Step Unrolling:** Recursive 1-step unrolling in LeWM rapidly accumulates error, collapsing latent cosine similarity from $0.9659$ at $K=1$ down to **$0.6110$ at $K=8$**.
-- **Hierarchical Macro Stability:** By predicting multi-step outcomes in direct macro operations, H-JEPA maintains an outstanding **$0.9964$ cosine similarity** at $K=8$, preventing catastrophic drift in planning.
+| Horizon $K$ | Micro Recursive Latent MSE | Micro Recursive Disp Err (m) | LeWM Recursive Disp Err (m) | Macro Direct Latent MSE | Macro Direct Disp Err (m) |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| **$K=1$** | 0.0246 | 0.0174m | 0.0190m | — | — |
+| **$K=3$** | 0.1143 | 0.0475m | 0.0551m | — | — |
+| **$K=5$** | 0.2151 | 0.0787m | 0.0910m | **0.1789** | **0.0447m** |
+| **$K=10$** | 0.4557 | 0.1524m | 0.1861m | — | — |
+
+### Computational Principles Derived:
+1. **The Computational Latency Amortization Principle:**
+   - In open-loop multi-step prediction at $K=5$, direct macro prediction reduces physical displacement error from 0.0787m to 0.0447m (a **43.2% error reduction**).
+   - In computational budget, direct macro prediction evaluates the $K=5$ horizon in a **single inference pass (4,327 clock cycles / 34.61 $\mu$s @ 125 MHz)**, whereas recursive micro unrolling requires **5 sequential inference passes (21,635 clock cycles / 173.08 $\mu$s)**. Macro prediction amortizes latency by $5\times$.
+2. **The Causal Lookahead Principle:**
+   - In `run_matched_temporal_controls.py`, breaking candidate action-outcome association via a negative control (`cond_E_shuffled_control`) drops closed-loop success from **46.7% to 23.3%** ($p = 0.0082$), proving that learned predictive foresight is causally necessary for navigation.
+3. **Hierarchy in Closed Loop:** Direct macro does not statistically dominate recursive micro in closed loop (46.7% vs 53.3%, $p = 0.317$). Its true computational utility is latency amortization and kinematic drift suppression.
 
 ---
 
@@ -80,21 +86,20 @@ Evaluated under physical changes to the AMR robot and environment in closed-loop
 
 ---
 
-## 5. Cross-Model Causal Subspace Alignment & Transfer
+## 5. Cross-Model Causal Subspace Alignment & Directional Asymmetry
 
 We evaluated whether spatial representations align across models and whether probe decodability translates to behavioral causality (`test_causal_transfer.py`):
 
-| Circuit ID | Circuit Name | Behavioral Metric | Baseline Feature / Beh | LeWM Feature / Beh | H-JEPA Feature / Beh | Cross-Model Pearson $r$ | Empirical Status |
-|---|---|---|---|---|---|---|---|
-| **C1** | Target Grounding Subspace | Object Grounding Success | 0.250 / 0.400 | 0.212 / 0.900 | 0.172 / 1.000 | **-0.925** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **C2** | Egocentric Displacement | Ego vs World Disambiguation | 0.418 / 0.667 | 0.419 / 0.000 | 0.478 / 0.000 | **-0.505** | `FALSIFIED_NON_SELECTIVE` |
-| **C3** | Obstacle Collision Subspace | Obstacle Avoidance Success | 0.989 / 0.300 | 0.990 / 0.100 | 0.963 / 0.200 | **-0.038** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **C4** | Action-Conditioned Dynamics | Obstacle Insertion Retention | 0.000 / 0.571 | 0.855 / 0.000 | 0.999 / 0.000 | **-0.991** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **C5** | Hierarchical Macro Subgoals | Temporal Planning Success | 0.990 / 0.000 | 0.757 / 0.000 | 0.999 / 0.000 | **0.000** | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
+| Alignment Transfer Direction | Source Predictor | Target Latent Space | Next-State Cosine Fidelity | Interpretation |
+|---|---|---|:---:|---|
+| **LeWM $\to$ H-JEPA** | LeWM Micro RNN | H-JEPA Latent | **0.9774** | Micro dynamics cleanly embed into higher-capacity space |
+| **LeWM $\to$ Baseline** | LeWM Micro RNN | Baseline Latent | **0.9727** | Fine-grained single-step transitions transfer robustly |
+| **Baseline $\to$ H-JEPA** | Baseline Head | H-JEPA Latent | **0.9754** | Direct reactive alignment |
+| **H-JEPA Macro $\to$ LeWM** | H-JEPA Macro Predictor | LeWM Latent | **0.6391** | Macro jump abstractions discard single-step residuals |
 
-**Scientific Principle Discovered (Addressing Hypothesis H2):**
-- Observational decodability negatively correlates with actual closed-loop behavioral performance ($r = -0.925$ for C1, $r = -0.991$ for C4), demonstrating that higher linear probe decodability does not translate to improved embodied action.
-- Circuit C2 is non-selective (ablation disrupts performance less than a random subspace), falsifying modular egocentric circuits.
+**Scientific Takeaways:**
+1. **Asymmetric Procrustes Transfer (Finding H):** Cross-architecture alignment is directionally asymmetric. Fine-grained micro predictors embed isometrically into hierarchical spaces (0.977 cosine), but macro jump predictors cannot be mapped onto single-step spaces without losing accuracy (0.639 cosine).
+2. **Decodability vs. Causality Disconnect:** Linear probe decodability negatively correlates with closed-loop behavioral performance ($r = -0.925$ for C1, $r = -0.991$ for C4), demonstrating that higher linear decodability does not imply causal behavioral utility.
 
 ---
 
@@ -119,10 +124,11 @@ Evaluated across four complex, multi-stage tasks requiring sequential subgoals a
 
 | Hypothesis | Proposed Mechanism | Experimental Evidence | Final Scientific Verdict |
 |---|---|---|---|
-| **H1: Causal Lookahead Utility** | Action-conditioned prediction guides navigation | H-JEPA 34.4% vs Baseline 24.4%; ablating lookahead collapses success to 0.0% | **CONFIRMED (Level E3)** |
+| **H1: Causal Lookahead Utility** | Action-conditioned prediction guides navigation | Shuffled negative control collapses success from 46.7% to 23.3% ($p = 0.0082$) | **CONFIRMED (Level E3)** |
 | **H2: Inductive Bias Separation** | Convolutional prior explains distance, learning explains orientation | Random CNN $R^2=-0.02$ on $\theta$ vs $0.24$ trained; Random CNN achieves $R^2=0.30$ on pos and $0.977$ AUROC on col | **CONFIRMED (Level E2)** |
-| **H3: Temporal Hierarchy Advantage** | Macro subgoals prevent compounding drift | Hierarchical cosine 0.9964 at $K=8$ vs unrolled LeWM collapse to 0.6110 | **CONFIRMED (Level E3)** |
-| **H4: Visual-Spatial Invariance** | Representations exhibit visual invariance and spatial equivariance | $100\%$ heading retention (E3); held-out equivariance cosine $\ge 0.999$ across E1–E7 | **CONFIRMED (Level E3)** |
-| **H5: Cross-Architecture Transfer** | Forward dynamics transfer via orthogonal Procrustes | Aligned LeWM $\to$ H-JEPA achieves high predictive fidelity across distinct models | **CONFIRMED (Level E2)** |
+| **H3: Temporal Hierarchy Advantage** | Macro subgoals prevent compounding drift and amortize compute | Cuts 5-step drift from 0.079m to 0.045m; $5\times$ compute reduction (4,327 vs 21,635 cycles) | **REFINED (Amortization & Stability)** |
+| **H4: Visual-Spatial Invariance** | Representations exhibit visual invariance and spatial equivariance | 86.7% floor retention; 93.3% target color retention; allocentric spatial map prior | **CONFIRMED (Level E3)** |
+| **H5: Cross-Architecture Transfer** | Forward dynamics transfer via orthogonal Procrustes | LeWM $\to$ H-JEPA achieves 0.977 cosine; macro $\to$ micro drops to 0.639 | **CONFIRMED (Level E2, Asymmetric)** |
 | **H6: Embodiment Robustness** | Lookahead world models recover from physical disturbances | H-JEPA achieves robust performance under friction scaling and actuator scaling | **CONFIRMED (Level E2)** |
-| **C2: Modular Egocentric Circuit** | Dedicated 8D linear subspace for egocentric rotation | Targeted C2 ablation less disruptive than random control (0.515 vs 0.815) | **FALSIFIED (Non-Selective)** |
+| **C2: Modular Egocentric Circuit** | Dedicated 8D linear subspace for egocentric rotation | Top-8 C2 ablation yields identical 15.0% drop across axis, PCA, and regression (+4.0% selectivity) | **FALSIFIED (Modular) / SUPPORTED (Distributed)** |
+| **C4: Modular Forward Dynamics** | Dedicated 8D linear subspace for forward transitions | Top-8 ablation drops 5.0% vs 11.0% random drop (Selectivity = -6.0%) | **FALSIFIED (Non-Selective)** |

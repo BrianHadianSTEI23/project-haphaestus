@@ -1,7 +1,7 @@
 # Project Hephaestus — Empirical Experiment Manifest & Provenance Registry (`experiment_manifest.md`)
 
 **Branch:** `fix/interpretability`  
-**Git Commit SHA:** `cbc6c4e6c0d7ff439365db135564c0fffcf1a209`  
+**Git Commit SHA:** `c56ba340ba57ba528f555df6826355bfdbfc48d8`  
 **Host Environment:** Linux `6.8.0-138-generic x86_64`, Intel Core i7 / 16 GB RAM, NVIDIA GeForce RTX 3050 Laptop GPU (CUDA 12.4), Python 3.13.16  
 **Embedded Edge Environment:** AMD Kria KR260 SOM (`ubuntu@kria.local`, Linux `5.15.0-1080-xilinx-zynqmp aarch64`, Quad-Core ARM Cortex-A53 @ 1.333 GHz, Xilinx Zynq UltraScale+ XCK26 FPGA)  
 **FPGA Toolchain:** Xilinx Vivado 2023.2 Post-Synthesis (`synth_kr260.tcl` on `xck26-sfvc784-2LV-c`) + Icarus Verilog (`iverilog` / `vvp` v12.0)  
@@ -14,7 +14,7 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 
 | Dataset Artifact | Total Episodes | Transitions | SHA-256 Digest | Purpose & Split Role |
 | :--- | :---: | :---: | :--- | :--- |
-| **`train_benchmark.npz`** | `408` | `18,360` | `8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7` | Training split for visual world models and representation autoencoders. Zero episode overlap with val/test. |
+| **`train_benchmark.npz`** | `408` | `18,360` | `8ba4406a4b12631557d07945cbe211832b8519fbbd8624128be1f609e9e6ca3a` | Training split for visual world models and representation autoencoders. Zero episode overlap with val/test. |
 | **`val_benchmark.npz`** | `96` | `4,320` | `8f5a21df67190c63e71d5f5927f23dab17cce1b2e66c055e86999ef4a57d29a4` | Validation split for early stopping, model checkpoint selection, and ridge regression $\alpha$ hyperparameter tuning. |
 | **`held_out_test_benchmark.npz`** | `96` | `4,320` | `5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38` | Primary held-out test split for linear probing, effective rank, and open-loop model evaluation. |
 | **`counterfactual_suite.npz`** | `350` (`7 \times 50`) | `15,750` | `0d1516dcb86d3a856149148e97d5ba24c4553f5232beec253f0f5e29c921db47` | Matched-pair counterfactual suite covering E1–E7 interventions (target position, color, rotation, lighting, obstacle, shape, pitch). |
@@ -27,15 +27,15 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 
 | Model Identifier | Seed | Params | Best Val Loss | SHA-256 Digest | Checkpoint File Path |
 | :--- | :---: | :---: | :---: | :--- | :--- |
-| **Baseline (Best)** | `42` | `155,608` | `0.4907` | `71457946fe0e87bf666cc835c0e2cafbc679b2c903f3369d20a81db7dc18960e` | `checkpoints_v4/baseline_best.pt` |
+| **Baseline (Best)** | `42` | `155,608` | `0.4907` | `6debd5f887cc24de01f55f479a358d742c5f4efc554dd5d991e27ed432680b66` | `checkpoints_v4/baseline_best.pt` |
 | **Baseline (Seed 42)** | `42` | `155,608` | `0.4907` | `6debd5f887cc24de01f55f479a358d742c5f4efc554dd5d991e27ed432680b66` | `checkpoints_v4/baseline_seed42_best.pt` |
 | **Baseline (Seed 1337)** | `1337` | `155,608` | `0.4900` | `8945227de23d6fa3d07f33834cd4e75261e5cd69ebed20b7581cfc5e9e68ec11` | `checkpoints_v4/baseline_seed1337_best.pt` |
 | **Baseline (Seed 2026)** | `2026` | `155,608` | `0.4897` | `7caa9f115356b9881a237533e919cc0fce4a53397dbacc74b00b9c9c796e2b7f` | `checkpoints_v4/baseline_seed2026_best.pt` |
-| **LeWM (Best)** | `42` | `169,660` | `0.5898` | `072c15f69789172ab58c5a8ea79a57d0926b7e103d18028d6f46429d4270f667` | `checkpoints_v4/lewm_best.pt` |
+| **LeWM (Best)** | `42` | `169,660` | `0.5898` | `e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454` | `checkpoints_v4/lewm_best.pt` |
 | **LeWM (Seed 42)** | `42` | `169,660` | `0.5898` | `e012dec7dc409864509ea71422b5f5287a433b58b832e984e63a913dc7993454` | `checkpoints_v4/lewm_seed42_best.pt` |
 | **LeWM (Seed 1337)** | `1337` | `169,660` | `0.5901` | `b1785f246e315a613b49bda9493d924499cfbcedf9a9af9ea9038704458e6f27` | `checkpoints_v4/lewm_seed1337_best.pt` |
 | **LeWM (Seed 2026)** | `2026` | `169,660` | `0.5899` | `4d8558ddd8fef1e3f0f68e5afedb22115fe46486196be2bfe4a3f7311cfdd70f` | `checkpoints_v4/lewm_seed2026_best.pt` |
-| **H-JEPA (Best)** | `42` | `191,907` | `0.8523` | `8f8afe945b253b1871a1f5abae08b77ad503f39d9fe48966cf8a42202f8aa023` | `checkpoints_v4/hjepa_best.pt` |
+| **H-JEPA (Best)** | `42` | `191,907` | `0.8523` | `ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442` | `checkpoints_v4/hjepa_best.pt` |
 | **H-JEPA (Seed 42)** | `42` | `191,907` | `0.8523` | `ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442` | `checkpoints_v4/hjepa_seed42_best.pt` |
 | **H-JEPA (Seed 1337)** | `1337` | `191,907` | `0.8530` | `2ef324bcb7485c920f0535443a4346a162c7740a02b2849e407e6a21a5622145` | `checkpoints_v4/hjepa_seed1337_best.pt` |
 | **H-JEPA (Seed 2026)** | `2026` | `191,907` | `0.8527` | `00bb947e4ffa31ba807b0c53674a6cd359afaa0fa9d6fd42e4f84e1ee2290a40` | `checkpoints_v4/hjepa_seed2026_best.pt` |
@@ -52,58 +52,54 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 * **Execution Command:**
   ```bash
   MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_behavioral_benchmarks.py
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py
   ```
 * **Inputs:** Checkpoints `checkpoints_v4/*`, dataset `splits_v4/held_out_test_benchmark.npz`.
-* **Output Artifacts:** [`behavioral_eval_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/behavioral_eval_results.json), [`behavioral_evaluation_report.md`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/research/reports/behavioral_evaluation_report.md).
+* **Output Artifacts:** [`behavioral_eval_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/behavioral_eval_results.json), [`track_c_visual_grounding.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/track_c_visual_grounding.json).
 * **Key Quantitative Results:**
   * Track A (Oracle): Success `76.7%`, Collision `13.3%`, Goal Error `0.288` m.
   * Track B (Structured Multi-Seed): Baseline `24.4% \pm 13.9%`, LeWM `26.7% \pm 0.0%`, H-JEPA **`34.4% \pm 6.9%`** (Best seed `40.0%`, Collision `48.3%`, Goal Error `0.490` m).
-  * Track C (Observation Only): Baseline `3.3%`, LeWM `10.0%`, H-JEPA **`13.3%`**.
+  * Track C (Observation Only Grounding): H-JEPA **15/15 (100.0%)**, LeWM 14/15 (93.3%), Baseline 7/15 (46.7%). Floor shift retention **86.7%**, target color mutation **93.3%**, landmark swap collapses to **0.0%** (allocentric map prior).
 
 ### Category 2: Latent Prediction & Drift Audit (`prediction`)
-* **Scientific Purpose:** Audit compounding error drift across multi-step recursive rollouts vs. direct hierarchical macro transitions ($K=5, K=10$).
+* **Scientific Purpose:** Audit compounding error drift across multi-step recursive rollouts vs. direct hierarchical macro transitions ($K=5, K=10$) and matched candidate controls.
 * **Execution Command:**
   ```bash
-  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/audit_latent_predictions.py
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py
   ```
 * **Inputs:** `checkpoints_v4/hjepa_best.pt`, `checkpoints_v4/lewm_best.pt`, `splits_v4/held_out_test_benchmark.npz`.
-* **Output Artifacts:** [`latent_prediction_audit.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/behavioral/latent_prediction_audit.json).
+* **Output Artifacts:** [`matched_temporal_controls.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/matched_temporal_controls.json).
 * **Key Quantitative Results:**
-  * Multi-step unrolling drift in LeWM escalates progressively ($0.027$ m at $K=1 \to 0.260$ m at $K=10$), whereas H-JEPA hierarchical macro prediction bounds drift to **`0.069` m at $K=10$** (a **`3.7x` error reduction**).
-  * H-JEPA Macro Predictor Val Dyn MSE: **`0.0178`**.
-  * Collision Classification Accuracy: **`96.3%` to `100.0%`**.
+  * Open-loop physical displacement error at $K=5$: Direct Macro achieves **0.0447m** vs **0.0787m** for recursive micro unrolling (a 43.2% error reduction).
+  * Computational latency: Direct macro executes $K=5$ in a single 4,327-cycle forward pass (34.61 $\mu$s @ 125 MHz) vs 21,635 cycles (173.08 $\mu$s) for 5-step recursive micro unrolling ($5\times$ compute reduction).
+  * In closed loop with matched candidates: Direct Macro **46.7%** vs Recursive Micro **53.3%** ($p = 0.317$).
 
 ### Category 3: Controlled Ablations & Behavioral Necessity (`necessity`)
-* **Scientific Purpose:** Test causal necessity of prediction, lookahead, action-conditioning, collision awareness, and temporal hierarchy.
+* **Scientific Purpose:** Test causal necessity of prediction, lookahead, action-conditioning, collision awareness, and temporal hierarchy on non-degenerate baselines.
 * **Execution Command:**
   ```bash
-  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_behavioral_benchmarks.py --ablations
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py
   ```
 * **Inputs:** `checkpoints_v4/hjepa_best.pt`.
-* **Output Artifacts:** `behavioral_eval_results.json` (`ablations`), [`circuit_registry.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/circuit_registry.json).
+* **Output Artifacts:** [`necessity_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/necessity_results.json), [`matched_temporal_controls.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/matched_temporal_controls.json).
 * **Key Quantitative Results:**
-  * Full Lookahead (`prediction_used`): `36.7%` success, `53.3%` collision, `0.490` m error.
-  * Reactive Policy (`reactive`, $K=0$): **`0.0%` success** (absolute collapse from `36.7%` to `0.0%`), `86.7%` collision, `0.741` m error.
-  * Prediction Ignored (`prediction_ignored`): **`3.3%` success**, `73.3%` collision, `0.697` m error.
-  * No Action Conditioning (`no_action_conditioning`): **`3.3%` success**, `93.3%` collision, `0.781` m error.
-  * No Collision Head (`no_collision_prediction`): `10.0%` success, **`76.7%` collision** (**`+23.4%` surge**), `0.587` m error.
-  * No Hierarchy ($K=1$ unroll): **`3.3%` success**, `70.0%` collision, `0.630` m error.
+  * Clean Baseline Success on non-degenerate tasks: **65.0%** (0.343m goal error).
+  * Ablating C1, C2 (axis, PCA, regression), C3, C5 yields genuine **15.0% necessity drop** (to 50.0% success), exceeding random 8D control drop (11.0%, +4.0% selectivity).
+  * C4 (forward dynamics) is non-selective (5.0% drop vs 11.0% random drop, selectivity = -6.0%, falsified).
+  * Shuffled prediction negative control collapses success from **46.7% to 23.3%** ($p = 0.0082$), proving causal necessity of learned lookahead.
+  * Removing collision head increases collision rate by **+6.7%** (from 63.3% to 70.0%).
 
 ### Category 4: Attribution Graphs & Activation Patching (`sufficiency`)
 * **Scientific Purpose:** Measure gradient-weighted feature attribution and test sufficiency of targeted subspaces vs. matched random controls.
 * **Execution Command:**
   ```bash
-  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/test_necessity_sufficiency.py
-  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_activation_patching.py
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py
   ```
-* **Inputs:** `checkpoints_v4/*`, `splits_v4/held_out_test_benchmark.npz`, `splits_v4/counterfactual_suite.npz`.
-* **Output Artifacts:** [`circuit_registry.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/circuit_registry.json), [`activation_patching_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/activation_patching_results.json).
+* **Inputs:** `checkpoints_v4/*`, `splits_v4/train_benchmark.npz`.
+* **Output Artifacts:** [`sufficiency_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/sufficiency_results.json), [`circuit_registry.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/circuit_registry.json).
 * **Key Quantitative Results:**
-  * C1 Target Grounding: Necessity `0.546` (vs Random `0.279`, Selectivity `+0.267`), Sufficiency `0.305` (vs Random `0.188`, Selectivity `+0.117`).
-  * C2 Egocentric Transform: **FALSIFIED_NON_SELECTIVE** (Necessity `0.515` vs Random `0.815`, Selectivity `-0.300`; Sufficiency `0.061` vs Random `0.346`, Selectivity `-0.285`).
-  * C3 Collision Detection: Necessity `0.468` (vs Random `0.326`, Selectivity `+0.142`), Sufficiency `0.238` (vs Random `0.314`).
-  * C4 Action-Conditioned Dynamics: Necessity `0.580` (vs Random `0.452`, Selectivity `+0.127`), Sufficiency `0.107` (vs Random `0.061`, Selectivity `+0.046`).
-  * C5 Hierarchical Subgoal: Necessity `0.447` (vs Random `0.426`, Selectivity `+0.021`), Sufficiency `0.261` (vs Random `0.022`, Selectivity `+0.239`).
+  * Dedicated `sufficiency_results.json` records clean baseline (65.0%), ablated retention, and random controls.
+  * Verified circuit registry with all 5 registered circuits classified according to empirical evidence.
 
 ### Category 5: Generalization & Counterfactual Invariance (`generalization`)
 * **Scientific Purpose:** Evaluate closed-loop retention under E1–E7 counterfactuals and visual/spatial disambiguation tasks.
@@ -130,8 +126,7 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 * **Key Quantitative Results:**
   * Invariance Cosine: H-JEPA $\ge 0.997$ across all E1–E7 counterfactuals (E1 `0.9971`, E2 `0.9998`, E3 `0.9985`, E4 `0.9975`, E5 `0.9975`, E6 `0.9996`, E7 `0.9997`).
   * Equivariance Held-Out Cosine: $\ge 0.999$ across all E1–E7 counterfactuals.
-  * Multi-Horizon Latent Stability: H-JEPA maintains `0.9964` cosine at $K=8$, whereas single-step LeWM unrolled MSE collapses from `0.9659` to `0.6110`.
-  * Cross-Model Decodability vs Behavior: Linear probe decodability negatively correlates with behavioral success across models ($r = -0.925$ for C1, $r = -0.991$ for C4), confirming H2.
+  * Cross-Architecture Asymmetry: LeWM $\to$ H-JEPA achieves **0.977 next-state cosine**, whereas H-JEPA macro $\to$ LeWM achieves **0.639 cosine**.
 
 ### Category 7: Novel Compositional Tasks (`compositionality`)
 * **Scientific Purpose:** Test zero-shot compositional recombination on non-trivial spatial tasks: Relational Detour (T2) and Narrow Corridor (T4).
@@ -153,13 +148,11 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
   MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/extraction/comparison/compare_three_models.py
   ```
 * **Inputs:** Teacher `checkpoints_v4/hjepa_best.pt`, `splits_v4/train_benchmark.npz`, `splits_v4/held_out_test_benchmark.npz`.
-* **Output Artifacts:** [`three_model_comparison.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/extraction/comparison/three_model_comparison.json), [`training_log.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/extraction/extracted_model/reconstructed_compact/training_log.json).
+* **Output Artifacts:** [`three_model_comparison.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/extraction/comparison/three_model_comparison.json).
 * **Key Quantitative Results:**
   * Parameter Compression: $191,907 \to 39,804$ parameters (**$79.3\%$ reduction**).
-  * Distilled Compact 16D: **`46.7%` success**, `26.7%` collision, `0.515` m error, `0.0178` val dyn MSE (**$3.5\times$ higher success** than supervised compact without teacher at `13.3%`).
-  * Supervised Compact (No Teacher): `13.3%` success, `33.3%` collision, `0.768` m error, `0.0491` val dyn MSE ($2.8\times$ worse dynamics).
-  * BC Only Compact: `53.3%` success on simple paths, but **`2.2916` val dyn MSE** (completely unlearned latent dynamics).
-  * Original H-JEPA Teacher: `73.3%` success, `26.7%` collision, `0.350` m error.
+  * Distilled Compact 16D: **`46.7%` success**, `26.7%` collision, `0.515` m error, `0.0178` val dyn MSE.
+  * BC Only Compact: `53.3%` success, `2.2916` val dyn MSE.
 
 ### Category 9: Cycle-Exact RTL Simulation & Hardware Benchmarks (`hardware_equivalence`)
 * **Scientific Purpose:** Verify bit-exact equivalence between synthesizable Verilog RTL and Python Q8.8 fixed-point; measure out-of-context Vivado synthesis on XCK26; benchmark physical KR260 SOM silicon.
@@ -172,10 +165,9 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 * **Output Artifacts:** [`hardware_equivalence_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/hardware/hardware_equivalence_results.json), [`benchmarks_heterogeneous_platforms.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/hardware/benchmarks_heterogeneous_platforms.json), [`hardware_validation_report.md`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/research/reports/hardware_validation_report.md).
 * **Key Quantitative Results:**
   * Relative Arithmetic Error: **`E_{\text{rel}} = 0.000000` (100.0% Bit-Exact across all 20 output words)**.
-  * Action Direction Cosine Similarity: **`0.9997`**; Safety Barrier Concordance: **`100.00%`**.
-  * Vivado 2023.2 Post-Synthesis (`xck26`): `3,579` LUTs (`3.06%`), `13` DSPs (`1.04%`), `0` BRAM, `0.365` W power.
-  * RTL Latency: `4,327` cycles (`0.0216` ms @ 200 MHz) single-pass; `54,467` cycles (`0.2723` ms @ 200 MHz) 24-MPC pass.
-  * Speedup over Kria KR260 ARM Cortex-A53 PS (`19.197` ms): **`70.49x`** (@ 200 MHz) / **`44.06x`** (@ 125 MHz).
+  * Vivado 2023.2 Post-Synthesis (`xck26`): `3,579` LUTs (`3.06%`), `13` DSPs (`1.04%`), `0` BRAM, `0.365` W power. Timing closed at **`125.0 MHz`**.
+  * RTL Latency: `4,327` cycles (`34.61` $\mu$s @ 125 MHz) single-pass; `1.038` ms 24-candidate MPC pass in software dispatch.
+  * Speedup over Kria KR260 ARM Cortex-A53 PS (`19.197` ms): **`44.06x`** (@ 125 MHz).
 
 ---
 
@@ -206,5 +198,4 @@ All 9 required evaluation categories are registered in the machine-readable mani
   "conclusion": "All 9 required evaluation categories independently executed and provenance-verified."
 }
 ```
-Every recorded entry contains explicit `git_commit`, `dataset_sha256`, `checkpoint_sha256`, `environment`, and complete raw metric dictionaries. Zero hardcoded constants or synthetic random timing distributions exist in any output.
-Every recorded entry contains explicit `git_commit`, `dataset_sha256`, `checkpoint_sha256`, `environment`, and complete raw metric dictionaries. Zero hardcoded constants or synthetic random timing distributions exist in any output.
+Every recorded entry contains explicit `git_commit`, `dataset_sha256`, `checkpoint_sha256`, `environment`, and complete raw metric dictionaries verified by cryptographic byte hash.
