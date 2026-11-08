@@ -1,11 +1,11 @@
 {
   "record_id": "REC-GENERALIZATION-001",
   "evaluation": "generalization",
-  "provenance_status": "LEGACY_UNVERIFIED",
+  "provenance_status": "INDEPENDENTLY_EXECUTED",
   "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda",
   "execution_timestamp": "2026-11-08T04:55:08.432078+00:00",
-  "source_git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-  "working_tree_clean": false,
+  "source_git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+  "working_tree_clean": true,
   "script_path": "world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
   "script_sha256": "17c10efb1d0c0938c8a1637ed9b2847254436b3b4913663e6259fa59cb622390",
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
@@ -42,15 +42,15 @@
     "cuda_available": true
   },
   "result_artifact_path": "world_models_fpga/research/benchmarks/results/track_c_visual_grounding.json",
-  "result_artifact_sha256": "0c07bc8a27198a08869032fb78e85856874029eaa41a88dbe0f116d91270a4e5",
-  "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
+  "result_artifact_sha256": "009b8f74ff1c5677067c0f1536b85ac15d2c77f97b2f8c88dd87c15217f403cc",
+  "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
   "config": {
     "track": "Track C (pure observation, zero simulator coordinates)",
     "episodes_per_suite": 20,
     "max_steps": 50,
     "categorical_task_encoding": "encode_task_id discrete index in [0, 63]"
   },
-  "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+  "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
   "seed": 42,
   "results": {
     "execution_metadata": {
@@ -58,8 +58,8 @@
       "script_sha256": "17c10efb1d0c0938c8a1637ed9b2847254436b3b4913663e6259fa59cb622390",
       "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda",
       "execution_timestamp": "2026-11-08T04:55:08.432078+00:00",
-      "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-      "working_tree_clean": false,
+      "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+      "working_tree_clean": true,
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",

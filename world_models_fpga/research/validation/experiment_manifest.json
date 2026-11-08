@@ -1,22 +1,23 @@
 {
   "schema_version": "2.0",
-  "manifest_generated_at": "2026-11-08T05:11:21.397592+00:00",
+  "manifest_generated_at": "2026-11-08T05:47:50.018452+00:00",
   "total_records": 9,
-  "independently_executed_evaluations": [],
-  "legacy_unverified_evaluations": [
-    "architecture_reconstruction",
+  "independently_executed_evaluations": [
     "behavior",
-    "compositionality",
     "generalization",
-    "hardware_equivalence",
     "necessity",
     "prediction",
-    "sufficiency",
+    "sufficiency"
+  ],
+  "legacy_unverified_evaluations": [
+    "architecture_reconstruction",
+    "compositionality",
+    "hardware_equivalence",
     "transfer"
   ],
   "missing_evaluations": [],
   "rejected_records": [],
-  "conclusion": "INCOMPLETE PROVENANCE: 0/9 categories independently executed. 9 categories are legacy unverified. 0 rejected records. 0 categories missing. Systematic re-execution required.",
+  "conclusion": "INCOMPLETE PROVENANCE: 5/9 categories independently executed. 4 categories are legacy unverified. 0 rejected records. 0 categories missing. Systematic re-execution required.",
   "records": [
     {
       "record_id": "REC-ARCHITECTURE_RECONSTRUCTION-001",
@@ -145,11 +146,11 @@
     {
       "record_id": "REC-BEHAVIOR-001",
       "evaluation": "behavior",
-      "provenance_status": "LEGACY_UNVERIFIED",
+      "provenance_status": "INDEPENDENTLY_EXECUTED",
       "command_executed": "python world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py --episodes 40 --device cuda",
       "execution_timestamp": "2026-11-08T05:11:09.690655+00:00",
-      "source_git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-      "working_tree_clean": false,
+      "source_git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+      "working_tree_clean": true,
       "script_path": "world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py",
       "script_sha256": "e8809a8d03496d0d3f02884d7b26d507734e691335a350924f0136b68695312a",
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
@@ -183,8 +184,8 @@
         "device": "cuda"
       },
       "result_artifact_path": "world_models_fpga/research/benchmarks/results/predictive_safety_benchmark.json",
-      "result_artifact_sha256": "74a522f3aacb317b9b9bc454fea6457458143c45b345048e833238ae827ee419",
-      "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
+      "result_artifact_sha256": "237fd4e5d9621aa1bcc29340c0c66aa43fad46f23d4da29debd31346874c1091",
+      "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
       "config": {
         "episodes": 40,
         "horizon_k": 5,
@@ -198,7 +199,7 @@
         ],
         "safety_type": "Empirical prospective safety filter (NOT a formal Control Barrier Function)"
       },
-      "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+      "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
       "seed": 42,
       "results": {
         "execution_metadata": {
@@ -206,8 +207,8 @@
           "script_sha256": "e8809a8d03496d0d3f02884d7b26d507734e691335a350924f0136b68695312a",
           "command_executed": "python world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py --episodes 40 --device cuda",
           "execution_timestamp": "2026-11-08T05:11:09.690655+00:00",
-          "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-          "working_tree_clean": false,
+          "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+          "working_tree_clean": true,
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
           "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -2354,7 +2355,7 @@
         "scientific_qualification": "This benchmark evaluates the empirical utility of prospective collision predictions. It does NOT establish a formal Control Barrier Function (CBF). Formal CBFs require mathematical forward invariance guarantees with class-K functions and known Lie derivatives, which cannot be formally asserted for neural network latent predictions."
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/behavior_record.json",
-      "record_sha256": "716d1b5d0fe3e71218a753bb48547e3dc982c5d4e8f1505d615ecfa6b5a3db6b"
+      "record_sha256": "993c10b2e41bef4613f897195efadd2fa80b175d7dde8299f8ce49b90d84c0af"
     },
     {
       "record_id": "REC-COMPOSITIONALITY-001",
@@ -2629,11 +2630,11 @@
     {
       "record_id": "REC-GENERALIZATION-001",
       "evaluation": "generalization",
-      "provenance_status": "LEGACY_UNVERIFIED",
+      "provenance_status": "INDEPENDENTLY_EXECUTED",
       "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda",
       "execution_timestamp": "2026-11-08T04:55:08.432078+00:00",
-      "source_git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-      "working_tree_clean": false,
+      "source_git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+      "working_tree_clean": true,
       "script_path": "world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
       "script_sha256": "17c10efb1d0c0938c8a1637ed9b2847254436b3b4913663e6259fa59cb622390",
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
@@ -2670,15 +2671,15 @@
         "cuda_available": true
       },
       "result_artifact_path": "world_models_fpga/research/benchmarks/results/track_c_visual_grounding.json",
-      "result_artifact_sha256": "0c07bc8a27198a08869032fb78e85856874029eaa41a88dbe0f116d91270a4e5",
-      "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
+      "result_artifact_sha256": "009b8f74ff1c5677067c0f1536b85ac15d2c77f97b2f8c88dd87c15217f403cc",
+      "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
       "config": {
         "track": "Track C (pure observation, zero simulator coordinates)",
         "episodes_per_suite": 20,
         "max_steps": 50,
         "categorical_task_encoding": "encode_task_id discrete index in [0, 63]"
       },
-      "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+      "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
       "seed": 42,
       "results": {
         "execution_metadata": {
@@ -2686,8 +2687,8 @@
           "script_sha256": "17c10efb1d0c0938c8a1637ed9b2847254436b3b4913663e6259fa59cb622390",
           "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda",
           "execution_timestamp": "2026-11-08T04:55:08.432078+00:00",
-          "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-          "working_tree_clean": false,
+          "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+          "working_tree_clean": true,
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
           "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -8718,7 +8719,7 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/generalization_record.json",
-      "record_sha256": "d3114ee46a274fccc1620c116d4d00c3d4902a26ebeb9951e66cbde714c55933"
+      "record_sha256": "c8e9c75a0167ef9327070fc57faa4462c0642a1cef864569f212a59e3e810588"
     },
     {
       "record_id": "REC-HARDWARE_EQUIVALENCE-001",
@@ -8813,11 +8814,11 @@
     {
       "record_id": "REC-NECESSITY-001",
       "evaluation": "necessity",
-      "provenance_status": "LEGACY_UNVERIFIED",
+      "provenance_status": "INDEPENDENTLY_EXECUTED",
       "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda",
       "execution_timestamp": "2026-11-08T05:07:05.041615+00:00",
-      "source_git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-      "working_tree_clean": false,
+      "source_git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+      "working_tree_clean": true,
       "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
       "script_sha256": "93c7ad89d764bc355b3389488113edb932e9099625ad4f850739423f21f3392b",
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
@@ -8851,8 +8852,8 @@
         "device": "cuda"
       },
       "result_artifact_path": "world_models_fpga/research/circuits/results/necessity_results.json",
-      "result_artifact_sha256": "325302a0eea8ee4123e49a0c80c28250ab56bb3430ae8de2d4e435016e70d16c",
-      "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
+      "result_artifact_sha256": "1febc7362c9408adc7bb7e2fc659017ebf75f854fdb84628c2c861f63b41bba2",
+      "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
       "config": {
         "episodes": 30,
         "evaluation_suite": "pure_object_grounding",
@@ -8861,7 +8862,7 @@
         "max_steps": 45,
         "protocol": "Genuine Matched-Donor Activation Patching"
       },
-      "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+      "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
       "seed": 42,
       "results": {
         "execution_metadata": {
@@ -8869,8 +8870,8 @@
           "script_sha256": "93c7ad89d764bc355b3389488113edb932e9099625ad4f850739423f21f3392b",
           "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda",
           "execution_timestamp": "2026-11-08T05:07:05.041615+00:00",
-          "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-          "working_tree_clean": false,
+          "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+          "working_tree_clean": true,
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
           "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -9256,16 +9257,16 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/necessity_record.json",
-      "record_sha256": "f6301915bfa8bd3d5cd7fe56c5cf2aec3e4abdd89718745d7e571741b8785caf"
+      "record_sha256": "b86a22d88bfa9a9fb17ee9a613c99af1a18ccb5ee90f84b60264a919a268e57a"
     },
     {
       "record_id": "REC-PREDICTION-001",
       "evaluation": "prediction",
-      "provenance_status": "LEGACY_UNVERIFIED",
+      "provenance_status": "INDEPENDENTLY_EXECUTED",
       "command_executed": "python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes 50 --device cuda",
       "execution_timestamp": "2026-11-08T05:09:32.263423+00:00",
-      "source_git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-      "working_tree_clean": false,
+      "source_git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+      "working_tree_clean": true,
       "script_path": "world_models_fpga/research/benchmarks/run_matched_temporal_controls.py",
       "script_sha256": "a0a3a71ed7561ec1cb31f91f7f696e529190ad22f7d8a5bdd8fab50667d3e7a6",
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
@@ -9308,8 +9309,8 @@
         "device": "cuda"
       },
       "result_artifact_path": "world_models_fpga/research/benchmarks/results/matched_temporal_controls.json",
-      "result_artifact_sha256": "69ee5d78df8f17f7bc08e29d6731a21a6c4e6c76c1434200ed1d098c593f29dc",
-      "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
+      "result_artifact_sha256": "ca20b03ff40d6f99572c9e51f7a609d7dbc3fdd78afac58865526e29b115c9b3",
+      "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
       "config": {
         "episodes": 50,
         "horizon_k": 5,
@@ -9327,7 +9328,7 @@
         ],
         "holm_bonferroni_family_size": 6
       },
-      "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+      "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
       "seed": 42,
       "results": {
         "execution_metadata": {
@@ -9335,8 +9336,8 @@
           "script_sha256": "a0a3a71ed7561ec1cb31f91f7f696e529190ad22f7d8a5bdd8fab50667d3e7a6",
           "command_executed": "python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes 50 --device cuda",
           "execution_timestamp": "2026-11-08T05:09:32.263423+00:00",
-          "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-          "working_tree_clean": false,
+          "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+          "working_tree_clean": true,
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
           "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -13743,16 +13744,16 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/prediction_record.json",
-      "record_sha256": "5ff3d097f8f08e3e72a53910f42bd73f02ce2797352dc91b8b289c6d2f02e3a1"
+      "record_sha256": "94c0b6becaf3fcaea6c1e65b3e4947c117ab4a0dd60c2febe9c3f368aaceaf12"
     },
     {
       "record_id": "REC-SUFFICIENCY-001",
       "evaluation": "sufficiency",
-      "provenance_status": "LEGACY_UNVERIFIED",
+      "provenance_status": "INDEPENDENTLY_EXECUTED",
       "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda",
       "execution_timestamp": "2026-11-08T05:07:05.041615+00:00",
-      "source_git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-      "working_tree_clean": false,
+      "source_git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+      "working_tree_clean": true,
       "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
       "script_sha256": "93c7ad89d764bc355b3389488113edb932e9099625ad4f850739423f21f3392b",
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
@@ -13786,8 +13787,8 @@
         "device": "cuda"
       },
       "result_artifact_path": "world_models_fpga/research/circuits/results/sufficiency_results.json",
-      "result_artifact_sha256": "43f3e5690dd90a0d9292d4237706210b3e13c29942861ff1803f61c9430b71a8",
-      "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
+      "result_artifact_sha256": "5fe136fcfca2d9788861804bbdff834c4a2daed25769b646a3dda9a42ab70bcd",
+      "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
       "config": {
         "episodes": 30,
         "evaluation_suite": "pure_object_grounding",
@@ -13796,7 +13797,7 @@
         "max_steps": 45,
         "protocol": "Genuine Matched-Donor Activation Patching"
       },
-      "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+      "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
       "seed": 42,
       "results": {
         "execution_metadata": {
@@ -13804,8 +13805,8 @@
           "script_sha256": "93c7ad89d764bc355b3389488113edb932e9099625ad4f850739423f21f3392b",
           "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda",
           "execution_timestamp": "2026-11-08T05:07:05.041615+00:00",
-          "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-          "working_tree_clean": false,
+          "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+          "working_tree_clean": true,
           "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
           "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
           "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -14192,7 +14193,7 @@
         }
       },
       "record_path": "/home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/validation/records/sufficiency_record.json",
-      "record_sha256": "eed30a6f621a310fd5520221e43f59cea8ed58cd58b9086fb3aefd6c34a3d7d9"
+      "record_sha256": "907bbc9cc8f2a7f88eb377235f4e015710fcbf62cf7d3269d3d2424ae3a2cdbe"
     },
     {
       "record_id": "REC-TRANSFER-001",

@@ -1,11 +1,11 @@
 {
   "record_id": "REC-BEHAVIOR-001",
   "evaluation": "behavior",
-  "provenance_status": "LEGACY_UNVERIFIED",
+  "provenance_status": "INDEPENDENTLY_EXECUTED",
   "command_executed": "python world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py --episodes 40 --device cuda",
   "execution_timestamp": "2026-11-08T05:11:09.690655+00:00",
-  "source_git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-  "working_tree_clean": false,
+  "source_git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+  "working_tree_clean": true,
   "script_path": "world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py",
   "script_sha256": "e8809a8d03496d0d3f02884d7b26d507734e691335a350924f0136b68695312a",
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
@@ -39,8 +39,8 @@
     "device": "cuda"
   },
   "result_artifact_path": "world_models_fpga/research/benchmarks/results/predictive_safety_benchmark.json",
-  "result_artifact_sha256": "74a522f3aacb317b9b9bc454fea6457458143c45b345048e833238ae827ee419",
-  "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
+  "result_artifact_sha256": "237fd4e5d9621aa1bcc29340c0c66aa43fad46f23d4da29debd31346874c1091",
+  "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
   "config": {
     "episodes": 40,
     "horizon_k": 5,
@@ -54,7 +54,7 @@
     ],
     "safety_type": "Empirical prospective safety filter (NOT a formal Control Barrier Function)"
   },
-  "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+  "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
   "seed": 42,
   "results": {
     "execution_metadata": {
@@ -62,8 +62,8 @@
       "script_sha256": "e8809a8d03496d0d3f02884d7b26d507734e691335a350924f0136b68695312a",
       "command_executed": "python world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py --episodes 40 --device cuda",
       "execution_timestamp": "2026-11-08T05:11:09.690655+00:00",
-      "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
-      "working_tree_clean": false,
+      "git_commit": "dd94c41cb3b4f16fbbda2fe974bcaa8dd64e4c40",
+      "working_tree_clean": true,
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
