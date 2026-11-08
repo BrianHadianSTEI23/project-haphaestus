@@ -401,8 +401,8 @@ def run_task_conditioned_binding_v3(
             g_ab = torch.cat([torch.clamp(raw_ab[:, :2], -3.5, 3.5), F.normalize(raw_ab[:, 2:4] + 1e-6, dim=-1)], dim=-1).squeeze(0).cpu().numpy()
 
         # Ground truth body-frame target vectors in Scene A
-        gt_a_scene_a = compute_body_frame_goal_vec(pair["robot_pose"], pair["pos_1"][:2])
-        gt_b_scene_a = compute_body_frame_goal_vec(pair["robot_pose"], pair["pos_2"][:2])
+        gt_a_scene_a = compute_body_frame_goal_vec(pair["robot_pose"], pair["wp_1"])
+        gt_b_scene_a = compute_body_frame_goal_vec(pair["robot_pose"], pair["wp_2"])
 
         # ---------------------------------------------------------
         # B. Evaluate Scene B (Object A at Pos 2, Object B at Pos 1)
@@ -422,8 +422,8 @@ def run_task_conditioned_binding_v3(
             raw_bb = agent.model.grounding_head(torch.cat([z_b, e_b], dim=-1))
             g_bb = torch.cat([torch.clamp(raw_bb[:, :2], -3.5, 3.5), F.normalize(raw_bb[:, 2:4] + 1e-6, dim=-1)], dim=-1).squeeze(0).cpu().numpy()
 
-        gt_a_scene_b = compute_body_frame_goal_vec(pair["robot_pose"], pair["pos_2"][:2])
-        gt_b_scene_b = compute_body_frame_goal_vec(pair["robot_pose"], pair["pos_1"][:2])
+        gt_a_scene_b = compute_body_frame_goal_vec(pair["robot_pose"], pair["wp_2"])
+        gt_b_scene_b = compute_body_frame_goal_vec(pair["robot_pose"], pair["wp_1"])
 
         # ---------------------------------------------------------
         # C. Same-Scene Discrimination Metrics (within Scene A)

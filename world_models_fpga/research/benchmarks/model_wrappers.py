@@ -63,7 +63,7 @@ def compute_body_frame_goal_vec(robot_pose: np.ndarray, target_pose: np.ndarray)
     th = float(robot_pose[2])
     dx_b = float(np.cos(th) * dx + np.sin(th) * dy)
     dy_b = float(-np.sin(th) * dx + np.cos(th) * dy)
-    dth = float(target_pose[2] - robot_pose[2])
+    dth = float(target_pose[2] - robot_pose[2]) if len(target_pose) > 2 else 0.0
     return np.array([dx_b, dy_b, np.sin(dth), np.cos(dth)], dtype=np.float32)
 
 
