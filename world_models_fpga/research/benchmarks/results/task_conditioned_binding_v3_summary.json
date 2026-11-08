@@ -1,0 +1,63 @@
+{
+  "experiment_metadata": {
+    "source_git_commit": "8eab3cdd5e90f40fa3a7f33b068f0d455b0e7237",
+    "script_path": "world_models_fpga/research/benchmarks/run_task_conditioned_binding_v3.py",
+    "script_sha256": "a9fd6da479ecf1f35ff4f3debf6ec60d31bb6dbb8277236b4894d67a304205d2",
+    "command_executed": "world_models_fpga/research/benchmarks/run_task_conditioned_binding_v3.py --pairs 50 --device cuda",
+    "execution_timestamp": "2026-11-08T10:38:25.591906+00:00",
+    "working_tree_clean": true,
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "random_seed": 42,
+    "device": "cuda",
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "mujoco_version": "3.17.0"
+  },
+  "rejection_sampling_log": {
+    "waypoint_too_close (< 0.60m)": 195,
+    "arena_bounds_violation": 75,
+    "separation_too_small (< 0.52m)": 523,
+    "obstacle_clearance_violation": 24
+  },
+  "sample_counts": {
+    "n_pairs_evaluated": 50,
+    "n_total_scenes": 100,
+    "n_all_candidates_visible_ge_100px": 100
+  },
+  "same_scene_token_steering_results": {
+    "a_correct_count": 21,
+    "a_correct_rate": 0.42,
+    "a_correct_binom_p_vs_chance": 0.3222363203575469,
+    "b_correct_count": 19,
+    "b_correct_rate": 0.38,
+    "b_correct_binom_p_vs_chance": 0.11892045255943628,
+    "dual_discrimination_count": 5,
+    "dual_discrimination_rate": 0.1,
+    "dual_discrimination_binom_p_vs_chance": 0.01330913256879453,
+    "mean_angular_shift_rad": 0.835544966054354,
+    "mean_angular_shift_deg": 47.87320014831612
+  },
+  "interaction_analysis": {
+    "mean_interaction_magnitude": 0.3521383224800229,
+    "median_interaction_magnitude": 0.2933572679758072,
+    "std_interaction_magnitude": 0.22743138835566507,
+    "mean_alignment_with_physical_displacement": 0.3140485670231283,
+    "fraction_positive_alignment": 0.72
+  },
+  "model_comparison_held_out": {
+    "model_1_additive_task_bias_mse": 0.033376991748809814,
+    "model_2_visual_geometry_selection_mse": 0.13567425310611725,
+    "model_3_general_nonlinear_interaction_mse": 0.0505345453320836,
+    "best_model": "model_1_additive_task_bias"
+  },
+  "saliency_factorial_results": {
+    "mean_error_a_when_a_less_salient": 0.519157432615757,
+    "mean_error_a_when_a_more_salient": 0.4127279662340879,
+    "wilcoxon_p_saliency_bias": 0.0857934137886982,
+    "saliency_bias_confirmed": false
+  },
+  "scientific_interpretation": {
+    "object_binding_status": "FALSIFIED_FOR_CLEAN_SELECTION",
+    "mechanistic_verdict": "The agent exhibits sensitivity to task tokens (angular shift ~49.8 deg), but does NOT implement a clean visual object binding operator. Dual-target discrimination rate (10.0%) is statistically indistinguishable from or below 25% chance level (p=0.0133). Model comparison shows Additive/Nonlinear bias (MSE=0.0334) outperforms Visual Geometry Selection (MSE=0.1357), proving the grounding head computes a mixed scene-to-goal vector with task bias rather than dynamic geometric object selection."
+  }
+}

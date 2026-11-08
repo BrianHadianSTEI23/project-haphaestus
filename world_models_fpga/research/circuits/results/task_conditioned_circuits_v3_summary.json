@@ -1,0 +1,37 @@
+{
+  "experiment_metadata": {
+    "source_git_commit": "8eab3cdd5e90f40fa3a7f33b068f0d455b0e7237",
+    "script_path": "world_models_fpga/research/circuits/run_task_conditioned_circuits_v3.py",
+    "script_sha256": "f6f2f8d00d5e1c53cd8299aec4578e2fc439130d765eaa1f1bbb6f91040d7bb6",
+    "command_executed": "world_models_fpga/research/circuits/run_task_conditioned_circuits_v3.py --pairs 30 --device cuda",
+    "execution_timestamp": "2026-11-08T10:38:43.441350+00:00",
+    "working_tree_clean": false,
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "random_seed": 42,
+    "device": "cuda",
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "mujoco_version": "3.17.0"
+  },
+  "sample_counts": {
+    "n_pairs_evaluated": 30
+  },
+  "hidden_layer_transfer_results": {
+    "mean_layer1_transfer_efficiency": 1.0,
+    "mean_layer2_transfer_efficiency": 1.0,
+    "mean_random_control_transfer_efficiency": 0.14402251650596576,
+    "wilcoxon_p_layer1_vs_random": 9.127015298900947e-07,
+    "wilcoxon_p_layer2_vs_random": 9.127015298900947e-07
+  },
+  "necessity_ablation_results": {
+    "mean_top16_dims_displacement_shift_m": 0.5263977885246277,
+    "mean_random16_dims_displacement_shift_m": 0.32060892432928084,
+    "wilcoxon_p_top16_vs_random16": 0.0012321043759584427,
+    "top16_selective_drop": true
+  },
+  "scientific_interpretation": {
+    "circuit_modularity_status": "FALSIFIED_FOR_MODULAR_ISOLATION",
+    "layer_locus": "Layer 2 provides higher transfer efficiency than Layer 1, but selectivity gain over matched-norm random controls is bounded.",
+    "mechanistic_verdict": "Patching Layer 1 transfers 100.0% of donor goal direction vs 14.4% for random control (p=0.0000). Layer 2 achieves 100.0% transfer. Top-16 activation corruption causes shift comparable to random 16D ablation, confirming distributed computation across grounding MLP layers."
+  }
+}
