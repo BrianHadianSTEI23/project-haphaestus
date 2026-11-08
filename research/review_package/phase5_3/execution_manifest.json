@@ -1,0 +1,119 @@
+{
+  "manifest_version": "1.0",
+  "phase": "Phase 5.3 Valid Norm-Matched Causal Mediation & Necessity Revalidation",
+  "execution_commit": "7c30728179b2bd04778219f1f2b9746ba9dcedd7",
+  "timestamp_utc": "2026-11-08T14:41:34Z",
+  "environment": {
+    "os": "Linux 6.8.0-138-generic",
+    "python": "3.13.16",
+    "pytorch": "2.1.0",
+    "mujoco": "3.17.0",
+    "device": "cuda (NVIDIA GeForce RTX 3050 Laptop GPU)"
+  },
+  "file_hashes": {
+    "checkpoint": {
+      "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+      "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+    },
+    "v4_discovery_activations": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v4_activations.jsonl",
+      "sha256": "378f8561d8587444a21e9bcb1d4524c96e431078b0a70aad242fcfda12478f62"
+    },
+    "phase5_2_scene_specs": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_scene_specs.jsonl",
+      "sha256": "5edfcf5d8e1638b9e624ea7fb796ab87a951ce88ef81b5244af339c9d7f34337"
+    },
+    "amr_env": {
+      "path": "world_models_fpga/env/amr_env.py",
+      "sha256": "a877c025719be495a5fcd0501fc7ae375ee62696317724d4332cfd47cf1bc252"
+    },
+    "model_wrappers": {
+      "path": "world_models_fpga/research/benchmarks/model_wrappers.py",
+      "sha256": "827670f371ac425cbc55e02209b0b8a37b19624d19855fff3ea69590c8f9e05d"
+    },
+    "baseline_policy": {
+      "path": "world_models_fpga/models/baseline_policy.py",
+      "sha256": "114ab44c55809d6546f276bacd8662348299f5ae81271fbfc8ed22022b844ffe"
+    },
+    "hjepa_model_definition": {
+      "path": "world_models_fpga/models/h_jepa.py",
+      "sha256": "1dbfa8f2f8799c0e376b8c1455f64f7f36d4ec03e1aae139031e44d66e33514b"
+    },
+    "capability_tasks": {
+      "path": "world_models_fpga/research/datasets/generation/capability_tasks.py",
+      "sha256": "af4385053a439dcb100c3c2d8e6368a6f5e94f27ecd413638b01a1a0efcf5131"
+    },
+    "phase5_3_benchmark_source": {
+      "path": "world_models_fpga/research/circuits/run_task_conditioned_circuits_v5_3.py",
+      "sha256": "e656ea6b9c8aa8ae11abf4db1e35d94a2d87efe8b0c82eed8957f1d2ed633b86"
+    },
+    "phase5_3_unit_tests": {
+      "path": "world_models_fpga/tests/test_task_conditioned_circuits_v5_3.py",
+      "sha256": "b791fb1abea8cea1fa17912a65aa505715bdcbac5738855e0700994fc413cec3"
+    },
+    "summary_json": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_summary.json",
+      "sha256": "1b28eb8b9a2e5a47fd1adad149deb2b8cddfd5fbb722e303e1a5b53c44f9394d"
+    },
+    "pairs_jsonl": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_pairs.jsonl",
+      "sha256": "5d9a0dc8abad2a6c6a78a762004f383eeb4f94a0aa427217f33d4a9e95e5eead"
+    },
+    "activations_jsonl": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_activations.jsonl",
+      "sha256": "1a8a922840cb0ecf5495cd7a470629ca37f7a40714f83d510bb495be7b650428"
+    },
+    "interventions_gz": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_interventions.jsonl.gz",
+      "sha256": "d57fee1c39717ddb061626ae63fbe657fe2a1e5fc70d6922bf3214b2b77ece0f"
+    },
+    "control_audit_jsonl": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_control_audit.jsonl",
+      "sha256": "a37bd534b11dc271c6422031fe9b0a389bd32c7af2d9464bc3e0b1a32fbd2d6e"
+    },
+    "schema_md": {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_schema.md",
+      "sha256": "8d9fcb591b8f8a80803d2cf416c4937eca6fe3cd1a3da5e723ad79b343b26f87"
+    },
+    "review_readme": {
+      "path": "research/review_package/phase5_3/README.md",
+      "sha256": "b63661a5152aea682afd3286f253b1293687e3b4bd65b22d41e3bac186ad999f"
+    },
+    "review_forensic_audit": {
+      "path": "research/review_package/phase5_3/forensic_audit.md",
+      "sha256": "f16d71c6a3f70e531f57de8cfea175df93832cae0ace2a6906acd290e6e1dd7f"
+    },
+    "review_protocol_deviations": {
+      "path": "research/review_package/phase5_3/protocol_deviations.md",
+      "sha256": "c0b39469cf1c170dcdffa54a714b8cecddc97f4390ec2c607ad67c413375ae00"
+    },
+    "review_data_dictionary": {
+      "path": "research/review_package/phase5_3/data_dictionary.md",
+      "sha256": "887a8aaaadb2fa63466ecc385381b4460de4d7cc391a8e19594a6c0ae88f326c"
+    },
+    "review_claims_ledger": {
+      "path": "research/review_package/phase5_3/revised_claims_ledger.csv",
+      "sha256": "40431791fa1e6c32d7028f30680e069b9215cb2308f1872e47bb49aa11ac80e0"
+    },
+    "review_unresolved_hypotheses": {
+      "path": "research/review_package/phase5_3/unresolved_hypotheses.md",
+      "sha256": "78c0e56a352e4a96ae8140167eea051253f9c7e34b18627397a7d669fa8b5893"
+    },
+    "review_test_log": {
+      "path": "research/review_package/phase5_3/test_run.log",
+      "sha256": "dfe6a3ab62296c439316cd12f3185d1dda34138c843d845cbf37a7f644f65769"
+    },
+    "report_claims_ledger": {
+      "path": "research/reports/claims_ledger.md",
+      "sha256": "af1e195e2d989a219beabaee8a6095365cd288dce0b0faadd4c4f91c52e65d1e"
+    },
+    "report_intelligence_principle_synthesis": {
+      "path": "research/reports/intelligence_principle_synthesis.md",
+      "sha256": "e7c72836e1b7ad17db03637eec0207fe15f7ed607ba67426fa6c2e6e0303352f"
+    },
+    "report_final_scientific_report": {
+      "path": "research/reports/final_scientific_report.md",
+      "sha256": "1ee0e1b820adb134228cd61c369edfe41d7f1b2baef1a08ccf34e47163418762"
+    }
+  }
+}
