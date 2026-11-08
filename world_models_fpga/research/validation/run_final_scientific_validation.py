@@ -176,10 +176,13 @@ def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
             item["result_artifact_path"] = item.get("result_artifact_path", "UNKNOWN")
             item["result_artifact_sha256"] = item.get("result_artifact_sha256", "UNKNOWN")
 
+        # --- Strict Cryptographic On-Disk Verification for Executed/Verified Records ---
+        ds_file = _resolve_repo_file(repo_root, base_dir, item.get("dataset_path", ""))
+        ckpt_file = _resolve_repo_file(repo_root, base_dir, item.get("checkpoint_path", ""))
+        art_file = _resolve_repo_file(repo_root, base_dir, item.get("result_artifact_path", ""))
+
         status = item.get("provenance_status")
         art_key = str(art_file.resolve())
-
-        # --- Strict Cryptographic On-Disk Verification for Executed/Verified Records ---
         provenance_errors = []
         if status in ("INDEPENDENTLY_EXECUTED", "REUSED_VERIFIED"):
             src_commit = str(item.get("source_git_commit", ""))

@@ -55,20 +55,21 @@ xychart-beta
 
 ### Open-Loop Physical Kinematic Fidelity across Horizons ($K \in \{1, 3, 5, 10\}$)
 
-| Horizon $K$ | Micro Recursive Latent MSE | Micro Recursive Disp Err (m) | LeWM Recursive Disp Err (m) | Macro Direct Latent MSE | Macro Direct Disp Err (m) |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| **$K=1$** | 0.0246 | 0.0174m | 0.0190m | — | — |
-| **$K=3$** | 0.1143 | 0.0475m | 0.0551m | — | — |
-| **$K=5$** | 0.2151 | 0.0787m | 0.0910m | **0.1789** | **0.0447m** |
-| **$K=10$** | 0.4557 | 0.1524m | 0.1861m | — | — |
+| Horizon $K$ | Micro Recursive Latent MSE | Micro Recursive Disp Err (m) | LeWM Recursive Disp Err (m) | Macro Direct Latent MSE | Macro Direct Disp Err (m) | $\Delta \text{Disp Err}$ (Macro vs Micro) |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **$K=1$** | 0.0262 | 0.0180m | 0.0200m | — | — | — |
+| **$K=3$** | 0.1217 | 0.0491m | 0.0588m | — | — | — |
+| **$K=5$** | 0.2272 | 0.0814m | 0.0975m | **0.1932** | **0.0460m** | **-0.0354m (-43.5%)** |
+| **$K=10$** | 0.4804 | 0.1612m | 0.2025m | — | — | — |
 
 ### Computational Principles Derived:
 1. **The Computational Latency Amortization Principle:**
-   - In open-loop multi-step prediction at $K=5$, direct macro prediction reduces physical displacement error from 0.0787m to 0.0447m (a **43.2% error reduction**).
+   - In open-loop multi-step prediction at $K=5$, direct macro prediction reduces physical displacement error from 0.0814m to 0.0460m (a **43.5% error reduction**).
    - In computational budget, direct macro prediction evaluates the $K=5$ horizon in a **single inference pass (4,327 clock cycles / 34.61 $\mu$s @ 125 MHz)**, whereas recursive micro unrolling requires **5 sequential inference passes (21,635 clock cycles / 173.08 $\mu$s)**. Macro prediction amortizes latency by $5\times$.
 2. **The Causal Lookahead Principle:**
-   - In `run_matched_temporal_controls.py`, breaking candidate action-outcome association via a negative control (`cond_E_shuffled_control`) drops closed-loop success from **46.7% to 23.3%** ($p = 0.0082$), proving that learned predictive foresight is causally necessary for navigation.
-3. **Hierarchy in Closed Loop:** Direct macro does not statistically dominate recursive micro in closed loop (46.7% vs 53.3%, $p = 0.317$). Its true computational utility is latency amortization and kinematic drift suppression.
+   - In `run_matched_temporal_controls.py`, macro lookahead significantly outperforms random candidate selection (46.7% vs 23.3%, $+23.3\%$, McNemar exact $p = 0.0156$). Shuffled action-outcome binding (`cond_E_shuffled_binding`) achieves 36.7%, matching the reactive baseline.
+   - Condition A (Reactive) and Condition F (Prior-Only Scorer) are mathematically and behaviorally equivalent ($\Delta = 0.0\%$, identical trajectory).
+3. **Hierarchy in Closed Loop:** In closed loop, direct macro (46.7%) achieves parity with recursive micro (53.3%, McNemar exact $p = 0.625$, Wilcoxon $p = 0.696$). Its true computational utility is latency amortization and kinematic drift suppression.
 
 ---
 

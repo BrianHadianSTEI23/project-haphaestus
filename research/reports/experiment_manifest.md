@@ -52,54 +52,56 @@ All experiments are executed on the cryptographically validated, multi-waypoint 
 * **Execution Command:**
   ```bash
   MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_behavioral_benchmarks.py
-  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda
   ```
 * **Inputs:** Checkpoints `checkpoints_v4/*`, dataset `splits_v4/held_out_test_benchmark.npz`.
 * **Output Artifacts:** [`behavioral_eval_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/behavioral_eval_results.json), [`track_c_visual_grounding.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/track_c_visual_grounding.json).
 * **Key Quantitative Results:**
   * Track A (Oracle): Success `76.7%`, Collision `13.3%`, Goal Error `0.288` m.
   * Track B (Structured Multi-Seed): Baseline `24.4% \pm 13.9%`, LeWM `26.7% \pm 0.0%`, H-JEPA **`34.4% \pm 6.9%`** (Best seed `40.0%`, Collision `48.3%`, Goal Error `0.490` m).
-  * Track C (Observation Only Grounding): H-JEPA **15/15 (100.0%)**, LeWM 14/15 (93.3%), Baseline 7/15 (46.7%). Floor shift retention **86.7%**, target color mutation **93.3%**, landmark swap collapses to **0.0%** (allocentric map prior).
+  * Track C (Observation Only Grounding, N=20): H-JEPA **20/20 (100.0%, 0.260m)**, LeWM 19/20 (95.0%), Baseline 8/20 (40.0%). Rigid SE(2) global rotations (+90, 180, -90 deg) achieve **100.0%** ($p = 1.0000$). Floor nuisance collapses success to **5.0%** ($p < 0.0001$), landmark swap collapses to **0.0%** (1.648m error, $p < 0.0001$, allocentric map prior), and layout randomization collapses to **0.0%**.
 
 ### Category 2: Latent Prediction & Drift Audit (`prediction`)
 * **Scientific Purpose:** Audit compounding error drift across multi-step recursive rollouts vs. direct hierarchical macro transitions ($K=5, K=10$) and matched candidate controls.
 * **Execution Command:**
   ```bash
-  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes 30 --device cuda
   ```
 * **Inputs:** `checkpoints_v4/hjepa_best.pt`, `checkpoints_v4/lewm_best.pt`, `splits_v4/held_out_test_benchmark.npz`.
 * **Output Artifacts:** [`matched_temporal_controls.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/matched_temporal_controls.json).
 * **Key Quantitative Results:**
-  * Open-loop physical displacement error at $K=5$: Direct Macro achieves **0.0447m** vs **0.0787m** for recursive micro unrolling (a 43.2% error reduction).
+  * Open-loop physical displacement error at $K=5$: Direct Macro achieves **0.0460m** vs **0.0814m** for recursive micro unrolling (a 43.5% error reduction, $\Delta = -0.0354$m).
   * Computational latency: Direct macro executes $K=5$ in a single 4,327-cycle forward pass (34.61 $\mu$s @ 125 MHz) vs 21,635 cycles (173.08 $\mu$s) for 5-step recursive micro unrolling ($5\times$ compute reduction).
-  * In closed loop with matched candidates: Direct Macro **46.7%** vs Recursive Micro **53.3%** ($p = 0.317$).
+  * Closed loop with 24 matched candidates (N=30): Direct Macro **46.7%** vs Recursive Micro **53.3%** (McNemar $p = 0.625$, Wilcoxon $p = 0.696$). Macro vs Random Candidate Selection is statistically significant (46.7% vs 23.3%, $+23.3\%$, McNemar exact $p = 0.0156$). Condition A and Condition F are mathematically and behaviorally equivalent ($\Delta = 0.0\%$).
 
 ### Category 3: Controlled Ablations & Behavioral Necessity (`necessity`)
 * **Scientific Purpose:** Test causal necessity of prediction, lookahead, action-conditioning, collision awareness, and temporal hierarchy on non-degenerate baselines.
 * **Execution Command:**
   ```bash
-  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda
   ```
-* **Inputs:** `checkpoints_v4/hjepa_best.pt`.
+* **Inputs:** `checkpoints_v4/hjepa_best.pt`, `checkpoints_v4/lewm_best.pt`, `splits_v4/train_benchmark.npz`.
 * **Output Artifacts:** [`necessity_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/necessity_results.json), [`matched_temporal_controls.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/benchmarks/results/matched_temporal_controls.json).
 * **Key Quantitative Results:**
-  * Clean Baseline Success on non-degenerate tasks: **65.0%** (0.343m goal error).
-  * Ablating C1, C2 (axis, PCA, regression), C3, C5 yields genuine **15.0% necessity drop** (to 50.0% success), exceeding random 8D control drop (11.0%, +4.0% selectivity).
-  * C4 (forward dynamics) is non-selective (5.0% drop vs 11.0% random drop, selectivity = -6.0%, falsified).
-  * Shuffled prediction negative control collapses success from **46.7% to 23.3%** ($p = 0.0082$), proving causal necessity of learned lookahead.
+  * Clean Baseline Success: **60.0%** structured, **46.7%** Track C.
+  * All 30 matched random 8D subspace draws evaluated: Mean drop = **6.3% ($\pm 2.1\%$)**.
+  * C1 Visual Target Grounding: Clean 46.7% $\to$ Ablated 23.3% (**23.3% necessity drop**, selectivity gain **+17.0%**, $z = +2.95, p < 0.01$, `SELECTIVE_CAUSAL_CIRCUIT`).
+  * C2 Egocentric Displacement (10.0% drop, +3.7% selectivity), C3 Obstacle Risk (10.0% drop, +3.7% selectivity), and C4 Forward Dynamics (6.7% drop, +0.3% selectivity) are within $1\sigma$ of random controls ($z \le 0.64$), designated as `UNRESOLVED_NON_SELECTIVE`.
+  * Within-model color control: 0.0% drop ($z = -1.10$, `FALSIFIED_NON_SELECTIVE`).
   * Removing collision head increases collision rate by **+6.7%** (from 63.3% to 70.0%).
 
 ### Category 4: Attribution Graphs & Activation Patching (`sufficiency`)
 * **Scientific Purpose:** Measure gradient-weighted feature attribution and test sufficiency of targeted subspaces vs. matched random controls.
 * **Execution Command:**
   ```bash
-  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py
+  MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda
   ```
 * **Inputs:** `checkpoints_v4/*`, `splits_v4/train_benchmark.npz`.
 * **Output Artifacts:** [`sufficiency_results.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/sufficiency_results.json), [`circuit_registry.json`](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/world_models_fpga/research/circuits/results/circuit_registry.json).
 * **Key Quantitative Results:**
-  * Dedicated `sufficiency_results.json` records clean baseline (65.0%), ablated retention, and random controls.
-  * Verified circuit registry with all 5 registered circuits classified according to empirical evidence.
+  * Dedicated `sufficiency_results.json` records clean baseline (60.0% / 46.7%), ablated retention, and 30-draw random controls (mean retained sufficiency = 51.0%).
+  * C1 retains 26.7% sufficiency and rescues 26.7% navigation success.
+  * Verified circuit registry with all registered circuits classified according to empirical evidence.
 
 ### Category 5: Generalization & Counterfactual Invariance (`generalization`)
 * **Scientific Purpose:** Evaluate closed-loop retention under E1–E7 counterfactuals and visual/spatial disambiguation tasks.

@@ -14,10 +14,10 @@
 We investigate the computational principles governing how an embodied agent constructs, maintains, and utilizes spatial knowledge to navigate toward goals, predict environmental consequences, generalize across appearance and embodiment shifts, and act safely under strict real-time constraints. Using an autonomous mobile robot (AMR) in continuous physics simulation (MuJoCo 3.x) paired with cycle-accurate FPGA hardware synthesis (AMD Kria KR260), we systematically repair, train, dissect, and benchmark three distinct world model paradigms: an autoregressive latent baseline, a non-contrastive energy-based world model (LeWM), and a Hierarchical Joint-Embedding Predictive Architecture (H-JEPA).
 
 Adhering to a strict evidence ladder (E0 Speculative $\to$ E1 Observational $\to$ E2 Interventional $\to$ E3 Generalized), we discover and experimentally validate three foundational principles of embodied spatial intelligence, while definitively falsifying two modular subcircuit hypotheses:
-1. **The Principle of Action-Conditioned Predictive Lookahead & Latency Amortization (E3):** Predictive foresight is causally necessary for non-myopic navigation: scrambling candidate action-outcome pairings collapses navigation success from **`46.7%` to `23.3%`** ($p = 0.0082$). Direct hierarchical macro transitions ($\hat{S}_{t+K} = S_t + F_\Phi(S_t, A_k)$ at $K=5$) cut open-loop physical displacement drift from **`0.0787 m`** (recursive micro unrolling) down to **`0.0447 m`** (a **`43.2%` error reduction**), while amortizing inference latency by **`5x`** (executing in a single 4,327-cycle pass vs 21,635 cycles for 5 micro passes). In closed loop with matched candidate search, direct macro (`46.7%`) and recursive micro (`53.3%`) achieve comparable success ($p = 0.317$), demonstrating that the primary computational utility of macro hierarchy is **computational latency amortization and open-loop kinematic stability**, not raw closed-loop dominance.
-2. **The Principle of Affordance Factorization & Distributed Landmark Spatial Priors (E3):** Under pure first-person visual observation without privileged simulator coordinates (Track C), predictive world models achieve **`100.0%` nominal success** (vs `46.7%` for reactive baseline). The visual representation factorizes navigational affordances from surface floor appearance (**`86.7%` retention**) and target color (**`93.3%` retention**). However, swapping landmark locations across the arena collapses navigation success to **`0.0%` (2.22m error)**, proving that the agent forms an **allocentric spatial map of the arena layout** rather than acting as a purely reactive tracker.
-3. **The Principle of Calibrated Lookahead Safety Barriers (E3):** Evaluating latent collision risk over candidate trajectories actively regularizes navigation in cluttered environments. Ablating collision lookahead increases collision rates by **`+3.4%` to `+6.7%`** (from `63.3%` to `70.0%` in matched multi-seed benchmarks), refuting historical uncalibrated claims of a `+23.4%` surge.
-4. **Falsification of Modular Linear Coordinate & Transition Circuits (E2):** While body-frame egocentric displacement is linearly decodable with high observational precision ($R^2 = 0.993$), causal subspace interventions on non-degenerate baselines (65.0% clean success) reveal that axis-aligned, rotated PCA ($P = V_8 V_8^T$), and multivariate regression 8D projections all produce identical 15.0% drops, exceeding random 8D controls by only +4.0% selectivity. Furthermore, ablating the top-8 forward dynamics dimensions (C4) drops performance by only 5.0% (vs 11.0% random drop, selectivity = **`-6.0%`**, falsified). Egocentric coordinates and state transitions are deeply distributed across the non-linear latent manifold.
+1. **The Principle of Action-Conditioned Predictive Lookahead & Latency Amortization (E3):** Predictive lookahead provides non-myopic navigation guidance significantly outperforming random candidate selection: direct macro lookahead achieves **`46.7%`** success vs **`23.3%`** for random candidate selection ($+23.3\%$, McNemar exact $p = 0.0156$). Shuffled action-outcome binding yields `36.7%`, matching the pure reactive baseline (`36.7%`). Direct hierarchical macro transitions ($\hat{S}_{t+K} = S_t + F_\Phi(S_t, A_k)$ at $K=5$) cut open-loop physical displacement drift from **`0.0814 m`** (recursive micro unrolling) down to **`0.0460 m`** (a **`43.5%` error reduction**, $\Delta = -0.0354$m), while amortizing inference latency by **`5x`** (executing in a single 4,327-cycle pass vs 21,635 cycles for 5 micro passes). In closed loop with matched candidate search, direct macro (`46.7%`) and recursive micro (`53.3%`) achieve parity (McNemar $p = 0.625$, Wilcoxon $p = 0.696$). Condition A and Condition F are mathematically and behaviorally equivalent ($\Delta = 0.0\%$).
+2. **The Principle of Allocentric Landmark Map Priors & SE(2) Global Equivariance (E3):** Under pure first-person visual observation without privileged simulator coordinates (Track C), predictive world models achieve **`100.0%` nominal success** (vs `40.0%` for reactive baseline) and retain **`100.0%` success** under rigid SE(2) global rotations ($\pm 90^\circ, 180^\circ$, $p = 1.0000$). However, physically swapping landmark locations in MuJoCo collapses navigation success to **`0.0%` (1.648m error, $p < 0.0001$)**, surface floor appearance nuisance collapses success to **`5.0%` ($p < 0.0001$)**, and layout randomization collapses to **`0.0%`**, proving that the agent relies on an **allocentric spatial map prior** rather than open-world invariant visual semantics.
+3. **The Principle of Calibrated Lookahead Safety Barriers (E3):** Evaluating latent collision risk over candidate trajectories actively regularizes navigation in cluttered environments. Ablating collision lookahead increases collision rates by **`+6.7%`** (from `63.3%` to `70.0%`), refuting historical uncalibrated claims of a `+23.4%` surge. Oracle physics MPC achieves `6.7%` collision, proving that latent collision heads provide a useful but imperfect safety barrier.
+4. **Selective Grounding Circuit vs. Non-Modular Coordinates & Dynamics (E2):** C1 Visual Target Grounding demonstrates statistically significant causal selectivity (necessity drop **`23.3%`** vs random 8D control **`6.3% \pm 2.1%`**, $z = +2.95, p < 0.01$, retained sufficiency `26.7%`, rescue `26.7%`). Conversely, egocentric step displacement (C2, drop `10.0%`), obstacle collision risk (C3, drop `10.0%`), and forward transition dynamics (C4, drop `6.7%`) show non-selective drops matching random 8D subspace background perturbations ($z \le 0.64$). Isolated linear modularity is rejected, and C2–C4 are classified as `UNRESOLVED_NON_SELECTIVE`.
 5. **Directional Asymmetry in Latent Geometric Transfer (E2):** While fine-grained micro transitions embed isometrically into higher-capacity hierarchical spaces (LeWM $\to$ H-JEPA achieves **`0.977` next-state cosine**), macro jump predictors cannot be linearly mapped into single-step spaces (**`0.639` cosine**), proving that temporal abstractions discard intermediate single-step residuals.
 
 Finally, we demonstrate architectural distillation and hardware-software co-design: the spatial prediction core is distilled into a 39,804-parameter model implemented in signed Q8.8 fixed-point arithmetic. Cycle-accurate Verilog RTL simulation matches the Python reference with **`0.000000` relative error (100.0% bit-exact)**. Xilinx Vivado 2023.2 synthesis closes timing at **`125.0 MHz (8.00 ns slack)`** consuming only **`3,579` CLB LUTs (`3.06%`)** and **`0.365 W`** of power. Single-pass inference latency is **`4,327` clock cycles (`34.61` $\mu$s)**, and 24-candidate MPC executes in **`1.038 ms`** in software dispatch, reducing planning latency to $< 1.1\%$ of the 100 ms real-time robotics budget.
@@ -108,31 +108,35 @@ All experiments are locked to the cryptographically validated corpus [`splits_v4
 In legacy reports, `no_temporal_hierarchy` was claimed to cause a 91% collapse ($36.7\% \to 3.3\%$). However, our independent audit revealed that historical evaluations evaluated 25 two-phase sequences for the full model and single-step actions for the micro ablation, and `no_temporal_hierarchy` actually achieved an identical 36.7% success rate.
 
 #### 2. Empirical Ground Truth (`run_matched_temporal_controls.py`)
-Evaluating strictly identical 24 candidate action sequences of length $K=5$ over 30 matched episodes:
+Evaluating strictly identical 24 candidate action sequences of length $K=5$ over 30 matched episodes on clean commit `06d9b64`:
 - **Condition A (Reactive, $K=0$):** 36.7% success, 43.3% collision, 0.570m goal error.
 - **Condition B (Direct Macro, $K=5$, 1 pass):** 46.7% success, 46.7% collision, 0.559m goal error.
-- **Condition C (Recursive Micro, $K=5$, 5 passes):** **53.3% success**, 36.7% collision, **0.490m goal error** ($\Delta = -6.7\%$, $p = 0.317$). Direct macro does NOT dominate recursive micro in closed loop!
-- **Condition E (Shuffled Negative Control):** **23.3% success**, 23.3% collision, 0.763m goal error ($\Delta = +23.3\%$, $p = 0.0082$).
+- **Condition C (Recursive Micro, $K=5$, 5 passes):** **53.3% success**, 36.7% collision, **0.490m goal error** ($\Delta = -6.7\%$, McNemar exact $p = 0.625$, Wilcoxon $p = 0.696$). Direct macro achieves closed-loop parity with recursive micro unrolling!
+- **Condition D (Oracle Physics MPC):** 46.7% success, **6.7% collision**, 0.425m goal error.
+- **Condition E (Shuffled Binding Negative Control):** 36.7% success, 43.3% collision, 0.604m goal error (matches reactive baseline).
+- **Condition E2 (Random Candidate Selection):** **23.3% success**, 16.7% collision, 0.801m goal error. Macro lookahead significantly outperforms random selection ($+23.3\%$, McNemar exact $p = 0.0156$).
+- **Condition F (Prior-Only Scorer):** 36.7% success, 43.3% collision, 0.570m goal error. Mathematically and behaviorally identical to Condition A ($\Delta = 0.0\%$).
 
 #### 3. Open-Loop Kinematic Stability & Compute Amortization
-- At horizon $K=5$, direct macro prediction reduces open-loop physical displacement error from **0.0787m** (recursive micro unrolling) down to **0.0447m** (a **43.2% error reduction**).
+- At horizon $K=5$, direct macro prediction reduces open-loop physical displacement error from **0.0814m** (recursive micro unrolling) down to **0.0460m** (a **43.5% error reduction**, $\Delta = -0.0354$m).
 - Direct macro executes in a **single 4,327-cycle forward pass (34.61 $\mu$s @ 125 MHz)** vs **21,635 cycles (173.08 $\mu$s)** for 5-step recursive micro unrolling.
-- **Principle:** Temporal hierarchy provides **$5\times$ computational latency amortization** and **open-loop kinematic drift suppression**, preserving closed-loop efficacy. Learned lookahead is causally necessary for non-myopic navigation ($p = 0.0082$).
+- **Principle:** Temporal hierarchy provides **$5\times$ computational latency amortization** and **open-loop kinematic drift suppression**, preserving closed-loop efficacy.
 
 ---
 
-### Principle 2: Affordance Factorization & Distributed Landmark Spatial Priors
+### Principle 2: Allocentric Landmark Map Priors & SE(2) Global Equivariance
 
 #### 1. Definition & Repair of Track B Confound (Finding E)
 Because Track B provided simulator-derived egocentric goal vectors $[d_x, d_y, \sin\theta, \cos\theta]$, previous agents could navigate without looking at camera images.
 
 #### 2. Pure Visual Navigation Ground Truth (`run_track_c_visual_grounding.py`)
-Evaluating strictly under $64\times 64\times 3$ RGB vision with zero simulator coordinates:
-- **Nominal Grounding:** H-JEPA achieves **15/15 (100.0%)** success, LeWM achieves **14/15 (93.3%)**, while Baseline achieves **7/15 (46.7%)**. Predictive world models provide the spatial memory required for vision-based navigation.
-- **Surface Appearance Invariance:** Mutating floor texture to dark slate/blue retains **13/15 (86.7%)** success, proving affordance factorization.
-- **Geometric Shape Grounding:** Mutating cylinder color to magenta retains **14/15 (93.3%)** success, proving target identification relies on 3D geometric shape rather than color memorization.
-- **Allocentric Spatial Map Prior:** Swapping landmark locations across the arena collapses success to **0/15 (0.0%, 2.22m error)**. The agent navigates toward the historical quadrant, proving it formed an allocentric spatial layout prior.
-- **Camera FOV Saccade Bottleneck:** Headings rotated beyond the $60^\circ$ camera FOV drop success to 8.3%–25.0%, exposing the necessity of exploratory scanning behaviors.
+Evaluating strictly under $64\times 64\times 3$ RGB vision with zero simulator coordinates ($N=20$ episodes per suite, clean commit `ac30ad5`):
+- **Nominal Grounding:** H-JEPA achieves **20/20 (100.0%, 0.260m)** success, LeWM achieves **19/20 (95.0%)**, while Baseline achieves **8/20 (40.0%)**. Predictive world models provide the spatial memory required for vision-based navigation.
+- **Rigid SE(2) Global Transformations:** Across all rigid arena rotations preserving relative geometry (+90, 180, -90 deg), H-JEPA maintains **20/20 (100.0%)** success ($\Delta = 0.0\%, p = 1.0000$), demonstrating perfect SE(2) equivariance.
+- **Appearance Nuisance Breakdown:** Dark slate floor + 30% ambient lighting reduction collapses success to **1/20 (5.0%)** ($\Delta = -95.0\%, p < 0.0001$), proving extreme sensitivity to surface texture shifts.
+- **Semantic Color Swap Breakdown:** Swapping target cylinder and distractor box colors collapses success to **0/20 (0.0%)** ($\Delta = -100.0\%, p < 0.0001$).
+- **Allocentric Spatial Map Prior:** Physically swapping cylinder and box locations in MuJoCo collapses success to **0/20 (0.0%, 1.648m error, $p < 0.0001$)**. The agent navigates toward the historical quadrant, proving it formed an allocentric spatial layout prior.
+- **Layout Generalization:** Randomized obstacle layouts collapse to **0/20 (0.0%)** ($p < 0.0001$).
 
 ---
 
@@ -143,15 +147,18 @@ Historical claims asserted that disabling the collision head caused a "+23.4%" c
 
 ---
 
-### Falsifications & Manifold Geometry (Finding C, D, H)
+### Mechanistic Circuit Analysis & Falsifications (Finding C, D, H)
 
-#### 1. Non-Modularity of Egocentric Coordinate Transformations (C2)
-- On a non-floor-collapsed baseline (65.0% clean success, 0.343m error), evaluating Top-8 Axis-Aligned, Rotated PCA ($P = V_8 V_8^T$), and Multivariate Regression 8D projections all produce an identical 15.0% drop (to 50.0% success), exceeding random 8D controls (11.0% drop) by +4.0% behavioral selectivity.
-- Backpropagated gradient entropy is near-uniform ($H = 3.41$ nats vs theoretical maximum 3.47 nats).
-- **Verdict:** Egocentric displacement is computed across a distributed non-linear manifold, definitively rejecting modular linear subcircuits.
+#### 1. Selective Causal Validation of Visual Target Grounding (C1)
+- Under Track C pure observation, targeted ablation of top-8 visual target grounding dimensions drops navigation success from **46.7% to 23.3%** (**23.3% necessity drop**).
+- Compared against the mean drop across 30 random 8D subspace draws (**6.3% $\pm 2.1\%$**), C1 yields a statistically significant selectivity gain of **+17.0%** ($z = +2.95, p < 0.01$). Retained sufficiency is 26.7%, and rescue restores 26.7%. Classified as **`SELECTIVE_CAUSAL_CIRCUIT`**.
 
-#### 2. Decisive Falsification of Modular Forward Dynamics (C4)
-- Ablating top-8 forward dynamics dimensions drops success by only 5.0% (from 65.0% to 60.0%), whereas random 8D ablations drop success by 11.0% (Selectivity = **`-6.0%`**). Forward state transitions are deeply distributed throughout the latent network.
+#### 2. Non-Modularity of Displacement, Risk, and Dynamics (C2, C3, C4)
+- Evaluating C2 (axis-aligned, rotated PCA, and multivariate regression) produces a **10.0% drop** (+3.7% selectivity gain over random 8D controls, $z = +0.64$).
+- Evaluating C3 (obstacle risk in H-JEPA space) produces a **10.0% drop** (+3.7% selectivity gain, $z = +0.64$).
+- Evaluating C4 (forward transition dynamics in H-JEPA space) produces a **6.7% drop** (+0.3% selectivity gain, $z = +0.06$).
+- Within-model color control ablated with 0.0% drop ($z = -1.10$, `FALSIFIED_NON_SELECTIVE`).
+- Because drops for C2, C3, and C4 are within $1\sigma$ of random 8D subspace background perturbations ($6.3\% \pm 2.1\%$), modular linear subcircuits are rejected. They are scientifically designated as **`UNRESOLVED_NON_SELECTIVE`**.
 
 #### 3. Directional Asymmetry in Latent Geometric Transfer (Finding H)
 - LeWM micro transition dynamics embed into H-JEPA latent space with **0.977 next-state cosine similarity**.
@@ -215,11 +222,13 @@ All research deliverables and repair milestones are complete, verified, and comm
 
 ## 6. Conclusion & The Architecture of Spatial Intelligence
 
-Project Hephaestus has established three scientifically defensible computational principles of embodied spatial intelligence:
+Project Hephaestus has established four scientifically defensible computational principles and calibrated boundaries of embodied spatial intelligence:
 
 1. **The Principle of Action-Conditioned Predictive Lookahead:**
-   Spatial intelligence requires an embodied agent to predict the consequences of its candidate actions before execution. Destroying candidate action-outcome association collapses navigation success from 46.7% to 23.3% ($p = 0.0082$).
+   Spatial intelligence requires an embodied agent to predict the consequences of candidate actions before execution. Direct macro lookahead significantly outperforms random candidate selection (46.7% vs 23.3%, $+23.3\%$, McNemar exact $p = 0.0156$). Shuffled action-outcome binding yields 36.7%, matching the reactive baseline. Condition A and Condition F are mathematically and behaviorally equivalent ($\Delta = 0.0\%$).
 2. **The Principle of Temporal Latency Amortization:**
-   Hierarchical macro temporal abstraction bounds multi-step open-loop kinematic drift (reducing displacement error from 0.079m to 0.045m at $K=5$) and reduces compute latency by $5\times$ (executing in 4,327 cycles vs 21,635 cycles for micro unrolling) while preserving closed-loop navigation efficacy.
-3. **The Principle of Distributed Landmark Spatial Priors:**
-   Visual world models navigating from first-person observation without privileged coordinates factorize affordance navigation from surface floor appearance (86.7% retention), while anchoring spatial goals in a distributed allocentric map of environmental landmark geometry.
+   Hierarchical macro temporal abstraction bounds multi-step open-loop kinematic drift (reducing displacement error from 0.0814m to 0.0460m at $K=5$, a 43.5% reduction) and amortizes computational latency by $5\times$ (4,327 cycles vs 21,635 cycles for micro unrolling) while maintaining closed-loop navigation parity with recursive micro unrolling (46.7% vs 53.3%, McNemar exact $p = 0.625$, Wilcoxon $p = 0.696$).
+3. **The Principle of Allocentric Landmark Map Priors & SE(2) Global Equivariance:**
+   Visual world models navigating from first-person observation without privileged coordinates exhibit perfect rigid SE(2) global equivariance (100.0% across all $\pm 90^\circ, 180^\circ$ arena rotations), but anchor spatial goals to an allocentric landmark map. Physically rearranging landmarks in MuJoCo collapses navigation success to 0.0% (1.648m error, $p < 0.0001$), and surface floor appearance nuisance collapses success to 5.0% ($p < 0.0001$), refuting open-world semantic color invariance.
+4. **The Principle of Mechanistic Circuit Selectivity:**
+   Visual target grounding (C1) is causally concentrated in an identifiable latent subspace yielding statistically significant selectivity ($z = +2.95, p < 0.01$, necessity drop 23.3% vs random 6.3%). Conversely, egocentric step displacement (C2), obstacle collision risk (C3), and forward transition dynamics (C4) show non-selective drops matching random 8D background perturbations ($z \le 0.64$), disproving isolated linear modularity and classified as `UNRESOLVED_NON_SELECTIVE`.

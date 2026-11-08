@@ -1,5 +1,13 @@
 # Phase 6 Technical Report: Discovery of Underlying Computational Intelligence Principles
 
+> [!WARNING]
+> **SUPERSEDED HISTORICAL DOCUMENT — FOR HISTORICAL PROVENANCE ONLY**
+> This Phase 6 document contains pre-audit hypotheses and uncalibrated claims (such as claiming all five principles satisfied Level E3, conflating decoding $R^2$ with causal necessity, and assuming cross-model isometric transfer).
+> Following the Phase 10 Scientific Truth Audit and rigorous interventional experiments:
+> 1. See [principle_validation_report.md](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/research/reports/principle_validation_report.md) for the authoritative validated principles and boundary conditions.
+> 2. See [claims_ledger.md](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/research/reports/claims_ledger.md) for calibrated evidence levels across hypotheses.
+> 3. See [causal_circuit_report.md](file:///home/hadynata/vs-code-data/hdl/project-haphaestus/research/reports/causal_circuit_report.md) for the exact selective circuit intervention findings.
+
 **Author:** Brian A. Hadian  
 **Project:** Action-Conditioned World Models & Language Navigation on AMD Kria KR260 FPGA  
 **Date:** November 2026  

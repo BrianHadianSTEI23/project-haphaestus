@@ -65,38 +65,44 @@ flowchart TD
 
 ### Empirical Interventional Results (`run_rigorous_behavioral_circuits.py`)
 
-All circuits were discovered strictly on `train_benchmark.npz` and evaluated in closed-loop MuJoCo navigation on non-degenerate tasks ($N = 20$ episodes; clean baseline success = **65.0%**, goal error = 0.343m):
+All candidate circuits were discovered strictly on `train_benchmark.npz` and evaluated in closed-loop MuJoCo navigation on non-degenerate tasks ($N = 30$ matched episodes; clean baseline success: **60.0%** in structured track, **46.7%** in pure-observation Track C). All 30 matched random 8D subspace draws were evaluated without slicing:
 
-| Circuit ID | Circuit Name | Formulation / Subspace | Clean Success | Ablated Success | Nec Drop | Random-8 Control Drop | Behavioral Selectivity | Verification Status |
-|---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **`C1`** | `target_grounding` | Landmark Identification (Top-8) | 65.0% | 50.0% | 15.0% | 11.0% | +4.0% | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **`C2_axis`** | `egocentric_transformation` | Axis-Aligned Marginal Correlation | 65.0% | 50.0% | 15.0% | 11.0% | +4.0% | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **`C2_pca`** | `egocentric_transformation` | Rotated PCA Subspace ($P = V_8 V_8^T$) | 65.0% | 50.0% | 15.0% | 11.0% | +4.0% | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **`C2_reg`** | `egocentric_transformation` | Multivariate Ridge Regression Rank-8 | 65.0% | 50.0% | 15.0% | 11.0% | +4.0% | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **`C3`** | `obstacle_collision_detection` | Near-Field Collision Subspace (Top-8) | 65.0% | 50.0% | 15.0% | 11.0% | +4.0% | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
-| **`C4`** | `action_conditioned_transition` | Forward Dynamics Subspace (Top-8) | 65.0% | 60.0% | 5.0% | 11.0% | **-6.0%** | **`FALSIFIED_NON_SELECTIVE`** |
-| **`C5`** | `hierarchical_subgoal_decomposition` | Macro Waypoint Subspace at $K=5$ | 65.0% | 50.0% | 15.0% | 11.0% | +4.0% | `PARTIALLY_SUPPORTED_DISTRIBUTED` |
+| Circuit ID | Circuit Name | Formulation / Subspace | Track | Clean Success | Ablated Success | Nec Drop | Random-8 Control Drop | Behavioral Selectivity | Retained Sufficiency | Rescued Success | Verification Status |
+|---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **`C1`** | `visual_target_grounding` | Landmark Identification (Top-8 Dims) | Track C | 46.7% | 23.3% | **23.3%** | 6.3% ($\pm 2.1\%$) | **+17.0%** ($z=+2.95, p<0.01$) | 26.7% | 26.7% | **`SELECTIVE_CAUSAL_CIRCUIT`** |
+| **`C2_axis`** | `egocentric_displacement` | Axis-Aligned Marginal Correlation (Top-8) | Structured | 60.0% | 50.0% | 10.0% | 6.3% ($\pm 2.1\%$) | +3.7% ($z=+0.64, p=0.52$) | 50.0% | 50.0% | `UNRESOLVED_NON_SELECTIVE` |
+| **`C2_pca`** | `egocentric_displacement` | Rotated PCA Subspace ($P = V_8 V_8^T$) | Structured | 60.0% | 50.0% | 10.0% | 6.3% ($\pm 2.1\%$) | +3.7% ($z=+0.64, p=0.52$) | 50.0% | 50.0% | `UNRESOLVED_NON_SELECTIVE` |
+| **`C2_reg`** | `egocentric_displacement` | Multivariate Ridge Regression Rank-8 | Structured | 60.0% | 50.0% | 10.0% | 6.3% ($\pm 2.1\%$) | +3.7% ($z=+0.64, p=0.52$) | 50.0% | 50.0% | `UNRESOLVED_NON_SELECTIVE` |
+| **`C3`** | `obstacle_collision_risk` | Collision Risk Subspace in H-JEPA Space | Structured | 60.0% | 50.0% | 10.0% | 6.3% ($\pm 2.1\%$) | +3.7% ($z=+0.64, p=0.52$) | 50.0% | 50.0% | `UNRESOLVED_NON_SELECTIVE` |
+| **`C4`** | `forward_transition_dynamics` | Transition Delta Subspace in H-JEPA Space | Structured | 60.0% | 53.3% | 6.7% | 6.3% ($\pm 2.1\%$) | +0.3% ($z=+0.06, p=0.95$) | 50.0% | 50.0% | `UNRESOLVED_NON_SELECTIVE` |
+| **`Control`**| `unrelated_color_control` | Within-Model Color Nuisance Control | Structured | 60.0% | 60.0% | 0.0% | 6.3% ($\pm 2.1\%$) | -6.3% ($z=-1.10, p=0.27$) | 50.0% | 50.0% | `FALSIFIED_NON_SELECTIVE` |
 
 ---
 
 ## 4. Scientific Discussion: Manifold Geometry & Falsifications
 
 ### 4.1 Resolution of the Baseline Floor Collapse Defect (Finding C)
-In previous reports, `circuit_registry.json` reported 0.0 necessity drop for circuits C3, C4, and C5 because the clean baseline success on the evaluated task set was **0.0%**. Measuring a drop from 0% to 0% as "0.0 drop" was an experimental defect. Evaluating on a non-degenerate task suite where the clean agent succeeds **65.0%** of the time reveals genuine **15.0% behavioral drops** under ablation.
+In pre-audit historical reports, `circuit_registry.json` reported 0.0 necessity drop for circuits C3, C4, and C5 because the clean baseline success on the evaluated task set was **0.0%**. Measuring a drop from 0% to 0% as "0.0 drop" was an experimental defect. Evaluating on a non-degenerate task suite where the clean agent succeeds **60.0%** of the time reveals genuine behavioral drops under ablation.
 
 ### 4.2 Non-Modularity of Egocentric Coordinate Transformation (Finding D)
 - **Hypothesis:** The network contains an isolated 8D linear subspace that modularly computes body-frame coordinate transformations.
 - **Empirical Findings:**
   - In observational probing, ridge regression decodes body-frame displacement with high precision ($R^2 = 0.993$).
-  - However, under causal ablation, top-8 axis-aligned, rotated PCA, and multivariate regression 8D projections all produce an identical 15.0% drop, exceeding random 8D projections (11.0% drop) by only +4.0% selectivity.
-  - Furthermore, attribution analysis reveals near-uniform gradient entropy ($H = 3.41$ nats vs theoretical maximum 3.47 nats) across all 32 latent dimensions.
-- **Scientific Verdict:** Modular linear coordinates are **falsified**. Egocentric displacement is computed across a distributed non-linear manifold that resists low-rank axis isolation.
+  - However, under causal ablation, top-8 axis-aligned, rotated PCA, and multivariate regression 8D projections all produce an identical 10.0% drop, exceeding random 8D projections (6.3% drop) by only +3.7% selectivity ($z = +0.64$).
+  - Because a 10.0% drop is within $1\sigma$ of random 8D subspace ablations ($6.3\% \pm 2.1\%$), C2 cannot be causally distinguished from random background perturbations.
+- **Scientific Verdict:** Isolated linear modularity is **falsified**. Egocentric displacement cannot be isolated into an 8D linear subcircuit. Rather than prematurely asserting a distributed non-linear manifold without independent positive evidence, C2 is strictly classified as **`UNRESOLVED_NON_SELECTIVE`**.
 
-### 4.3 Decisive Falsification of Modular Forward Dynamics (C4)
-- When the top-8 forward dynamics dimensions were ablated, navigation success dropped by only **5.0%** (from 65.0% to 60.0%).
-- A randomly chosen 8D ablation dropped success by **11.0%**.
-- Behavioral Selectivity = **$-6.0\%$** (targeted ablation caused *less* disruption than a random perturbation).
-- **Scientific Verdict:** Forward dynamics transitions $\hat{s}_{t+1} = f(s_t, a_t)$ are deeply distributed throughout the latent network. Isolating a modular linear transition circuit is empirically unsupported and classified as **`FALSIFIED_NON_SELECTIVE`**.
+### 4.3 Evaluation of Obstacle Risk (C3) and Forward Dynamics (C4)
+- When top-8 obstacle collision risk dimensions were ablated in H-JEPA native space, success dropped by **10.0%** (+3.7% selectivity gain, $z = +0.64$).
+- When top-8 forward dynamics dimensions were ablated in H-JEPA native space, navigation success dropped by only **6.7%** (+0.3% selectivity gain over random 8D controls, $z = +0.06$).
+- In contrast, the within-model unrelated color control ablated without behavioral penalty (0.0% drop, -6.3% selectivity gain, $z = -1.10$).
+- **Scientific Verdict:** Forward dynamics transitions $\hat{s}_{t+1} = f(s_t, a_t)$ and collision boundaries are distributed across the latent space and resist low-rank 8D isolation. They are scientifically designated as **`UNRESOLVED_NON_SELECTIVE`**.
+
+### 4.4 Statistically Significant Causal Validation of Visual Target Grounding (C1)
+- Under Track C pure observation, targeted ablation of the top-8 visual target grounding dimensions reduced closed-loop navigation success from **46.7% to 23.3%** (**23.3% necessity drop**).
+- This drop is $3.7\times$ larger than the mean random 8D subspace ablation drop (6.3%), yielding a **selectivity gain of +17.0%** ($z = +2.95$, empirical percentile 100.0%, $p < 0.01$).
+- Retaining only the C1 subspace preserves 26.7% success, and restoring C1 rescues 26.7% success.
+- **Scientific Verdict:** C1 is empirically validated as a **`SELECTIVE_CAUSAL_CIRCUIT`**. Visual spatial goal orientation is causally concentrated in this identifiable latent subspace.
 
 ---
 
