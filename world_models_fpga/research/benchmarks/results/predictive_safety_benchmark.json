@@ -3,9 +3,9 @@
     "script_path": "world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py",
     "script_sha256": "212d9b4a23f49df0e68f572f78dd291194fd45feec40a6aa92f8062e312c2fba",
     "command_executed": "python world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py --episodes 40 --device cuda",
-    "execution_timestamp": "2026-11-08T02:43:22.366296+00:00",
-    "git_commit": "0041158c674a87098736afd67d0a9da797c47395",
-    "working_tree_clean": false,
+    "execution_timestamp": "2026-11-08T03:22:27.278675+00:00",
+    "git_commit": "daa659d5f02d960dc4cc68ccc95012ca1dcda443",
+    "working_tree_clean": true,
     "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
     "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
     "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -1292,14 +1292,14 @@
       },
       "cond_4_random_collision_predictor": {
         "episodes_evaluated": 40,
-        "success_rate": 0.17499999701976776,
-        "collision_rate": 0.625,
-        "mean_final_goal_error_m": 0.6707396507263184,
+        "success_rate": 0.22499999403953552,
+        "collision_rate": 0.699999988079071,
+        "mean_final_goal_error_m": 0.6644473671913147,
         "per_episode_success": [
           false,
+          true,
           false,
-          false,
-          false,
+          true,
           false,
           true,
           false,
@@ -1349,9 +1349,7 @@
           true,
           false,
           true,
-          false,
-          false,
-          false,
+          true,
           true,
           false,
           true,
@@ -1359,20 +1357,22 @@
           true,
           false,
           true,
-          true,
-          true,
-          true,
-          true,
-          true,
-          true,
           false,
+          true,
+          true,
           false,
           true,
           true,
           true,
           true,
-          true,
           false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
           true,
           true,
           true,
@@ -1380,327 +1380,327 @@
           false
         ],
         "per_episode_goal_error": [
-          0.8396849036216736,
-          0.4617486298084259,
-          0.8647078275680542,
-          0.31301748752593994,
-          0.6967660784721375,
-          0.24154657125473022,
-          0.7090246677398682,
-          0.27892589569091797,
-          0.7610481381416321,
-          0.2301906794309616,
-          0.7270753383636475,
-          0.42266175150871277,
-          0.3545820415019989,
-          0.22683848440647125,
-          0.90434330701828,
-          0.7025479674339294,
-          0.9224625825881958,
-          0.23979881405830383,
-          0.31580784916877747,
-          0.23992255330085754,
-          0.8348695039749146,
-          0.9704915881156921,
-          0.908812940120697,
-          1.142580270767212,
-          0.6733396649360657,
-          0.763903021812439,
-          0.8849596381187439,
-          0.22064146399497986,
-          0.7150527238845825,
-          1.6056150197982788,
-          0.790569543838501,
-          0.23991365730762482,
-          0.852457582950592,
-          0.9606107473373413,
-          0.7310575842857361,
-          1.191097378730774,
-          0.7423285841941833,
-          1.1235677003860474,
-          0.7766704559326172,
-          0.24834522604942322
+          0.3276384770870209,
+          0.2487088143825531,
+          0.5589349865913391,
+          0.244882732629776,
+          0.6815106272697449,
+          0.24227315187454224,
+          0.340614378452301,
+          0.3872171640396118,
+          0.7081297636032104,
+          0.23699615895748138,
+          0.9518524408340454,
+          0.9232131242752075,
+          0.6845313906669617,
+          0.2303166687488556,
+          0.7829129695892334,
+          1.0181028842926025,
+          0.7871593236923218,
+          0.24074846506118774,
+          0.8560980558395386,
+          0.24887827038764954,
+          0.7741634249687195,
+          0.9935611486434937,
+          0.6843595504760742,
+          1.154767632484436,
+          0.7616109848022461,
+          1.1298322677612305,
+          0.8775148391723633,
+          0.24696747958660126,
+          0.6453260183334351,
+          1.6214011907577515,
+          0.7783790826797485,
+          0.24126183986663818,
+          0.83940589427948,
+          0.9248809218406677,
+          0.658535361289978,
+          1.1612619161605835,
+          0.7294836640357971,
+          1.0399771928787231,
+          0.36545562744140625,
+          0.24902896583080292
         ],
         "records": [
           {
             "episode_idx": 0,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.8396849036216736,
-            "path_length_m": 0.937682862393558
+            "goal_error_m": 0.3276384770870209,
+            "path_length_m": 1.4321310017257929
           },
           {
             "episode_idx": 1,
-            "success": false,
+            "success": true,
             "collision": false,
-            "goal_error_m": 0.4617486298084259,
-            "path_length_m": 1.0839620755286887
+            "goal_error_m": 0.2487088143825531,
+            "path_length_m": 0.5992686175741255
           },
           {
             "episode_idx": 2,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.8647078275680542,
-            "path_length_m": 0.919628462404944
+            "goal_error_m": 0.5589349865913391,
+            "path_length_m": 1.1811178461648524
           },
           {
             "episode_idx": 3,
-            "success": false,
+            "success": true,
             "collision": false,
-            "goal_error_m": 0.31301748752593994,
-            "path_length_m": 1.416284365579486
+            "goal_error_m": 0.244882732629776,
+            "path_length_m": 1.4572089156135917
           },
           {
             "episode_idx": 4,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.6967660784721375,
-            "path_length_m": 1.2855812488123775
+            "goal_error_m": 0.6815106272697449,
+            "path_length_m": 1.3055293023353443
           },
           {
             "episode_idx": 5,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.24154657125473022,
-            "path_length_m": 1.0259392615407705
+            "goal_error_m": 0.24227315187454224,
+            "path_length_m": 1.0644752162043005
           },
           {
             "episode_idx": 6,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.7090246677398682,
-            "path_length_m": 0.9435052847838961
+            "goal_error_m": 0.340614378452301,
+            "path_length_m": 1.3303847694769502
           },
           {
             "episode_idx": 7,
             "success": false,
             "collision": false,
-            "goal_error_m": 0.27892589569091797,
-            "path_length_m": 1.4059372832998633
+            "goal_error_m": 0.3872171640396118,
+            "path_length_m": 1.2465787939727306
           },
           {
             "episode_idx": 8,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.7610481381416321,
-            "path_length_m": 0.9782186041702516
+            "goal_error_m": 0.7081297636032104,
+            "path_length_m": 0.9095419755904004
           },
           {
             "episode_idx": 9,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.2301906794309616,
-            "path_length_m": 0.9587011425755918
+            "goal_error_m": 0.23699615895748138,
+            "path_length_m": 0.8836027793586254
           },
           {
             "episode_idx": 10,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.7270753383636475,
-            "path_length_m": 1.3415945367887616
+            "goal_error_m": 0.9518524408340454,
+            "path_length_m": 0.9413376594893634
           },
           {
             "episode_idx": 11,
             "success": false,
-            "collision": false,
-            "goal_error_m": 0.42266175150871277,
-            "path_length_m": 1.4688834268599749
+            "collision": true,
+            "goal_error_m": 0.9232131242752075,
+            "path_length_m": 1.2074389869812876
           },
           {
             "episode_idx": 12,
             "success": false,
-            "collision": false,
-            "goal_error_m": 0.3545820415019989,
-            "path_length_m": 1.3279668428003788
+            "collision": true,
+            "goal_error_m": 0.6845313906669617,
+            "path_length_m": 0.9476443149615079
           },
           {
             "episode_idx": 13,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.22683848440647125,
-            "path_length_m": 0.5258771888911724
+            "goal_error_m": 0.2303166687488556,
+            "path_length_m": 0.5603560754097998
           },
           {
             "episode_idx": 14,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.90434330701828,
-            "path_length_m": 0.9714818289066898
+            "goal_error_m": 0.7829129695892334,
+            "path_length_m": 0.9192801747121848
           },
           {
             "episode_idx": 15,
             "success": false,
             "collision": false,
-            "goal_error_m": 0.7025479674339294,
-            "path_length_m": 1.2101028789766133
+            "goal_error_m": 1.0181028842926025,
+            "path_length_m": 1.0194234568625689
           },
           {
             "episode_idx": 16,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.9224625825881958,
-            "path_length_m": 0.8711891644634306
+            "goal_error_m": 0.7871593236923218,
+            "path_length_m": 1.2435619570314884
           },
           {
             "episode_idx": 17,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.23979881405830383,
-            "path_length_m": 0.9533388735726476
+            "goal_error_m": 0.24074846506118774,
+            "path_length_m": 0.9518221656326205
           },
           {
             "episode_idx": 18,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.31580784916877747,
-            "path_length_m": 1.3741961028426886
+            "goal_error_m": 0.8560980558395386,
+            "path_length_m": 0.8690694099059328
           },
           {
             "episode_idx": 19,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.23992255330085754,
-            "path_length_m": 1.333596371114254
+            "goal_error_m": 0.24887827038764954,
+            "path_length_m": 1.3165490627288818
           },
           {
             "episode_idx": 20,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.8348695039749146,
-            "path_length_m": 0.8847967549809255
+            "goal_error_m": 0.7741634249687195,
+            "path_length_m": 1.004861272405833
           },
           {
             "episode_idx": 21,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.9704915881156921,
-            "path_length_m": 0.6578070115065202
+            "goal_error_m": 0.9935611486434937,
+            "path_length_m": 0.5864447437779745
           },
           {
             "episode_idx": 22,
             "success": false,
-            "collision": true,
-            "goal_error_m": 0.908812940120697,
-            "path_length_m": 0.9714007924776524
+            "collision": false,
+            "goal_error_m": 0.6843595504760742,
+            "path_length_m": 1.3083788519725204
           },
           {
             "episode_idx": 23,
             "success": false,
             "collision": true,
-            "goal_error_m": 1.142580270767212,
-            "path_length_m": 0.563384349050466
+            "goal_error_m": 1.154767632484436,
+            "path_length_m": 0.5283815601142123
           },
           {
             "episode_idx": 24,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.6733396649360657,
-            "path_length_m": 1.126439657062292
+            "goal_error_m": 0.7616109848022461,
+            "path_length_m": 0.8880730076925829
           },
           {
             "episode_idx": 25,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.763903021812439,
-            "path_length_m": 0.9979343747254461
+            "goal_error_m": 1.1298322677612305,
+            "path_length_m": 0.6816006788285449
           },
           {
             "episode_idx": 26,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.8849596381187439,
-            "path_length_m": 0.8693694121320732
+            "goal_error_m": 0.8775148391723633,
+            "path_length_m": 0.8941418653121218
           },
           {
             "episode_idx": 27,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.22064146399497986,
-            "path_length_m": 0.7893208432942629
+            "goal_error_m": 0.24696747958660126,
+            "path_length_m": 0.7700195601209998
           },
           {
             "episode_idx": 28,
             "success": false,
-            "collision": false,
-            "goal_error_m": 0.7150527238845825,
-            "path_length_m": 1.4212561883032322
+            "collision": true,
+            "goal_error_m": 0.6453260183334351,
+            "path_length_m": 1.406991551630199
           },
           {
             "episode_idx": 29,
             "success": false,
             "collision": true,
-            "goal_error_m": 1.6056150197982788,
-            "path_length_m": 0.5296738543838728
+            "goal_error_m": 1.6214011907577515,
+            "path_length_m": 0.5497673130594194
           },
           {
             "episode_idx": 30,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.790569543838501,
-            "path_length_m": 0.9022874632501043
+            "goal_error_m": 0.7783790826797485,
+            "path_length_m": 0.8480498301214539
           },
           {
             "episode_idx": 31,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.23991365730762482,
-            "path_length_m": 0.7613184712827206
+            "goal_error_m": 0.24126183986663818,
+            "path_length_m": 0.8231201303424314
           },
           {
             "episode_idx": 32,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.852457582950592,
-            "path_length_m": 0.8637541208881885
+            "goal_error_m": 0.83940589427948,
+            "path_length_m": 0.933234685799107
           },
           {
             "episode_idx": 33,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.9606107473373413,
-            "path_length_m": 0.5815300009271596
+            "goal_error_m": 0.9248809218406677,
+            "path_length_m": 0.6277542794123292
           },
           {
             "episode_idx": 34,
             "success": false,
-            "collision": false,
-            "goal_error_m": 0.7310575842857361,
-            "path_length_m": 1.3291162080131471
+            "collision": true,
+            "goal_error_m": 0.658535361289978,
+            "path_length_m": 1.2655272223055363
           },
           {
             "episode_idx": 35,
             "success": false,
             "collision": true,
-            "goal_error_m": 1.191097378730774,
-            "path_length_m": 0.4277512449771166
+            "goal_error_m": 1.1612619161605835,
+            "path_length_m": 0.5341970567824319
           },
           {
             "episode_idx": 36,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.7423285841941833,
-            "path_length_m": 0.997369761695154
+            "goal_error_m": 0.7294836640357971,
+            "path_length_m": 0.8325352868996561
           },
           {
             "episode_idx": 37,
             "success": false,
             "collision": true,
-            "goal_error_m": 1.1235677003860474,
-            "path_length_m": 0.5401006804895587
+            "goal_error_m": 1.0399771928787231,
+            "path_length_m": 0.529802089324221
           },
           {
             "episode_idx": 38,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.7766704559326172,
-            "path_length_m": 0.9348586304404307
+            "goal_error_m": 0.36545562744140625,
+            "path_length_m": 1.2875654678791761
           },
           {
             "episode_idx": 39,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.24834522604942322,
-            "path_length_m": 0.8216937044635415
+            "goal_error_m": 0.24902896583080292,
+            "path_length_m": 0.7844606041908264
           }
         ]
       },
@@ -2135,9 +2135,9 @@
       },
       "intact_vs_random_collision_predictor": {
         "collision_rate_intact": 0.699999988079071,
-        "collision_rate_random": 0.625,
-        "delta_collision_rate": -0.07499998807907104,
-        "mcnemar_p_value": 0.25
+        "collision_rate_random": 0.699999988079071,
+        "delta_collision_rate": 0.0,
+        "mcnemar_p_value": 1.0
       },
       "intact_vs_oracle_physics": {
         "collision_rate_intact": 0.699999988079071,
