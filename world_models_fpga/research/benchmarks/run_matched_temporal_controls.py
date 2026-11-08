@@ -21,6 +21,9 @@ Strictly isolates learned temporal prediction from candidate search confounds:
 
 from __future__ import annotations
 
+import os
+os.environ["MUJOCO_GL"] = "egl"
+
 import argparse
 import datetime
 import hashlib
@@ -686,36 +689,101 @@ def evaluate_closed_loop_matched_controls(
         },
     }
 
-    # Computational inference efficiency comparison (Macro 1-pass vs Micro K-pass)
-    # Measured timing per step
+    # Computational inference efficiency comparison (Macro 1-pass vs Micro K-pass vs Heuristic)
+    # Measured GPU timing with CUDA synchronization, warm-up, and percentile metrics
     t_macro_trials = []
     t_micro_trials = []
+    t_heur_trials = []
     cands_test = build_matched_action_candidates(torch.zeros(1, 3, device=device), k=k, device=device)
     s_test = torch.zeros(1, 32, device=device)
-    import time
-    for _ in range(50):
-        t0 = time.perf_counter()
-        with torch.no_grad():
-            hjepa_model.macro_predictor(s_test.repeat(24, 1), cands_test.view(24, -1))
-        t_macro_trials.append(time.perf_counter() - t0)
+    macro_in_test = cands_test.view(24, -1)
+    s_rep_test = s_test.repeat(24, 1)
 
-        t0 = time.perf_counter()
-        s_c = s_test.repeat(24, 1)
+    import time
+    # 50 Warm-up iterations
+    for _ in range(50):
         with torch.no_grad():
+            next_S_w, _ = hjepa_model.macro_predictor(s_rep_test, macro_in_test)
+            _ = hjepa_model.predict_macro_displacement(s_rep_test, next_S_w)
+            s_c = s_rep_test.clone()
             for st in range(k):
                 s_c, _ = hjepa_model.micro_predictor.forward_transition(s_c, cands_test[:, st])
+            _ = torch.sum(cands_test[:, :, :2], dim=1) * 0.02
+        if device.startswith("cuda"):
+            torch.cuda.synchronize()
+
+    # 200 Timed iterations with explicit CUDA synchronization
+    for _ in range(200):
+        if device.startswith("cuda"):
+            torch.cuda.synchronize()
+        t0 = time.perf_counter()
+        with torch.no_grad():
+            next_S, col_m = hjepa_model.macro_predictor(s_rep_test, macro_in_test)
+            _ = hjepa_model.predict_macro_displacement(s_rep_test, next_S)
+        if device.startswith("cuda"):
+            torch.cuda.synchronize()
+        t_macro_trials.append(time.perf_counter() - t0)
+
+        if device.startswith("cuda"):
+            torch.cuda.synchronize()
+        t0 = time.perf_counter()
+        with torch.no_grad():
+            s_c = s_rep_test.clone()
+            cum_disp = torch.zeros(24, 3, device=device)
+            for st in range(k):
+                s_next, col_u = hjepa_model.micro_predictor.forward_transition(s_c, cands_test[:, st])
+                cum_disp = cum_disp + hjepa_model.predict_micro_displacement(s_c, s_next)
+                s_c = s_next
+        if device.startswith("cuda"):
+            torch.cuda.synchronize()
         t_micro_trials.append(time.perf_counter() - t0)
 
+        if device.startswith("cuda"):
+            torch.cuda.synchronize()
+        t0 = time.perf_counter()
+        with torch.no_grad():
+            cand_disp_b = torch.sum(cands_test[:, :, :2], dim=1) * 0.02
+            _ = torch.sqrt(cand_disp_b[:, 0] ** 2 + cand_disp_b[:, 1] ** 2 + 1e-6)
+        if device.startswith("cuda"):
+            torch.cuda.synchronize()
+        t_heur_trials.append(time.perf_counter() - t0)
+
+    t_mac_ms = np.array(t_macro_trials) * 1000.0
+    t_mic_ms = np.array(t_micro_trials) * 1000.0
+    t_heu_ms = np.array(t_heur_trials) * 1000.0
+
     computational_efficiency = {
+        "timing_methodology": "CUDA synchronized, 50 warm-up runs, 200 repeats",
+        "device": str(device),
+        "macro_direct_1pass_ms": {
+            "median": float(np.median(t_mac_ms)),
+            "mean": float(np.mean(t_mac_ms)),
+            "p95": float(np.percentile(t_mac_ms, 95)),
+            "p99": float(np.percentile(t_mac_ms, 99)),
+        },
+        "micro_recursive_kpass_ms": {
+            "median": float(np.median(t_mic_ms)),
+            "mean": float(np.mean(t_mic_ms)),
+            "p95": float(np.percentile(t_mic_ms, 95)),
+            "p99": float(np.percentile(t_mic_ms, 99)),
+        },
+        "straight_line_heuristic_ms": {
+            "median": float(np.median(t_heu_ms)),
+            "mean": float(np.mean(t_heu_ms)),
+            "p95": float(np.percentile(t_heu_ms, 95)),
+            "p99": float(np.percentile(t_heu_ms, 99)),
+        },
         "measured_mean_step_time_ms": {
-            "macro_direct_1pass": float(np.mean(t_macro_trials) * 1000.0),
-            "micro_recursive_kpass": float(np.mean(t_micro_trials) * 1000.0),
-            "speedup_ratio": float(np.mean(t_micro_trials) / max(1e-6, np.mean(t_macro_trials))),
+            "macro_direct_1pass": float(np.mean(t_mac_ms)),
+            "micro_recursive_kpass": float(np.mean(t_mic_ms)),
+            "straight_line_heuristic": float(np.mean(t_heu_ms)),
+            "speedup_ratio": float(np.median(t_mic_ms) / max(1e-6, np.median(t_mac_ms))),
         },
         "fpga_cycle_estimates_100mhz": {
             "macro_direct_cycles": 45000,
             "micro_recursive_k_cycles": 190000,
             "cycle_ratio": 4.22,
+            "status": "Theoretical architectural model estimate from parallel RTL design, NOT measured GPU runtime",
         },
         "scientific_note": (
             "Hardware inference efficiency (cycles/latency) characterizes implementation throughput. "

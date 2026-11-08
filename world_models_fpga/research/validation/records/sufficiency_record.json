@@ -1,13 +1,13 @@
 {
   "record_id": "REC-SUFFICIENCY-001",
   "evaluation": "sufficiency",
-  "provenance_status": "INDEPENDENTLY_EXECUTED",
-  "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 50 --device cuda",
-  "execution_timestamp": "2026-11-08T03:11:49.955016+00:00",
-  "source_git_commit": "ec186389aac3cea87aaa01b1d51a6ac975147682",
-  "working_tree_clean": true,
+  "provenance_status": "LEGACY_UNVERIFIED",
+  "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda",
+  "execution_timestamp": "2026-11-08T05:07:05.041615+00:00",
+  "source_git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+  "working_tree_clean": false,
   "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
-  "script_sha256": "4bcb23a28a55e43e8e01b44ef6807757e480c930f7b7bde34057e5c91a3d327a",
+  "script_sha256": "93c7ad89d764bc355b3389488113edb932e9099625ad4f850739423f21f3392b",
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
   "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
   "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -27,10 +27,11 @@
   "random_seed": 42,
   "configuration": {
     "episodes": 30,
-    "n_random_subspace_draws": 50,
+    "evaluation_suite": "pure_object_grounding",
+    "n_random_subspace_draws": 30,
     "subspace_dimension": 8,
     "max_steps": 45,
-    "information_regimes": "Strictly matched: Track C random controls for C1; Structured random controls for C2-C4"
+    "protocol": "Genuine Matched-Donor Activation Patching"
   },
   "environment": {
     "python": "3.13.16",
@@ -38,25 +39,26 @@
     "device": "cuda"
   },
   "result_artifact_path": "world_models_fpga/research/circuits/results/sufficiency_results.json",
-  "result_artifact_sha256": "37cf9509d0b23327e41766296e43fcacebc945aaf4f2b891a5a4fd35c09afa3e",
-  "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
+  "result_artifact_sha256": "43f3e5690dd90a0d9292d4237706210b3e13c29942861ff1803f61c9430b71a8",
+  "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
   "config": {
     "episodes": 30,
-    "n_random_subspace_draws": 50,
+    "evaluation_suite": "pure_object_grounding",
+    "n_random_subspace_draws": 30,
     "subspace_dimension": 8,
     "max_steps": 45,
-    "information_regimes": "Strictly matched: Track C random controls for C1; Structured random controls for C2-C4"
+    "protocol": "Genuine Matched-Donor Activation Patching"
   },
-  "git_commit": "ec186389aac3cea87aaa01b1d51a6ac975147682",
+  "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
   "seed": 42,
   "results": {
     "execution_metadata": {
       "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
-      "script_sha256": "4bcb23a28a55e43e8e01b44ef6807757e480c930f7b7bde34057e5c91a3d327a",
-      "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 50 --device cuda",
-      "execution_timestamp": "2026-11-08T03:11:49.955016+00:00",
-      "git_commit": "ec186389aac3cea87aaa01b1d51a6ac975147682",
-      "working_tree_clean": true,
+      "script_sha256": "93c7ad89d764bc355b3389488113edb932e9099625ad4f850739423f21f3392b",
+      "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30 --device cuda",
+      "execution_timestamp": "2026-11-08T05:07:05.041615+00:00",
+      "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+      "working_tree_clean": false,
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
       "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -76,10 +78,11 @@
       "random_seed": 42,
       "configuration": {
         "episodes": 30,
-        "n_random_subspace_draws": 50,
+        "evaluation_suite": "pure_object_grounding",
+        "n_random_subspace_draws": 30,
         "subspace_dimension": 8,
         "max_steps": 45,
-        "information_regimes": "Strictly matched: Track C random controls for C1; Structured random controls for C2-C4"
+        "protocol": "Genuine Matched-Donor Activation Patching"
       },
       "environment": {
         "python": "3.13.16",
@@ -87,1561 +90,358 @@
         "device": "cuda"
       }
     },
-    "results": {
-      "C1_target_grounding_track_c": {
-        "circuit_id": "C1_target_grounding_track_c",
-        "clean_success_rate": 0.46666666865348816,
-        "retained_success_rate": 0.2666666805744171,
-        "rescue_success_rate": 0.6000000238418579,
-        "random_control_retained": 0.27066667392849925,
-        "random_control_rescue": 0.5160000061988831,
-        "rescue_empirical_p_value": 0.09803921568627451,
-        "verdict": "SELECTIVE_CAUSAL_CIRCUIT",
-        "records": [
-          {
-            "episode_id": "circuit_eval_object_grounding_00",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.8462249636650085,
-            "path_length": 0.9985571885481477
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_01",
-            "success": false,
-            "collision": true,
-            "goal_error": 2.0335958003997803,
-            "path_length": 1.0838084910064936
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_02",
-            "success": false,
-            "collision": true,
-            "goal_error": 1.9373033046722412,
-            "path_length": 1.5251106731593609
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_03",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.9067872762680054,
-            "path_length": 0.9497055355459452
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_04",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23277665674686432,
-            "path_length": 0.3722611013799906
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_05",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7369869351387024,
-            "path_length": 0.8362415810115635
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_06",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.8845343589782715,
-            "path_length": 0.9819973027333617
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_07",
-            "success": false,
-            "collision": true,
-            "goal_error": 2.0323007106781006,
-            "path_length": 1.0827066889032722
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_08",
-            "success": false,
-            "collision": true,
-            "goal_error": 2.04252552986145,
-            "path_length": 1.4698633425869048
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_09",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.9435304403305054,
-            "path_length": 0.9601800059899688
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_10",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.21172133088111877,
-            "path_length": 0.3926207721233368
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_11",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8003170490264893,
-            "path_length": 0.8875184990465641
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_12",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23719190061092377,
-            "path_length": 0.4175933748483658
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_13",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.3170148134231567,
-            "path_length": 0.8260372942313552
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_14",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.7999420166015625,
-            "path_length": 1.4996680160984397
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_15",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.8543566465377808,
-            "path_length": 0.9394582370296121
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_16",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2475549727678299,
-            "path_length": 0.3358590714633465
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_17",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7014611959457397,
-            "path_length": 0.8356051687151194
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_18",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2300454080104828,
-            "path_length": 0.4572793021798134
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_19",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.3164397478103638,
-            "path_length": 0.8292570528574288
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_20",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.7993258237838745,
-            "path_length": 1.5316663368139416
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_21",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.9054064750671387,
-            "path_length": 0.9170878129079938
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_22",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2291950136423111,
-            "path_length": 0.3203658703714609
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_23",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7059361338615417,
-            "path_length": 0.8968918384052813
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_24",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2472686916589737,
-            "path_length": 0.5325448978692293
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_25",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.3342838287353516,
-            "path_length": 0.8822226175107062
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_26",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.7949156761169434,
-            "path_length": 1.5005511508788913
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_27",
-            "success": false,
-            "collision": false,
-            "goal_error": 2.058779239654541,
-            "path_length": 0.9899688153527677
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_28",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24512536823749542,
-            "path_length": 0.30554734729230404
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_29",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.7853701710700989,
-            "path_length": 0.8655577721074224
-          }
-        ]
-      },
-      "C2_axis_aligned": {
-        "circuit_id": "C2_axis_aligned",
-        "clean_success_rate": 0.6000000238418579,
-        "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.6333333253860474,
-        "random_control_retained": 0.5080000030994415,
-        "random_control_rescue": 0.5880000138282776,
-        "rescue_empirical_p_value": 0.19607843137254902,
-        "verdict": "UNRESOLVED_NON_SELECTIVE",
-        "records": [
-          {
-            "episode_id": "circuit_eval_object_grounding_00",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2384057193994522,
-            "path_length": 0.3670108914375305
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_01",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9398618936538696,
-            "path_length": 0.9420750503923045
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_02",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2498733103275299,
-            "path_length": 0.4733169339597225
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_03",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7192578315734863,
-            "path_length": 0.786881549982354
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_04",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.246019646525383,
-            "path_length": 0.36124089173972607
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_05",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7556705474853516,
-            "path_length": 1.0737009684089571
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_06",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24936513602733612,
-            "path_length": 0.33042318373918533
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_07",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9393322467803955,
-            "path_length": 0.9732584216399118
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_08",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2181725651025772,
-            "path_length": 0.4310951568186283
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_09",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7635759711265564,
-            "path_length": 0.87629458704032
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_10",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24955005943775177,
-            "path_length": 0.3575077559798956
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_11",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8487491607666016,
-            "path_length": 1.0445516905747354
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_12",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22600935399532318,
-            "path_length": 0.3709932677447796
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_13",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.916297197341919,
-            "path_length": 0.9382614180503879
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_14",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23892711102962494,
-            "path_length": 0.34242490865290165
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_15",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.6688278913497925,
-            "path_length": 0.7350259491795441
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_16",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23731689155101776,
-            "path_length": 0.348246393725276
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_17",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7535940408706665,
-            "path_length": 0.9788976942654699
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_18",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2297772467136383,
-            "path_length": 0.40450439415872097
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_19",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9133955240249634,
-            "path_length": 0.9106207725708373
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_20",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23975229263305664,
-            "path_length": 0.29556718096137047
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_21",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7044517993927002,
-            "path_length": 0.8428360896650702
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_22",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22961747646331787,
-            "path_length": 0.321613859385252
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_23",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7659672498703003,
-            "path_length": 1.0115811233990826
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_24",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23116321861743927,
-            "path_length": 0.47360573150217533
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_25",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9665012359619141,
-            "path_length": 0.994366820435971
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_26",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.21103566884994507,
-            "path_length": 0.39071565866470337
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_27",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7850600481033325,
-            "path_length": 0.8918709342833608
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_28",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24025443196296692,
-            "path_length": 0.31298111006617546
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_29",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8782737851142883,
-            "path_length": 1.0320104982238263
-          }
-        ]
-      },
-      "C2_rotated_pca": {
-        "circuit_id": "C2_rotated_pca",
-        "clean_success_rate": 0.6000000238418579,
-        "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5333333611488342,
-        "random_control_retained": 0.5080000030994415,
-        "random_control_rescue": 0.5880000138282776,
-        "rescue_empirical_p_value": 0.9411764705882353,
-        "verdict": "UNRESOLVED_NON_SELECTIVE",
-        "records": [
-          {
-            "episode_id": "circuit_eval_object_grounding_00",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23887234926223755,
-            "path_length": 0.3689339645206928
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_01",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8888194561004639,
-            "path_length": 0.8890070928955538
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_02",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22589215636253357,
-            "path_length": 0.4956953413784504
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_03",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7635452151298523,
-            "path_length": 0.7391799524848466
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_04",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23042677342891693,
-            "path_length": 0.37590322829782963
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_05",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.3021649122238159,
-            "path_length": 1.3649545069783926
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_06",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2180347889661789,
-            "path_length": 0.37045906111598015
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_07",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9394503235816956,
-            "path_length": 1.0144584376830608
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_08",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.21314214169979095,
-            "path_length": 0.4364459943026304
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_09",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.758634090423584,
-            "path_length": 0.7257449496391928
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_10",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24355298280715942,
-            "path_length": 0.3620307072997093
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_11",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8185809254646301,
-            "path_length": 1.0419160325982375
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_12",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.21866582334041595,
-            "path_length": 0.3649433273822069
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_13",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9127910733222961,
-            "path_length": 0.9279130126815289
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_14",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.21155895292758942,
-            "path_length": 0.37310585752129555
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_15",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.6907835602760315,
-            "path_length": 0.603981429921987
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_16",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22659167647361755,
-            "path_length": 0.3574218153953552
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_17",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.2930644154548645,
-            "path_length": 1.3474749960005283
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_18",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22800979018211365,
-            "path_length": 0.4016228597611189
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_19",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9021121859550476,
-            "path_length": 0.8604967011779081
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_20",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.21114929020404816,
-            "path_length": 0.3236007019877434
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_21",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7235420346260071,
-            "path_length": 0.6195961264202197
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_22",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23672737181186676,
-            "path_length": 0.31372849084436893
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_23",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.3320586085319519,
-            "path_length": 1.3459351602941751
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_24",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22954653203487396,
-            "path_length": 0.472873417660594
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_25",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9557489156723022,
-            "path_length": 0.9205020021181554
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_26",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23053376376628876,
-            "path_length": 0.3729871828109026
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_27",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8411369919776917,
-            "path_length": 0.9356139679439366
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_28",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24827976524829865,
-            "path_length": 0.304218553006649
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_29",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7514458298683167,
-            "path_length": 1.1023487066850066
-          }
-        ]
-      },
-      "C2_multivariate_reg": {
-        "circuit_id": "C2_multivariate_reg",
-        "clean_success_rate": 0.6000000238418579,
-        "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5666666626930237,
-        "random_control_retained": 0.5080000030994415,
-        "random_control_rescue": 0.5880000138282776,
-        "rescue_empirical_p_value": 0.803921568627451,
-        "verdict": "UNRESOLVED_NON_SELECTIVE",
-        "records": [
-          {
-            "episode_id": "circuit_eval_object_grounding_00",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24402664601802826,
-            "path_length": 0.35479544289410114
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_01",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8753872513771057,
-            "path_length": 0.8329562257276848
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_02",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24661760032176971,
-            "path_length": 0.4890803648158908
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_03",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.6907590627670288,
-            "path_length": 0.7378487184178084
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_04",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2384696900844574,
-            "path_length": 0.368988374248147
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_05",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.8264389038085938,
-            "path_length": 0.7969649927690625
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_06",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22312527894973755,
-            "path_length": 0.35245772637426853
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_07",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8825398087501526,
-            "path_length": 0.8614331473363563
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_08",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2492479681968689,
-            "path_length": 0.44041945273056626
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_09",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.6904007196426392,
-            "path_length": 0.7356671106535941
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_10",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.20792575180530548,
-            "path_length": 0.3979081306606531
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_11",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.1883392333984375,
-            "path_length": 0.5574833899736404
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_12",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24115143716335297,
-            "path_length": 0.3395698554813862
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_13",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8801210522651672,
-            "path_length": 0.8356607432942837
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_14",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24530842900276184,
-            "path_length": 0.37650096183642745
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_15",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.6616788506507874,
-            "path_length": 0.7318073832429945
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_16",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23181237280368805,
-            "path_length": 0.3526185043156147
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_17",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7098473906517029,
-            "path_length": 0.8420752517413348
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_18",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22909407317638397,
-            "path_length": 0.399279722943902
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_19",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8606417775154114,
-            "path_length": 0.8118773536989465
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_20",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24076253175735474,
-            "path_length": 0.320086314342916
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_21",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.6850874423980713,
-            "path_length": 0.71259825094603
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_22",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22995147109031677,
-            "path_length": 0.3219158835709095
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_23",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.8507428169250488,
-            "path_length": 0.7700226046144962
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_24",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2284301370382309,
-            "path_length": 0.46971811540424824
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_25",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9051530361175537,
-            "path_length": 0.85658102738671
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_26",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24242855608463287,
-            "path_length": 0.3810882493853569
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_27",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.9143962264060974,
-            "path_length": 0.6378756975755095
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_28",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24344827234745026,
-            "path_length": 0.3101712204515934
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_29",
-            "success": false,
-            "collision": false,
-            "goal_error": 1.1520721912384033,
-            "path_length": 0.6032123384065926
-          }
-        ]
-      },
-      "C3_obstacle_risk_hjepa": {
-        "circuit_id": "C3_obstacle_risk_hjepa",
-        "clean_success_rate": 0.6000000238418579,
-        "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5666666626930237,
-        "random_control_retained": 0.5080000030994415,
-        "random_control_rescue": 0.5880000138282776,
-        "rescue_empirical_p_value": 0.803921568627451,
-        "verdict": "UNRESOLVED_NON_SELECTIVE",
-        "records": [
-          {
-            "episode_id": "circuit_eval_object_grounding_00",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24425220489501953,
-            "path_length": 0.3583138817921281
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_01",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9102709889411926,
-            "path_length": 0.9070911832386628
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_02",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2262105494737625,
-            "path_length": 0.49993669986724854
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_03",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7026140093803406,
-            "path_length": 0.8331299420678988
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_04",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22553092241287231,
-            "path_length": 0.3808099515736103
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_05",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8169123530387878,
-            "path_length": 0.9330830812687054
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_06",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2292451560497284,
-            "path_length": 0.3514492195099592
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_07",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8922523260116577,
-            "path_length": 0.9306681774323806
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_08",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23439748585224152,
-            "path_length": 0.41469433158636093
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_09",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.745755672454834,
-            "path_length": 0.7924569852184504
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_10",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23323780298233032,
-            "path_length": 0.37141403555870056
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_11",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8456242084503174,
-            "path_length": 1.041462464723736
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_12",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23466740548610687,
-            "path_length": 0.3653016686439514
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_13",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9197409749031067,
-            "path_length": 1.0038655779790133
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_14",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.20920231938362122,
-            "path_length": 0.3729797415435314
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_15",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7285001873970032,
-            "path_length": 0.8291614549816586
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_16",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22413109242916107,
-            "path_length": 0.3597082644701004
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_17",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7837875485420227,
-            "path_length": 0.8691838853992522
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_18",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24750010669231415,
-            "path_length": 0.39697117917239666
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_19",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8760775327682495,
-            "path_length": 0.9003667316283099
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_20",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.20869337022304535,
-            "path_length": 0.3263692781329155
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_21",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7288261651992798,
-            "path_length": 0.7968939268030226
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_22",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2438078075647354,
-            "path_length": 0.3065874055027962
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_23",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8360364437103271,
-            "path_length": 0.9210576945915818
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_24",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23667313158512115,
-            "path_length": 0.47344911098480225
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_25",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.915280282497406,
-            "path_length": 0.9532741389703006
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_26",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2220519781112671,
-            "path_length": 0.3798410091549158
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_27",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7797319293022156,
-            "path_length": 0.8761255054268986
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_28",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23486042022705078,
-            "path_length": 0.31895498745143414
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_29",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8437290787696838,
-            "path_length": 1.0028701015689876
-          }
-        ]
-      },
-      "C4_forward_dynamics_hjepa": {
-        "circuit_id": "C4_forward_dynamics_hjepa",
-        "clean_success_rate": 0.6000000238418579,
-        "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.6000000238418579,
-        "random_control_retained": 0.5080000030994415,
-        "random_control_rescue": 0.5880000138282776,
-        "rescue_empirical_p_value": 0.5882352941176471,
-        "verdict": "UNRESOLVED_NON_SELECTIVE",
-        "records": [
-          {
-            "episode_id": "circuit_eval_object_grounding_00",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23722733557224274,
-            "path_length": 0.3631197512149811
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_01",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8807852864265442,
-            "path_length": 0.900757007766515
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_02",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.21969161927700043,
-            "path_length": 0.49316632747650146
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_03",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.6582015156745911,
-            "path_length": 0.6971066495170817
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_04",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2296118438243866,
-            "path_length": 0.37800542265176773
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_05",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7893178462982178,
-            "path_length": 0.9060422637267038
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_06",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24725116789340973,
-            "path_length": 0.3296357151120901
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_07",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8964077830314636,
-            "path_length": 0.9450553557835519
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_08",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2370688021183014,
-            "path_length": 0.4235862661153078
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_09",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.6754364967346191,
-            "path_length": 0.715765054221265
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_10",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24863290786743164,
-            "path_length": 0.3598913811147213
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_11",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.847682774066925,
-            "path_length": 0.8885879484005272
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_12",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2256653904914856,
-            "path_length": 0.3557504154741764
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_13",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8731337189674377,
-            "path_length": 0.9196940450929105
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_14",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.21702267229557037,
-            "path_length": 0.36316514760255814
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_15",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.28438982367515564,
-            "path_length": 1.150430397479795
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_16",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24365149438381195,
-            "path_length": 0.3438223525881767
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_17",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7889684438705444,
-            "path_length": 0.848673933185637
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_18",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2350040227174759,
-            "path_length": 0.3938104994595051
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_19",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8675169944763184,
-            "path_length": 0.8967058521229774
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_20",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22207871079444885,
-            "path_length": 0.315226087346673
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_21",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.4314521551132202,
-            "path_length": 1.0595292713260278
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_22",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23996132612228394,
-            "path_length": 0.31109307147562504
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_23",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7929719090461731,
-            "path_length": 0.9113817240577191
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_24",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23212410509586334,
-            "path_length": 0.47278203442692757
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_25",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.9247826933860779,
-            "path_length": 0.966172581538558
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_26",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23761986196041107,
-            "path_length": 0.3658564258366823
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_27",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.7477352023124695,
-            "path_length": 0.847110563860042
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_28",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23584425449371338,
-            "path_length": 0.3178374916315079
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_29",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8608449697494507,
-            "path_length": 0.8876227779546753
-          }
-        ]
-      },
-      "Unrelated_Color_Control": {
-        "circuit_id": "Unrelated_Color_Control",
-        "clean_success_rate": 0.6000000238418579,
-        "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5,
-        "random_control_retained": 0.5080000030994415,
-        "random_control_rescue": 0.5880000138282776,
-        "rescue_empirical_p_value": 1.0,
-        "verdict": "FALSIFIED_NON_SELECTIVE",
-        "records": [
-          {
-            "episode_id": "circuit_eval_object_grounding_00",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24645820260047913,
-            "path_length": 0.3505896274000406
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_01",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.9167540669441223,
-            "path_length": 0.8138584056869149
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_02",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23261559009552002,
-            "path_length": 0.4800549317151308
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_03",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.844636857509613,
-            "path_length": 0.5602011806331575
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_04",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24354764819145203,
-            "path_length": 0.364729143679142
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_05",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8449329137802124,
-            "path_length": 0.773578008171171
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_06",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2435045838356018,
-            "path_length": 0.32926956564188004
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_07",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.9385151863098145,
-            "path_length": 0.8099311888217926
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_08",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2499193400144577,
-            "path_length": 0.4194364193826914
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_09",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.837480902671814,
-            "path_length": 0.609357968904078
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_10",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2430468499660492,
-            "path_length": 0.3759724050760269
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_11",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8846474885940552,
-            "path_length": 0.8088883138261735
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_12",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24046261608600616,
-            "path_length": 0.3450671089813113
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_13",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.9062656760215759,
-            "path_length": 0.835590310394764
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_14",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24782750010490417,
-            "path_length": 0.34614583291113377
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_15",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.6942717432975769,
-            "path_length": 0.6695676306262612
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_16",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.24398796260356903,
-            "path_length": 0.35173529759049416
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_17",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8059399127960205,
-            "path_length": 0.7777988957241178
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_18",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23991017043590546,
-            "path_length": 0.3945203679613769
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_19",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8806354999542236,
-            "path_length": 0.808512250892818
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_20",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23477932810783386,
-            "path_length": 0.31514293886721134
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_21",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.8602403402328491,
-            "path_length": 0.554710257332772
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_22",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.23245392739772797,
-            "path_length": 0.3220136184245348
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_23",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.837432861328125,
-            "path_length": 0.7988506946712732
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_24",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2389092743396759,
-            "path_length": 0.4623857485130429
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_25",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.9308180809020996,
-            "path_length": 0.8694049492478371
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_26",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.22922676801681519,
-            "path_length": 0.3810869585722685
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_27",
-            "success": false,
-            "collision": false,
-            "goal_error": 0.8028214573860168,
-            "path_length": 0.7869497817009687
-          },
-          {
-            "episode_id": "circuit_eval_object_grounding_28",
-            "success": true,
-            "collision": false,
-            "goal_error": 0.2390449494123459,
-            "path_length": 0.3155146576464176
-          },
-          {
-            "episode_id": "circuit_eval_obstacle_avoidance_29",
-            "success": false,
-            "collision": true,
-            "goal_error": 0.8920118808746338,
-            "path_length": 0.8081480730324984
-          }
-        ]
-      }
+    "C1_goal_vector_grounding": {
+      "circuit_id": "C1_goal_vector_grounding",
+      "dimensions": [
+        24,
+        17,
+        7,
+        10,
+        2,
+        8,
+        27,
+        26
+      ],
+      "clean_success_rate": 0.9333333333333333,
+      "retained_success_rate": 0.16666666666666666,
+      "matched_rescue_success_rate": 0.9333333333333333,
+      "mismatched_rescue_success_rate": 0.8333333333333334,
+      "random_control_retained": 0.20888888888888893,
+      "random_control_rescue": 0.9088888888888889,
+      "rescue_empirical_p_value": 0.6129032258064516,
+      "verdict": "FALSIFIED_NON_SELECTIVE",
+      "records": [
+        {
+          "episode_id": "c1_eval_obj_00",
+          "target_key": "purple_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6592303514480591,
+          "path_length_m": 0.8616015533916652,
+          "mean_step_goal_disp_error_m": 0.8572613769107394,
+          "mean_step_goal_angular_error_rad": 2.233260180585212
+        },
+        {
+          "episode_id": "c1_eval_obj_01",
+          "target_key": "cyan_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 1.1823973655700684,
+          "path_length_m": 0.7344593768939376,
+          "mean_step_goal_disp_error_m": 1.3511924690670438,
+          "mean_step_goal_angular_error_rad": 2.857127753147631
+        },
+        {
+          "episode_id": "c1_eval_obj_02",
+          "target_key": "yellow_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6246881484985352,
+          "path_length_m": 0.7149798850296065,
+          "mean_step_goal_disp_error_m": 1.045004207558102,
+          "mean_step_goal_angular_error_rad": 2.1237837354342144
+        },
+        {
+          "episode_id": "c1_eval_obj_03",
+          "target_key": "red_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6176857352256775,
+          "path_length_m": 0.9762311200611293,
+          "mean_step_goal_disp_error_m": 0.44956781135665047,
+          "mean_step_goal_angular_error_rad": 1.0029751295948195
+        },
+        {
+          "episode_id": "c1_eval_obj_04",
+          "target_key": "blue_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": true,
+          "final_goal_error_m": 0.6735134124755859,
+          "path_length_m": 1.3332105446606874,
+          "mean_step_goal_disp_error_m": 0.6762798435158199,
+          "mean_step_goal_angular_error_rad": 1.3450146411338615
+        },
+        {
+          "episode_id": "c1_eval_obj_05",
+          "target_key": "green_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.23423820734024048,
+          "path_length_m": 0.41315524093806744,
+          "mean_step_goal_disp_error_m": 0.6077168186505636,
+          "mean_step_goal_angular_error_rad": 0.6327304299920797
+        },
+        {
+          "episode_id": "c1_eval_obj_06",
+          "target_key": "purple_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6734935641288757,
+          "path_length_m": 0.84281534422189,
+          "mean_step_goal_disp_error_m": 0.8665423817104764,
+          "mean_step_goal_angular_error_rad": 2.2707818337936794
+        },
+        {
+          "episode_id": "c1_eval_obj_07",
+          "target_key": "cyan_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 1.1896660327911377,
+          "path_length_m": 0.712003568187356,
+          "mean_step_goal_disp_error_m": 1.3784443219502767,
+          "mean_step_goal_angular_error_rad": 2.8873897684945664
+        },
+        {
+          "episode_id": "c1_eval_obj_08",
+          "target_key": "yellow_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 1.0067461729049683,
+          "path_length_m": 0.5960510913282633,
+          "mean_step_goal_disp_error_m": 1.090878603193495,
+          "mean_step_goal_angular_error_rad": 2.0471073049638004
+        },
+        {
+          "episode_id": "c1_eval_obj_09",
+          "target_key": "red_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6885520815849304,
+          "path_length_m": 1.1180524257943034,
+          "mean_step_goal_disp_error_m": 0.5125025868415832,
+          "mean_step_goal_angular_error_rad": 1.1736130659778914
+        },
+        {
+          "episode_id": "c1_eval_obj_10",
+          "target_key": "blue_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": true,
+          "final_goal_error_m": 0.5994489789009094,
+          "path_length_m": 1.251095043728128,
+          "mean_step_goal_disp_error_m": 0.6625122321976555,
+          "mean_step_goal_angular_error_rad": 1.3105708421052744
+        },
+        {
+          "episode_id": "c1_eval_obj_11",
+          "target_key": "green_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2288089394569397,
+          "path_length_m": 0.5137930903583765,
+          "mean_step_goal_disp_error_m": 0.6157907055956977,
+          "mean_step_goal_angular_error_rad": 0.6928892476218087
+        },
+        {
+          "episode_id": "c1_eval_obj_12",
+          "target_key": "purple_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6310487985610962,
+          "path_length_m": 0.8451458291965537,
+          "mean_step_goal_disp_error_m": 0.8235511819521586,
+          "mean_step_goal_angular_error_rad": 2.1410708153629474
+        },
+        {
+          "episode_id": "c1_eval_obj_13",
+          "target_key": "cyan_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 1.1291712522506714,
+          "path_length_m": 0.6815475891344249,
+          "mean_step_goal_disp_error_m": 1.399573063850403,
+          "mean_step_goal_angular_error_rad": 2.8730519172182993
+        },
+        {
+          "episode_id": "c1_eval_obj_14",
+          "target_key": "yellow_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6981316804885864,
+          "path_length_m": 0.677626283839345,
+          "mean_step_goal_disp_error_m": 0.7961893041928609,
+          "mean_step_goal_angular_error_rad": 1.7872855693101883
+        },
+        {
+          "episode_id": "c1_eval_obj_15",
+          "target_key": "red_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6367761492729187,
+          "path_length_m": 0.9430469758808613,
+          "mean_step_goal_disp_error_m": 0.4433813664648268,
+          "mean_step_goal_angular_error_rad": 1.1542708450126358
+        },
+        {
+          "episode_id": "c1_eval_obj_16",
+          "target_key": "blue_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": true,
+          "final_goal_error_m": 0.5857423543930054,
+          "path_length_m": 1.2177176247350872,
+          "mean_step_goal_disp_error_m": 0.6767272922727797,
+          "mean_step_goal_angular_error_rad": 1.349793037896355
+        },
+        {
+          "episode_id": "c1_eval_obj_17",
+          "target_key": "green_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.23222127556800842,
+          "path_length_m": 0.33624000661075115,
+          "mean_step_goal_disp_error_m": 0.6616911172866822,
+          "mean_step_goal_angular_error_rad": 0.6324834175407886
+        },
+        {
+          "episode_id": "c1_eval_obj_18",
+          "target_key": "purple_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6044533252716064,
+          "path_length_m": 0.8053950101020746,
+          "mean_step_goal_disp_error_m": 0.8194464378886752,
+          "mean_step_goal_angular_error_rad": 2.075410221020381
+        },
+        {
+          "episode_id": "c1_eval_obj_19",
+          "target_key": "cyan_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 1.0872678756713867,
+          "path_length_m": 0.7015379210934043,
+          "mean_step_goal_disp_error_m": 1.3787484116024442,
+          "mean_step_goal_angular_error_rad": 2.861866627619256
+        },
+        {
+          "episode_id": "c1_eval_obj_20",
+          "target_key": "yellow_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.548592209815979,
+          "path_length_m": 0.6753974389575887,
+          "mean_step_goal_disp_error_m": 0.944302687380049,
+          "mean_step_goal_angular_error_rad": 2.0052059908087054
+        },
+        {
+          "episode_id": "c1_eval_obj_21",
+          "target_key": "red_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6235251426696777,
+          "path_length_m": 1.0276536168530583,
+          "mean_step_goal_disp_error_m": 0.4773054771953159,
+          "mean_step_goal_angular_error_rad": 0.9714715572850158
+        },
+        {
+          "episode_id": "c1_eval_obj_22",
+          "target_key": "blue_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": true,
+          "final_goal_error_m": 0.5862170457839966,
+          "path_length_m": 1.1546164554019924,
+          "mean_step_goal_disp_error_m": 0.6566125187608931,
+          "mean_step_goal_angular_error_rad": 1.3572076900499976
+        },
+        {
+          "episode_id": "c1_eval_obj_23",
+          "target_key": "green_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.24460045993328094,
+          "path_length_m": 0.41173356398940086,
+          "mean_step_goal_disp_error_m": 0.6481082489093145,
+          "mean_step_goal_angular_error_rad": 0.6435168683916951
+        },
+        {
+          "episode_id": "c1_eval_obj_24",
+          "target_key": "purple_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.8669413328170776,
+          "path_length_m": 0.8440893074148335,
+          "mean_step_goal_disp_error_m": 1.1699066294564142,
+          "mean_step_goal_angular_error_rad": 2.37250425980884
+        },
+        {
+          "episode_id": "c1_eval_obj_25",
+          "target_key": "cyan_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 1.2841063737869263,
+          "path_length_m": 0.7526182252913713,
+          "mean_step_goal_disp_error_m": 1.4476293934716118,
+          "mean_step_goal_angular_error_rad": 2.9433425515855003
+        },
+        {
+          "episode_id": "c1_eval_obj_26",
+          "target_key": "yellow_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 0.6796189546585083,
+          "path_length_m": 0.6619090316817164,
+          "mean_step_goal_disp_error_m": 0.7501171482933893,
+          "mean_step_goal_angular_error_rad": 1.7588817291789585
+        },
+        {
+          "episode_id": "c1_eval_obj_27",
+          "target_key": "red_box",
+          "success": false,
+          "goal_reached": false,
+          "collision": false,
+          "final_goal_error_m": 1.3802796602249146,
+          "path_length_m": 0.6781715303659439,
+          "mean_step_goal_disp_error_m": 1.5357539667023552,
+          "mean_step_goal_angular_error_rad": 2.8912603546554845
+        },
+        {
+          "episode_id": "c1_eval_obj_28",
+          "target_key": "blue_cylinder",
+          "success": false,
+          "goal_reached": false,
+          "collision": true,
+          "final_goal_error_m": 0.700630784034729,
+          "path_length_m": 1.3068666467443109,
+          "mean_step_goal_disp_error_m": 0.6879600644111633,
+          "mean_step_goal_angular_error_rad": 1.4033630294828778
+        },
+        {
+          "episode_id": "c1_eval_obj_29",
+          "target_key": "green_cylinder",
+          "success": true,
+          "goal_reached": true,
+          "collision": false,
+          "final_goal_error_m": 0.2466585785150528,
+          "path_length_m": 0.6053765099495649,
+          "mean_step_goal_disp_error_m": 0.6063278685597813,
+          "mean_step_goal_angular_error_rad": 0.6975060872295323
+        }
+      ]
     }
   }
 }

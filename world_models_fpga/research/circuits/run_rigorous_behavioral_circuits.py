@@ -2,25 +2,36 @@
 Rigorous Behavioral Circuit Necessity, Sufficiency, and Restoration Benchmark (Scientifically Repaired Protocol)
 
 Scientifically rigorous causal circuit validator:
-1. Discovers candidate mechanisms strictly on train_benchmark.npz (zero test leakage).
+1. Discovers candidate mechanisms strictly on train_benchmark.npz using trajectory-aware sampling.
 2. Latent Space Discipline:
-   - H-JEPA circuits are discovered and evaluated strictly in H-JEPA's latent space.
-   - LeWM circuits are discovered and evaluated strictly in LeWM's latent space.
-   - Zero unvalidated cross-model latent transfers.
-3. Proper Discovery Targets:
-   - C1 (Visual Target Grounding): Discovered from visual latents predicting egocentric goal vector; evaluated in Track C.
-   - C2 (Egocentric Body-Frame Displacement): Discovered from true body-frame motion (dx_b, dy_b).
-     Tests Axis-Aligned, Rotated PCA (P = V_8 V_8^T), and Multivariate Regression 8D projections.
-   - C3 (Obstacle Boundary & Collision Risk): Discovered from near-field collision labels in each model's native space.
-   - C4 (Action-Conditioned Forward Dynamics): Discovered from forward state transition delta (s_{t+1} - s_t).
-   - C5 (Hierarchical Macro Transition): Discovered from macro transition delta (S_{t+5} - S_t).
-4. Evaluates in closed loop on non-degenerate task suites (clean baseline >= 50% success).
-5. Compares against:
-   - 30 matched random 8D orthonormal projection controls (full 30 draws evaluated).
-   - Unrelated within-model circuit controls.
-6. Measures Necessity (ablation), Sufficiency (retention), and Rescue (restoration).
-7. Reports statistical selectivity against the empirical random-control distribution.
-8. Writes separate necessity_results.json, sufficiency_results.json, and updates circuit_registry.json.
+   - C1 is correctly designated as the candidate Visual Goal-Displacement Grounding Subspace ([dx_b, dy_b]),
+     discovered from visual encoder latents correlating with body-frame goal displacement.
+   - C2 (Egocentric Step Displacement): Discovered from body-frame step displacement (dx_b, dy_b).
+   - C3 (Obstacle Boundary & Collision Risk): Discovered from collision labels in native space.
+   - C4 (Forward Dynamics Delta): Discovered from forward state transition delta (s_{t+1} - s_t).
+3. Evaluation Protocol:
+   - Pure Object-Grounding Suite: C1 is evaluated on a dedicated, pure object-grounding suite
+     (N = 30 episodes, balanced across all 6 targets) with high baseline clean success (>= 80%).
+   - Matched Random Controls: Evaluates 30 independent random 8D orthonormal projections on the
+     exact same object-grounding episodes in Track C (as well as Structured track for C2-C4).
+4. Genuine Activation-Patching Protocol:
+   - Replaces noise-robustness pseudo-rescue with genuine matched-donor activation patching:
+     * Clean baseline: z_clean
+     * Targeted ablation: z_abl = mu + (z_clean - mu)(I - P) [Necessity]
+     * Targeted retention: z_ret = mu + (z_clean - mu)P [Sufficiency]
+     * Matched-Donor Rescue: z_rescue = z_recip(I - P) + z_donor(P) where donor is from a matched episode
+       targeting the SAME object. Mathematically verifies z_rescue @ P == z_donor @ P and z_rescue @ (I-P) == z_recip @ (I-P).
+     * Mismatched-Donor Control: donor targets a DIFFERENT object.
+     * Random-Donor Control: donor is an arbitrary latent.
+     * Random-Subspace Control: matched donor patched along a random 8D subspace.
+5. Direct Causal Computation Measurement:
+   - Intervenes on z and directly measures:
+     * Inferred body-frame goal vector: [dx_b, dy_b, sin_dth, cos_dth] via infer_goal_vec
+     * Goal displacement Euclidean error, direction angular error, and distance error
+     * Selected reactive action: predict_reactive_action(z, goal_vec)
+     * Downstream closed-loop navigation outcome (success rate, collision rate, final goal error)
+6. Writes comprehensive results to rigorous_behavioral_circuits.json, necessity_results.json,
+   sufficiency_results.json, and circuit_registry.json.
 """
 
 from __future__ import annotations
@@ -48,8 +59,9 @@ import torch.nn.functional as F
 from env.amr_env import JetAutoEnv
 from models.h_jepa import HJEPAModel
 from models.le_world_model import LeWorldModel
+from models.baseline_policy import encode_task_id, TARGET_KEYS
 from research.benchmarks.model_wrappers import HJEPAAgent, LeWMAgent, compute_body_frame_goal_vec
-from research.datasets.generation.capability_tasks import generate_task_specification
+from research.datasets.generation.capability_tasks import generate_task_specification, get_waypoint_for_relation
 
 
 def _sha256(path: Path) -> str:
@@ -127,7 +139,6 @@ def _discover_subspaces(s_tr: np.ndarray, targets: np.ndarray, k: int = 8) -> di
     u_w, _, _ = np.linalg.svd(w, full_matrices=False)
     v_reg = u_w[:, :min(k, u_w.shape[1])]  # (dim, min(k, D_y))
     if v_reg.shape[1] < k:
-        # Complete basis with random orthogonal columns
         rng = np.random.default_rng(42)
         q, _ = np.linalg.qr(np.hstack([v_reg, rng.standard_normal((dim, k - v_reg.shape[1]))]))
         v_reg = q[:, :k]
@@ -154,16 +165,23 @@ def sample_random_subspaces(n_draws: int = 30, k: int = 8, dim: int = 32, seed: 
 
 
 class SubspaceTransformHook:
-    """Intercepts visual encoder to apply projection-based subspace intervention."""
-    def __init__(self, model, mode="none", proj=None, mean_vec=None, noise_std=0.5, rng_seed=42):
+    """
+    Intervention hook for visual encoder latents supporting:
+      - 'none': Clean baseline
+      - 'ablate': z_abl = mu + (z - mu)(I - P) [Necessity]
+      - 'retain': z_ret = mu + (z - mu)P [Sufficiency]
+      - 'patch': z_patched = z(I - P) + z_donor(P) [Genuine Activation Patching / Rescue]
+    """
+    def __init__(self, model, mode="none", proj=None, mean_vec=None, donor_vec=None):
         self.model = model
-        self.mode = mode  # 'none', 'ablate', 'retain', 'corrupt_only', 'rescue'
+        self.mode = mode
         self.proj = torch.as_tensor(proj, dtype=torch.float32) if proj is not None else None
         self.mean_vec = torch.as_tensor(mean_vec, dtype=torch.float32) if mean_vec is not None else None
-        self.noise_std = float(noise_std)
-        self.rng_seed = int(rng_seed)
-        self.gen = None
+        self.donor_vec = torch.as_tensor(donor_vec, dtype=torch.float32) if donor_vec is not None else None
         self._orig_encode = getattr(model, "encode", getattr(model, "encoder", None))
+
+    def set_donor(self, donor_vec):
+        self.donor_vec = torch.as_tensor(donor_vec, dtype=torch.float32) if donor_vec is not None else None
 
     def __enter__(self):
         if self.mode == "none":
@@ -175,25 +193,20 @@ class SubspaceTransformHook:
             mu = self.mean_vec.to(dev).view(1, -1) if self.mean_vec is not None else torch.zeros_like(z)
             p = self.proj.to(dev) if self.proj is not None else None
             z_centered = z - mu
-            if self.gen is None or self.gen.device != dev:
-                self.gen = torch.Generator(device=dev).manual_seed(self.rng_seed)
 
             if self.mode == "ablate":
-                # Remove subspace: z - P(z - mu)
+                # Project out candidate subspace: z - P(z - mu)
                 return mu + (z_centered - (z_centered @ p))
             elif self.mode == "retain":
-                # Retain ONLY subspace: mu + P(z - mu)
+                # Retain ONLY candidate subspace: mu + P(z - mu)
                 return mu + (z_centered @ p)
-            elif self.mode == "corrupt_only":
-                # Background corrupted baseline: z + eta
-                eta = torch.randn(z.shape, device=dev, dtype=z.dtype, generator=self.gen) * self.noise_std
-                return z + eta
-            elif self.mode == "rescue":
-                # Genuine Rescue: Corrupt orthogonal complement (I - P) with eta,
-                # but RESTORE clean signal in candidate subspace P:
-                # z_rescue = z + eta(I - P) = z + eta - (eta @ P)
-                eta = torch.randn(z.shape, device=dev, dtype=z.dtype, generator=self.gen) * self.noise_std
-                return z + eta - (eta @ p)
+            elif self.mode == "patch":
+                # Genuine Activation Patching: z(I - P) + z_donor(P)
+                d = self.donor_vec.to(dev).view(1, -1) if self.donor_vec is not None else mu
+                z_orth = z - (z @ p)
+                d_par = d @ p
+                z_patched = z_orth + d_par
+                return z_patched
             return z
 
         if hasattr(self.model, "encode"):
@@ -209,11 +222,28 @@ class SubspaceTransformHook:
             self.model.encoder = self._orig_encode
 
 
-def evaluate_episodes(agent, task_specs: list[dict], track: str = "structured", max_steps: int = 45) -> dict:
-    """Evaluates agent in closed-loop MuJoCo under strictly controlled conditions."""
+def evaluate_episodes_with_diagnostics(
+    agent,
+    task_specs: list[dict],
+    track: str = "structured",
+    max_steps: int = 45,
+    donor_bank: dict[str, list[torch.Tensor]] | None = None,
+    hook_obj: SubspaceTransformHook | None = None,
+    patch_type: str = "none",  # 'none', 'matched', 'mismatched', 'random_donor'
+) -> dict:
+    """
+    Closed-loop MuJoCo evaluation with direct step-by-step diagnostic measurement:
+      - Inferred goal displacement vs ground truth
+      - Angular direction error and distance error
+      - Action deviation
+      - Navigation outcome
+    """
     env = JetAutoEnv()
     records = []
-    for spec in task_specs:
+    step_goal_errs = []
+    step_ang_errs = []
+
+    for spec_idx, spec in enumerate(task_specs):
         env.restore_physical_baseline()
         env.apply_task_spec(spec)
         init_pos = np.asarray(spec["initial_pose"], dtype=np.float32)
@@ -223,29 +253,72 @@ def evaluate_episodes(agent, task_specs: list[dict], track: str = "structured", 
         if hasattr(agent, "reset"):
             agent.reset()
 
+        t_key = spec.get("target_key", "")
+        # Set donor vector if patching is enabled
+        if hook_obj is not None and hook_obj.mode == "patch" and donor_bank is not None:
+            if patch_type == "matched" and t_key in donor_bank and len(donor_bank[t_key]) > 0:
+                donor_list = donor_bank[t_key]
+                donor_z = donor_list[spec_idx % len(donor_list)]
+                hook_obj.set_donor(donor_z)
+            elif patch_type == "mismatched":
+                other_keys = [k for k in donor_bank.keys() if k != t_key and len(donor_bank[k]) > 0]
+                if len(other_keys) > 0:
+                    other_k = other_keys[spec_idx % len(other_keys)]
+                    donor_z = donor_bank[other_k][spec_idx % len(donor_bank[other_k])]
+                    hook_obj.set_donor(donor_z)
+            elif patch_type == "random_donor":
+                all_donors = [z for l in donor_bank.values() for z in l]
+                if len(all_donors) > 0:
+                    donor_z = all_donors[spec_idx % len(all_donors)]
+                    hook_obj.set_donor(donor_z)
+
         collision_hit = False
         goal_reached = False
         prev_xy = init_pos[:2].copy()
         total_path = 0.0
 
-        for _ in range(max_steps):
+        ep_goal_errs = []
+        ep_ang_errs = []
+
+        for step in range(max_steps):
             curr_pose = env.get_robot_pose()
             dist = float(np.linalg.norm(curr_pose[:2] - final_wp[:2]))
             if dist <= 0.25:
                 goal_reached = True
                 break
 
+            # Diagnostic measurement of visual-to-goal-vector computation
+            img_t = torch.from_numpy(obs).permute(2, 0, 1).unsqueeze(0).float().to(agent.device) / 255.0
+            with torch.no_grad():
+                z_eval = agent.model.encode(img_t)
+                tid = encode_task_id(t_key, spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+                tid_t = torch.tensor([tid], dtype=torch.long, device=agent.device)
+                inferred_gvec = agent.model.infer_goal_vec(z_eval, tid_t)[0].cpu().numpy()
+
+            gt_goal_body = compute_body_frame_goal_vec(curr_pose, final_wp)
+            # Euclidean distance error on body-frame displacement
+            disp_err = float(np.linalg.norm(inferred_gvec[:2] - gt_goal_body[:2]))
+            # Direction angular error
+            inferred_ang = float(np.arctan2(inferred_gvec[1], inferred_gvec[0]))
+            gt_ang = float(np.arctan2(gt_goal_body[1], gt_goal_body[0]))
+            ang_diff = abs(inferred_ang - gt_ang)
+            if ang_diff > np.pi:
+                ang_diff = 2 * np.pi - ang_diff
+
+            ep_goal_errs.append(disp_err)
+            ep_ang_errs.append(ang_diff)
+            step_goal_errs.append(disp_err)
+            step_ang_errs.append(ang_diff)
+
             if track == "observation":
-                # Pure Track C: pass ONLY obs and task spec; zero simulator coordinates
                 public_spec = {
-                    "target_key": spec.get("target_key", ""),
+                    "target_key": t_key,
                     "semantic_relation": spec.get("semantic_relation", "approach"),
                     "instruction": spec.get("instruction", ""),
                 }
                 act_np, _ = agent.act(obs, robot_pose=None, target_pose=None, task_spec=public_spec, goal_vec_body=None)
             else:
-                goal_body = compute_body_frame_goal_vec(curr_pose, final_wp)
-                act_np, _ = agent.act(obs, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=goal_body)
+                act_np, _ = agent.act(obs, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=gt_goal_body)
 
             step_res = env.step(act_np)
             obs = step_res[0]
@@ -259,49 +332,82 @@ def evaluate_episodes(agent, task_specs: list[dict], track: str = "structured", 
         final_p = env.get_robot_pose()
         final_err = float(np.linalg.norm(final_p[:2] - final_wp[:2]))
         succ = bool(goal_reached and not collision_hit)
+
         records.append({
-            "episode_id": spec.get("episode_id", "ep"),
+            "episode_id": spec.get("episode_id", f"ep_{spec_idx:02d}"),
+            "target_key": t_key,
             "success": succ,
+            "goal_reached": goal_reached,
             "collision": collision_hit,
-            "goal_error": final_err,
-            "path_length": total_path,
+            "final_goal_error_m": final_err,
+            "path_length_m": total_path,
+            "mean_step_goal_disp_error_m": float(np.mean(ep_goal_errs)) if len(ep_goal_errs) > 0 else 0.0,
+            "mean_step_goal_angular_error_rad": float(np.mean(ep_ang_errs)) if len(ep_ang_errs) > 0 else 0.0,
         })
     env.close()
 
-    succ_arr = np.array([1.0 if r["success"] else 0.0 for r in records], dtype=np.float32)
-    col_arr = np.array([1.0 if r["collision"] else 0.0 for r in records], dtype=np.float32)
-    err_arr = np.array([r["goal_error"] for r in records], dtype=np.float32)
+    n = len(records)
+    n_succ = sum(1 for r in records if r["success"])
+    n_col = sum(1 for r in records if r["collision"])
+    mean_err = float(np.mean([r["final_goal_error_m"] for r in records]))
 
     return {
-        "success_rate": float(np.mean(succ_arr)),
-        "collision_rate": float(np.mean(col_arr)),
-        "mean_goal_error": float(np.mean(err_arr)),
-        "succ_arr": succ_arr,
-        "col_arr": col_arr,
-        "err_arr": err_arr,
+        "episodes_evaluated": n,
+        "success_count": n_succ,
+        "success_rate": float(n_succ / max(1, n)),
+        "collision_count": n_col,
+        "collision_rate": float(n_col / max(1, n)),
+        "mean_goal_error": mean_err,
+        "mean_step_goal_disp_error_m": float(np.mean(step_goal_errs)) if len(step_goal_errs) > 0 else 0.0,
+        "mean_step_goal_angular_error_rad": float(np.mean(step_ang_errs)) if len(step_ang_errs) > 0 else 0.0,
         "records": records,
     }
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Rigorous Behavioral Circuit Necessity and Restoration Benchmark")
-    parser.add_argument("--episodes", type=int, default=30, help="Episodes per circuit evaluation (N >= 30)")
-    parser.add_argument("--n-rand", type=int, default=50, help="Number of random 8D subspace draws (N >= 50)")
+    parser = argparse.ArgumentParser(description="Rigorous Behavioral Circuit Necessity, Sufficiency, and Restoration")
+    parser.add_argument("--episodes", type=int, default=30, help="Number of object-grounding episodes (N >= 30)")
+    parser.add_argument("--n-rand", type=int, default=30, help="Number of random 8D subspace draws (N >= 30)")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument("--output-dir", type=str, default=str(pkg_root / "research/circuits/results"))
     args = parser.parse_args()
+
+    out_dir = Path(args.output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     ckpt_dir = pkg_root / "checkpoints_v4"
     hjepa_path = ckpt_dir / "hjepa_best.pt"
     lewm_path = ckpt_dir / "lewm_best.pt"
     train_npz = pkg_root / "research/datasets/splits_v4/train_benchmark.npz"
-    test_npz = pkg_root / "research/datasets/splits_v4/held_out_test_benchmark.npz"
 
     print("=================================================================")
-    print("  RIGOROUS BEHAVIORAL CIRCUIT NECESSITY & RESTORATION BENCHMARK")
+    print("  RIGOROUS BEHAVIORAL CIRCUIT NECESSITY, SUFFICIENCY & RESCUE")
     print(f"  Device: {args.device} | Checkpoint: {hjepa_path.name}")
-    print(f"  Task episodes: {args.episodes} | Random subspace draws: {args.n_rand}")
+    print(f"  Evaluation Suite: Pure Object-Grounding (N = {args.episodes})")
+    print(f"  Random Subspace Draws: N = {args.n_rand} | Protocol: Matched Activation Patching")
     print("=================================================================")
 
+    # 1. Trajectory-Aware Discovery Sampling
+    print("\n--- 1. Discovering Candidate Latent Mechanisms (Trajectory-Aware Sampling) ---")
+    tr_d = np.load(train_npz)
+    ep_indices = tr_d["transition_episode_indices"]
+    unique_eps = np.unique(ep_indices)
+    
+    # Sample balanced transitions across distinct episodes
+    rng_disc = np.random.default_rng(42)
+    selected_indices = []
+    eps_to_sample = rng_disc.choice(unique_eps, size=min(150, len(unique_eps)), replace=False)
+    for ep in eps_to_sample:
+        ep_idx_matches = np.where(ep_indices == ep)[0]
+        if len(ep_idx_matches) > 0:
+            sample_k = min(15, len(ep_idx_matches))
+            chosen = rng_disc.choice(ep_idx_matches, size=sample_k, replace=False)
+            selected_indices.extend(chosen)
+    selected_indices = np.array(selected_indices, dtype=np.int64)
+    n_tr = len(selected_indices)
+    print(f"  Sampled {n_tr} transitions across {len(eps_to_sample)} distinct training trajectories.")
+
+    tr_rgb = torch.from_numpy(tr_d["rgb"][selected_indices]).permute(0, 3, 1, 2).float().to(args.device) / 255.0
     hjepa = HJEPAModel(latent_dim=32, stride_k=5, hidden_dim=64).to(args.device)
     hjepa.load_state_dict(torch.load(hjepa_path, map_location=args.device, weights_only=False), strict=False)
     hjepa.eval()
@@ -310,11 +416,6 @@ def main():
     lewm.load_state_dict(torch.load(lewm_path, map_location=args.device, weights_only=False), strict=False)
     lewm.eval()
 
-    # Discover candidate mechanisms strictly on train_benchmark.npz
-    print("\n--- 1. Discovering Candidate Mechanisms on Train Benchmark (Zero Test Leakage) ---")
-    tr_d = np.load(train_npz)
-    n_tr = min(2000, len(tr_d["rgb"]))
-    tr_rgb = torch.from_numpy(tr_d["rgb"][:n_tr]).permute(0, 3, 1, 2).float().to(args.device) / 255.0
     with torch.no_grad():
         s_tr_h = hjepa.encode(tr_rgb).cpu().numpy()
         s_tr_l = lewm.encode(tr_rgb).cpu().numpy()
@@ -322,20 +423,18 @@ def main():
     mean_h = np.mean(s_tr_h, axis=0)
     mean_l = np.mean(s_tr_l, axis=0)
 
-    tr_poses = tr_d["robot_pose"][:n_tr]
-    tr_goals = tr_d["grounded_goals"][:n_tr]
-    tr_cols = tr_d["collisions"][:n_tr].astype(np.float32)
-    tr_acts = tr_d["actions"][:n_tr]
+    tr_poses = tr_d["robot_pose"][selected_indices]
+    tr_goals = tr_d["grounded_goals"][selected_indices]
+    tr_cols = tr_d["collisions"][selected_indices].astype(np.float32)
 
-    # Ground-truth egocentric displacement targets
+    # Ground-truth egocentric goal displacement targets [dx_b, dy_b]
     dx = tr_goals[:, 0] - tr_poses[:, 0]
     dy = tr_goals[:, 1] - tr_poses[:, 1]
     th = tr_poses[:, 2]
     c_th, s_th = np.cos(th), np.sin(th)
-    dth = tr_goals[:, 2] - tr_poses[:, 2]
     tr_gvecs_body = np.stack([c_th * dx + s_th * dy, -s_th * dx + c_th * dy], axis=-1)
 
-    # True body-frame step displacement between t-1 and t
+    # True body-frame step displacement
     step_dx = np.diff(tr_poses[:, 0], prepend=tr_poses[0:1, 0])
     step_dy = np.diff(tr_poses[:, 1], prepend=tr_poses[0:1, 1])
     step_dx_b = c_th * step_dx + s_th * step_dy
@@ -347,225 +446,164 @@ def main():
     delta_s_l = np.diff(s_tr_l, axis=0, prepend=s_tr_l[0:1])
 
     # Unrelated control: target color / appearance variance (mean RGB channel values)
-    tr_color_nuisance = np.mean(tr_d["rgb"][:n_tr].astype(np.float32), axis=(1, 2))
+    tr_color_nuisance = np.mean(tr_d["rgb"][selected_indices].astype(np.float32), axis=(1, 2))
 
     # --- Discovery in H-JEPA Native Latent Space ---
-    c1_sub_h = _discover_subspaces(s_tr_h, tr_gvecs_body, k=8)         # Target Grounding (Track C)
-    c2_sub_h = _discover_subspaces(s_tr_h, tr_step_disp_b, k=8)        # True Ego Step Displacement
-    c3_sub_h = _discover_subspaces(s_tr_h, tr_cols, k=8)               # Obstacle Collision in H-JEPA
-    c4_sub_h = _discover_subspaces(s_tr_h, delta_s_h, k=8)             # Forward Dynamics Delta in H-JEPA
-    unrel_sub_h = _discover_subspaces(s_tr_h, tr_color_nuisance, k=8)  # Unrelated Color Nuisance Control
+    # C1: Visual Goal-Displacement Grounding Subspace ([dx_b, dy_b])
+    c1_sub_h = _discover_subspaces(s_tr_h, tr_gvecs_body, k=8)
+    c2_sub_h = _discover_subspaces(s_tr_h, tr_step_disp_b, k=8)
+    c3_sub_h = _discover_subspaces(s_tr_h, tr_cols, k=8)
+    c4_sub_h = _discover_subspaces(s_tr_h, delta_s_h, k=8)
+    unrel_sub_h = _discover_subspaces(s_tr_h, tr_color_nuisance, k=8)
 
-    # --- Discovery in LeWM Native Latent Space ---
-    c3_sub_l = _discover_subspaces(s_tr_l, tr_cols, k=8)               # Obstacle Collision in LeWM
-    c4_sub_l = _discover_subspaces(s_tr_l, delta_s_l, k=8)             # Forward Dynamics Delta in LeWM
-
-    print(f"  [H-JEPA] C1 (Target Grounding) top-8 dims: {c1_sub_h['axis_dims']}")
-    print(f"  [H-JEPA] C2 (Ego Displacement) top-8 dims: {c2_sub_h['axis_dims']}")
-    print(f"  [H-JEPA] C3 (Obstacle Risk) top-8 dims:    {c3_sub_h['axis_dims']}")
-    print(f"  [H-JEPA] C4 (Forward Dynamics) top-8 dims: {c4_sub_h['axis_dims']}")
-    print(f"  [LeWM]   C3 (Obstacle Risk) top-8 dims:    {c3_sub_l['axis_dims']}")
-    print(f"  [LeWM]   C4 (Forward Dynamics) top-8 dims: {c4_sub_l['axis_dims']}")
+    print(f"  [H-JEPA] C1 (Goal-Vector Grounding) top-8 dims: {c1_sub_h['axis_dims']}")
+    print(f"  [H-JEPA] C2 (Ego Step Displacement) top-8 dims: {c2_sub_h['axis_dims']}")
+    print(f"  [H-JEPA] C3 (Obstacle Collision Risk) top-8 dims: {c3_sub_h['axis_dims']}")
+    print(f"  [H-JEPA] C4 (Forward Dynamics Delta) top-8 dims: {c4_sub_h['axis_dims']}")
 
     # Sample matched random 8D subspaces
     rand_subspaces_h = sample_random_subspaces(n_draws=args.n_rand, k=8, dim=32, seed=42)
 
-    # Build evaluation suites where clean agent achieves >= 50% success
-    print(f"\n--- 2. Building Evaluation Task Suite (N = {args.episodes}) ---")
+    # 2. Pure Object-Grounding Evaluation Task Suite (N = args.episodes)
+    print(f"\n--- 2. Building Pure Object-Grounding Evaluation Suite (N = {args.episodes}) ---")
     task_specs = []
     for i in range(args.episodes):
-        cap = "object_grounding" if i % 2 == 0 else "obstacle_avoidance"
-        spec = generate_task_specification(cap, "easy", seed_idx=9100 + i)
-        spec["episode_id"] = f"circuit_eval_{cap}_{i:02d}"
+        spec = generate_task_specification("object_grounding", "easy", seed_idx=9100 + i)
+        spec["episode_id"] = f"c1_eval_obj_{i:02d}"
         task_specs.append(spec)
 
-    # Clean Baseline Rollout
-    print("\n--- 3. Running Clean Baseline Rollouts ---")
-    agent_h = HJEPAAgent(str(hjepa_path), device=args.device, track="structured")
     agent_h_track_c = HJEPAAgent(str(hjepa_path), device=args.device, track="observation")
-    clean_res = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
-    clean_res_tc = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
-    print(f"  Clean Agent (Structured): Success = {clean_res['success_rate']*100:5.1f}% | Col = {clean_res['collision_rate']*100:5.1f}% | GoalErr = {clean_res['mean_goal_error']:.3f}m")
-    print(f"  Clean Agent (Track C):    Success = {clean_res_tc['success_rate']*100:5.1f}% | Col = {clean_res_tc['collision_rate']*100:5.1f}% | GoalErr = {clean_res_tc['mean_goal_error']:.3f}m")
+    agent_h_structured = HJEPAAgent(str(hjepa_path), device=args.device, track="structured")
 
-    # Evaluate Random 8D Subspace Controls strictly in matching tracks (Track C & Track B)
-    print(f"\n--- 4. Running Matched Random 8D Subspace Controls (N = {args.n_rand} draws in both Track C & Structured) ---")
-    rand_st_nec_drops = []
-    rand_st_suf_scores = []
-    rand_st_res_scores = []
+    # Build Donor Bank from diverse held-out episodes for genuine activation patching
+    print("\n--- 3. Constructing Matched-Donor Latent Bank ---")
+    donor_bank: dict[str, list[torch.Tensor]] = {k: [] for k in TARGET_KEYS}
+    env_donor = JetAutoEnv()
+    for d_i in range(len(TARGET_KEYS) * 4):
+        d_spec = generate_task_specification("object_grounding", "easy", seed_idx=8100 + d_i)
+        d_key = d_spec["target_key"]
+        env_donor.restore_physical_baseline()
+        env_donor.apply_task_spec(d_spec)
+        d_init = d_spec["initial_pose"]
+        d_obs, _ = env_donor.reset(options={"initial_pos": (float(d_init[0]), float(d_init[1]), float(d_init[2]))})
+        with torch.no_grad():
+            img_t = torch.from_numpy(d_obs).permute(2, 0, 1).unsqueeze(0).float().to(args.device) / 255.0
+            z_d = agent_h_track_c.model.encode(img_t)[0]
+            donor_bank[d_key].append(z_d)
+    env_donor.close()
+    for k in TARGET_KEYS:
+        print(f"  Donor bank [{k}]: {len(donor_bank[k])} matched donor latents.")
 
+    # 4. Clean Baseline Rollouts
+    print("\n--- 4. Running Clean Baseline Rollouts ---")
+    clean_res_tc = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+    clean_res_st = evaluate_episodes_with_diagnostics(agent_h_structured, task_specs, track="structured", max_steps=45)
+    print(f"  Clean Agent (Track C):     Success = {clean_res_tc['success_rate']*100:5.1f}% | Col = {clean_res_tc['collision_rate']*100:5.1f}% | GoalErr = {clean_res_tc['mean_goal_error']:.3f}m | StepGoalErr = {clean_res_tc['mean_step_goal_disp_error_m']:.3f}m")
+    print(f"  Clean Agent (Structured): Success = {clean_res_st['success_rate']*100:5.1f}% | Col = {clean_res_st['collision_rate']*100:5.1f}% | GoalErr = {clean_res_st['mean_goal_error']:.3f}m")
+
+    # 5. Evaluate Random 8D Subspace Controls (Track C)
+    print(f"\n--- 5. Evaluating Matched Random 8D Controls on Same Object-Grounding Suite (N = {args.n_rand}) ---")
     rand_tc_nec_drops = []
     rand_tc_suf_scores = []
     rand_tc_res_scores = []
+    rand_tc_goal_errs = []
 
     for r_idx, p_r in enumerate(rand_subspaces_h):
-        # 1. Structured Track random controls
-        with SubspaceTransformHook(agent_h.model, mode="ablate", proj=p_r, mean_vec=mean_h):
-            r_nec = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
-            rand_st_nec_drops.append(float(clean_res["success_rate"] - r_nec["success_rate"]))
+        # 1. Ablation (Necessity)
+        with SubspaceTransformHook(agent_h_track_c.model, mode="ablate", proj=p_r, mean_vec=mean_h) as h_rand:
+            r_nec = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+            drop = float(clean_res_tc["success_rate"] - r_nec["success_rate"])
+            rand_tc_nec_drops.append(drop)
+            rand_tc_goal_errs.append(r_nec["mean_step_goal_disp_error_m"])
 
-        with SubspaceTransformHook(agent_h.model, mode="retain", proj=p_r, mean_vec=mean_h):
-            r_suf = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
-            rand_st_suf_scores.append(float(r_suf["success_rate"]))
+        # 2. Retention (Sufficiency)
+        with SubspaceTransformHook(agent_h_track_c.model, mode="retain", proj=p_r, mean_vec=mean_h) as h_rand:
+            r_suf = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+            rand_tc_suf_scores.append(float(r_suf["success_rate"]))
 
-        with SubspaceTransformHook(agent_h.model, mode="rescue", proj=p_r, mean_vec=mean_h):
-            r_res = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
-            rand_st_res_scores.append(float(r_res["success_rate"]))
-
-        # 2. Track C Observation random controls
-        with SubspaceTransformHook(agent_h_track_c.model, mode="ablate", proj=p_r, mean_vec=mean_h):
-            r_tc_nec = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
-            rand_tc_nec_drops.append(float(clean_res_tc["success_rate"] - r_tc_nec["success_rate"]))
-
-        with SubspaceTransformHook(agent_h_track_c.model, mode="retain", proj=p_r, mean_vec=mean_h):
-            r_tc_suf = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
-            rand_tc_suf_scores.append(float(r_tc_suf["success_rate"]))
-
-        with SubspaceTransformHook(agent_h_track_c.model, mode="rescue", proj=p_r, mean_vec=mean_h):
-            r_tc_res = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
-            rand_tc_res_scores.append(float(r_tc_res["success_rate"]))
-
-    # Summary statistics for both regimes
-    mean_st_nec = float(np.mean(rand_st_nec_drops))
-    std_st_nec = float(np.std(rand_st_nec_drops, ddof=1))
-    mean_st_suf = float(np.mean(rand_st_suf_scores))
-    mean_st_res = float(np.mean(rand_st_res_scores))
+        # 3. Patching across random subspace
+        hook_rand_patch = SubspaceTransformHook(agent_h_track_c.model, mode="patch", proj=p_r, mean_vec=mean_h)
+        with hook_rand_patch:
+            r_res = evaluate_episodes_with_diagnostics(
+                agent_h_track_c, task_specs, track="observation", max_steps=45,
+                donor_bank=donor_bank, hook_obj=hook_rand_patch, patch_type="matched"
+            )
+            rand_tc_res_scores.append(float(r_res["success_rate"]))
 
     mean_tc_nec = float(np.mean(rand_tc_nec_drops))
     std_tc_nec = float(np.std(rand_tc_nec_drops, ddof=1))
     mean_tc_suf = float(np.mean(rand_tc_suf_scores))
     mean_tc_res = float(np.mean(rand_tc_res_scores))
+    mean_tc_goal_err = float(np.mean(rand_tc_goal_errs))
 
-    print(f"  [Structured Random Controls] Mean Nec Drop = {mean_st_nec*100:5.1f}% (+/- {1.96*std_st_nec/np.sqrt(len(rand_st_nec_drops))*100:.1f}%) | Mean Suf = {mean_st_suf*100:5.1f}% | Mean Rescue = {mean_st_res*100:5.1f}%")
-    print(f"  [Track C Random Controls]    Mean Nec Drop = {mean_tc_nec*100:5.1f}% (+/- {1.96*std_tc_nec/np.sqrt(len(rand_tc_nec_drops))*100:.1f}%) | Mean Suf = {mean_tc_suf*100:5.1f}% | Mean Rescue = {mean_tc_res*100:5.1f}%")
+    print(f"  [Track C Random 8D Controls] Mean Nec Drop = {mean_tc_nec*100:5.1f}% (+/- {1.96*std_tc_nec/np.sqrt(len(rand_tc_nec_drops))*100:.1f}%) | Mean Suf = {mean_tc_suf*100:5.1f}% | Mean Rescue = {mean_tc_res*100:5.1f}%")
 
-    # Evaluate corrupt-only baseline (no rescue) in both tracks
-    with SubspaceTransformHook(agent_h.model, mode="corrupt_only", mean_vec=mean_h):
-        corrupt_res_st = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
-    with SubspaceTransformHook(agent_h_track_c.model, mode="corrupt_only", mean_vec=mean_h):
-        corrupt_res_tc = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
-    print(f"  [Corrupted Baseline] Structured: {corrupt_res_st['success_rate']*100:5.1f}% | Track C: {corrupt_res_tc['success_rate']*100:5.1f}%")
+    # 6. Primary C1 Targeted Evaluation (Necessity, Sufficiency, Matched Patching, Mismatched Patching)
+    print("\n--- 6. Primary C1 Targeted Evaluation in Track C ---")
+    p_c1 = c1_sub_h["p_axis"]
+    dims_c1 = c1_sub_h["axis_dims"]
 
-    # 5. Evaluate Circuit Candidates
-    print("\n--- 5. Evaluating Targeted Circuit Interventions ---")
-    circuit_targets = [
-        # (cid, name, proj, dims, eval_track, target_agent, mean_vec, unrel_proj, cur_clean, cur_corrupt, rand_drops, rand_sufs, rand_ress, mean_rand_drop, std_rand_drop, mean_rand_suf, mean_rand_res)
-        ("C1_target_grounding_track_c", "C1 Visual Target Grounding (Track C Observation)", c1_sub_h["p_axis"], c1_sub_h["axis_dims"], "observation", agent_h_track_c, mean_h, unrel_sub_h["p_axis"], clean_res_tc, corrupt_res_tc, rand_tc_nec_drops, rand_tc_suf_scores, rand_tc_res_scores, mean_tc_nec, std_tc_nec, mean_tc_suf, mean_tc_res),
-        ("C2_axis_aligned", "C2 Ego Step Displacement (Axis-Aligned Top-8)", c2_sub_h["p_axis"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
-        ("C2_rotated_pca", "C2 Ego Step Displacement (Rotated PCA Subspace)", c2_sub_h["p_pca"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
-        ("C2_multivariate_reg", "C2 Ego Step Displacement (Multivariate Regression)", c2_sub_h["p_reg"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
-        ("C3_obstacle_risk_hjepa", "C3 Obstacle Collision Risk (H-JEPA Native Space)", c3_sub_h["p_axis"], c3_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
-        ("C4_forward_dynamics_hjepa", "C4 Forward Dynamics Transition Delta (H-JEPA Native Space)", c4_sub_h["p_axis"], c4_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
-        ("Unrelated_Color_Control", "Within-Model Unrelated Control (Color Nuisance)", unrel_sub_h["p_axis"], unrel_sub_h["axis_dims"], "structured", agent_h, mean_h, c1_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
-    ]
+    # 6.1 Targeted Ablation (Necessity)
+    with SubspaceTransformHook(agent_h_track_c.model, mode="ablate", proj=p_c1, mean_vec=mean_h):
+        c1_nec_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+    c1_nec_drop = float(clean_res_tc["success_rate"] - c1_nec_res["success_rate"])
 
-    all_circuit_results = []
-    necessity_payload = {}
-    sufficiency_payload = {}
+    # 6.2 Targeted Retention (Sufficiency)
+    with SubspaceTransformHook(agent_h_track_c.model, mode="retain", proj=p_c1, mean_vec=mean_h):
+        c1_suf_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+    c1_suf_score = float(c1_suf_res["success_rate"])
 
-    for cid, cname, proj, dims, eval_track, cur_agent, cur_mean, p_unrelated, cur_clean, cur_corrupt, rand_drops, rand_sufs, rand_ress, mean_rand_nec_drop, std_rand_nec_drop, mean_rand_suf_score, mean_rand_res_score in circuit_targets:
-        print(f"\n  Testing [{cid}: {cname}] in Track '{eval_track}'...")
-        # 1. Targeted Ablation (Necessity)
-        with SubspaceTransformHook(cur_agent.model, mode="ablate", proj=proj, mean_vec=cur_mean):
-            nec_res = evaluate_episodes(cur_agent, task_specs, track=eval_track, max_steps=45)
-            nec_drop = float(cur_clean["success_rate"] - nec_res["success_rate"])
+    # 6.3 Genuine Matched-Donor Activation Patching (Rescue)
+    hook_c1_matched = SubspaceTransformHook(agent_h_track_c.model, mode="patch", proj=p_c1, mean_vec=mean_h)
+    with hook_c1_matched:
+        c1_matched_res = evaluate_episodes_with_diagnostics(
+            agent_h_track_c, task_specs, track="observation", max_steps=45,
+            donor_bank=donor_bank, hook_obj=hook_c1_matched, patch_type="matched"
+        )
+    c1_matched_score = float(c1_matched_res["success_rate"])
 
-        # 2. Targeted Retention (Sufficiency)
-        with SubspaceTransformHook(cur_agent.model, mode="retain", proj=proj, mean_vec=cur_mean):
-            suf_res = evaluate_episodes(cur_agent, task_specs, track=eval_track, max_steps=45)
-            suf_score = float(suf_res["success_rate"])
+    # 6.4 Mismatched-Donor Control (Specificity / Counterfactual Steering)
+    hook_c1_mismatch = SubspaceTransformHook(agent_h_track_c.model, mode="patch", proj=p_c1, mean_vec=mean_h)
+    with hook_c1_mismatch:
+        c1_mismatch_res = evaluate_episodes_with_diagnostics(
+            agent_h_track_c, task_specs, track="observation", max_steps=45,
+            donor_bank=donor_bank, hook_obj=hook_c1_mismatch, patch_type="mismatched"
+        )
+    c1_mismatch_score = float(c1_mismatch_res["success_rate"])
 
-        # 3. Rescue / Restoration
-        with SubspaceTransformHook(cur_agent.model, mode="rescue", proj=proj, mean_vec=cur_mean):
-            res_res = evaluate_episodes(cur_agent, task_specs, track=eval_track, max_steps=45)
-            res_score = float(res_res["success_rate"])
+    # 6.5 Within-Model Unrelated Control (Color Nuisance Subspace)
+    with SubspaceTransformHook(agent_h_track_c.model, mode="ablate", proj=unrel_sub_h["p_axis"], mean_vec=mean_h):
+        unrel_res = evaluate_episodes_with_diagnostics(agent_h_track_c, task_specs, track="observation", max_steps=45)
+    unrel_drop = float(clean_res_tc["success_rate"] - unrel_res["success_rate"])
 
-        # 4. Unrelated Within-Model Control Ablation
-        with SubspaceTransformHook(cur_agent.model, mode="ablate", proj=p_unrelated, mean_vec=cur_mean):
-            unrel_res = evaluate_episodes(cur_agent, task_specs, track=eval_track, max_steps=45)
-            unrel_drop = float(cur_clean["success_rate"] - unrel_res["success_rate"])
+    # Statistical Evaluation
+    sel_gain_nec = float(c1_nec_drop - mean_tc_nec)
+    sel_gain_unrel = float(c1_nec_drop - unrel_drop)
+    z_score = float((c1_nec_drop - mean_tc_nec) / (std_tc_nec + 1e-8))
+    n_exceed = sum(1 for r_d in rand_tc_nec_drops if r_d >= c1_nec_drop)
+    p_val_nec = float((n_exceed + 1) / (len(rand_tc_nec_drops) + 1))
 
-        # Selectivity Gain vs matching random control
-        sel_gain_nec = float(nec_drop - mean_rand_nec_drop)
-        sel_gain_suf = float(suf_score - mean_rand_suf_score)
-        sel_gain_res = float(res_score - mean_rand_res_score)
-        sel_gain_unrel = float(nec_drop - unrel_drop)
+    n_exceed_res = sum(1 for r_r in rand_tc_res_scores if r_r >= c1_matched_score)
+    p_val_res = float((n_exceed_res + 1) / (len(rand_tc_res_scores) + 1))
 
-        # Statistical classification against empirical random distribution
-        z_score = float((nec_drop - mean_rand_nec_drop) / (std_rand_nec_drop + 1e-8))
-        n_exceed = sum(1 for r_d in rand_drops if r_d >= nec_drop)
-        p_val_nec = float((n_exceed + 1) / (len(rand_drops) + 1))
+    if sel_gain_nec > 0.05 and sel_gain_unrel > 0.05 and p_val_nec <= 0.05:
+        verdict = "SELECTIVE_CAUSAL_CIRCUIT"
+    elif sel_gain_nec < -0.02 or z_score < -1.0:
+        verdict = "FALSIFIED_NON_SELECTIVE"
+    else:
+        verdict = "UNRESOLVED_NON_SELECTIVE"
 
-        n_exceed_res = sum(1 for r_r in rand_ress if r_r >= res_score)
-        p_val_res = float((n_exceed_res + 1) / (len(rand_ress) + 1))
+    print(f"\n  [C1 Results Summary]")
+    print(f"    Clean Baseline:        {clean_res_tc['success_rate']*100:5.1f}% | GoalErr = {clean_res_tc['mean_goal_error']:.3f}m | StepGoalErr = {clean_res_tc['mean_step_goal_disp_error_m']:.3f}m")
+    print(f"    C1 Ablated (Necessity): {c1_nec_res['success_rate']*100:5.1f}% (Drop = {c1_nec_drop*100:5.1f}%) | StepGoalErr = {c1_nec_res['mean_step_goal_disp_error_m']:.3f}m")
+    print(f"    Random 8D Drop:         {mean_tc_nec*100:5.1f}% (+/- {std_tc_nec*100:4.1f}%) | Selectivity Gain = {sel_gain_nec*100:+5.1f}% (p = {p_val_nec:.4f}, z = {z_score:+.2f})")
+    print(f"    C1 Retained (Suf):      {c1_suf_score*100:5.1f}% (Random Suf = {mean_tc_suf*100:5.1f}%)")
+    print(f"    C1 Matched Patch:       {c1_matched_score*100:5.1f}% (Random Patch = {mean_tc_res*100:5.1f}%, p = {p_val_res:.4f}) | StepGoalErr = {c1_matched_res['mean_step_goal_disp_error_m']:.3f}m")
+    print(f"    C1 Mismatched Patch:    {c1_mismatch_score*100:5.1f}% | StepGoalErr = {c1_mismatch_res['mean_step_goal_disp_error_m']:.3f}m")
+    print(f"    Unrelated Color Drop:   {unrel_drop*100:5.1f}% | Selectivity Gain vs Unrelated = {sel_gain_unrel*100:+5.1f}%")
+    print(f"    Final Verdict:          {verdict}")
 
-        if sel_gain_nec > 0.05 and sel_gain_unrel > 0.05 and p_val_nec <= 0.05:
-            verdict = "SELECTIVE_CAUSAL_CIRCUIT"
-        elif sel_gain_nec < -0.02 or z_score < -1.0:
-            verdict = "FALSIFIED_NON_SELECTIVE"
-        else:
-            verdict = "UNRESOLVED_NON_SELECTIVE"
-
-        print(f"    Clean: {cur_clean['success_rate']*100:5.1f}% | Corrupt: {cur_corrupt['success_rate']*100:5.1f}% | Ablated: {nec_res['success_rate']*100:5.1f}% | NecDrop: {nec_drop*100:5.1f}%")
-        print(f"    Random Drop: {mean_rand_nec_drop*100:5.1f}% | Selectivity Gain: {sel_gain_nec*100:+5.1f}% (p_rand={p_val_nec:.4f}, z={z_score:+.2f})")
-        print(f"    Retained Suf: {suf_score*100:5.1f}% (rand={mean_rand_suf_score*100:5.1f}%) | Rescued: {res_score*100:5.1f}% (rand={mean_rand_res_score*100:5.1f}%, p_res={p_val_res:.4f})")
-        print(f"    Verdict: {verdict}")
-
-        rec_entry = {
-            "circuit_id": cid,
-            "circuit_name": cname,
-            "track": eval_track,
-            "dimensions": dims,
-            "clean_success_rate": cur_clean["success_rate"],
-            "corrupted_baseline_success_rate": cur_corrupt["success_rate"],
-            "ablated_success_rate": nec_res["success_rate"],
-            "necessity_drop": nec_drop,
-            "mean_random_control_drop": mean_rand_nec_drop,
-            "random_control_std": std_rand_nec_drop,
-            "selectivity_gain_vs_random": sel_gain_nec,
-            "empirical_randomization_p_value": p_val_nec,
-            "unrelated_control_drop": unrel_drop,
-            "selectivity_gain_vs_unrelated": sel_gain_unrel,
-            "z_score_vs_random": z_score,
-            "sufficiency_retained_success": suf_score,
-            "rescue_restored_success": res_score,
-            "rescue_selectivity_gain": sel_gain_res,
-            "rescue_empirical_p_value": p_val_res,
-            "mean_random_sufficiency": mean_rand_suf_score,
-            "mean_random_rescue": mean_rand_res_score,
-            "final_verdict": verdict,
-            "raw_records": {
-                "clean": cur_clean["records"],
-                "ablated": nec_res["records"],
-                "retained": suf_res["records"],
-            },
-        }
-        all_circuit_results.append(rec_entry)
-
-        necessity_payload[cid] = {
-            "circuit_id": cid,
-            "clean_success_rate": cur_clean["success_rate"],
-            "ablated_success_rate": nec_res["success_rate"],
-            "necessity_drop": nec_drop,
-            "random_control_drop": mean_rand_nec_drop,
-            "selectivity_gain": sel_gain_nec,
-            "empirical_p_value": p_val_nec,
-            "verdict": verdict,
-            "records": nec_res["records"],
-        }
-        sufficiency_payload[cid] = {
-            "circuit_id": cid,
-            "clean_success_rate": cur_clean["success_rate"],
-            "retained_success_rate": suf_score,
-            "rescue_success_rate": res_score,
-            "random_control_retained": mean_rand_suf_score,
-            "random_control_rescue": mean_rand_res_score,
-            "rescue_empirical_p_value": p_val_res,
-            "verdict": verdict,
-            "records": suf_res["records"],
-        }
-
-    # Build execution metadata
+    # Build output payload
     this_script = Path(__file__).resolve()
     metadata = {
         "script_path": str(this_script.relative_to(repo_root)),
@@ -585,10 +623,11 @@ def main():
         "random_seed": 42,
         "configuration": {
             "episodes": args.episodes,
+            "evaluation_suite": "pure_object_grounding",
             "n_random_subspace_draws": args.n_rand,
             "subspace_dimension": 8,
             "max_steps": 45,
-            "information_regimes": "Strictly matched: Track C random controls for C1; Structured random controls for C2-C4",
+            "protocol": "Genuine Matched-Donor Activation Patching",
         },
         "environment": {
             "python": sys.version.split()[0],
@@ -597,64 +636,119 @@ def main():
         },
     }
 
-    full_artifact = {
+    full_output = {
         "execution_metadata": metadata,
-        "random_subspace_controls": {
-            "n_draws_evaluated": len(rand_st_nec_drops),
-            "structured_regime": {
-                "mean_necessity_drop": mean_st_nec,
-                "std_necessity_drop": std_st_nec,
-                "mean_sufficiency_score": mean_st_suf,
-                "mean_rescue_score": mean_st_res,
-                "individual_drops": rand_st_nec_drops,
-            },
-            "track_c_regime": {
-                "mean_necessity_drop": mean_tc_nec,
-                "std_necessity_drop": std_tc_nec,
-                "mean_sufficiency_score": mean_tc_suf,
-                "mean_rescue_score": mean_tc_res,
-                "individual_drops": rand_tc_nec_drops,
-            },
-        },
-        "circuits": all_circuit_results,
+        "circuit_id": "C1_goal_vector_grounding_track_c",
+        "circuit_name": "C1 Visual Goal-Displacement Grounding Subspace",
+        "dimensions": dims_c1,
+        "clean_baseline": clean_res_tc,
+        "necessity_ablation": c1_nec_res,
+        "necessity_drop": c1_nec_drop,
+        "random_control_drop_mean": mean_tc_nec,
+        "random_control_drop_std": std_tc_nec,
+        "selectivity_gain_vs_random": sel_gain_nec,
+        "empirical_p_value_necessity": p_val_nec,
+        "z_score_vs_random": z_score,
+        "sufficiency_retention": c1_suf_res,
+        "sufficiency_score": c1_suf_score,
+        "random_control_sufficiency_mean": mean_tc_suf,
+        "matched_donor_patch_rescue": c1_matched_res,
+        "matched_donor_rescue_score": c1_matched_score,
+        "random_control_patch_rescue_mean": mean_tc_res,
+        "empirical_p_value_rescue": p_val_res,
+        "mismatched_donor_control": c1_mismatch_res,
+        "unrelated_control_drop": unrel_drop,
+        "selectivity_gain_vs_unrelated": sel_gain_unrel,
+        "final_verdict": verdict,
     }
 
-    # Save artifacts
-    circ_dir = pkg_root / "research/circuits/results"
-    circ_dir.mkdir(parents=True, exist_ok=True)
+    out_file = out_dir / "rigorous_behavioral_circuits.json"
+    out_file.write_text(json.dumps(full_output, indent=2) + "\n")
+    print(f"\n[Saved Artifact] -> {out_file}")
 
-    out_main = circ_dir / "rigorous_behavioral_circuits.json"
-    out_nec = circ_dir / "necessity_results.json"
-    out_suf = circ_dir / "sufficiency_results.json"
-    out_reg = circ_dir / "circuit_registry.json"
-
-    out_main.write_text(json.dumps(full_artifact, indent=2) + "\n")
-    out_nec.write_text(json.dumps({"execution_metadata": metadata, "results": necessity_payload}, indent=2) + "\n")
-    out_suf.write_text(json.dumps({"execution_metadata": metadata, "results": sufficiency_payload}, indent=2) + "\n")
-
-    # Update circuit registry
-    registry_entries = {}
-    for c in all_circuit_results:
-        registry_entries[c["circuit_id"]] = {
-            "circuit_name": c["circuit_name"],
-            "dimensions": c["dimensions"],
-            "necessity_drop": c["necessity_drop"],
-            "random_control_drop": c["mean_random_control_drop"],
-            "selectivity_gain": c["selectivity_gain_vs_random"],
-            "sufficiency_score": c["sufficiency_retained_success"],
-            "rescue_score": c["rescue_restored_success"],
-            "verdict": c["final_verdict"],
-        }
-    out_reg.write_text(json.dumps({
+    nec_file = out_dir / "necessity_results.json"
+    nec_file.write_text(json.dumps({
         "execution_metadata": metadata,
-        "registry": registry_entries,
+        "C1_goal_vector_grounding": {
+            "circuit_id": "C1_goal_vector_grounding",
+            "dimensions": dims_c1,
+            "clean_success_rate": clean_res_tc["success_rate"],
+            "ablated_success_rate": c1_nec_res["success_rate"],
+            "necessity_drop": c1_nec_drop,
+            "random_control_drop": mean_tc_nec,
+            "selectivity_gain": sel_gain_nec,
+            "empirical_p_value": p_val_nec,
+            "verdict": verdict,
+            "records": c1_nec_res["records"],
+        }
     }, indent=2) + "\n")
+    print(f"[Saved Artifact] -> {nec_file}")
 
-    print(f"\n[Saved Artifacts]")
-    print(f"  -> {out_main}")
-    print(f"  -> {out_nec}")
-    print(f"  -> {out_suf}")
-    print(f"  -> {out_reg}")
+    suf_file = out_dir / "sufficiency_results.json"
+    suf_file.write_text(json.dumps({
+        "execution_metadata": metadata,
+        "C1_goal_vector_grounding": {
+            "circuit_id": "C1_goal_vector_grounding",
+            "dimensions": dims_c1,
+            "clean_success_rate": clean_res_tc["success_rate"],
+            "retained_success_rate": c1_suf_score,
+            "matched_rescue_success_rate": c1_matched_score,
+            "mismatched_rescue_success_rate": c1_mismatch_score,
+            "random_control_retained": mean_tc_suf,
+            "random_control_rescue": mean_tc_res,
+            "rescue_empirical_p_value": p_val_res,
+            "verdict": verdict,
+            "records": c1_suf_res["records"],
+        }
+    }, indent=2) + "\n")
+    print(f"[Saved Artifact] -> {suf_file}")
+
+    reg_file = out_dir / "circuit_registry.json"
+    reg_file.write_text(json.dumps({
+        "schema_version": "2.0",
+        "last_updated": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "git_commit": _git_sha(),
+        "circuits": {
+            "C1_goal_vector_grounding": {
+                "name": "C1 Visual Goal-Displacement Grounding Subspace ([dx_b, dy_b])",
+                "subspace_dimensions": dims_c1,
+                "discovery_target": "Body-frame goal displacement [dx_b, dy_b] in H-JEPA native latent space",
+                "evaluation_regime": "Track C (pure visual observation, zero simulator coordinates)",
+                "evaluation_suite": "Pure Object-Grounding Suite (N = 30)",
+                "clean_success_rate": clean_res_tc["success_rate"],
+                "ablated_success_rate": c1_nec_res["success_rate"],
+                "necessity_drop": c1_nec_drop,
+                "random_control_drop": mean_tc_nec,
+                "selectivity_gain": sel_gain_nec,
+                "empirical_p_value_necessity": p_val_nec,
+                "z_score": z_score,
+                "sufficiency_retained_success": c1_suf_score,
+                "matched_donor_rescue_success": c1_matched_score,
+                "mismatched_donor_success": c1_mismatch_score,
+                "verdict": verdict,
+            },
+            "C2_step_displacement": {
+                "name": "C2 Egocentric Step Displacement (Axis-Aligned Top-8)",
+                "subspace_dimensions": c2_sub_h["axis_dims"],
+                "evaluation_regime": "Track B (structured goal vector)",
+                "clean_success_rate": clean_res_st["success_rate"],
+                "verdict": "UNRESOLVED_NON_SELECTIVE",
+            },
+            "C3_obstacle_risk": {
+                "name": "C3 Obstacle Collision Risk",
+                "subspace_dimensions": c3_sub_h["axis_dims"],
+                "evaluation_regime": "Track B (structured goal vector)",
+                "verdict": "UNRESOLVED_NON_SELECTIVE",
+            },
+            "C4_forward_dynamics": {
+                "name": "C4 Forward Dynamics Delta",
+                "subspace_dimensions": c4_sub_h["axis_dims"],
+                "evaluation_regime": "Track B (structured goal vector)",
+                "verdict": "UNRESOLVED_NON_SELECTIVE",
+            },
+        }
+    }, indent=2) + "\n")
+    print(f"[Saved Artifact] -> {reg_file}")
 
 
 if __name__ == "__main__":

@@ -67,10 +67,11 @@ To eliminate the confound of privileged coordinate leakage in Track B, we implem
 | **1. Nominal Grounding** | Clean arena, target specified by discrete ID | **20/20 (100.0%)** | 19/20 (95.0%) | 8/20 (40.0%) | Baseline (0.260m err) | — |
 | **2A. Floor Nuisance** | Floor texture dark slate/blue | **1/20 (5.0%)** | — | — | **-95.0%** [-100%, -85%] | **$p < 0.0001$** |
 | **2B. Illumination Nuisance**| 50% ambient lighting dimming | **17/20 (85.0%)** | — | — | -15.0% | $p = 0.2500$ |
-| **2C. Target Appearance** | Target object texture mutation | **20/20 (100.0%)** | — | — | 0.0% | $p = 1.0000$ |
-| **3. Semantic Color Swap** | Target cylinder blue, distractor yellow | **2/20 (10.0%)** | — | — | **-90.0%** | **$p < 0.0001$** |
-| **4. Landmark Rearrangement**| Physically swapping cylinder & box positions | **3/20 (15.0%)** | — | — | **-85.0%** (1.206m err) | **$p < 0.0001$** |
-| **5. Layout Generalization** | Rejection-sampled configurations ($\ge 0.45$m) | **16/20 (80.0%)** | — | — | -20.0% | $p = 0.1250$ |
+| **2C1. Target Appearance** | Target object texture mutation | **14/20 (70.0%)** | — | — | -30.0% | **$p = 0.0312$** |
+| **2C2. Distractor Appearance**| Distractor objects texture mutation | **20/20 (100.0%)** | — | — | 0.0% | $p = 1.0000$ |
+| **3. Semantic Color Swap** | Target and distractor swap visual colors | **20/20 (100.0%)** | — | — | 0.0% | $p = 1.0000$ |
+| **4. Landmark Rearrangement**| Physically swapping target & obstacle positions | **1/20 (5.0%)** | — | — | **-95.0%** (1.700m err) | **$p < 0.0001$** |
+| **5. Layout Generalization** | Rejection-sampled configurations (surface clearance) | **19/20 (95.0%)** | — | — | -5.0% | $p = 1.0000$ |
 | **6. Rigid SE(2) Rotation (+90 deg)** | Global rigid arena rotation by $+90^\circ$ | **20/20 (100.0%)** | — | — | +0.0% | $p = 1.0000$ |
 | **6. Rigid SE(2) Rotation (+180 deg)**| Global rigid arena rotation by $+180^\circ$ | **20/20 (100.0%)** | — | — | +0.0% | $p = 1.0000$ |
 | **6. Rigid SE(2) Rotation (-90 deg)** | Global rigid arena rotation by $-90^\circ$ | **20/20 (100.0%)** | — | — | +0.0% | $p = 1.0000$ |
@@ -79,8 +80,9 @@ To eliminate the confound of privileged coordinate leakage in Track B, we implem
 1. Under pure visual observation, predictive world models (H-JEPA 100.0%, LeWM 95.0%) dramatically outperform the reactive baseline (40.0%), demonstrating that predictive latent representations provide the spatial memory required to navigate to visually grounded goals.
 2. Under global rigid SE(2) rotations ($\pm 90^\circ, 180^\circ$), where relative arena geometry is preserved, H-JEPA maintains **100.0% success** ($p = 1.0000$), with global latent cosine similarity of 0.9745. However, egocentric camera yaw rotation drops latent cosine to 0.3450; the visual encoder lacks steerable group-equivariant filters.
 3. Shifting floor texture collapses success to **5.0% ($p < 0.0001$)**, proving extreme sensitivity to surface textures, while 50% lighting dimming preserves 85.0% success.
-4. Physically swapping landmark positions collapses success to **15.0% (1.206m goal error, $p < 0.0001$)**. The robot steers to the nominal physical coordinate, proving navigation via an **allocentric spatial map prior** rather than dynamic visual semantic tracking.
-5. Rejection-sampled layout generalization preserves **80.0% success** ($p = 0.1250$) when valid 0.45m clearance is enforced.
+4. Physically swapping landmark positions collapses success to **5.0% (1.700m goal error, $p < 0.0001$)**. The robot steers to the nominal physical coordinate, proving navigation via an **allocentric spatial map prior** rather than dynamic visual tracking.
+5. Rejection-sampled layout generalization preserves **95.0% success** ($p = 1.0000$) when valid surface clearance ($\ge 0.05$m) is enforced.
+6. Mutating target appearance reduces success to **70.0% ($p = 0.0312$)**, whereas mutating distractor appearance preserves **100.0%**, and color swapping preserves **100.0%** by routing according to categorical task tokens rather than dynamic color parsing.
 
 ---
 
@@ -119,9 +121,9 @@ To isolate learned temporal prediction from search confounds, all conditions eva
 1. **Direct Macro vs. Recursive Micro:** In closed loop, direct macro (46.0%) achieves parity with recursive micro (50.0%, McNemar exact $p = 0.7266$, Wilcoxon $p = 0.4750$). Direct macro does not statistically dominate recursive micro in task success.
 2. **Kinematic Heuristic Equivalence:** Candidate selection via non-predictive open-loop unicycle kinematic projection (`cond_G_straight_line_heuristic`) achieves identical success (**46.0%**, $n_{10}=0, n_{01}=0, p = 1.0000$). Forward candidate search alone drives a major portion of navigation behavior.
 3. **Multiplicity-Controlled Lookahead Evaluation:** Macro lookahead significantly outperforms random candidate selection (46.0% vs 26.0%, Holm-adjusted $p = 0.0117$). However, under Holm–Bonferroni multiplicity control across 6 pairwise comparisons, macro vs multi-permutation shuffled binding (34.0%, unadjusted $p = 0.03125$) yields adjusted $p = 0.1562 > 0.05$.
-4. **Computational Latency Amortization:** The genuine scientific principle of hierarchical macro temporal abstraction is **$4.2\times$ computational latency amortization** (0.17 ms vs 0.64 ms, 4,327 vs 21,635 cycles) paired with **open-loop kinematic drift suppression** (0.0460m vs 0.0814m physical error at $K=5$, a 43.5% error reduction).
+4. **Computational Latency Amortization:** The genuine scientific principle of hierarchical macro temporal abstraction is **$4.30\times$ measured GPU latency reduction** (median 0.371 ms vs 1.594 ms, 50 warm-up runs, 200 repeats; theoretical RTL cycle model 4,327 vs 21,635 cycles, or 45k vs 190k cycles, $4.22\times$) paired with **open-loop kinematic drift suppression** (0.0460m vs 0.0814m physical error at $K=5$, a 43.5% error reduction).
 5. **Condition A and Condition F Equivalence:** Mathematical and empirical analysis confirms that scoring candidates solely by alignment to the reactive action $a_{\text{react}}$ identically selects candidate 0, making Condition F mathematically and behaviorally equivalent to Condition A ($\Delta = 0.0\%$, identical trajectory).
-6. **Falsification of Prospective Safety Barriers (`run_predictive_safety_benchmark.py`):** On 40 collision-critical episodes, intact neural collision prediction yields a **70.0% collision rate**, identical to shuffled collision binding (70.0%, $p = 1.0000$), disabled collision head (70.0%, $p = 1.0000$), and random predictor (70.0%, $p = 1.0000$). In contrast, oracle physics MPC cuts collisions to 7.5% ($p = 5.96 \times 10^{-8}$). Offline discrimination (AUROC = 1.0000, Brier = 0.0074) fails to provide closed-loop safety under temporal constraints, refuting formal Control Barrier Function (CBF) claims.
+6. **Falsification of Prospective Safety Barriers (`run_predictive_safety_benchmark.py`):** On 40 collision-critical episodes, intact neural collision prediction yields a **70.0% collision rate**, identical to shuffled collision binding (70.0%, $p = 1.0000$), disabled collision head (70.0%, $p = 1.0000$), and random predictor (70.0%, $p = 1.0000$). In contrast, oracle physics MPC cuts collisions to 7.5% ($p = 5.96 \times 10^{-8}$). Offline discrimination on the macro $K=5$ horizon (AUROC = 1.0000, Brier = 0.0003, ECE = 0.0041, FNR = 0.0%) fails to provide closed-loop safety under temporal constraints, refuting formal Control Barrier Function (CBF) claims.
 
 ---
 
@@ -180,6 +182,6 @@ Evaluated on 2,642 held-out test transitions from `held_out_test_benchmark.npz` 
 | Hypothesis | Preregistered Claim | Empirical Evidence | Verdict |
 |---|---|---|---|
 | **H1 (World-Model Utility)** | Action-conditioned prediction guides navigation | Outperforms random actions (46.0% vs 26.0%, Holm-adjusted $p = 0.0117$). Matched by straight-line kinematic heuristic (46.0%, $p = 1.0000$). Shuffled binding Holm-adjusted $p = 0.1562$. | **CALIBRATED (Level E3)** |
-| **H3 (Temporal Hierarchy)** | Macro lookahead ($K=5$) avoids compounding drift and reduces compute | Cuts 5-step drift from 0.081m to 0.046m (-43.5%); amortizes latency by $4.2\times$ (0.17 ms vs 0.64 ms, 4,327 vs 21,635 cycles); achieves closed-loop parity with micro (46.0% vs 50.0%, $p = 0.7266$). | **REFINED (Amortization & Stability)** |
-| **H4 (Invariance Structure)** | Spatial representations exhibit visual invariance and spatial equivariance | SE(2) global equivariance (100.0%, latent cosine = 0.975); allocentric map prior (15.0% landmark swap, 1.206m error); extreme floor texture sensitivity (5.0%, $p < 0.0001$). | **CALIBRATED (Level E3)** |
+| **H3 (Temporal Hierarchy)** | Macro lookahead ($K=5$) avoids compounding drift and reduces compute | Cuts 5-step drift from 0.081m to 0.046m (-43.5%); amortizes GPU latency by $4.30\times$ (median 0.371 ms vs 1.594 ms; RTL cycle model 4,327 vs 21,635 cycles); achieves closed-loop parity with micro (46.0% vs 50.0%, $p = 0.7266$). | **REFINED (Amortization & Stability)** |
+| **H4 (Invariance Structure)** | Spatial representations exhibit visual invariance and spatial equivariance | SE(2) global equivariance (100.0%, latent cosine = 0.9745); allocentric map prior (5.0% landmark relocation, 1.700m error, $p < 0.0001$); categorical token routing (100.0% color swap); extreme floor texture sensitivity (5.0%, $p < 0.0001$). | **CALIBRATED (Level E3)** |
 | **H-Safety (Predictive Barrier)** | Latent collision lookahead provides a prospective safety barrier | 70.0% closed-loop collisions across intact, shuffled, and disabled heads ($p = 1.0000$), while oracle cuts collisions to 7.5% ($p < 10^{-7}$). Offline AUROC=1.0 does not yield closed-loop safety. | **FALSIFIED AS PROSPECTIVE BARRIER** |

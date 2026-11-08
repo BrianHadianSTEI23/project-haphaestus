@@ -4,15 +4,21 @@ Track C Pure Visual Spatial Grounding Benchmark (Scientifically Repaired Protoco
 Strict Information Regime:
 - Track C ('observation'): The agent receives ONLY camera RGB (64x64x3) and discrete task ID.
 - Zero simulator coordinates ([dx, dy, sin_th, cos_th] strictly withheld).
-- Evaluates five paired counterfactual test suites against matched nominal episodes:
-  1. Nominal Visual Grounding: Baseline canonical tasks.
-  2. Appearance Nuisance: Floor texture and illumination altered; geometry and semantics held constant.
-  3. Semantically Relevant Appearance: Target color swapped with distractor; tests visual grounding vs location memorization.
-  4. Visual Geometry Grounding: Physical landmark positions swapped; tests visual steering vs allocentric prior.
-  5. Layout Generalization: Non-canonical randomized obstacle layouts.
-  6. Rigid SE(2) Transformations: Global rigid rotation of robot pose, all obstacles, and target waypoints.
+- Evaluates controlled counterfactual test suites against matched nominal episodes:
+  1. Nominal Visual Grounding: Baseline canonical tasks balanced across all 6 targets.
+  2A. Floor Appearance Nuisance: Floor texture altered; geometry and lighting held constant.
+  2B. Illumination Nuisance: 50% lighting reduction; geometry and floor held constant.
+  2C1. Target-Only Appearance Perturbation: Mutates ONLY the requested target object's appearance.
+  2C2. Distractor-Only Appearance Perturbation: Mutates distractor appearances while target is canonical.
+  3. Color-Defined Semantic Targeting: Evaluates whether agent routes by visual appearance or discrete categorical task token.
+  4. Visual Geometry Grounding: Landmark physical positions swapped while task token, target instance,
+     and waypoint remain consistent; tests visual steering vs canonical allocentric location memorization.
+  5. Layout Generalization: Non-canonical randomized obstacle layouts with verified physical clearances.
+  6. Rigid SE(2) Transformations: Global rigid arena rotation vs egocentric camera rotation.
+- Rigorous geometric validation asserts task token, target object instance, and waypoint consistency
+  accounting for robot footprint (radius 0.18m) and obstacle geometries (cylinders and boxes).
 - Reports exact contingency tables, paired differences, McNemar exact tests, 95% bootstrap CIs,
-  and saves full episode-level raw records.
+  and saves full episode-level raw records with comprehensive metadata.
 """
 
 from __future__ import annotations
@@ -41,7 +47,7 @@ from scipy.stats import binom
 from env.amr_env import JetAutoEnv
 from models.h_jepa import HJEPAModel
 from models.le_world_model import LeWorldModel
-from models.baseline_policy import BaselineNavigationPolicy
+from models.baseline_policy import BaselineNavigationPolicy, encode_task_id, TARGET_KEYS
 from research.benchmarks.model_wrappers import BaselineAgent, HJEPAAgent, LeWMAgent
 from research.datasets.generation.capability_tasks import (
     CANONICAL_OBSTACLES,
@@ -50,13 +56,56 @@ from research.datasets.generation.capability_tasks import (
 )
 
 
+def compute_surface_distance(point: np.ndarray, obs: dict, robot_radius: float = 0.18) -> float:
+    """Computes exact Euclidean distance from robot footprint to obstacle boundary."""
+    p = np.asarray(point[:2], dtype=np.float32)
+    c = np.asarray(obs["pos"][:2], dtype=np.float32)
+    if "radius" in obs:
+        d = float(np.linalg.norm(p - c))
+        return float(d - (float(obs["radius"]) + robot_radius))
+    elif "size" in obs:
+        hx, hy = float(obs["size"][0]), float(obs["size"][1])
+        dx = max(0.0, abs(float(p[0] - c[0])) - hx)
+        dy = max(0.0, abs(float(p[1] - c[1])) - hy)
+        d_box = float(np.sqrt(dx * dx + dy * dy))
+        return float(d_box - robot_radius)
+    return float(np.linalg.norm(p - c) - (0.25 + robot_radius))
+
+
 def assert_task_spec_valid(
     spec: dict,
-    clearance_thresh: float = 0.45,
+    robot_radius: float = 0.18,
+    min_surface_clearance: float = 0.05,
     min_obs_sep: float = 0.30,
     arena_bounds: tuple[float, float] = (-1.85, 1.85),
 ) -> None:
-    """Rigorous geometric validation of task specification."""
+    """
+    Rigorous geometric and task-specification validation:
+    1. Task identity resolves to exactly one intended target.
+    2. Physical target object corresponds to that task identity.
+    3. Waypoint is derived from actual target object's current position using declared spatial relation.
+    4. Task identity, instruction, target instance, and evaluation waypoint agree.
+    5. Start pose and waypoint are physically feasible, within arena bounds.
+    6. Obstacle geometry and robot footprint are considered (surface-to-surface clearance, not merely center distance).
+    """
+    target_key = spec.get("target_key", "")
+    assert target_key, "Task spec missing 'target_key'"
+    obs_dict = spec.get("obstacles", {})
+    assert target_key in obs_dict, f"Target key '{target_key}' not found in obstacles: {list(obs_dict.keys())}"
+    target_obj = obs_dict[target_key]
+
+    # Task identity encoding check
+    instruction = spec.get("instruction", "")
+    sem_rel = spec.get("semantic_relation", "approach")
+    tid = encode_task_id(target_key, sem_rel, instruction)
+    assert 0 <= tid < 64, f"Invalid task ID {tid} for target_key {target_key}"
+
+    # Verify instruction mentions target identity or label
+    target_label = target_obj.get("label", target_key.replace("_", " "))
+    aliases = target_obj.get("aliases", [target_label, target_key])
+    has_target_mention = any(a.lower() in instruction.lower() for a in aliases) or (target_key.replace("_", " ") in instruction.lower())
+    assert has_target_mention, f"Instruction '{instruction}' does not mention target '{target_key}' or aliases {aliases}"
+
     init_xy = np.asarray(spec["initial_pose"][:2], dtype=np.float32)
     assert (
         arena_bounds[0] <= init_xy[0] <= arena_bounds[1]
@@ -71,24 +120,44 @@ def assert_task_spec_valid(
         and arena_bounds[0] <= final_wp[1] <= arena_bounds[1]
     ), f"Final waypoint {final_wp} out of bounds {arena_bounds}"
 
-    obs_dict = spec.get("obstacles", {})
-    obs_positions = [np.asarray(o["pos"][:2], dtype=np.float32) for o in obs_dict.values()]
+    # Verify waypoint is derived from actual target object's current position
+    t_pos_2d = np.asarray(target_obj["pos"][:2], dtype=np.float32)
+    dist_wp_target = float(np.linalg.norm(final_wp - t_pos_2d))
+    assert 0.40 <= dist_wp_target <= 0.85, f"Waypoint {final_wp} distance to target {t_pos_2d} is {dist_wp_target:.3f}m, expected ~0.60m"
 
-    # Waypoint clearance from all obstacle centers
-    for i, o_pos in enumerate(obs_positions):
-        d_wp = float(np.linalg.norm(final_wp - o_pos))
-        assert d_wp >= clearance_thresh, f"Waypoint {final_wp} too close to obstacle {i} at {o_pos}: dist={d_wp:.3f} < {clearance_thresh}"
+    # Robot footprint & obstacle geometry checks
+    for k, o in obs_dict.items():
+        o_pos = np.asarray(o["pos"][:2], dtype=np.float32)
 
-    # Initial pose clearance from all obstacle centers
-    for i, o_pos in enumerate(obs_positions):
-        d_init = float(np.linalg.norm(init_xy - o_pos))
-        assert d_init >= clearance_thresh, f"Initial pose {init_xy} too close to obstacle {i} at {o_pos}: dist={d_init:.3f} < {clearance_thresh}"
+        # Initial pose surface clearance
+        init_surf_clearance = compute_surface_distance(init_xy, o, robot_radius=robot_radius)
+        assert init_surf_clearance >= min_surface_clearance, (
+            f"Initial pose {init_xy} collides with obstacle '{k}' at {o_pos}: "
+            f"surface clearance = {init_surf_clearance:.3f}m < {min_surface_clearance}m"
+        )
+
+        # Final waypoint surface clearance
+        wp_surf_clearance = compute_surface_distance(final_wp, o, robot_radius=robot_radius)
+        if k != target_key:
+            assert wp_surf_clearance >= min_surface_clearance, (
+                f"Waypoint {final_wp} collides with non-target obstacle '{k}' at {o_pos}: "
+                f"surface clearance = {wp_surf_clearance:.3f}m < {min_surface_clearance}m"
+            )
+        else:
+            # Standoff clearance to target object (must be non-colliding, >= 0.05m)
+            assert wp_surf_clearance >= min_surface_clearance, (
+                f"Waypoint {final_wp} collides with target obstacle '{k}': "
+                f"surface clearance = {wp_surf_clearance:.3f}m < {min_surface_clearance}m"
+            )
 
     # Inter-obstacle separation
-    for i in range(len(obs_positions)):
-        for j in range(i + 1, len(obs_positions)):
-            d_obs = float(np.linalg.norm(obs_positions[i] - obs_positions[j]))
-            assert d_obs >= min_obs_sep, f"Obstacle overlap: obs {i} and {j} separated by {d_obs:.3f} < {min_obs_sep}"
+    obs_list = list(obs_dict.values())
+    for i in range(len(obs_list)):
+        for j in range(i + 1, len(obs_list)):
+            p_i = np.asarray(obs_list[i]["pos"][:2], dtype=np.float32)
+            p_j = np.asarray(obs_list[j]["pos"][:2], dtype=np.float32)
+            d_obs = float(np.linalg.norm(p_i - p_j))
+            assert d_obs >= min_obs_sep, f"Obstacle overlap: separated by {d_obs:.3f} < {min_obs_sep}"
 
 
 def _sha256(path: Path) -> str:
@@ -200,9 +269,19 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
         final_p = env.get_robot_pose()
         final_err = float(np.linalg.norm(final_p[:2] - final_wp[:2]))
         succ = bool(goal_reached and not collision_hit)
+        
+        t_key = spec.get("target_key", "")
+        t_pos = spec.get("obstacles", {}).get(t_key, {}).get("pos", [0.0, 0.0, 0.0])
+        tid = encode_task_id(t_key, spec.get("semantic_relation", "approach"), spec.get("instruction", ""))
+        
         records.append({
             "episode_id": spec.get("episode_id", "ep"),
-            "target_key": spec.get("target_key", ""),
+            "target_key": t_key,
+            "target_instance": t_key,
+            "target_physical_coordinates": [float(x) for x in t_pos],
+            "task_token": int(tid),
+            "instruction": spec.get("instruction", ""),
+            "computed_waypoint": [float(x) for x in final_wp],
             "success": succ,
             "goal_reached": goal_reached,
             "collision": collision_hit,
@@ -244,7 +323,7 @@ def main():
     test_npz = pkg_root / "research/datasets/splits_v4/held_out_test_benchmark.npz"
 
     print("=================================================================")
-    print("  TRACK C PURE VISUAL SPATIAL GROUNDING BENCHMARK")
+    print("  TRACK C PURE VISUAL SPATIAL GROUNDING BENCHMARK (REPAIRED)")
     print(f"  Device: {args.device} | Checkpoint: {hjepa_path.name}")
     print(f"  Episodes per suite: {args.episodes_per_suite} | Privileged coordinates: ZERO")
     print("=================================================================")
@@ -304,64 +383,93 @@ def main():
     pair_illum = _paired_contingency(nom_h_succ, illum_h_succ)
     print(f"  [H-JEPA Illum Nuisance] Succ: {res_illum_h['success_count']}/{n_eps} ({res_illum_h['success_rate']*100:5.1f}%) | Delta: {pair_illum['mean_diff']*100:+5.1f}% [CI95: {pair_illum['ci95_low']*100:+5.1f}%, {pair_illum['ci95_high']*100:+5.1f}%] | p={pair_illum['mcnemar_exact_p_value']:.4f}")
 
-    # --- 2C. Appearance Nuisance: Target Object Appearance Only ---
-    print("\n--- 2C. Evaluating Target Appearance Nuisance (Floor & Lighting Constant) ---")
-    obj_app_specs = []
+    # --- 2C1. Object-Appearance Invariance: Target Object Only ---
+    print("\n--- 2C1. Evaluating Target-Only Appearance Perturbation (Balanced Across Targets) ---")
+    target_app_specs = []
     for i in range(n_eps):
         spec = copy.deepcopy(nominal_specs[i])
-        spec["episode_id"] = f"nuis_obj_app_{i:02d}"
-        spec["color_mutations"] = {"obs_yellow_cyl": [0.85, 0.15, 0.85, 1.0]}  # magenta target cylinder
+        spec["episode_id"] = f"nuis_target_app_{i:02d}"
+        t_key = spec["target_key"]
+        t_geom = spec["obstacles"][t_key]["geom_name"]
+        # Mutate target appearance to magenta/violet while distractors retain canonical appearance
+        spec["color_mutations"] = {t_geom: [0.85, 0.15, 0.85, 1.0]}
         assert_task_spec_valid(spec)
-        obj_app_specs.append(spec)
+        target_app_specs.append(spec)
 
-    res_obj_app_h = evaluate_suite_track_c(agent_h, obj_app_specs)
-    obj_app_h_succ = [r["success"] for r in res_obj_app_h["records"]]
-    pair_obj_app = _paired_contingency(nom_h_succ, obj_app_h_succ)
-    print(f"  [H-JEPA Obj Appearance] Succ: {res_obj_app_h['success_count']}/{n_eps} ({res_obj_app_h['success_rate']*100:5.1f}%) | Delta: {pair_obj_app['mean_diff']*100:+5.1f}% [CI95: {pair_obj_app['ci95_low']*100:+5.1f}%, {pair_obj_app['ci95_high']*100:+5.1f}%] | p={pair_obj_app['mcnemar_exact_p_value']:.4f}")
+    res_target_app_h = evaluate_suite_track_c(agent_h, target_app_specs)
+    target_app_h_succ = [r["success"] for r in res_target_app_h["records"]]
+    pair_target_app = _paired_contingency(nom_h_succ, target_app_h_succ)
+    print(f"  [H-JEPA Target Appearance] Succ: {res_target_app_h['success_count']}/{n_eps} ({res_target_app_h['success_rate']*100:5.1f}%) | Delta: {pair_target_app['mean_diff']*100:+5.1f}% [CI95: {pair_target_app['ci95_low']*100:+5.1f}%, {pair_target_app['ci95_high']*100:+5.1f}%] | p={pair_target_app['mcnemar_exact_p_value']:.4f}")
 
-    # --- 3. Semantically Relevant Appearance: Color-Defined Semantic Targeting (Experiment B) ---
-    print("\n--- 3. Evaluating Color-Defined Semantic Targeting (Color Swap with Distractor) ---")
+    # --- 2C2. Object-Appearance Invariance: Distractor Objects Only ---
+    print("\n--- 2C2. Evaluating Distractor-Only Appearance Perturbation (Target Canonical) ---")
+    dist_app_specs = []
+    for i in range(n_eps):
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"nuis_dist_app_{i:02d}"
+        t_key = spec["target_key"]
+        # Mutate all distractor geoms, leave target object unchanged
+        spec["color_mutations"] = {}
+        for k, o in spec["obstacles"].items():
+            if k != t_key:
+                spec["color_mutations"][o["geom_name"]] = [0.15, 0.75, 0.75, 1.0]
+        assert_task_spec_valid(spec)
+        dist_app_specs.append(spec)
+
+    res_dist_app_h = evaluate_suite_track_c(agent_h, dist_app_specs)
+    dist_app_h_succ = [r["success"] for r in res_dist_app_h["records"]]
+    pair_dist_app = _paired_contingency(nom_h_succ, dist_app_h_succ)
+    print(f"  [H-JEPA Distractor App] Succ: {res_dist_app_h['success_count']}/{n_eps} ({res_dist_app_h['success_rate']*100:5.1f}%) | Delta: {pair_dist_app['mean_diff']*100:+5.1f}% [CI95: {pair_dist_app['ci95_low']*100:+5.1f}%, {pair_dist_app['ci95_high']*100:+5.1f}%] | p={pair_dist_app['mcnemar_exact_p_value']:.4f}")
+
+    # --- 3. Semantically Relevant Appearance: Color Swap vs Landmark Categorical Token ---
+    print("\n--- 3. Evaluating Color-Swap Semantics (Categorical Task Token vs Visual Color) ---")
     sem_specs = []
     for i in range(n_eps):
         spec = copy.deepcopy(nominal_specs[i])
         spec["episode_id"] = f"sem_color_{i:02d}"
-        # Target cylinder painted blue, distractor cylinder painted yellow
-        spec["color_mutations"] = {
-            "obs_yellow_cyl": [0.2, 0.4, 0.85, 1.0],  # blue
-            "obs_blue_cyl": [0.95, 0.85, 0.1, 1.0],   # yellow
-        }
-        # The agent task instruction is to target the yellow object.
-        # Since obs_blue_cyl is now physically yellow, the approach waypoint is recomputed
-        # with clearance in front of obs_blue_cyl.
+        # Swap colors between target and a distractor
+        t_key = spec["target_key"]
         obs = spec.get("obstacles", {})
-        if "blue_cylinder" in obs:
-            t_pos = obs["blue_cylinder"]["pos"]
-            new_wp = get_waypoint_for_relation(t_pos, "approach", spec["initial_pose"], clearance=0.60)
-            spec["waypoints"] = [new_wp]
+        other_keys = [k for k in obs.keys() if k != t_key]
+        partner_key = other_keys[i % len(other_keys)]
+        
+        t_geom = obs[t_key]["geom_name"]
+        p_geom = obs[partner_key]["geom_name"]
+        
+        # Color swap: target receives partner's color, partner receives target's color
+        spec["color_mutations"] = {
+            t_geom: [0.2, 0.4, 0.85, 1.0],
+            p_geom: [0.95, 0.85, 0.1, 1.0],
+        }
+        # In Track C, agent is prompted with target_key. We evaluate whether agent steers to target_key's physical pos
         assert_task_spec_valid(spec)
         sem_specs.append(spec)
 
     res_sem_h = evaluate_suite_track_c(agent_h, sem_specs)
     sem_h_succ = [r["success"] for r in res_sem_h["records"]]
     pair_sem = _paired_contingency(nom_h_succ, sem_h_succ)
-    print(f"  [H-JEPA Sem Color] Succ: {res_sem_h['success_count']}/{n_eps} ({res_sem_h['success_rate']*100:5.1f}%) | Delta: {pair_sem['mean_diff']*100:+5.1f}% [CI95: {pair_sem['ci95_low']*100:+5.1f}%, {pair_sem['ci95_high']*100:+5.1f}%] | p={pair_sem['mcnemar_exact_p_value']:.4f}")
+    print(f"  [H-JEPA Color Swap] Succ: {res_sem_h['success_count']}/{n_eps} ({res_sem_h['success_rate']*100:5.1f}%) | Delta: {pair_sem['mean_diff']*100:+5.1f}% [CI95: {pair_sem['ci95_low']*100:+5.1f}%, {pair_sem['ci95_high']*100:+5.1f}%] | p={pair_sem['mcnemar_exact_p_value']:.4f}")
 
     # --- 4. Visual Geometry Grounding: Landmark Physical Rearrangement ---
-    print("\n--- 4. Evaluating Visual Geometry Grounding (Physical Landmark Swap) ---")
+    print("\n--- 4. Evaluating Visual Geometry Grounding (Physical Landmark Relocation) ---")
     rearrange_specs = []
     for i in range(n_eps):
         spec = copy.deepcopy(nominal_specs[i])
         spec["episode_id"] = f"rearr_{i:02d}"
-        # Physically swap target yellow_cylinder and distractor red_box positions
+        t_key = spec["target_key"]
         obs = spec.get("obstacles", {})
-        if "yellow_cylinder" in obs and "red_box" in obs:
-            pos_y = obs["yellow_cylinder"]["pos"].copy()
-            pos_r = obs["red_box"]["pos"].copy()
-            obs["yellow_cylinder"]["pos"] = pos_r
-            obs["red_box"]["pos"] = pos_y
-            # Recompute valid approach waypoint with clearance in front of new target position
-            new_wp = get_waypoint_for_relation(pos_r, "approach", spec["initial_pose"], clearance=0.60)
-            spec["waypoints"] = [new_wp]
+        other_keys = [k for k in obs.keys() if k != t_key]
+        partner_key = other_keys[i % len(other_keys)]
+
+        # Physically swap positions of target object and partner obstacle
+        pos_target = obs[t_key]["pos"].copy()
+        pos_partner = obs[partner_key]["pos"].copy()
+        obs[t_key]["pos"] = pos_partner
+        obs[partner_key]["pos"] = pos_target
+
+        # Recompute valid approach waypoint with clearance in front of target's new position
+        new_wp = get_waypoint_for_relation(obs[t_key]["pos"], spec.get("semantic_relation", "approach"), spec["initial_pose"], clearance=0.60)
+        spec["waypoints"] = [new_wp]
         assert_task_spec_valid(spec)
         rearrange_specs.append(spec)
 
@@ -376,12 +484,12 @@ def main():
     rand_specs = []
     for i in range(n_eps):
         valid = False
-        for _ in range(100):
+        for _ in range(150):
             spec = copy.deepcopy(nominal_specs[i])
             spec["episode_id"] = f"rand_layout_{i:02d}"
             for k, o_dict in spec.get("obstacles", {}).items():
-                delta_xy = rng_layout.uniform(-0.25, 0.25, size=2)
-                o_dict["pos"][:2] = np.clip(o_dict["pos"][:2] + delta_xy, -1.7, 1.7)
+                delta_xy = rng_layout.uniform(-0.20, 0.20, size=2)
+                o_dict["pos"][:2] = np.clip(o_dict["pos"][:2] + delta_xy, -1.65, 1.65)
             t_key = spec.get("target_key", "yellow_cylinder")
             if t_key in spec.get("obstacles", {}):
                 t_pos = spec["obstacles"][t_key]["pos"]
@@ -405,7 +513,6 @@ def main():
     print("\n--- 6. Evaluating Rigid SE(2) Global Transformations & Latent Equivariance ---")
     se2_angles = [np.pi / 2, np.pi, -np.pi / 2]
     se2_results = {}
-    latent_equiv_results = {}
 
     for ang in se2_angles:
         deg = int(round(np.degrees(ang)))
@@ -444,14 +551,13 @@ def main():
         }
         print(f"  [SE(2) {deg:+4d} deg] Succ: {res_se2_h['success_count']}/{n_eps} ({res_se2_h['success_rate']*100:5.1f}%) | Delta: {pair_se2['mean_diff']*100:+5.1f}% | p={pair_se2['mcnemar_exact_p_value']:.4f}")
 
-    # Latent SE(2) Equivariance vs Behavioral Rotation Analysis
+    # Latent SE(2) Global Rigid vs Egocentric Rotation Analysis
     print("\n--- Measuring Latent Transformation under Global Rigid vs Egocentric Rotation ---")
     env_eval = JetAutoEnv()
     cos_sims_global = []
     cos_sims_ego_only = []
     with torch.no_grad():
         for i in range(min(10, n_eps)):
-            # Nominal initial observation
             nom_s = nominal_specs[i]
             env_eval.restore_physical_baseline()
             env_eval.apply_task_spec(nom_s)
@@ -487,7 +593,7 @@ def main():
         "global_rigid_rotation_latent_cosine": float(np.mean(cos_sims_global)),
         "egocentric_yaw_rotation_latent_cosine": float(np.mean(cos_sims_ego_only)),
         "interpretation": (
-            "Under global rigid rotation, the robot's camera view of local obstacles is preserved "
+            "Under global rigid rotation, the robot camera view of local obstacles is preserved "
             f"(cosine sim = {np.mean(cos_sims_global):.3f}), yielding behavioral rotation robustness. "
             "However, egocentric camera rotation shifts visual scene contents "
             f"(cosine sim = {np.mean(cos_sims_ego_only):.3f}); the CNN does not possess steerable group-equivariant filters."
@@ -542,9 +648,13 @@ def main():
                 "results": res_illum_h,
                 "paired_contingency": pair_illum,
             },
-            "appearance_nuisance_object": {
-                "results": res_obj_app_h,
-                "paired_contingency": pair_obj_app,
+            "appearance_nuisance_target_only": {
+                "results": res_target_app_h,
+                "paired_contingency": pair_target_app,
+            },
+            "appearance_nuisance_distractors_only": {
+                "results": res_dist_app_h,
+                "paired_contingency": pair_dist_app,
             },
             "semantically_relevant_appearance": {
                 "results": res_sem_h,

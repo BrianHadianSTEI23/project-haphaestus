@@ -65,13 +65,13 @@ flowchart TD
 
 ### Empirical Interventional Results (`run_rigorous_behavioral_circuits.py`)
 
-All candidate circuits were discovered strictly on `train_benchmark.npz` and evaluated in closed-loop MuJoCo navigation on non-degenerate tasks ($N = 30$ matched episodes; clean baseline success: **60.0%** in structured track, **46.7%** in pure-observation Track C). 50 matched random 8D subspace draws were evaluated strictly in their matching information regimes with genuine mathematical rescue intervention ($\hat{z} = z + \eta(I - P)$):
-- **Track C Random-8 Controls:** Mean drop = **1.6% ($\pm 2.0\%$)**, mean retained sufficiency = 27.1%, mean rescue = 51.6%.
+All candidate circuits were discovered strictly on `train_benchmark.npz` and evaluated in closed-loop MuJoCo navigation on non-degenerate tasks. For Track C visual grounding, trajectory-aware discovery across 150 diverse episodes (2214 transitions) identified candidate top-8 dimensions `[24, 17, 7, 10, 2, 8, 27, 26]`, evaluated on a pure object-grounding suite ($N = 30$ matched episodes; clean baseline success: **93.3%** in Track C, **60.0%** in structured track). 30 matched random 8D subspace draws were evaluated strictly on the exact same suite with genuine matched-donor activation patching ($z_{\text{rescue}} = z_{\text{recip}}(I - P) + z_{\text{donor}}P$) satisfying exact mathematical projection invariants:
+- **Track C Random-8 Controls:** Mean drop = **20.8% ($\pm 14.5\%$)**, mean retained sufficiency = 20.9%, mean rescue = 90.9%.
 - **Structured Track Random-8 Controls:** Mean drop = **5.3% ($\pm 2.1\%$)**, mean retained sufficiency = 51.0%, mean rescue = 53.3%.
 
 | Circuit ID | Circuit Name | Formulation / Subspace | Track | Clean Success | Ablated Success | Nec Drop | Regime Random Control Drop | Behavioral Selectivity | Retained Sufficiency | Rescued Success | Verification Status |
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **`C1`** | `visual_target_grounding` | Landmark Identification (Top-8 Dims) | Track C | 46.7% | 23.3% | **23.3%** | 1.6% ($\pm 2.0\%$) | **+21.7%** ($z=+2.99, p=0.0196$) | 26.7% | **60.0%** | **`SELECTIVE_CAUSAL_CIRCUIT`** |
+| **`C1`** | `visual_target_grounding` | Landmark Identification (Top-8 Dims) | Track C | 93.3% | 90.0% | **3.3%** | 20.8% ($\pm 14.5\%$) | **-17.4%** ($z=-1.21, p=0.9032$) | 16.7% | **93.3%** | **`FALSIFIED_NON_SELECTIVE`** |
 | **`C2_axis`** | `egocentric_displacement` | Axis-Aligned Marginal Correlation (Top-8) | Structured | 60.0% | 50.0% | 10.0% | 5.3% ($\pm 2.1\%$) | +4.7% ($z=+0.62, p=0.5294$) | 50.0% | 63.3% | `UNRESOLVED_NON_SELECTIVE` |
 | **`C2_pca`** | `egocentric_displacement` | Rotated PCA Subspace ($P = V_8 V_8^T$) | Structured | 60.0% | 50.0% | 10.0% | 5.3% ($\pm 2.1\%$) | +4.7% ($z=+0.62, p=0.5294$) | 50.0% | 53.3% | `UNRESOLVED_NON_SELECTIVE` |
 | **`C2_reg`** | `egocentric_displacement` | Multivariate Ridge Regression Rank-8 | Structured | 60.0% | 50.0% | 10.0% | 5.3% ($\pm 2.1\%$) | +4.7% ($z=+0.62, p=0.5294$) | 50.0% | 56.7% | `UNRESOLVED_NON_SELECTIVE` |
@@ -100,11 +100,11 @@ In pre-audit historical reports, `circuit_registry.json` reported 0.0 necessity 
 - In contrast, the within-model unrelated color control ablated without behavioral penalty (0.0% drop, -5.3% selectivity gain, $z = -0.69$, empirical $p = 0.8235$).
 - **Scientific Verdict:** Forward dynamics transitions $\hat{s}_{t+1} = f(s_t, a_t)$ and collision boundaries are distributed across the latent space and resist low-rank 8D isolation. They are scientifically designated as **`UNRESOLVED_NON_SELECTIVE`**.
 
-### 4.4 Statistically Significant Causal Validation of Visual Target Grounding (C1)
-- Under Track C pure observation, targeted ablation of the top-8 visual target grounding dimensions reduced closed-loop navigation success from **46.7% to 23.3%** (**23.3% necessity drop**).
-- This drop is $14.6\times$ larger than the regime-matched Track C random 8D subspace ablation drop (1.6% $\pm 2.0\%$), yielding a **selectivity gain of +21.7%** ($z = +2.99$, empirical randomization $p = \frac{0+1}{50+1} = 0.0196$).
-- Retaining only the C1 subspace preserves 26.7% success, and genuine mathematical rescue ($\hat{z} = z + \eta(I - P)$) restores **60.0% success** (substantially exceeding the random rescue mean of 51.6%).
-- **Scientific Verdict:** C1 is empirically validated as a **`SELECTIVE_CAUSAL_CIRCUIT`**. Visual spatial goal orientation is causally concentrated in this identifiable latent subspace.
+### 4.4 Resolution of Visual Target Grounding (C1): Diffuse Population Code
+- Under Track C pure observation on the pure object-grounding suite ($N=30$), targeted ablation of candidate top-8 dimensions `[24, 17, 7, 10, 2, 8, 27, 26]` reduced closed-loop navigation success from **93.3% to 90.0%** (a **3.3% necessity drop**, step goal error 0.439m).
+- In contrast, 30 matched random 8D subspace ablations on the exact same suite induced an average **20.8% ($\pm 14.5\%$) drop**, yielding a negative selectivity gain of **-17.4%** ($z = -1.21$, empirical randomization $p = 0.9032$). Candidate C1 does not demonstrate modular causal selectivity over arbitrary 8D projections.
+- However, genuine matched-donor activation patching ($z_{\text{rescue}} = z_{\text{recip}}(I - P) + z_{\text{donor}}P$) restores **93.3% success** (0.295m step goal error), substantially outperforming mismatched donor patching (**83.3% success**, 0.668m step goal error). Furthermore, offline donor patching rotates the inferred body-frame goal vector $[\widehat{dx}_b, \widehat{dy}_b]$ toward the donor target direction ($\cos = 0.6669$ vs $0.2311 \pm 0.2474$ for random 8D patches).
+- **Scientific Verdict:** C1 is reclassified as **`FALSIFIED_NON_SELECTIVE`** as a modular circuit. The visual latent $z_t$ causally mediates goal-vector computation, but the spatial goal information is organized as a **diffuse population code across all 32 dimensions** rather than an isolated linear sub-circuit.
 
 ---
 

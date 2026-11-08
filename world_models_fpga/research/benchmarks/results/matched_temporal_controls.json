@@ -1,11 +1,11 @@
 {
   "execution_metadata": {
     "script_path": "world_models_fpga/research/benchmarks/run_matched_temporal_controls.py",
-    "script_sha256": "460e4cf3ce879d9681c5c36aa04a42e1710cddc9397916509625ad7113004aa1",
+    "script_sha256": "a0a3a71ed7561ec1cb31f91f7f696e529190ad22f7d8a5bdd8fab50667d3e7a6",
     "command_executed": "python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes 50 --device cuda",
-    "execution_timestamp": "2026-11-08T03:24:30.501165+00:00",
-    "git_commit": "9db418ac15825d1fb8504b04f944cac5304a94f3",
-    "working_tree_clean": true,
+    "execution_timestamp": "2026-11-08T05:09:32.263423+00:00",
+    "git_commit": "c50c4f3422dd3241a2d2371b426fcd1c2d9673f1",
+    "working_tree_clean": false,
     "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
     "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
     "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -735,7 +735,7 @@
           0.961402952671051,
           0.24808312952518463,
           0.22650830447673798,
-          0.524666965007782,
+          0.5246666669845581,
           0.21801798045635223,
           0.23348401486873627,
           0.9313492774963379,
@@ -917,8 +917,8 @@
             "episode_idx": 21,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.524666965007782,
-            "path_length_m": 0.9302991227596067
+            "goal_error_m": 0.5246666669845581,
+            "path_length_m": 0.9302995055331849
           },
           {
             "episode_idx": 22,
@@ -1544,7 +1544,7 @@
             "success": false,
             "collision": true,
             "goal_error_m": 1.6090490818023682,
-            "path_length_m": 0.5060271222610027
+            "path_length_m": 0.5060265671927482
           },
           {
             "episode_idx": 38,
@@ -3178,7 +3178,7 @@
         "episodes_evaluated": 50,
         "success_rate": 0.36000001430511475,
         "collision_rate": 0.4000000059604645,
-        "mean_final_goal_error_m": 0.5367311239242554,
+        "mean_final_goal_error_m": 0.5367204546928406,
         "per_episode_success": [
           false,
           true,
@@ -3293,7 +3293,7 @@
           0.6991488933563232,
           0.3160213232040405,
           0.24250857532024384,
-          0.7452346086502075,
+          0.7446019649505615,
           0.2258182168006897,
           0.24862708151340485,
           0.6906920075416565,
@@ -3313,7 +3313,7 @@
           0.24916008114814758,
           0.6491574645042419,
           0.8918328285217285,
-          0.24737709760665894,
+          0.24747690558433533,
           0.6782631874084473,
           1.1955156326293945,
           0.320289671421051,
@@ -3403,8 +3403,8 @@
             "episode_idx": 9,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.7452346086502075,
-            "path_length_m": 1.3093543788418174
+            "goal_error_m": 0.7446019649505615,
+            "path_length_m": 1.3097663652151823
           },
           {
             "episode_idx": 10,
@@ -3543,8 +3543,8 @@
             "episode_idx": 29,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.24737709760665894,
-            "path_length_m": 0.4126894483342767
+            "goal_error_m": 0.24747690558433533,
+            "path_length_m": 0.4126048469915986
           },
           {
             "episode_idx": 30,
@@ -3692,7 +3692,7 @@
         "episodes_evaluated": 50,
         "success_rate": 0.46000000834465027,
         "collision_rate": 0.47999998927116394,
-        "mean_final_goal_error_m": 0.5401027202606201,
+        "mean_final_goal_error_m": 0.5402897596359253,
         "per_episode_success": [
           false,
           true,
@@ -3841,7 +3841,7 @@
           0.19515787065029144,
           0.39981523156166077,
           0.7227936387062073,
-          0.3466651141643524,
+          0.3560194969177246,
           0.23173214495182037,
           0.7780219316482544,
           0.22091735899448395,
@@ -4155,8 +4155,8 @@
             "episode_idx": 43,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.3466651141643524,
-            "path_length_m": 0.6866996093885973
+            "goal_error_m": 0.3560194969177246,
+            "path_length_m": 0.6785181083250791
           },
           {
             "episode_idx": 44,
@@ -4331,15 +4331,37 @@
       }
     },
     "computational_efficiency": {
+      "timing_methodology": "CUDA synchronized, 50 warm-up runs, 200 repeats",
+      "device": "cuda",
+      "macro_direct_1pass_ms": {
+        "median": 0.3710429955390282,
+        "mean": 0.37999412037606817,
+        "p95": 0.467183010187,
+        "p99": 0.5313308791664891
+      },
+      "micro_recursive_kpass_ms": {
+        "median": 1.5942120007821359,
+        "mean": 1.6676495305000572,
+        "p95": 1.997884204320144,
+        "p99": 2.1469962525588913
+      },
+      "straight_line_heuristic_ms": {
+        "median": 0.1840919940150343,
+        "mean": 0.19317281075927895,
+        "p95": 0.23978485332918334,
+        "p99": 0.30913922004401606
+      },
       "measured_mean_step_time_ms": {
-        "macro_direct_1pass": 0.171521520242095,
-        "micro_recursive_kpass": 0.6366399582475424,
-        "speedup_ratio": 3.711720589631863
+        "macro_direct_1pass": 0.37999412037606817,
+        "micro_recursive_kpass": 1.6676495305000572,
+        "straight_line_heuristic": 0.19317281075927895,
+        "speedup_ratio": 4.296569454076781
       },
       "fpga_cycle_estimates_100mhz": {
         "macro_direct_cycles": 45000,
         "micro_recursive_k_cycles": 190000,
-        "cycle_ratio": 4.22
+        "cycle_ratio": 4.22,
+        "status": "Theoretical architectural model estimate from parallel RTL design, NOT measured GPU runtime"
       },
       "scientific_note": "Hardware inference efficiency (cycles/latency) characterizes implementation throughput. It must not be conflated with the scientific hypothesis of causal lookahead utility, which is established only if Macro significantly outperforms Shuffled Binding."
     },

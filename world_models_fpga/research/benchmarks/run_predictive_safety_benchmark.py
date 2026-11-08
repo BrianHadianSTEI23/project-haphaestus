@@ -14,10 +14,13 @@ Investigates whether learned predictive world models provide prospective collisi
    - AUROC (Area under the ROC curve)
    - False-Negative Rate (FNR) at decision threshold 0.5 (missed imminent collisions)
 3. Evaluates closed-loop collision rates, success rates, and paired statistical differences (McNemar tests).
-4. Explicit scientific note: This represents an empirical prospective safety filter, NOT a formal Control Barrier Function (CBF).
+4. Explicit scientific note: This benchmark falsifies this particular learned prospective collision-scoring filter on the tested discrete-horizon collision-critical tasks. It does not falsify all predictive safety mechanisms or formal theoretical continuous-time Control Barrier Functions (CBFs).
 """
 
 from __future__ import annotations
+
+import os
+os.environ["MUJOCO_GL"] = "egl"
 
 import argparse
 import datetime
@@ -358,24 +361,43 @@ def evaluate_offline_prediction_quality(
     test_npz_path: str | Path,
     device: str,
     max_samples: int = 500,
+    stride_k: int = 5,
 ) -> dict:
-    """Evaluates collision prediction quality on held-out transitions."""
+    """Evaluates macro K=5 collision prediction quality on held-out transitions matching closed-loop control."""
     d = np.load(test_npz_path)
-    rgb = d["rgb"][:max_samples]
-    act = d["actions"][:max_samples]
-    cols = d["collisions"][:max_samples].astype(np.float64)
+    rgb = d["rgb"]
+    act = d["actions"]
+    cols = d["collisions"].astype(np.float64)
+    ep_idx = d["transition_episode_indices"]
 
-    rgb_t = torch.from_numpy(rgb).permute(0, 3, 1, 2).float().to(device) / 255.0
-    act_t = torch.from_numpy(act).float().to(device)
+    valid_starts = []
+    for i in range(len(rgb) - stride_k):
+        if ep_idx[i] == ep_idx[i + stride_k - 1]:
+            valid_starts.append(i)
+        if len(valid_starts) >= max_samples:
+            break
 
-    # Flatten actions for K=5 macro prediction or evaluate 1-step
+    valid_starts = np.array(valid_starts, dtype=np.int64)
+    rgb_t = torch.from_numpy(rgb[valid_starts]).permute(0, 3, 1, 2).float().to(device) / 255.0
+
+    macro_acts = []
+    macro_cols = []
+    for s_i in valid_starts:
+        macro_acts.append(act[s_i : s_i + stride_k].reshape(-1))
+        # Ground truth: collision occurs anywhere within K steps
+        macro_cols.append(float(np.max(cols[s_i : s_i + stride_k])))
+
+    macro_act_t = torch.from_numpy(np.array(macro_acts, dtype=np.float32)).to(device)
+    gt_macro_cols = np.array(macro_cols, dtype=np.float64)
+
     with torch.no_grad():
         s = hjepa_model.encode(rgb_t)
-        # Evaluate micro 1-step collision prediction
-        _, col_logits_micro = hjepa_model.micro_predictor.forward_transition(s, act_t)
-        col_probs_micro = torch.sigmoid(col_logits_micro).squeeze(-1).cpu().numpy()
+        _, m_col_logits = hjepa_model.macro_predictor(s, macro_act_t)
+        col_probs_macro = torch.sigmoid(m_col_logits).squeeze(-1).cpu().numpy()
 
-    metrics = compute_prediction_quality_metrics(col_probs_micro, cols, n_bins=10)
+    metrics = compute_prediction_quality_metrics(col_probs_macro, gt_macro_cols, n_bins=10)
+    metrics["horizon_k"] = stride_k
+    metrics["evaluated_samples"] = len(valid_starts)
     return metrics
 
 
