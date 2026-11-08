@@ -69,9 +69,14 @@ class JetAutoEnv(gym.Env):
         self._baseline_geom_size = self.model.geom_size.copy()
         self._baseline_geom_rgba = self.model.geom_rgba.copy()
         self._baseline_geom_type = self.model.geom_type.copy()
+        self._baseline_geom_matid = self.model.geom_matid.copy()
+        self._baseline_mat_rgba = self.model.mat_rgba.copy() if self.model.nmat > 0 else None
         self._baseline_cam_quat = self.model.cam_quat.copy()
         self._baseline_geom_friction = self.model.geom_friction.copy()
+        self._baseline_light_diffuse = self.model.light_diffuse.copy() if self.model.nlight > 0 else None
+        self._baseline_light_pos = self.model.light_pos.copy() if self.model.nlight > 0 else None
         self.active_task_spec = None
+        mujoco.mj_forward(self.model, self.data)
 
     def geometry_id(self, geom_name):
         """Return a checked geometry id; fail early on misspelled mutations."""
@@ -86,8 +91,15 @@ class JetAutoEnv(gym.Env):
         self.model.geom_size[:] = self._baseline_geom_size
         self.model.geom_rgba[:] = self._baseline_geom_rgba
         self.model.geom_type[:] = self._baseline_geom_type
+        self.model.geom_matid[:] = self._baseline_geom_matid
+        if self._baseline_mat_rgba is not None:
+            self.model.mat_rgba[:] = self._baseline_mat_rgba
         self.model.geom_friction[:] = self._baseline_geom_friction
         self.model.cam_quat[:] = self._baseline_cam_quat
+        if self._baseline_light_diffuse is not None:
+            self.model.light_diffuse[:] = self._baseline_light_diffuse
+        if self._baseline_light_pos is not None:
+            self.model.light_pos[:] = self._baseline_light_pos
         self.active_task_spec = None
         mujoco.mj_forward(self.model, self.data)
 
@@ -107,6 +119,7 @@ class JetAutoEnv(gym.Env):
             geom_id = self.geometry_id(geom_name)
             self.model.geom_pos[geom_id] = np.asarray(obstacle["pos"], dtype=np.float64)
             if "rgba" in obstacle:
+                self.model.geom_matid[geom_id] = -1
                 self.model.geom_rgba[geom_id] = np.asarray(obstacle["rgba"], dtype=np.float32)
 
             shape = obstacle.get("shape")
@@ -118,6 +131,35 @@ class JetAutoEnv(gym.Env):
                 self.model.geom_type[geom_id] = mujoco.mjtGeom.mjGEOM_CYLINDER
                 self.model.geom_size[geom_id, 0] = float(obstacle.get("radius", 0.25))
                 self.model.geom_size[geom_id, 1] = float(obstacle.get("height", 0.35))
+
+        # Explicit floor appearance mutation (nuisance intervention)
+        if "floor_rgba" in task_spec:
+            self.model.geom_matid[self.floor_geom_id] = -1
+            self.model.geom_rgba[self.floor_geom_id] = np.asarray(task_spec["floor_rgba"], dtype=np.float32)
+
+        # Explicit color mutations mapping object/geom keys to RGBA
+        color_mutations = task_spec.get("color_mutations", {})
+        for obj_or_geom_key, rgba in color_mutations.items():
+            geom_name = None
+            if obj_or_geom_key in obstacles and "geom_name" in obstacles[obj_or_geom_key]:
+                geom_name = obstacles[obj_or_geom_key]["geom_name"]
+            elif obj_or_geom_key in obstacles:
+                geom_name = obstacles[obj_or_geom_key].get("geom_name")
+            else:
+                geom_name = obj_or_geom_key
+            try:
+                g_id = self.geometry_id(geom_name)
+                self.model.geom_matid[g_id] = -1
+                self.model.geom_rgba[g_id] = np.asarray(rgba, dtype=np.float32)
+            except KeyError:
+                pass
+
+        # Explicit lighting / illumination mutation
+        if "light_diffuse_scale" in task_spec and self._baseline_light_diffuse is not None:
+            scale = float(task_spec["light_diffuse_scale"])
+            self.model.light_diffuse[:] = self._baseline_light_diffuse * scale
+        if "light_diffuse" in task_spec and self._baseline_light_diffuse is not None:
+            self.model.light_diffuse[:] = np.asarray(task_spec["light_diffuse"], dtype=np.float32)
 
         pitch_degrees = float(task_spec.get("camera_pitch_offset", 0.0))
         if pitch_degrees:

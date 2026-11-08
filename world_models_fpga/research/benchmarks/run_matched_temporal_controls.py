@@ -1,5 +1,5 @@
 """
-Matched Temporal-Prediction Controls Benchmark (Resolving Finding A & Finding B)
+Matched Temporal-Prediction Controls Benchmark (Scientifically Repaired Protocol)
 
 Strictly isolates learned temporal prediction from candidate search confounds:
 1. Candidate search is held identical across all conditions:
@@ -11,11 +11,12 @@ Strictly isolates learned temporal prediction from candidate search confounds:
    - Condition B: Direct K-step macro prediction (H-JEPA MacroPredictor in 1 pass).
    - Condition C: Recursive K-step micro unrolling (H-JEPA MicroPredictor unrolled K times).
    - Condition D: Oracle MuJoCo K-step physics simulation (ground-truth physical MPC).
-   - Condition E: Shuffled / inverted predicted transitions (negative control).
-   - Condition F: Macro candidate sequences scored without future prediction (reactive prior only).
+   - Condition E: Shuffled action-outcome binding (true causal test: action a_i bound to predicted outcome pi[i]).
+   - Condition E2: Pure random candidate selection (uninformed negative control).
+   - Condition F: Prior-only candidate selection (demonstrates exact behavioral equivalence to Condition A).
 4. Evaluates open-loop multi-step prediction across horizons K in {1, 3, 5, 10} on held_out_test_benchmark.
-5. Computes paired differences (Delta Success, Delta Collision, Delta GoalError) with
-   exact 95% bootstrap confidence intervals and Wilcoxon signed-rank tests.
+5. Computes exact McNemar tests on paired binary success outcomes, Wilcoxon tests on continuous errors,
+   paired 95% bootstrap confidence intervals, and Holm-Bonferroni correction.
 """
 
 from __future__ import annotations
@@ -38,7 +39,7 @@ sys.path.insert(0, str(pkg_root))
 import numpy as np
 import torch
 import torch.nn.functional as F
-from scipy.stats import wilcoxon
+from scipy.stats import wilcoxon, binom
 
 from env.amr_env import JetAutoEnv
 from models.h_jepa import HJEPAModel
@@ -65,6 +66,14 @@ def _git_sha() -> str:
         return "unknown"
 
 
+def _git_clean() -> bool:
+    try:
+        out = subprocess.check_output(["git", "status", "--porcelain"], text=True).strip()
+        return len(out) == 0
+    except Exception:
+        return False
+
+
 def _bootstrap_ci95_diff(a: np.ndarray, b: np.ndarray, n_boot: int = 2000, seed: int = 42) -> tuple[float, float, float]:
     """Computes mean difference and 95% bootstrap confidence interval."""
     diff = a - b
@@ -76,6 +85,18 @@ def _bootstrap_ci95_diff(a: np.ndarray, b: np.ndarray, n_boot: int = 2000, seed:
     low = float(np.percentile(boot_means, 2.5))
     high = float(np.percentile(boot_means, 97.5))
     return mean_diff, low, high
+
+
+def _paired_mcnemar(a: np.ndarray, b: np.ndarray) -> tuple[int, int, float]:
+    """Exact McNemar binomial test on paired binary outcomes (a vs b)."""
+    n10 = int(np.sum((a == 1.0) & (b == 0.0)))
+    n01 = int(np.sum((a == 0.0) & (b == 1.0)))
+    discordant = n10 + n01
+    if discordant == 0:
+        return n10, n01, 1.0
+    k = min(n10, n01)
+    p_val = float(min(1.0, 2.0 * binom.cdf(k, discordant, 0.5)))
+    return n10, n01, p_val
 
 
 def _paired_wilcoxon(a: np.ndarray, b: np.ndarray) -> float:
@@ -150,122 +171,139 @@ def build_matched_action_candidates(a_react: torch.Tensor, k: int, device: str) 
         (torch.tensor([0.45, 0.60, 0.20], device=device), torch.tensor([0.70, -0.30, -0.15], device=device)),
         # Wide right flank then inward turn
         (torch.tensor([0.45, -0.60, -0.20], device=device), torch.tensor([0.70, 0.30, 0.15], device=device)),
-        # Reactive proposal then damped approach
-        (ar, ar * 0.6),
+        # Reverse recovery then turn
+        (torch.tensor([-0.40, 0.0, 0.0], device=device), torch.tensor([0.30, 0.50, 0.60], device=device)),
     ]
 
-    two_phase_k = []
+    tp_seqs = []
     for a1, a2 in two_phase_pairs:
-        seq = torch.cat([a1.repeat(k_first, 1), a2.repeat(k_second, 1)], dim=0)  # (K, 3)
-        two_phase_k.append(seq)
-    two_phase_k = torch.stack(two_phase_k, dim=0)  # (7, K, 3)
+        s1 = a1.view(1, 1, 3).repeat(1, k_first, 1)
+        s2 = a2.view(1, 1, 3).repeat(1, k_second, 1)
+        tp_seqs.append(torch.cat([s1, s2], dim=1))
 
-    # Total: 17 + 7 = 24 candidates
-    cands = torch.cat([const_k, two_phase_k], dim=0)
-    return cands  # (24, K, 3)
+    tp_tensor = torch.cat(tp_seqs, dim=0)  # (7, K, 3)
+    matched_candidates = torch.cat([const_k, tp_tensor], dim=0)  # (24, K, 3)
+    return matched_candidates
 
 
 def run_open_loop_prediction_audit(
     hjepa_model: HJEPAModel,
     lewm_model: LeWorldModel,
-    val_npz_path: Path,
+    dataset_path: str | Path,
     device: str,
     horizons: tuple[int, ...] = (1, 3, 5, 10),
-    max_transitions: int = 500,
+    max_transitions: int = 400,
 ) -> dict:
     """
-    Evaluates open-loop multi-step prediction on held_out_test_benchmark:
-    - Direct Macro prediction vs Recursive Micro unrolling vs LeWM single-scale.
+    Evaluates multi-step open-loop unrolling fidelity on held-out transitions:
+    - Micro recursive 1-step unrolling (H-JEPA micro predictor)
+    - Macro direct jump prediction at K=5 (H-JEPA macro predictor)
+    - LeWM recursive 1-step unrolling
+    Measures latent MSE, latent cosine similarity, and decoded physical displacement error (meters).
     """
-    d = np.load(val_npz_path)
-    n = min(max_transitions, len(d["rgb"]))
-    rgb_t = torch.from_numpy(d["rgb"][:n]).permute(0, 3, 1, 2).float().to(device) / 255.0
-    act_t = torch.from_numpy(d["actions"][:n]).float().to(device)
-    poses = d["robot_pose"][:n]
-    cols = d["collisions"][:n].astype(np.float32)
-    ep_idx = d["transition_episode_indices"][:n]
+    d = np.load(dataset_path)
+    rgb = d["rgb"][:max_transitions]
+    actions = d["actions"][:max_transitions]
+    poses = d["robot_pose"][:max_transitions]
+    ep_idx = d["transition_episode_indices"][:max_transitions]
+
+    n_samples = len(rgb)
+    rgb_t = torch.from_numpy(rgb).permute(0, 3, 1, 2).float().to(device) / 255.0
+    act_t = torch.from_numpy(actions).float().to(device)
 
     with torch.no_grad():
-        z_h = hjepa_model.encode(rgb_t)
-        z_l = lewm_model.encode(rgb_t)
+        z_hjepa = hjepa_model.encode(rgb_t)
+        z_lewm = lewm_model.encode(rgb_t)
 
-        results_by_h = {}
-        for h in horizons:
-            macro_latent_mses = []
-            macro_latent_cosines = []
-            micro_latent_mses = []
-            micro_latent_cosines = []
-            lewm_latent_mses = []
+    results_by_h = {}
 
-            macro_disp_errs = []
-            micro_disp_errs = []
-            lewm_disp_errs = []
+    for h in horizons:
+        micro_latent_mses = []
+        micro_latent_cosines = []
+        micro_disp_errs = []
 
-            macro_col_preds, micro_col_preds, true_cols = [], [], []
+        macro_latent_mses = []
+        macro_latent_cosines = []
+        macro_disp_errs = []
 
-            for i in range(n - h):
-                if ep_idx[i] != ep_idx[i + h]:
-                    continue
-                # Ground truth transition
-                p0 = poses[i]
-                pk = poses[i + h]
-                th0 = float(p0[2])
-                dx_w = float(pk[0] - p0[0])
-                dy_w = float(pk[1] - p0[1])
-                dth_true = float(pk[2] - p0[2])
-                # True body-frame displacement over h steps
-                dx_b = np.cos(th0) * dx_w + np.sin(th0) * dy_w
-                dy_b = -np.sin(th0) * dx_w + np.cos(th0) * dy_w
-                true_disp = np.array([dx_b, dy_b, dth_true], dtype=np.float32)
+        lewm_latent_mses = []
+        lewm_disp_errs = []
 
-                true_zh_k = z_h[i + h : i + h + 1]
-                true_zl_k = z_l[i + h : i + h + 1]
-                col_in_horizon = float(np.max(cols[i : i + h]))
-                true_cols.append(col_in_horizon)
+        for i in range(n_samples - h):
+            if ep_idx[i] != ep_idx[i + h]:
+                continue
 
-                # 1. H-JEPA Macro (Direct h-step if h == 5, or scaled sequence)
-                # Flatten action sequence for macro input
-                act_seq = act_t[i : i + h].flatten().unsqueeze(0)  # (1, 3*h)
-                if h == 5:
-                    pred_zh_macro, m_col_logit = hjepa_model.macro_predictor(z_h[i : i + 1], act_seq)
-                    macro_disp = hjepa_model.predict_macro_displacement(z_h[i : i + 1], pred_zh_macro).squeeze(0).detach().cpu().numpy()
-                    macro_latent_mses.append(float(F.mse_loss(pred_zh_macro, true_zh_k).item()))
-                    macro_latent_cosines.append(float(F.cosine_similarity(pred_zh_macro, true_zh_k).item()))
-                    macro_disp_errs.append(float(np.linalg.norm(macro_disp[:2] - true_disp[:2])))
-                    macro_col_preds.append(float(torch.sigmoid(m_col_logit).item()))
+            # Ground-truth physical displacement over h steps (body frame)
+            p0 = poses[i]
+            ph = poses[i + h]
+            dx_w = float(ph[0] - p0[0])
+            dy_w = float(ph[1] - p0[1])
+            th0 = float(p0[2])
+            gt_dx_b = float(np.cos(th0) * dx_w + np.sin(th0) * dy_w)
+            gt_dy_b = float(-np.sin(th0) * dx_w + np.cos(th0) * dy_w)
+            gt_disp = np.array([gt_dx_b, gt_dy_b], dtype=np.float32)
 
-                # 2. H-JEPA Micro recursive unroll over h steps
-                curr_zh = z_h[i : i + 1]
-                cum_micro_disp = np.zeros(3, dtype=np.float32)
-                max_micro_col = 0.0
-                for s in range(h):
-                    a_s = act_t[i + s : i + s + 1]
-                    next_zh, col_logit = hjepa_model.micro_predictor.forward_transition(curr_zh, a_s)
-                    step_disp = hjepa_model.predict_micro_displacement(curr_zh, next_zh).squeeze(0).detach().cpu().numpy()
-                    cum_micro_disp[:2] += step_disp[:2]
-                    cum_micro_disp[2] += step_disp[2]
-                    max_micro_col = max(max_micro_col, float(torch.sigmoid(col_logit).item()))
-                    curr_zh = next_zh
+            target_z_h = z_hjepa[i + h : i + h + 1]
+            target_z_l = z_lewm[i + h : i + h + 1]
 
-                micro_latent_mses.append(float(F.mse_loss(curr_zh, true_zh_k).item()))
-                micro_latent_cosines.append(float(F.cosine_similarity(curr_zh, true_zh_k).item()))
-                micro_disp_errs.append(float(np.linalg.norm(cum_micro_disp[:2] - true_disp[:2])))
-                micro_col_preds.append(max_micro_col)
+            # 1. H-JEPA Micro recursive unrolling
+            curr_micro = z_hjepa[i : i + 1]
+            cum_micro_disp = torch.zeros(1, 3, device=device)
+            with torch.no_grad():
+                for step in range(h):
+                    a_s = act_t[i + step : i + step + 1]
+                    next_micro, _ = hjepa_model.micro_predictor.forward_transition(curr_micro, a_s)
+                    step_disp = hjepa_model.predict_micro_displacement(curr_micro, next_micro)
+                    cum_micro_disp = cum_micro_disp + step_disp
+                    curr_micro = next_micro
 
-                # 3. LeWM recursive unroll over h steps
-                curr_zl = z_l[i : i + 1]
-                cum_lewm_disp = np.zeros(3, dtype=np.float32)
-                for s in range(h):
-                    a_s = act_t[i + s : i + s + 1]
-                    next_zl, _ = lewm_model.predict_next(curr_zl, a_s)
-                    step_disp = lewm_model.predict_ego_displacement(curr_zl, next_zl).squeeze(0).detach().cpu().numpy()
-                    cum_lewm_disp[:2] += step_disp[:2]
-                    cum_lewm_disp[2] += step_disp[2]
-                    curr_zl = next_zl
-                lewm_latent_mses.append(float(F.mse_loss(curr_zl, true_zl_k).item()))
-                lewm_disp_errs.append(float(np.linalg.norm(cum_lewm_disp[:2] - true_disp[:2])))
+            micro_mse = float(F.mse_loss(curr_micro, target_z_h).item())
+            micro_cos = float(F.cosine_similarity(curr_micro, target_z_h).item())
+            micro_pred_disp = cum_micro_disp[0, :2].cpu().numpy()
+            micro_disp_err = float(np.linalg.norm(micro_pred_disp - gt_disp))
 
+            micro_latent_mses.append(micro_mse)
+            micro_latent_cosines.append(micro_cos)
+            micro_disp_errs.append(micro_disp_err)
+
+            # 2. LeWM recursive unrolling
+            curr_lewm = z_lewm[i : i + 1]
+            cum_lewm_disp = torch.zeros(1, 3, device=device)
+            with torch.no_grad():
+                for step in range(h):
+                    a_s = act_t[i + step : i + step + 1]
+                    next_lewm, _ = lewm_model.predict_next(curr_lewm, a_s)
+                    step_disp = lewm_model.predict_ego_displacement(curr_lewm, next_lewm)
+                    cum_lewm_disp = cum_lewm_disp + step_disp
+                    curr_lewm = next_lewm
+
+            lewm_mse = float(F.mse_loss(curr_lewm, target_z_l).item())
+            lewm_pred_disp = cum_lewm_disp[0, :2].cpu().numpy()
+            lewm_disp_err = float(np.linalg.norm(lewm_pred_disp - gt_disp))
+            lewm_latent_mses.append(lewm_mse)
+            lewm_disp_errs.append(lewm_disp_err)
+
+            # 3. H-JEPA Macro direct jump (for h=5)
+            if h == 5:
+                curr_macro = z_hjepa[i : i + 1]
+                macro_act_seq = act_t[i : i + 5].view(1, 15)
+                with torch.no_grad():
+                    next_macro, _ = hjepa_model.macro_predictor(curr_macro, macro_act_seq)
+                    macro_disp_pred = hjepa_model.predict_macro_displacement(curr_macro, next_macro)
+
+                macro_mse = float(F.mse_loss(next_macro, target_z_h).item())
+                macro_cos = float(F.cosine_similarity(next_macro, target_z_h).item())
+                macro_disp_np = macro_disp_pred[0, :2].cpu().numpy()
+                macro_disp_err = float(np.linalg.norm(macro_disp_np - gt_disp))
+
+                macro_latent_mses.append(macro_mse)
+                macro_latent_cosines.append(macro_cos)
+                macro_disp_errs.append(macro_disp_err)
+
+        if len(micro_latent_mses) > 0:
             results_by_h[f"k_{h}"] = {
+                "horizon_steps": h,
+                "n_eval_pairs": len(micro_latent_mses),
                 "micro_recursive_latent_mse": float(np.mean(micro_latent_mses)),
                 "micro_recursive_latent_cosine": float(np.mean(micro_latent_cosines)),
                 "micro_recursive_disp_error_m": float(np.mean(micro_disp_errs)),
@@ -297,7 +335,8 @@ def evaluate_closed_loop_matched_controls(
         "cond_B_direct_macro",
         "cond_C_recursive_micro",
         "cond_D_oracle_physics",
-        "cond_E_shuffled_control",
+        "cond_E_shuffled_binding",
+        "cond_E2_random_selection",
         "cond_F_open_loop_reactive_scorer",
     ]
 
@@ -336,7 +375,6 @@ def evaluate_closed_loop_matched_controls(
 
                 gx = goal_t[0, 0]
                 gy = goal_t[0, 1]
-                g_dth = torch.atan2(goal_t[0, 2], goal_t[0, 3])
 
                 # Condition A: Reactive (no candidate search)
                 if cond == "cond_A_reactive":
@@ -395,7 +433,6 @@ def evaluate_closed_loop_matched_controls(
                         for c_i in range(num_cands):
                             env.data.qpos[:] = qpos_saved
                             env.data.qvel[:] = qvel_saved
-                            import mujoco
                             mujoco.mj_forward(env.model, env.data)
                             hit_col = False
                             for s_i in range(k):
@@ -410,13 +447,14 @@ def evaluate_closed_loop_matched_controls(
                         # Restore simulator state
                         env.data.qpos[:] = qpos_saved
                         env.data.qvel[:] = qvel_saved
-                        import mujoco
                         mujoco.mj_forward(env.model, env.data)
                         best_idx = int(np.argmin(oracle_costs))
                         action_exec = np.clip(cands[best_idx, 0].cpu().numpy(), -1.0, 1.0)
 
-                    elif cond == "cond_E_shuffled_control":
-                        # Shuffled predicted transition (negative control)
+                    elif cond == "cond_E_shuffled_binding":
+                        # True Causal Unbinding Test:
+                        # Compute genuine predictions for all candidates, but randomly permute
+                        # the association between candidate action i and predicted outcome pi[i].
                         macro_in = cands.view(num_cands, -1)
                         s_rep = s_t.repeat(num_cands, 1)
                         with torch.no_grad():
@@ -424,18 +462,26 @@ def evaluate_closed_loop_matched_controls(
                             disp = hjepa_model.predict_macro_displacement(s_rep, next_S)
                             col_p = torch.sigmoid(m_col_logits).squeeze(-1)
 
-                        rem_dx = gx - disp[:, 0]
-                        rem_dy = gy - disp[:, 1]
+                        perm = rng.permutation(num_cands)
+                        disp_perm = disp[perm]
+                        col_p_perm = col_p[perm]
+
+                        rem_dx = gx - disp_perm[:, 0]
+                        rem_dy = gy - disp_perm[:, 1]
                         rem_dist = torch.sqrt(rem_dx ** 2 + rem_dy ** 2 + 1e-6)
                         prior_cost = torch.sum((cands[:, 0] - a_react) ** 2, dim=-1)
-                        cost = rem_dist + 0.10 * prior_cost + 1.8 * col_p
-                        cost_np = cost.cpu().numpy()
-                        shuffled_cost = rng.permutation(cost_np)
-                        best_idx = int(np.argmin(shuffled_cost))
+                        cost = rem_dist + 0.10 * prior_cost + 1.8 * col_p_perm
+                        best_idx = int(torch.argmin(cost).item())
                         action_exec = np.clip(cands[best_idx, 0].cpu().numpy(), -1.0, 1.0)
+
+                    elif cond == "cond_E2_random_selection":
+                        # Negative control: random candidate selection from the 24 candidates
+                        rand_idx = int(rng.integers(0, num_cands))
+                        action_exec = np.clip(cands[rand_idx, 0].cpu().numpy(), -1.0, 1.0)
 
                     elif cond == "cond_F_open_loop_reactive_scorer":
                         # Score candidate sequences solely by alignment to reactive action (no future world model)
+                        # Since cand 0 is a_react, argmin(prior_cost) identically selects candidate 0
                         prior_cost = torch.sum((cands[:, 0] - a_react) ** 2, dim=-1)
                         best_idx = int(torch.argmin(prior_cost).item())
                         action_exec = np.clip(cands[best_idx, 0].cpu().numpy(), -1.0, 1.0)
@@ -458,20 +504,19 @@ def evaluate_closed_loop_matched_controls(
             cond_records[cond].append({
                 "episode_idx": spec_idx,
                 "success": success,
-                "goal_reached": goal_reached,
                 "collision": collision_occurred,
-                "final_goal_error_m": final_err,
+                "goal_error_m": final_err,
                 "path_length_m": total_path,
             })
 
     env.close()
 
-    # Summarize conditions
     summary = {}
     for c in conditions:
-        succ_arr = np.array([1.0 if r["success"] else 0.0 for r in cond_records[c]], dtype=np.float32)
-        col_arr = np.array([1.0 if r["collision"] else 0.0 for r in cond_records[c]], dtype=np.float32)
-        err_arr = np.array([r["final_goal_error_m"] for r in cond_records[c]], dtype=np.float32)
+        recs = cond_records[c]
+        succ_arr = np.array([1.0 if r["success"] else 0.0 for r in recs], dtype=np.float32)
+        col_arr = np.array([1.0 if r["collision"] else 0.0 for r in recs], dtype=np.float32)
+        err_arr = np.array([r["goal_error_m"] for r in recs], dtype=np.float32)
 
         summary[c] = {
             "episodes_evaluated": len(succ_arr),
@@ -481,6 +526,7 @@ def evaluate_closed_loop_matched_controls(
             "per_episode_success": [bool(x) for x in succ_arr],
             "per_episode_collision": [bool(x) for x in col_arr],
             "per_episode_goal_error": [float(x) for x in err_arr],
+            "records": recs,
         }
 
     # Statistical comparisons against reactive baseline (cond_A)
@@ -488,51 +534,72 @@ def evaluate_closed_loop_matched_controls(
     succ_B = np.array(summary["cond_B_direct_macro"]["per_episode_success"], dtype=np.float32)
     succ_C = np.array(summary["cond_C_recursive_micro"]["per_episode_success"], dtype=np.float32)
     succ_D = np.array(summary["cond_D_oracle_physics"]["per_episode_success"], dtype=np.float32)
-    succ_E = np.array(summary["cond_E_shuffled_control"]["per_episode_success"], dtype=np.float32)
+    succ_E = np.array(summary["cond_E_shuffled_binding"]["per_episode_success"], dtype=np.float32)
+    succ_E2 = np.array(summary["cond_E2_random_selection"]["per_episode_success"], dtype=np.float32)
+    succ_F = np.array(summary["cond_F_open_loop_reactive_scorer"]["per_episode_success"], dtype=np.float32)
 
-    col_A = np.array(summary["cond_A_reactive"]["per_episode_collision"], dtype=np.float32)
-    col_B = np.array(summary["cond_B_direct_macro"]["per_episode_collision"], dtype=np.float32)
-    col_C = np.array(summary["cond_C_recursive_micro"]["per_episode_collision"], dtype=np.float32)
+    err_A = np.array(summary["cond_A_reactive"]["per_episode_goal_error"], dtype=np.float32)
+    err_B = np.array(summary["cond_B_direct_macro"]["per_episode_goal_error"], dtype=np.float32)
+    err_C = np.array(summary["cond_C_recursive_micro"]["per_episode_goal_error"], dtype=np.float32)
+    err_E = np.array(summary["cond_E_shuffled_binding"]["per_episode_goal_error"], dtype=np.float32)
 
-    # Macro vs Reactive
+    # 1. Macro vs Reactive
     m_diff, m_low, m_high = _bootstrap_ci95_diff(succ_B, succ_A)
-    c_diff, c_low, c_high = _bootstrap_ci95_diff(col_B, col_A)
-    p_succ_B_A = _paired_wilcoxon(succ_B, succ_A)
+    n10_ba, n01_ba, p_mcnemar_B_A = _paired_mcnemar(succ_B, succ_A)
+    p_wilc_err_B_A = _paired_wilcoxon(err_B, err_A)
 
-    # Macro vs Micro
+    # 2. Macro vs Recursive Micro
     mm_diff, mm_low, mm_high = _bootstrap_ci95_diff(succ_B, succ_C)
-    p_succ_B_C = _paired_wilcoxon(succ_B, succ_C)
+    n10_bc, n01_bc, p_mcnemar_B_C = _paired_mcnemar(succ_B, succ_C)
+    p_wilc_err_B_C = _paired_wilcoxon(err_B, err_C)
 
-    # Macro vs Shuffled (Causal test)
+    # 3. Macro vs Shuffled Binding (Causal action-outcome unbinding test)
     me_diff, me_low, me_high = _bootstrap_ci95_diff(succ_B, succ_E)
-    p_succ_B_E = _paired_wilcoxon(succ_B, succ_E)
+    n10_be, n01_be, p_mcnemar_B_E = _paired_mcnemar(succ_B, succ_E)
+    p_wilc_err_B_E = _paired_wilcoxon(err_B, err_E)
 
-    # Oracle vs Macro
-    od_diff, _, _ = _bootstrap_ci95_diff(succ_D, succ_B)
+    # 4. Macro vs Random Selection
+    me2_diff, me2_low, me2_high = _bootstrap_ci95_diff(succ_B, succ_E2)
+    n10_be2, n01_be2, p_mcnemar_B_E2 = _paired_mcnemar(succ_B, succ_E2)
+
+    # 5. Condition A vs Condition F equivalence verification
+    af_diff, _, _ = _bootstrap_ci95_diff(succ_F, succ_A)
+    is_af_identical = bool(np.all(succ_F == succ_A))
 
     comparisons = {
         "macro_vs_reactive": {
             "delta_success_rate": m_diff,
             "delta_success_ci95": [m_low, m_high],
-            "wilcoxon_p_value": p_succ_B_A,
-            "delta_collision_rate": c_diff,
-            "delta_collision_ci95": [c_low, c_high],
+            "mcnemar_discordant_table": {"n10_macro_only": n10_ba, "n01_react_only": n01_ba},
+            "mcnemar_exact_p_value": p_mcnemar_B_A,
+            "goal_error_wilcoxon_p_value": p_wilc_err_B_A,
         },
         "macro_vs_recursive_micro": {
             "delta_success_rate": mm_diff,
             "delta_success_ci95": [mm_low, mm_high],
-            "wilcoxon_p_value": p_succ_B_C,
-            "notes": "With matched candidate search, isolates whether direct macro multi-step prediction outperforms micro unrolling.",
+            "mcnemar_discordant_table": {"n10_macro_only": n10_bc, "n01_micro_only": n01_bc},
+            "mcnemar_exact_p_value": p_mcnemar_B_C,
+            "goal_error_wilcoxon_p_value": p_wilc_err_B_C,
+            "notes": "Direct macro vs recursive micro under strictly matched 24-candidate search.",
         },
-        "macro_vs_shuffled_control": {
+        "macro_vs_shuffled_binding": {
             "delta_success_rate": me_diff,
             "delta_success_ci95": [me_low, me_high],
-            "wilcoxon_p_value": p_succ_B_E,
-            "causal_effect_supported": bool(me_diff > 0.0 and p_succ_B_E < 0.05),
+            "mcnemar_discordant_table": {"n10_macro_only": n10_be, "n01_shuffled_only": n01_be},
+            "mcnemar_exact_p_value": p_mcnemar_B_E,
+            "goal_error_wilcoxon_p_value": p_wilc_err_B_E,
+            "causal_lookahead_verified": bool(me_diff > 0.0 and p_mcnemar_B_E < 0.05),
         },
-        "oracle_vs_macro_gap": {
-            "delta_success_rate": od_diff,
-            "notes": "Remaining headroom between learned macro world model and ground-truth physics MPC.",
+        "macro_vs_random_candidate_selection": {
+            "delta_success_rate": me2_diff,
+            "delta_success_ci95": [me2_low, me2_high],
+            "mcnemar_discordant_table": {"n10_macro_only": n10_be2, "n01_rand_only": n01_be2},
+            "mcnemar_exact_p_value": p_mcnemar_B_E2,
+        },
+        "condition_A_vs_F_equivalence": {
+            "identical_actions_and_outcomes": is_af_identical,
+            "delta_success": af_diff,
+            "explanation": "Condition F minimizes prior cost against a_react, identically selecting candidate 0 (a_react).",
         },
     }
 
@@ -575,7 +642,6 @@ def main():
 
     # 2. Closed-loop navigation with strictly matched candidate search
     print(f"\n--- 2. Evaluating Closed-Loop Navigation on {args.episodes} Matched Episodes ---")
-    # Generate 30 matched episodes across capabilities
     task_specs = []
     caps = ["obstacle_avoidance", "spatial_reasoning", "object_grounding"]
     for i in range(args.episodes):
@@ -603,6 +669,7 @@ def main():
         "command_executed": f"python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes {args.episodes}",
         "execution_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "git_commit": _git_sha(),
+        "working_tree_clean": _git_clean(),
         "dataset_path": str(val_npz.relative_to(repo_root)),
         "dataset_sha256": _sha256(val_npz),
         "checkpoint_path": str(hjepa_path.relative_to(repo_root)),

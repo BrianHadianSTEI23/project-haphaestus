@@ -95,6 +95,16 @@ def _git_sha() -> str:
         return "unavailable"
 
 
+def _git_commit_exists(commit_sha: str) -> bool:
+    if not commit_sha or commit_sha in {"unknown", "UNVERIFIED_PRE_AUDIT_COMMIT"}:
+        return False
+    try:
+        res = subprocess.run(["git", "cat-file", "-e", f"{commit_sha}^{{commit}}"], capture_output=True, text=True)
+        return res.returncode == 0
+    except Exception:
+        return False
+
+
 def get_system_environment() -> dict:
     env = {
         "os_platform": platform.platform(),
@@ -166,42 +176,45 @@ def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
             item["result_artifact_path"] = item.get("result_artifact_path", "UNKNOWN")
             item["result_artifact_sha256"] = item.get("result_artifact_sha256", "UNKNOWN")
 
-        # --- Strict Cryptographic On-Disk Verification ---
-        ds_file = _resolve_repo_file(repo_root, base_dir, item.get("dataset_path", ""))
-        ckpt_file = _resolve_repo_file(repo_root, base_dir, item.get("checkpoint_path", ""))
-        art_file = _resolve_repo_file(repo_root, base_dir, item.get("result_artifact_path", ""))
-
-        provenance_errors = []
-        if not ds_file.exists():
-            provenance_errors.append(f"dataset_path not found: {ds_file}")
-        elif _digest(ds_file) != item.get("dataset_sha256"):
-            provenance_errors.append(f"dataset_sha256 mismatch (actual={_digest(ds_file)[:8]}.., declared={str(item.get('dataset_sha256'))[:8]}..)")
-
-        if not ckpt_file.exists():
-            provenance_errors.append(f"checkpoint_path not found: {ckpt_file}")
-        elif _digest(ckpt_file) != item.get("checkpoint_sha256"):
-            provenance_errors.append(f"checkpoint_sha256 mismatch (actual={_digest(ckpt_file)[:8]}.., declared={str(item.get('checkpoint_sha256'))[:8]}..)")
-
-        # Verify any additional multi-seed checkpoints if present
-        for ck_item in item.get("checkpoints", []):
-            p_c = _resolve_repo_file(repo_root, base_dir, ck_item.get("path", ""))
-            if not p_c.exists() or _digest(p_c) != ck_item.get("sha256"):
-                provenance_errors.append(f"multi-seed checkpoint mismatch: {ck_item.get('name')}")
-
-        if not art_file.exists():
-            provenance_errors.append(f"result_artifact_path not found: {art_file}")
-        elif _digest(art_file) != item.get("result_artifact_sha256"):
-            provenance_errors.append(f"result_artifact_sha256 mismatch (actual={_digest(art_file)[:8]}.., declared={str(item.get('result_artifact_sha256'))[:8]}..)")
-
         status = item.get("provenance_status")
         art_key = str(art_file.resolve())
 
-        # Disallow duplicate artifact reuse claiming independent execution
-        if status == "INDEPENDENTLY_EXECUTED":
-            if art_key in seen_executed_artifacts:
-                provenance_errors.append(f"Duplicate artifact claimed for independent execution: {art_file.name}. Must use dedicated evaluation artifact or be labeled REUSED_VERIFIED.")
-            else:
-                seen_executed_artifacts.add(art_key)
+        # --- Strict Cryptographic On-Disk Verification for Executed/Verified Records ---
+        provenance_errors = []
+        if status in ("INDEPENDENTLY_EXECUTED", "REUSED_VERIFIED"):
+            src_commit = str(item.get("source_git_commit", ""))
+            if not _git_commit_exists(src_commit):
+                provenance_errors.append(f"source_git_commit not found in local git history: {src_commit}")
+            if not item.get("working_tree_clean", True):
+                provenance_errors.append(f"working_tree_clean is False for commit: {src_commit}")
+
+            if not ds_file.exists():
+                provenance_errors.append(f"dataset_path not found: {ds_file}")
+            elif _digest(ds_file) != item.get("dataset_sha256"):
+                provenance_errors.append(f"dataset_sha256 mismatch (actual={_digest(ds_file)[:8]}.., declared={str(item.get('dataset_sha256'))[:8]}..)")
+
+            if not ckpt_file.exists():
+                provenance_errors.append(f"checkpoint_path not found: {ckpt_file}")
+            elif _digest(ckpt_file) != item.get("checkpoint_sha256"):
+                provenance_errors.append(f"checkpoint_sha256 mismatch (actual={_digest(ckpt_file)[:8]}.., declared={str(item.get('checkpoint_sha256'))[:8]}..)")
+
+            # Verify any additional multi-seed checkpoints if present
+            for ck_item in item.get("checkpoints", []):
+                p_c = _resolve_repo_file(repo_root, base_dir, ck_item.get("path", ""))
+                if not p_c.exists() or _digest(p_c) != ck_item.get("sha256"):
+                    provenance_errors.append(f"multi-seed checkpoint mismatch: {ck_item.get('name')}")
+
+            if not art_file.exists():
+                provenance_errors.append(f"result_artifact_path not found: {art_file}")
+            elif _digest(art_file) != item.get("result_artifact_sha256"):
+                provenance_errors.append(f"result_artifact_sha256 mismatch (actual={_digest(art_file)[:8]}.., declared={str(item.get('result_artifact_sha256'))[:8]}..)")
+
+            # Disallow duplicate artifact reuse claiming independent execution
+            if status == "INDEPENDENTLY_EXECUTED":
+                if art_key in seen_executed_artifacts:
+                    provenance_errors.append(f"Duplicate artifact claimed for independent execution: {art_file.name}. Must use dedicated evaluation artifact or be labeled REUSED_VERIFIED.")
+                else:
+                    seen_executed_artifacts.add(art_key)
 
         if provenance_errors:
             rejected_records.append({
@@ -404,6 +417,7 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             base_dir / "research/circuits/attribution_graphs/attribution_graphs.json",
         ]),
         ("generalization", [
+            base_dir / "research/benchmarks/results/track_c_visual_grounding.json",
             base_dir / "research/benchmarks/results/generalization_eval_results.json",
             base_dir / "research/benchmarks/generalization/generalization_results.json",
         ]),
@@ -439,16 +453,16 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             cmd_exec = meta.get("command_executed")
             ts = meta.get("execution_timestamp", datetime.datetime.now(datetime.timezone.utc).isoformat())
             src_commit = meta.get("git_commit")
+            # Preserve declared metadata hashes directly from the experiment's execution metadata
             ds_path = meta.get("dataset_path", "unknown")
-            ds_file = _resolve_repo_file(repo_root, base_dir, ds_path)
-            ds_sha = _digest(ds_file) if ds_file.exists() else meta.get("dataset_sha256", "unknown")
+            ds_sha = meta.get("dataset_sha256", "unknown")
             ckpt_path = meta.get("checkpoint_path", "unknown")
-            ckpt_file = _resolve_repo_file(repo_root, base_dir, ckpt_path)
-            ckpt_sha = _digest(ckpt_file) if ckpt_file.exists() else meta.get("checkpoint_sha256", "unknown")
+            ckpt_sha = meta.get("checkpoint_sha256", "unknown")
             seed = int(meta.get("random_seed", 42))
             cfg = meta.get("configuration", {})
             env = meta.get("environment", sys_env)
             checkpoints_list = meta.get("checkpoints", [])
+            working_tree_clean = meta.get("working_tree_clean", True)
             notes = "Independently executed with verified embedded execution metadata."
         else:
             status = "LEGACY_UNVERIFIED"
@@ -456,15 +470,14 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             ts = "UNKNOWN_HISTORICAL_TIMESTAMP"
             src_commit = "UNVERIFIED_PRE_AUDIT_COMMIT"
             ds_path = "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz"
-            ds_file = _resolve_repo_file(repo_root, base_dir, ds_path)
-            ds_sha = _digest(ds_file)
+            ds_sha = "UNVERIFIED"
             ckpt_path = "world_models_fpga/checkpoints_v4/hjepa_best.pt"
-            ckpt_file = _resolve_repo_file(repo_root, base_dir, ckpt_path)
-            ckpt_sha = _digest(ckpt_file)
+            ckpt_sha = "UNVERIFIED"
             seed = 42
             cfg = {"source_artifact": str(src_path.relative_to(base_dir))}
             env = sys_env
             checkpoints_list = []
+            working_tree_clean = False
             notes = "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol."
 
         record = {
@@ -473,6 +486,8 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             "provenance_status": status,
             "command_executed": cmd_exec,
             "execution_timestamp": ts,
+            "source_git_commit": src_commit,
+            "working_tree_clean": working_tree_clean,
             "source_git_commit": src_commit,
             "dataset_path": ds_path,
             "dataset_sha256": ds_sha,

@@ -1,21 +1,24 @@
 """
-Track C Pure Visual Spatial Grounding Benchmark (Resolving Finding E)
+Track C Pure Visual Spatial Grounding Benchmark (Scientifically Repaired Protocol)
 
 Strict Information Regime:
 - Track C ('observation'): The agent receives ONLY camera RGB (64x64x3) and discrete task ID.
-- Zero simulator coordinates ([dx, dy, sin_th, cos_th] withheld).
-- Evaluates four rigorous visual grounding test suites:
-  1. Color-Grounded Target Identity (Target vs Distractors)
-  2. Color Mutation: Irrelevant (Floor/Background) vs Relevant (Target Color)
-  3. Spatial Landmark Rearrangement (Target & Distractor Swapped)
-  4. SE(2) Robot Rotations (+/-45 deg, +/-90 deg, 180 deg)
-- Measures closed-loop success, retention rate with exact numerator/denominator tables,
-  and physical goal localization error (m).
+- Zero simulator coordinates ([dx, dy, sin_th, cos_th] strictly withheld).
+- Evaluates five paired counterfactual test suites against matched nominal episodes:
+  1. Nominal Visual Grounding: Baseline canonical tasks.
+  2. Appearance Nuisance: Floor texture and illumination altered; geometry and semantics held constant.
+  3. Semantically Relevant Appearance: Target color swapped with distractor; tests visual grounding vs location memorization.
+  4. Visual Geometry Grounding: Physical landmark positions swapped; tests visual steering vs allocentric prior.
+  5. Layout Generalization: Non-canonical randomized obstacle layouts.
+  6. Rigid SE(2) Transformations: Global rigid rotation of robot pose, all obstacles, and target waypoints.
+- Reports exact contingency tables, paired differences, McNemar exact tests, 95% bootstrap CIs,
+  and saves full episode-level raw records.
 """
 
 from __future__ import annotations
 
 import argparse
+import copy
 import datetime
 import hashlib
 import json
@@ -32,13 +35,14 @@ sys.path.insert(0, str(pkg_root))
 
 import numpy as np
 import torch
+from scipy.stats import binom
 
 from env.amr_env import JetAutoEnv
 from models.h_jepa import HJEPAModel
 from models.le_world_model import LeWorldModel
 from models.baseline_policy import BaselineNavigationPolicy
 from research.benchmarks.model_wrappers import BaselineAgent, HJEPAAgent, LeWMAgent
-from research.datasets.generation.capability_tasks import generate_task_specification
+from research.datasets.generation.capability_tasks import generate_task_specification, CANONICAL_OBSTACLES
 
 
 def _sha256(path: Path) -> str:
@@ -56,6 +60,52 @@ def _git_sha() -> str:
         return subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     except Exception:
         return "unknown"
+
+
+def _git_clean() -> bool:
+    try:
+        out = subprocess.check_output(["git", "status", "--porcelain"], text=True).strip()
+        return len(out) == 0
+    except Exception:
+        return False
+
+
+def _paired_contingency(nom_succ: list[bool], mut_succ: list[bool]) -> dict:
+    """Computes exact 2x2 contingency table and McNemar exact binomial p-value."""
+    n11 = sum(1 for n, m in zip(nom_succ, mut_succ) if n and m)
+    n00 = sum(1 for n, m in zip(nom_succ, mut_succ) if not n and not m)
+    n10 = sum(1 for n, m in zip(nom_succ, mut_succ) if n and not m)  # nom succ, mut fail
+    n01 = sum(1 for n, m in zip(nom_succ, mut_succ) if not n and m)  # nom fail, mut succ
+
+    discordant = n10 + n01
+    if discordant == 0:
+        p_val = 1.0
+    else:
+        k = min(n10, n01)
+        p_val = float(min(1.0, 2.0 * binom.cdf(k, discordant, 0.5)))
+
+    diffs = np.array([float(m) - float(n) for n, m in zip(nom_succ, mut_succ)], dtype=np.float32)
+    mean_diff = float(np.mean(diffs))
+
+    rng = np.random.default_rng(42)
+    if len(diffs) > 1:
+        boot_diffs = [np.mean(rng.choice(diffs, size=len(diffs), replace=True)) for _ in range(2000)]
+        ci_low = float(np.percentile(boot_diffs, 2.5))
+        ci_high = float(np.percentile(boot_diffs, 97.5))
+    else:
+        ci_low, ci_high = mean_diff, mean_diff
+
+    return {
+        "n11_both_success": n11,
+        "n00_both_fail": n00,
+        "n10_nom_succ_mut_fail": n10,
+        "n01_nom_fail_mut_succ": n01,
+        "discordant_count": discordant,
+        "mcnemar_exact_p_value": p_val,
+        "mean_diff": mean_diff,
+        "ci95_low": ci_low,
+        "ci95_high": ci_high,
+    }
 
 
 def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dict:
@@ -97,7 +147,6 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
             info = step_res[-1]
             if info.get("collision", False):
                 collision_hit = True
-
             curr_xy = env.get_robot_pose()[:2]
             total_path += float(np.linalg.norm(curr_xy - prev_xy))
             prev_xy = curr_xy.copy()
@@ -106,6 +155,8 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
         final_err = float(np.linalg.norm(final_p[:2] - final_wp[:2]))
         succ = bool(goal_reached and not collision_hit)
         records.append({
+            "episode_id": spec.get("episode_id", "ep"),
+            "target_key": spec.get("target_key", ""),
             "success": succ,
             "goal_reached": goal_reached,
             "collision": collision_hit,
@@ -135,8 +186,9 @@ def evaluate_suite_track_c(agent, specs: list[dict], max_steps: int = 50) -> dic
 
 def main():
     parser = argparse.ArgumentParser(description="Track C Pure Visual Spatial Grounding Benchmark")
-    parser.add_argument("--episodes-per-suite", type=int, default=15, help="Number of episodes per test suite (N >= 15)")
+    parser.add_argument("--episodes-per-suite", type=int, default=20, help="Number of episodes per test suite (N >= 20)")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument("--output", type=str, default=str(pkg_root / "research/benchmarks/results/track_c_visual_grounding.json"))
     args = parser.parse_args()
 
     ckpt_dir = pkg_root / "checkpoints_v4"
@@ -160,7 +212,12 @@ def main():
 
     # --- 1. Nominal Track C Grounding Suite ---
     print("\n--- 1. Evaluating Nominal Track C Visual Grounding ---")
-    nominal_specs = [generate_task_specification("object_grounding", "easy", seed_idx=6100 + i) for i in range(n_eps)]
+    nominal_specs = []
+    for i in range(n_eps):
+        spec = generate_task_specification("object_grounding", "easy", seed_idx=6100 + i)
+        spec["episode_id"] = f"nom_{i:02d}"
+        nominal_specs.append(spec)
+
     res_nom_h = evaluate_suite_track_c(agent_h, nominal_specs)
     res_nom_l = evaluate_suite_track_c(agent_l, nominal_specs)
     res_nom_b = evaluate_suite_track_c(agent_b, nominal_specs)
@@ -168,71 +225,139 @@ def main():
     print(f"  [LeWM Nominal]     Succ: {res_nom_l['success_count']}/{n_eps} ({res_nom_l['success_rate']*100:5.1f}%) | Col: {res_nom_l['collision_rate']*100:5.1f}% | GoalErr: {res_nom_l['mean_final_goal_error_m']:.3f}m")
     print(f"  [Baseline Nominal] Succ: {res_nom_b['success_count']}/{n_eps} ({res_nom_b['success_rate']*100:5.1f}%) | Col: {res_nom_b['collision_rate']*100:5.1f}% | GoalErr: {res_nom_b['mean_final_goal_error_m']:.3f}m")
 
-    # --- 2. Color Mutation Suites: Irrelevant vs Relevant ---
-    print("\n--- 2. Evaluating Color Mutation (Irrelevant vs Relevant) ---")
-    # 2A: Irrelevant (Floor color shifted to dark blue/brown; target unchanged)
-    irrel_specs = []
-    for i in range(n_eps):
-        spec = generate_task_specification("object_grounding", "easy", seed_idx=6200 + i)
-        spec["floor_rgba"] = [0.15, 0.20, 0.35, 1.0]  # dark blue/slate floor
-        irrel_specs.append(spec)
-    res_irrel_h = evaluate_suite_track_c(agent_h, irrel_specs)
+    nom_h_succ = [r["success"] for r in res_nom_h["records"]]
 
-    # 2B: Relevant (Target object color mutated to unrelated color)
-    rel_specs = []
+    # --- 2. Appearance Nuisance: Floor Texture & Illumination ---
+    print("\n--- 2. Evaluating Appearance Nuisance (Floor & Lighting) ---")
+    nuisance_specs = []
     for i in range(n_eps):
-        spec = generate_task_specification("object_grounding", "easy", seed_idx=6300 + i)
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"nuisance_{i:02d}"
+        spec["floor_rgba"] = [0.15, 0.20, 0.35, 1.0]  # dark slate/blue floor
+        spec["light_diffuse_scale"] = 0.7  # 30% ambient lighting drop
+        nuisance_specs.append(spec)
+
+    res_nuis_h = evaluate_suite_track_c(agent_h, nuisance_specs)
+    nuis_h_succ = [r["success"] for r in res_nuis_h["records"]]
+    pair_nuis = _paired_contingency(nom_h_succ, nuis_h_succ)
+    print(f"  [H-JEPA Nuisance]  Succ: {res_nuis_h['success_count']}/{n_eps} ({res_nuis_h['success_rate']*100:5.1f}%) | Delta: {pair_nuis['mean_diff']*100:+5.1f}% [CI95: {pair_nuis['ci95_low']*100:+5.1f}%, {pair_nuis['ci95_high']*100:+5.1f}%] | p={pair_nuis['mcnemar_exact_p_value']:.4f}")
+
+    # --- 3. Semantically Relevant Appearance: Color Swap with Distractor ---
+    print("\n--- 3. Evaluating Semantically Relevant Appearance (Color Swap) ---")
+    sem_specs = []
+    for i in range(n_eps):
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"sem_color_{i:02d}"
         target = spec.get("target_key", "yellow_cylinder")
-        spec["color_mutations"] = {target: [0.85, 0.15, 0.85, 1.0]}  # mutated to magenta/purple
-        rel_specs.append(spec)
-    res_rel_h = evaluate_suite_track_c(agent_h, rel_specs)
+        # Swap colors between target cylinder (yellow) and distractor cylinder (blue)
+        # Target cylinder painted blue, distractor cylinder painted yellow
+        spec["color_mutations"] = {
+            "obs_yellow_cyl": [0.2, 0.4, 0.85, 1.0],  # blue
+            "obs_blue_cyl": [0.95, 0.85, 0.1, 1.0],   # yellow
+        }
+        # Update waypoint to the cylinder that is now yellow (obs_blue_cyl pos)
+        if "obs_blue_cyl" in [o.get("geom_name") for o in spec.get("obstacles", {}).values()]:
+            for o in spec["obstacles"].values():
+                if o.get("geom_name") == "obs_blue_cyl":
+                    spec["waypoints"] = [o["pos"].copy()]
+        sem_specs.append(spec)
 
-    ret_irrel = float(res_irrel_h["success_rate"] / max(0.05, res_nom_h["success_rate"]))
-    ret_rel = float(res_rel_h["success_rate"] / max(0.05, res_nom_h["success_rate"]))
-    print(f"  [Irrelevant Floor Mutation] Succ: {res_irrel_h['success_count']}/{n_eps} ({res_irrel_h['success_rate']*100:5.1f}%) | Retention: {ret_irrel*100:5.1f}%")
-    print(f"  [Relevant Target Mutation]  Succ: {res_rel_h['success_count']}/{n_eps} ({res_rel_h['success_rate']*100:5.1f}%) | Retention: {ret_rel*100:5.1f}%")
+    res_sem_h = evaluate_suite_track_c(agent_h, sem_specs)
+    sem_h_succ = [r["success"] for r in res_sem_h["records"]]
+    pair_sem = _paired_contingency(nom_h_succ, sem_h_succ)
+    print(f"  [H-JEPA Sem Color] Succ: {res_sem_h['success_count']}/{n_eps} ({res_sem_h['success_rate']*100:5.1f}%) | Delta: {pair_sem['mean_diff']*100:+5.1f}% [CI95: {pair_sem['ci95_low']*100:+5.1f}%, {pair_sem['ci95_high']*100:+5.1f}%] | p={pair_sem['mcnemar_exact_p_value']:.4f}")
 
-    # --- 3. Spatial Landmark Rearrangement ---
-    print("\n--- 3. Evaluating Spatial Landmark Rearrangement ---")
+    # --- 4. Visual Geometry Grounding: Landmark Physical Rearrangement ---
+    print("\n--- 4. Evaluating Visual Geometry Grounding (Physical Landmark Swap) ---")
     rearrange_specs = []
     for i in range(n_eps):
-        spec = generate_task_specification("object_grounding", "easy", seed_idx=6400 + i)
-        # Swap target location with an opposite quadrant obstacle
-        target = spec.get("target_key", "yellow_cylinder")
-        wp = spec["waypoints"][-1]
-        spec["waypoints"] = [np.array([-wp[0], -wp[1], float(wp[2])], dtype=np.float32)]
-        spec["rearranged_target"] = True
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"rearr_{i:02d}"
+        # Physically swap target yellow_cylinder and distractor red_box positions
+        obs = spec.get("obstacles", {})
+        if "yellow_cylinder" in obs and "red_box" in obs:
+            pos_y = obs["yellow_cylinder"]["pos"].copy()
+            pos_r = obs["red_box"]["pos"].copy()
+            obs["yellow_cylinder"]["pos"] = pos_r
+            obs["red_box"]["pos"] = pos_y
+            spec["waypoints"] = [pos_r.copy()]  # target is physically at pos_r now
         rearrange_specs.append(spec)
-    res_rearr_h = evaluate_suite_track_c(agent_h, rearrange_specs)
-    ret_rearr = float(res_rearr_h["success_rate"] / max(0.05, res_nom_h["success_rate"]))
-    print(f"  [Landmark Rearrangement]    Succ: {res_rearr_h['success_count']}/{n_eps} ({res_rearr_h['success_rate']*100:5.1f}%) | Retention: {ret_rearr*100:5.1f}% | GoalErr: {res_rearr_h['mean_final_goal_error_m']:.3f}m")
 
-    # --- 4. SE(2) Robot In-Plane Rotations ---
-    print("\n--- 4. Evaluating SE(2) Robot In-Plane Rotations (+/-45 deg, +/-90 deg, 180 deg) ---")
-    rot_angles = [np.pi / 4, -np.pi / 4, np.pi / 2, -np.pi / 2, np.pi]
-    rot_results = {}
-    for ang_idx, ang in enumerate(rot_angles):
+    res_rearr_h = evaluate_suite_track_c(agent_h, rearrange_specs)
+    rearr_h_succ = [r["success"] for r in res_rearr_h["records"]]
+    pair_rearr = _paired_contingency(nom_h_succ, rearr_h_succ)
+    print(f"  [H-JEPA Rearrange] Succ: {res_rearr_h['success_count']}/{n_eps} ({res_rearr_h['success_rate']*100:5.1f}%) | Delta: {pair_rearr['mean_diff']*100:+5.1f}% [CI95: {pair_rearr['ci95_low']*100:+5.1f}%, {pair_rearr['ci95_high']*100:+5.1f}%] | p={pair_rearr['mcnemar_exact_p_value']:.4f} | GoalErr: {res_rearr_h['mean_final_goal_error_m']:.3f}m")
+
+    # --- 5. Layout Generalization: Randomized Obstacle Layouts ---
+    print("\n--- 5. Evaluating Layout Generalization (Randomized Configurations) ---")
+    rng_layout = np.random.default_rng(777)
+    rand_specs = []
+    for i in range(n_eps):
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"rand_layout_{i:02d}"
+        for k, o_dict in spec.get("obstacles", {}).items():
+            delta_xy = rng_layout.uniform(-0.35, 0.35, size=2)
+            o_dict["pos"][:2] = np.clip(o_dict["pos"][:2] + delta_xy, -1.8, 1.8)
+        # Update target waypoint to new target position
+        t_key = spec.get("target_key", "yellow_cylinder")
+        if t_key in spec.get("obstacles", {}):
+            spec["waypoints"] = [spec["obstacles"][t_key]["pos"].copy()]
+        rand_specs.append(spec)
+
+    res_rand_h = evaluate_suite_track_c(agent_h, rand_specs)
+    rand_h_succ = [r["success"] for r in res_rand_h["records"]]
+    pair_rand = _paired_contingency(nom_h_succ, rand_h_succ)
+    print(f"  [H-JEPA Layout]    Succ: {res_rand_h['success_count']}/{n_eps} ({res_rand_h['success_rate']*100:5.1f}%) | Delta: {pair_rand['mean_diff']*100:+5.1f}% [CI95: {pair_rand['ci95_low']*100:+5.1f}%, {pair_rand['ci95_high']*100:+5.1f}%] | p={pair_rand['mcnemar_exact_p_value']:.4f}")
+
+    # --- 6. Rigid SE(2) Global Transformation (90, 180, 270 deg) ---
+    print("\n--- 6. Evaluating Rigid SE(2) Global Transformations ---")
+    se2_angles = [np.pi / 2, np.pi, -np.pi / 2]
+    se2_results = {}
+    for ang in se2_angles:
         deg = int(round(np.degrees(ang)))
-        rot_specs = []
-        for i in range(max(6, n_eps // 3)):
-            spec = generate_task_specification("object_grounding", "easy", seed_idx=6500 + ang_idx * 50 + i)
+        c_a, s_a = np.cos(ang), np.sin(ang)
+        R = np.array([[c_a, -s_a], [s_a, c_a]], dtype=np.float32)
+
+        se2_specs = []
+        for i in range(n_eps):
+            spec = copy.deepcopy(nominal_specs[i])
+            spec["episode_id"] = f"se2_{deg:+d}_{i:02d}"
+            # Transform initial pose
             p = spec["initial_pose"]
-            spec["initial_pose"] = np.array([p[0], p[1], float(p[2] + ang)], dtype=np.float32)
-            rot_specs.append(spec)
-        res_rot = evaluate_suite_track_c(agent_h, rot_specs)
-        rot_results[f"rot_{deg:+}deg"] = {
-            "episodes": len(rot_specs),
-            "success_count": res_rot["success_count"],
-            "success_rate": res_rot["success_rate"],
-            "mean_goal_error_m": res_rot["mean_final_goal_error_m"],
+            new_xy = R @ p[:2]
+            spec["initial_pose"] = np.array([new_xy[0], new_xy[1], p[2] + ang], dtype=np.float32)
+
+            # Transform all obstacles
+            for k, o_dict in spec.get("obstacles", {}).items():
+                o_xy = R @ o_dict["pos"][:2]
+                o_dict["pos"] = np.array([o_xy[0], o_xy[1], o_dict["pos"][2]], dtype=np.float32)
+
+            # Transform waypoints
+            wps = []
+            for wp in spec.get("waypoints", []):
+                w_xy = R @ wp[:2]
+                wps.append(np.array([w_xy[0], w_xy[1], wp[2]], dtype=np.float32))
+            spec["waypoints"] = wps
+            se2_specs.append(spec)
+
+        res_se2_h = evaluate_suite_track_c(agent_h, se2_specs)
+        se2_succ = [r["success"] for r in res_se2_h["records"]]
+        pair_se2 = _paired_contingency(nom_h_succ, se2_succ)
+        se2_results[f"rot_{deg:+}deg"] = {
+            "success_count": res_se2_h["success_count"],
+            "success_rate": res_se2_h["success_rate"],
+            "mean_goal_error_m": res_se2_h["mean_final_goal_error_m"],
+            "paired_stats": pair_se2,
+            "records": res_se2_h["records"],
         }
-        print(f"  [Rotation {deg:+4d} deg] Succ: {res_rot['success_count']}/{len(rot_specs)} ({res_rot['success_rate']*100:5.1f}%) | GoalErr: {res_rot['mean_final_goal_error_m']:.3f}m")
+        print(f"  [SE(2) {deg:+4d} deg] Succ: {res_se2_h['success_count']}/{n_eps} ({res_se2_h['success_rate']*100:5.1f}%) | Delta: {pair_se2['mean_diff']*100:+5.1f}% | p={pair_se2['mcnemar_exact_p_value']:.4f}")
 
     # Build execution metadata
     metadata = {
-        "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
+        "command_executed": f"python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite {n_eps} --device {args.device}",
         "execution_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "git_commit": _git_sha(),
+        "working_tree_clean": _git_clean(),
         "dataset_path": str(test_npz.relative_to(repo_root)),
         "dataset_sha256": _sha256(test_npz),
         "checkpoint_path": str(hjepa_path.relative_to(repo_root)),
@@ -244,53 +369,47 @@ def main():
         ],
         "random_seed": 42,
         "configuration": {
-            "track": "Track C (observation only, zero simulator coordinates)",
+            "track": "Track C (pure observation, zero simulator coordinates)",
             "episodes_per_suite": n_eps,
             "max_steps": 50,
         },
         "environment": {
-            "python": sys.version.split()[0],
-            "torch": torch.__version__,
-            "device": args.device,
+            "platform": sys.platform,
+            "torch_version": torch.__version__,
+            "cuda_available": torch.cuda.is_available(),
         },
     }
 
-    payload = {
+    full_output = {
         "execution_metadata": metadata,
-        "track_c_nominal": {
-            "H-JEPA": res_nom_h,
-            "LeWM": res_nom_l,
-            "Baseline": res_nom_b,
-        },
-        "color_mutations": {
-            "irrelevant_floor_shift": {
-                "success_rate": res_irrel_h["success_rate"],
-                "success_count": res_irrel_h["success_count"],
-                "total_episodes": n_eps,
-                "retention_rate": ret_irrel,
+        "summary": {
+            "hjepa_nominal": res_nom_h,
+            "lewm_nominal": res_nom_l,
+            "baseline_nominal": res_nom_b,
+            "appearance_nuisance": {
+                "results": res_nuis_h,
+                "paired_contingency": pair_nuis,
             },
-            "relevant_target_mutation": {
-                "success_rate": res_rel_h["success_rate"],
-                "success_count": res_rel_h["success_count"],
-                "total_episodes": n_eps,
-                "retention_rate": ret_rel,
+            "semantically_relevant_appearance": {
+                "results": res_sem_h,
+                "paired_contingency": pair_sem,
             },
-            "affordance_appearance_factorization_supported": bool(ret_irrel >= 0.70 and ret_rel <= 0.40),
+            "visual_geometry_grounding": {
+                "results": res_rearr_h,
+                "paired_contingency": pair_rearr,
+            },
+            "layout_generalization": {
+                "results": res_rand_h,
+                "paired_contingency": pair_rand,
+            },
+            "se2_rigid_transformations": se2_results,
         },
-        "landmark_rearrangement": {
-            "success_rate": res_rearr_h["success_rate"],
-            "success_count": res_rearr_h["success_count"],
-            "total_episodes": n_eps,
-            "retention_rate": ret_rearr,
-            "mean_goal_error_m": res_rearr_h["mean_final_goal_error_m"],
-        },
-        "se2_rotations": rot_results,
     }
 
-    out_file = pkg_root / "research/benchmarks/results/track_c_visual_grounding.json"
-    out_file.parent.mkdir(parents=True, exist_ok=True)
-    out_file.write_text(json.dumps(payload, indent=2) + "\n")
-    print(f"\n[SAVED TRACK C VISUAL GROUNDING ARTIFACT TO {out_file}]")
+    out_p = Path(args.output)
+    out_p.parent.mkdir(parents=True, exist_ok=True)
+    out_p.write_text(json.dumps(full_output, indent=2) + "\n")
+    print(f"\n[Saved Artifact] -> {out_p}")
 
 
 if __name__ == "__main__":
