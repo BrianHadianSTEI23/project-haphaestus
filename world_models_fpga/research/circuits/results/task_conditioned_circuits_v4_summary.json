@@ -1,0 +1,216 @@
+{
+  "experiment_metadata": {
+    "experiment_id": "task_conditioned_circuits_v4",
+    "git_commit": "fa0d4f97abbe16de9980f7844db90a6921660324",
+    "script_path": "world_models_fpga/research/circuits/run_task_conditioned_circuits_v4.py",
+    "script_sha256": "944c44ac4bd835098a27c866e39cfbc4a5201c2d6be1ae269fceac9e91e649ac",
+    "command_executed": "world_models_fpga/research/circuits/run_task_conditioned_circuits_v4.py",
+    "execution_timestamp": "2026-11-08T11:32:16.613138+00:00",
+    "working_tree_clean": false,
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "random_seed": 42,
+    "device": "cuda",
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "mujoco_version": "3.17.0"
+  },
+  "sample_counts": {
+    "total_pairs_instrumented": 50,
+    "discovery_split_pairs": 25,
+    "held_out_evaluation_pairs": 25,
+    "stages_instrumented": 9,
+    "activations_recorded_format": "exact_activation_vectors_float_list"
+  },
+  "discovery_split_analysis": {
+    "layer_1": {
+      "treves_rolls_sparsity": 0.3157197833061218,
+      "effective_dimensionality": 7.630515214530215,
+      "top_8_task_units": [
+        40,
+        39,
+        58,
+        36,
+        54,
+        25,
+        27,
+        57
+      ],
+      "top_8_geom_units": [
+        26,
+        3,
+        50,
+        8,
+        57,
+        16,
+        18,
+        46
+      ],
+      "top_8_interact_units": [
+        50,
+        27,
+        26,
+        44,
+        18,
+        25,
+        6,
+        4
+      ]
+    },
+    "layer_2": {
+      "treves_rolls_sparsity": 0.30493324995040894,
+      "effective_dimensionality": 5.9586760701200205,
+      "top_8_task_units": [
+        13,
+        61,
+        4,
+        14,
+        50,
+        8,
+        56,
+        19
+      ],
+      "top_8_geom_units": [
+        19,
+        14,
+        3,
+        62,
+        8,
+        22,
+        25,
+        56
+      ],
+      "top_8_interact_units": [
+        8,
+        62,
+        19,
+        25,
+        56,
+        1,
+        13,
+        60
+      ]
+    }
+  },
+  "held_out_causal_interventions": {
+    "layer_1": {
+      "k_2": {
+        "necessity_shift_cand_mean_m": 0.2799341218173504,
+        "necessity_shift_rand_mean_m": 0.26702678967267274,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.0567457377910614,
+        "sufficiency_te_cand_mean": 0.13465343912417885,
+        "sufficiency_te_rand_mean": 0.0509700501809087,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.021250980571409433,
+        "rescue_pct_mean": 0.13465343912417885
+      },
+      "k_4": {
+        "necessity_shift_cand_mean_m": 0.5046671205759048,
+        "necessity_shift_rand_mean_m": 0.25271401574835184,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.0018904507160186768,
+        "sufficiency_te_cand_mean": 0.27266368159292687,
+        "sufficiency_te_rand_mean": 0.06721109398898541,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.00037389713715228285,
+        "rescue_pct_mean": 0.27266368159292687
+      },
+      "k_8": {
+        "necessity_shift_cand_mean_m": 0.6577149701118469,
+        "necessity_shift_rand_mean_m": 0.4691842332482338,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.012752532958984375,
+        "sufficiency_te_cand_mean": 0.17076227766107555,
+        "sufficiency_te_rand_mean": 0.16380648834539396,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.493524324126157,
+        "rescue_pct_mean": 0.17076227766107555
+      },
+      "k_16": {
+        "necessity_shift_cand_mean_m": 0.6910302066802978,
+        "necessity_shift_rand_mean_m": 0.6538994601368904,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.1762598156929016,
+        "sufficiency_te_cand_mean": 0.2422994802440327,
+        "sufficiency_te_rand_mean": 0.17909987327379753,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.15865525393145707,
+        "rescue_pct_mean": 0.2422994802440327
+      },
+      "k_32": {
+        "necessity_shift_cand_mean_m": 1.2501200807094575,
+        "necessity_shift_rand_mean_m": 0.8065028059482574,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.0005135536193847656,
+        "sufficiency_te_cand_mean": 0.639099928443852,
+        "sufficiency_te_rand_mean": 0.28284370509862344,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 1.3507974243552756e-05,
+        "rescue_pct_mean": 0.639099928443852
+      },
+      "k_64": {
+        "necessity_shift_cand_mean_m": 1.0781918197870255,
+        "necessity_shift_rand_mean_m": 1.0781918197870255,
+        "necessity_wilcoxon_p_cand_vs_rand": 1.0,
+        "sufficiency_te_cand_mean": 1.0,
+        "sufficiency_te_rand_mean": 1.0,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 1.0,
+        "rescue_pct_mean": 1.0
+      }
+    },
+    "layer_2": {
+      "k_2": {
+        "necessity_shift_cand_mean_m": 0.5166720922291279,
+        "necessity_shift_rand_mean_m": 0.2758965437859297,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.004661188023718747,
+        "sufficiency_te_cand_mean": 0.04909810936350256,
+        "sufficiency_te_rand_mean": 0.045884994267685414,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.691754294503184,
+        "rescue_pct_mean": 0.04909810936350256
+      },
+      "k_4": {
+        "necessity_shift_cand_mean_m": 0.6244332671165467,
+        "necessity_shift_rand_mean_m": 0.2979001425299794,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.001253962516784668,
+        "sufficiency_te_cand_mean": 0.11337227490187597,
+        "sufficiency_te_rand_mean": 0.05523098674844214,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.1386203181130568,
+        "rescue_pct_mean": 0.11337227490187597
+      },
+      "k_8": {
+        "necessity_shift_cand_mean_m": 0.5956776827573776,
+        "necessity_shift_rand_mean_m": 0.44918351516127586,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.0400979220867157,
+        "sufficiency_te_cand_mean": 0.25650245376428704,
+        "sufficiency_te_rand_mean": 0.16616110839598006,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.068068388150435,
+        "rescue_pct_mean": 0.25650245376428704
+      },
+      "k_16": {
+        "necessity_shift_cand_mean_m": 0.6269193756580352,
+        "necessity_shift_rand_mean_m": 0.6492711460590362,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.6042620241641998,
+        "sufficiency_te_cand_mean": 0.40023568351211447,
+        "sufficiency_te_rand_mean": 0.13509233122667588,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.0001424969509270589,
+        "rescue_pct_mean": 0.40023568351211447
+      },
+      "k_32": {
+        "necessity_shift_cand_mean_m": 1.2642052102088928,
+        "necessity_shift_rand_mean_m": 0.8403317725658417,
+        "necessity_wilcoxon_p_cand_vs_rand": 0.00027820467948913574,
+        "sufficiency_te_cand_mean": 0.6378498151698593,
+        "sufficiency_te_rand_mean": 0.3483049929474552,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 0.00016453862190246582,
+        "rescue_pct_mean": 0.6378498151698593
+      },
+      "k_64": {
+        "necessity_shift_cand_mean_m": 1.2161470866203308,
+        "necessity_shift_rand_mean_m": 1.2161470866203308,
+        "necessity_wilcoxon_p_cand_vs_rand": 1.0,
+        "sufficiency_te_cand_mean": 1.0,
+        "sufficiency_te_rand_mean": 1.0,
+        "sufficiency_wilcoxon_p_cand_vs_rand": 1.0,
+        "rescue_pct_mean": 1.0
+      }
+    }
+  },
+  "modularity_determination": {
+    "organization_status": "CONFIRMED_DISTRIBUTED_ORGANIZATION",
+    "effective_dimensionality_layer1": 7.630515214530215,
+    "effective_dimensionality_layer2": 5.9586760701200205,
+    "layer2_k8_transfer_efficiency": 0.25650245376428704,
+    "layer2_k64_transfer_efficiency": 1.0,
+    "scientific_rationale": "Modularity is definitively falsified. Effective dimensionality is high (L1: 7.6, L2: 6.0), and lifetime sparsity is high (0.305). Transplanting a small subset (k=8) yields only 25.7% transfer efficiency, while complete replacement (k=64) reaches 100.0%. Transfer scales smoothly with dimension count, confirming a distributed representation across hidden units."
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "manifest_version": "5.0.0",
+  "project": "Project Hephaestus",
+  "phase": "Phase 5: Forensic Mechanistic Reanalysis and Targeted Causal Identification",
+  "repository": "BrianHadianSTEI23/project-haphaestus",
+  "branch": "fix/interpretability",
+  "baseline_commit": "fa0d4f97abbe16de9980f7844db90a6921660324",
+  "host_environment": {
+    "os": "Linux 6.8.0-138-generic x86_64",
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "cuda_available": true,
+    "cuda_device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "mujoco_version": "3.17.0",
+    "mujoco_gl": "egl"
+  },
+  "checkpoint": {
+    "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+    "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+  },
+  "experiments": {
+    "task_conditioned_binding_v4": {
+      "script_path": "world_models_fpga/research/benchmarks/run_task_conditioned_binding_v4.py",
+      "script_sha256": "b41dbe357499c380b426f51bb1142e371bfa3bafa66121169555bdde4ee29fab",
+      "summary_path": "world_models_fpga/research/benchmarks/results/task_conditioned_binding_v4_summary.json",
+      "pairs_path": "world_models_fpga/research/benchmarks/results/task_conditioned_binding_v4_pairs.jsonl",
+      "model_comparison_path": "world_models_fpga/research/benchmarks/results/task_conditioned_binding_v4_model_comparison.csv",
+      "schema_path": "world_models_fpga/research/benchmarks/results/task_conditioned_binding_v4_schema.md",
+      "n_categorical_pairs": 50,
+      "n_categorical_scenes": 100,
+      "n_instance_pairs": 20,
+      "random_seed": 42,
+      "key_findings": {
+        "observed_dual_rate": 0.1600,
+        "permutation_null_mean": 0.1627,
+        "paired_permutation_p": 0.6300,
+        "interaction_magnitude_m": 0.3521,
+        "interaction_cosine_alignment": -0.3140,
+        "comp1_bilinear_mse": 0.004823,
+        "comp1_additive_mse": 0.020125,
+        "instance_binding_dual_rate": 0.0500
+      }
+    },
+    "task_conditioned_circuits_v4": {
+      "script_path": "world_models_fpga/research/circuits/run_task_conditioned_circuits_v4.py",
+      "script_sha256": "944c44ac4bd835098a27c866e39cfbc4a5201c2d6be1ae269fceac9e91e649ac",
+      "summary_path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v4_summary.json",
+      "pairs_path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v4_pairs.jsonl",
+      "activations_path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v4_activations.jsonl",
+      "schema_path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v4_schema.md",
+      "n_pairs": 50,
+      "discovery_pairs": 25,
+      "held_out_pairs": 25,
+      "random_seed": 42,
+      "key_findings": {
+        "layer1_effective_dim": 7.63,
+        "layer2_effective_dim": 5.96,
+        "layer2_k8_transfer_efficiency": 0.257,
+        "organization_verdict": "CONFIRMED_DISTRIBUTED_ORGANIZATION"
+      }
+    },
+    "ego_memory_mechanism_v4": {
+      "script_path": "world_models_fpga/research/circuits/run_ego_memory_mechanism_v4.py",
+      "script_sha256": "0e9d867a86b46b3bbf83f8cecc657f0fcbad02997faacd52f262846ff96712de",
+      "summary_path": "world_models_fpga/research/circuits/results/ego_memory_mechanism_v4_summary.json",
+      "pairs_path": "world_models_fpga/research/circuits/results/ego_memory_mechanism_v4_pairs.jsonl",
+      "steps_path": "world_models_fpga/research/circuits/results/ego_memory_mechanism_v4_steps.jsonl",
+      "schema_path": "world_models_fpga/research/circuits/results/ego_memory_mechanism_v4_schema.md",
+      "n_trajectories": 50,
+      "random_seed": 42,
+      "key_findings": {
+        "clean_zero_baseline_mae_m": 0.0239,
+        "clean_sensor_delta_mae_m": 0.0261,
+        "clean_action_pred_mae_m": 0.0177,
+        "clean_action_pred_r2": 0.5039,
+        "blackout_sensor_fixed_error_m": 1.2772,
+        "blackout_zero_fixed_error_m": 1.2799,
+        "sensor_vs_zero_tost_p": 0.0001,
+        "blackout_action_hold_error_m": 1.4439,
+        "blackout_oracle_hold_error_m": 1.4450
+      }
+    }
+  },
+  "test_suite": {
+    "total_tests": 64,
+    "passed": 64,
+    "failed": 0,
+    "execution_time_seconds": 34.25,
+    "log_path": "research/review_package/phase5/test_run.log"
+  }
+}

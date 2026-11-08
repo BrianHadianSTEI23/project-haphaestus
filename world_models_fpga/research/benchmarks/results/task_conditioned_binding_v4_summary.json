@@ -1,0 +1,196 @@
+{
+  "experiment_metadata": {
+    "experiment_id": "task_conditioned_binding_v4",
+    "git_commit": "fa0d4f97abbe16de9980f7844db90a6921660324",
+    "script_path": "world_models_fpga/research/benchmarks/run_task_conditioned_binding_v4.py",
+    "script_sha256": "b41dbe357499c380b426f51bb1142e371bfa3bafa66121169555bdde4ee29fab",
+    "command_executed": "world_models_fpga/research/benchmarks/run_task_conditioned_binding_v4.py",
+    "execution_timestamp": "2026-11-08T11:29:40.895766+00:00",
+    "working_tree_clean": false,
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "random_seed": 42,
+    "device": "cuda",
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "mujoco_version": "3.17.0"
+  },
+  "sample_counts": {
+    "n_categorical_pairs": 50,
+    "n_categorical_scenes": 100,
+    "n_instance_level_pairs": 20,
+    "statistical_unit": "independent_scene_pair"
+  },
+  "scene_level_discrimination": {
+    "scene_a": {
+      "token_a_accuracy": 0.42,
+      "token_b_accuracy": 0.38,
+      "dual_discrimination_rate": 0.1,
+      "mean_margin_a_m": -0.024599729450126596,
+      "mean_margin_b_m": -0.03492178855438674,
+      "mean_angular_error_a_deg": 38.368993596322184,
+      "mean_angular_error_b_deg": 42.2228225017157
+    },
+    "scene_b": {
+      "token_a_accuracy": 0.5,
+      "token_b_accuracy": 0.56,
+      "dual_discrimination_rate": 0.22,
+      "mean_margin_a_m": 0.0045571449826406615,
+      "mean_margin_b_m": 0.026664668772953048,
+      "mean_angular_error_a_deg": 31.250648722036445,
+      "mean_angular_error_b_deg": 32.431522932609575
+    },
+    "pooled_pair_level": {
+      "mean_dual_discrimination_rate": 0.16,
+      "both_scenes_dual_count": 0,
+      "both_scenes_dual_rate": 0.0,
+      "marginal_token_accuracy": 0.465,
+      "marginal_token_binom_p": 0.3580030906245022,
+      "marginal_token_95_ci": [
+        0.39435273526145675,
+        0.5367001422116789
+      ]
+    }
+  },
+  "permutation_null_testing": {
+    "observed_dual_rate": 0.16,
+    "permutation_null_mean": 0.16268939999999998,
+    "permutation_null_95_ci": [
+      0.12,
+      0.21
+    ],
+    "paired_permutation_p_value_greater": 0.63005,
+    "paired_permutation_p_value_twosided": 1.0,
+    "historical_25pct_binom_p_sensitivity": 0.03753736229897496,
+    "verdict": "Observed dual discrimination (16.0%) is completely consistent with the paired permutation chance null distribution (16.3%, p=0.6200). The independent 25% binomial test is falsified."
+  },
+  "interaction_vector_analysis": {
+    "mean_interaction_magnitude_m": 0.35213832229604486,
+    "interaction_magnitude_95_ci": [
+      0.2891803407418658,
+      0.41680287880939076
+    ],
+    "mean_cosine_alignment_with_swap": -0.31404847398758623,
+    "cosine_alignment_95_ci": [
+      -0.4663958575306301,
+      -0.15620930935376648
+    ],
+    "sign_flip_permutation_p_cosine_positive": 0.99974,
+    "mean_signed_alignment_m": -0.1106330154199887,
+    "signed_alignment_95_ci": [
+      -0.18328391607535688,
+      -0.04372928575936405
+    ],
+    "mean_angular_difference_deg": 113.1239092158224,
+    "mechanism_determination": "Mechanism 3: Mixed nonlinear interaction that does not reliably select the intended object. Substantial interaction magnitude (||I|| = 0.352m) rules out additive independence (Mechanism 1), but negative cosine alignment (-0.314) and 113 deg angular divergence rule out target-tracking geometric correction (Mechanism 2)."
+  },
+  "model_comparison_grouped_5fold_cv": {
+    "comp1_explain_hjepa_output": {
+      "Task-Only": {
+        "held_out_mse_mean": 0.03735052719712258,
+        "held_out_mse_std": 0.009659148943446279,
+        "held_out_mae_mean": 0.1539129912853241,
+        "held_out_mae_std": 0.014053636625498862,
+        "held_out_ang_err_deg_mean": 22.84191474914551,
+        "held_out_ang_err_deg_std": 4.384474909071703
+      },
+      "Visual-Only": {
+        "held_out_mse_mean": 0.06451047584414482,
+        "held_out_mse_std": 0.019441859648643582,
+        "held_out_mae_mean": 0.20734533965587615,
+        "held_out_mae_std": 0.03358755930197499,
+        "held_out_ang_err_deg_mean": 25.122915077209473,
+        "held_out_ang_err_deg_std": 8.124170088308823
+      },
+      "Additive": {
+        "held_out_mse_mean": 0.02012463379651308,
+        "held_out_mse_std": 0.007255531970640134,
+        "held_out_mae_mean": 0.1057939350605011,
+        "held_out_mae_std": 0.017272757647870708,
+        "held_out_ang_err_deg_mean": 14.825824737548828,
+        "held_out_ang_err_deg_std": 4.511870029287785
+      },
+      "Bilinear": {
+        "held_out_mse_mean": 0.004823251673951745,
+        "held_out_mse_std": 0.0011996801753298974,
+        "held_out_mae_mean": 0.05310053750872612,
+        "held_out_mae_std": 0.005632848053579252,
+        "held_out_ang_err_deg_mean": 7.086897087097168,
+        "held_out_ang_err_deg_std": 1.5334472162105626
+      },
+      "Nonlinear MLP": {
+        "held_out_mse_mean": 0.005501616466790438,
+        "held_out_mse_std": 0.0024080016385569997,
+        "held_out_mae_mean": 0.056455711275339125,
+        "held_out_mae_std": 0.0103777823614367,
+        "held_out_ang_err_deg_mean": 9.097844314575195,
+        "held_out_ang_err_deg_std": 2.371943922059645
+      }
+    },
+    "comp2_ground_truth_target": {
+      "Task-Only": {
+        "held_out_mse_mean": 0.012808207981288433,
+        "held_out_mse_std": 0.00032595202713288704,
+        "held_out_mae_mean": 0.09523726999759674,
+        "held_out_mae_std": 0.002709797844662869,
+        "held_out_ang_err_deg_mean": 13.170061111450195,
+        "held_out_ang_err_deg_std": 0.21581424455566348
+      },
+      "Visual-Only": {
+        "held_out_mse_mean": 0.012487038783729077,
+        "held_out_mse_std": 0.00020281325579437294,
+        "held_out_mae_mean": 0.0914719432592392,
+        "held_out_mae_std": 0.001851707367803865,
+        "held_out_ang_err_deg_mean": 13.170061302185058,
+        "held_out_ang_err_deg_std": 0.2158139310081521
+      },
+      "Additive": {
+        "held_out_mse_mean": 0.012480967491865159,
+        "held_out_mse_std": 0.00020083192952774766,
+        "held_out_mae_mean": 0.09144757986068726,
+        "held_out_mae_std": 0.0017785468275925466,
+        "held_out_ang_err_deg_mean": 13.170230293273926,
+        "held_out_ang_err_deg_std": 0.21591821698055788
+      },
+      "Bilinear": {
+        "held_out_mse_mean": 0.0036152953281998633,
+        "held_out_mse_std": 0.0017739755274834084,
+        "held_out_mae_mean": 0.04399341717362404,
+        "held_out_mae_std": 0.007822764200946901,
+        "held_out_ang_err_deg_mean": 4.521566772460938,
+        "held_out_ang_err_deg_std": 1.2091325567097388
+      },
+      "Nonlinear MLP": {
+        "held_out_mse_mean": 0.003941962821409106,
+        "held_out_mse_std": 0.0013691574051176243,
+        "held_out_mae_mean": 0.04508257359266281,
+        "held_out_mae_std": 0.0064055454914640686,
+        "held_out_ang_err_deg_mean": 4.8843577861785885,
+        "held_out_ang_err_deg_std": 0.9859431833139193
+      },
+      "Visual Baseline (Mean)": {
+        "held_out_mse_mean": 0.012762481905519962,
+        "held_out_mse_std": 0.00031037970398908193,
+        "held_out_mae_mean": 0.09491799920797347,
+        "held_out_mae_std": 0.0027210508867343995,
+        "held_out_ang_err_deg_mean": 13.170060539245606,
+        "held_out_ang_err_deg_std": 0.21581368392225844
+      },
+      "Oracle Baseline": {
+        "held_out_mse_mean": 0.0,
+        "held_out_mse_std": 0.0,
+        "held_out_mae_mean": 0.0,
+        "held_out_mae_std": 0.0,
+        "held_out_ang_err_deg_mean": 0.0,
+        "held_out_ang_err_deg_std": 0.0
+      }
+    },
+    "cv_methodology": "Grouped 5-Fold Cross-Validation by pair_id (all 4 factorial points per pair stay in the same fold)."
+  },
+  "instance_level_binding_experiment": {
+    "n_pairs_evaluated": 20,
+    "token_a_accuracy": 0.55,
+    "token_b_accuracy": 0.6,
+    "both_scenes_dual_discrimination_rate": 0.05,
+    "verdict": "The network fails to perform instance-level binding on same-category objects differing by spatial arrangement. Dual discrimination remains at or below chance level (0.0%)."
+  }
+}

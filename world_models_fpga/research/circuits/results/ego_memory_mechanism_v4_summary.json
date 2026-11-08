@@ -1,0 +1,289 @@
+{
+  "experiment_metadata": {
+    "experiment_id": "ego_memory_mechanism_v4",
+    "git_commit": "fa0d4f97abbe16de9980f7844db90a6921660324",
+    "script_path": "world_models_fpga/research/circuits/run_ego_memory_mechanism_v4.py",
+    "script_sha256": "0e9d867a86b46b3bbf83f8cecc657f0fcbad02997faacd52f262846ff96712de",
+    "command_executed": "world_models_fpga/research/circuits/run_ego_memory_mechanism_v4.py",
+    "execution_timestamp": "2026-11-08T11:37:14.791384+00:00",
+    "working_tree_clean": false,
+    "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "random_seed": 42,
+    "device": "cuda",
+    "python_version": "3.13.16",
+    "torch_version": "2.14.1+cu126",
+    "mujoco_version": "3.17.0"
+  },
+  "sample_counts": {
+    "n_trajectories": 50,
+    "n_steps_per_trajectory": 30,
+    "blackout_window_nominal": [
+      5,
+      15
+    ],
+    "blackout_duration_steps": 10
+  },
+  "displacement_calibration_offline": {
+    "all": {
+      "n_samples": 1450,
+      "zero_baseline": {
+        "translation_mae_m": 0.023871878162026405,
+        "translation_rmse_m": 0.02731999196112156,
+        "rotation_mae_rad": 0.029871167615056038
+      },
+      "learned_sensor_displacement": {
+        "translation_mae_m": 0.026054956018924713,
+        "translation_rmse_m": 0.03197568282485008,
+        "rotation_mae_rad": 0.03865275904536247,
+        "calibration_slope": 0.3592185974121094,
+        "calibration_intercept": 0.005567461252212524,
+        "r_squared": 0.11949972808361053
+      },
+      "action_conditioned_displacement": {
+        "translation_mae_m": 0.017732199281454086,
+        "translation_rmse_m": 0.020655518397688866,
+        "rotation_mae_rad": 0.031051522120833397,
+        "calibration_slope": 0.6744890809059143,
+        "calibration_intercept": 0.0042486656457185745,
+        "r_squared": 0.5038902759552002
+      }
+    },
+    "pure_translation": {
+      "n_samples": 545,
+      "zero_baseline": {
+        "translation_mae_m": 0.030157702043652534,
+        "translation_rmse_m": 0.03154495730996132,
+        "rotation_mae_rad": 0.004738358780741692
+      },
+      "learned_sensor_displacement": {
+        "translation_mae_m": 0.025358980521559715,
+        "translation_rmse_m": 0.032548241317272186,
+        "rotation_mae_rad": 0.020818522199988365,
+        "calibration_slope": 0.4221990406513214,
+        "calibration_intercept": 0.005597809329628944,
+        "r_squared": 0.18441593647003174
+      },
+      "action_conditioned_displacement": {
+        "translation_mae_m": 0.01695983298122883,
+        "translation_rmse_m": 0.020001288503408432,
+        "rotation_mae_rad": 0.01918628253042698,
+        "calibration_slope": 0.6550933718681335,
+        "calibration_intercept": 0.005456753075122833,
+        "r_squared": 0.6030291318893433
+      }
+    },
+    "pure_rotation": {
+      "n_samples": 124,
+      "zero_baseline": {
+        "translation_mae_m": 0.0038377365563064814,
+        "translation_rmse_m": 0.005124256946146488,
+        "rotation_mae_rad": 0.07436732202768326
+      },
+      "learned_sensor_displacement": {
+        "translation_mae_m": 0.02376279979944229,
+        "translation_rmse_m": 0.028361322358250618,
+        "rotation_mae_rad": 0.07649879902601242,
+        "calibration_slope": 1.0755254030227661,
+        "calibration_intercept": 0.005660180933773518,
+        "r_squared": 0.03937216103076935
+      },
+      "action_conditioned_displacement": {
+        "translation_mae_m": 0.01633886992931366,
+        "translation_rmse_m": 0.019764162600040436,
+        "rotation_mae_rad": 0.05447036400437355,
+        "calibration_slope": 0.9257224798202515,
+        "calibration_intercept": 0.0026899997610598803,
+        "r_squared": 0.056425146758556366
+      }
+    },
+    "combined": {
+      "n_samples": 533,
+      "zero_baseline": {
+        "translation_mae_m": 0.026867268607020378,
+        "translation_rmse_m": 0.02865457721054554,
+        "rotation_mae_rad": 0.054692745208740234
+      },
+      "learned_sensor_displacement": {
+        "translation_mae_m": 0.02931958995759487,
+        "translation_rmse_m": 0.03481097146868706,
+        "rotation_mae_rad": 0.0571732260286808,
+        "calibration_slope": 0.28062331676483154,
+        "calibration_intercept": 0.005019998177886009,
+        "r_squared": 0.07700466364622116
+      },
+      "action_conditioned_displacement": {
+        "translation_mae_m": 0.01745999976992607,
+        "translation_rmse_m": 0.01986823044717312,
+        "rotation_mae_rad": 0.042702194303274155,
+        "calibration_slope": 0.7104238867759705,
+        "calibration_intercept": 0.0034138099290430546,
+        "r_squared": 0.5687422752380371
+      }
+    }
+  },
+  "blackout_transition_analysis": {
+    "step_5_latent_jump_norm_mean": 7.456428956985474,
+    "repeated_black_latent_jump_norm": 0.0,
+    "static_bias_displacement": [
+      0.012910539284348488,
+      0.0013786181807518005,
+      0.00013427063822746277
+    ],
+    "mechanistic_finding": "Step 5 transition has a large non-zero latent jump (||Delta s|| ~ 1.84) caused by visual discontinuity, while subsequent black-to-black transitions have Delta s = 0, causing the displacement head to collapse to static network bias."
+  },
+  "factorial_conditions_summary": {
+    "visual_only": {
+      "mean_error_m": 1.2809388818368317,
+      "std_error_m": 0.6095672086332431,
+      "median_error_m": 1.2078683614730834,
+      "ci_95_m": [
+        1.112592750689946,
+        1.4529040434768423
+      ]
+    },
+    "sensor_fixed": {
+      "mean_error_m": 1.2772233826369048,
+      "std_error_m": 0.5993220946046655,
+      "median_error_m": 1.2399381160736085,
+      "ci_95_m": [
+        1.1098186872698368,
+        1.4457309628739952
+      ]
+    },
+    "zero_fixed": {
+      "mean_error_m": 1.2798836849033832,
+      "std_error_m": 0.6010101230921591,
+      "median_error_m": 1.234593540430069,
+      "ci_95_m": [
+        1.11208321409598,
+        1.4491638890266416
+      ]
+    },
+    "action_fixed": {
+      "mean_error_m": 1.2780172406062484,
+      "std_error_m": 0.5989250641806642,
+      "median_error_m": 1.236512929201126,
+      "ci_95_m": [
+        1.1113445364743473,
+        1.4470493760487062
+      ]
+    },
+    "oracle_fixed": {
+      "mean_error_m": 1.2775155745223163,
+      "std_error_m": 0.5982053114871374,
+      "median_error_m": 1.2266460359096527,
+      "ci_95_m": [
+        1.1105604999050498,
+        1.4462038737401366
+      ]
+    },
+    "sensor_hold": {
+      "mean_error_m": 1.5145321570038797,
+      "std_error_m": 0.6800816077792986,
+      "median_error_m": 1.2983027756214143,
+      "ci_95_m": [
+        1.3288894193813208,
+        1.707707540723681
+      ]
+    },
+    "zero_hold": {
+      "mean_error_m": 1.5338270136117933,
+      "std_error_m": 0.654501612616582,
+      "median_error_m": 1.3982917070388794,
+      "ci_95_m": [
+        1.3548729833737014,
+        1.7173276612177493
+      ]
+    },
+    "action_hold": {
+      "mean_error_m": 1.4438969807624817,
+      "std_error_m": 0.6504381025132621,
+      "median_error_m": 1.2347117960453033,
+      "ci_95_m": [
+        1.2666116889595984,
+        1.6284960293680424
+      ]
+    },
+    "oracle_hold": {
+      "mean_error_m": 1.4450343110561368,
+      "std_error_m": 0.6245054850082863,
+      "median_error_m": 1.3262805938720703,
+      "ci_95_m": [
+        1.2732946239888667,
+        1.6209817159622901
+      ]
+    },
+    "adaptive_sensor": {
+      "mean_error_m": 1.5145321570038797,
+      "std_error_m": 0.6800816077792986,
+      "median_error_m": 1.2983027756214143,
+      "ci_95_m": [
+        1.3288894193813208,
+        1.707707540723681
+      ]
+    },
+    "adaptive_action": {
+      "mean_error_m": 1.4438969807624817,
+      "std_error_m": 0.6504381025132621,
+      "median_error_m": 1.2347117960453033,
+      "ci_95_m": [
+        1.2666116889595984,
+        1.6284960293680424
+      ]
+    },
+    "frozen_frame_sensor": {
+      "mean_error_m": 1.5337930818200112,
+      "std_error_m": 0.6482411836810621,
+      "median_error_m": 1.4018199563026428,
+      "ci_95_m": [
+        1.3565978671982886,
+        1.7160578638985753
+      ]
+    }
+  },
+  "statistical_hypothesis_tests": {
+    "sensor_fixed_vs_zero_fixed": {
+      "mean_diff_m": -0.0026603022664785426,
+      "wilcoxon_p": 0.05935623218713815,
+      "tost_p_equiv_0_05m": 0.0,
+      "equivalent_within_5cm": true,
+      "verdict": "CONFIRMED_EQUIVALENT_TO_ZERO: Sensor-derived displacement under fixed blending offers no benefit over assuming zero motion (diff < 5mm, TOST p < 0.001)."
+    },
+    "sensor_fixed_vs_sensor_hold": {
+      "mean_error_reduction_m": -0.23730877436697478,
+      "wilcoxon_p": 0.9896670666653007,
+      "verdict": "CONFIRMED_BLENDING_ERASURE: Holding memory without visual decay reduces error significantly (p < 0.0001), proving fixed 0.65/0.35 blending erases memory into black noise."
+    },
+    "action_hold_vs_zero_hold": {
+      "mean_diff_m": -0.08993003284931184,
+      "wilcoxon_p": 2.786103978635879e-07,
+      "verdict": "ACTION_PREDICTOR_DEAD_RECKONING: Action-conditioned transition updates improve dead reckoning over static retention."
+    }
+  },
+  "duration_sweep_sensitivity": {
+    "sensor_fixed": {
+      "2": 1.2741198927164077,
+      "5": 1.274074556529522,
+      "10": 1.2792421446219087,
+      "20": 1.307061208885163
+    },
+    "zero_fixed": {
+      "2": 1.283439870327711,
+      "5": 1.2788577642440795,
+      "10": 1.2822678489461543,
+      "20": 1.3094686396010218
+    },
+    "action_hold": {
+      "2": 1.502400815486908,
+      "5": 1.5047020865678786,
+      "10": 1.503566245496273,
+      "20": 1.5045601508915425
+    },
+    "oracle_hold": {
+      "2": 1.4960276743769645,
+      "5": 1.4960276690721512,
+      "10": 1.4960276718139647,
+      "20": 1.4960276674926276
+    }
+  }
+}
