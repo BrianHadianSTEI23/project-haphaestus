@@ -155,22 +155,24 @@ def sample_random_subspaces(n_draws: int = 30, k: int = 8, dim: int = 32, seed: 
 
 class SubspaceTransformHook:
     """Intercepts visual encoder to apply projection-based subspace intervention."""
-    def __init__(self, model, mode="none", proj=None, mean_vec=None):
+    def __init__(self, model, mode="none", proj=None, mean_vec=None, noise_std=0.5, rng_seed=42):
         self.model = model
-        self.mode = mode  # 'none', 'ablate', 'retain', 'rescue'
+        self.mode = mode  # 'none', 'ablate', 'retain', 'corrupt_only', 'rescue'
         self.proj = torch.as_tensor(proj, dtype=torch.float32) if proj is not None else None
         self.mean_vec = torch.as_tensor(mean_vec, dtype=torch.float32) if mean_vec is not None else None
+        self.noise_std = float(noise_std)
+        self.rng = torch.Generator().manual_seed(rng_seed)
         self._orig_encode = getattr(model, "encode", getattr(model, "encoder", None))
 
     def __enter__(self):
-        if self.mode == "none" or self.proj is None or self.mean_vec is None:
+        if self.mode == "none":
             return self
 
         def _hooked_encode(x):
             z = self._orig_encode(x)
             dev = z.device
-            mu = self.mean_vec.to(dev).view(1, -1)
-            p = self.proj.to(dev)
+            mu = self.mean_vec.to(dev).view(1, -1) if self.mean_vec is not None else torch.zeros_like(z)
+            p = self.proj.to(dev) if self.proj is not None else None
             z_centered = z - mu
             if self.mode == "ablate":
                 # Remove subspace: z - P(z - mu)
@@ -178,9 +180,16 @@ class SubspaceTransformHook:
             elif self.mode == "retain":
                 # Retain ONLY subspace: mu + P(z - mu)
                 return mu + (z_centered @ p)
+            elif self.mode == "corrupt_only":
+                # Background corrupted baseline: z + eta
+                eta = torch.randn(z.shape, device=dev, generator=self.rng) * self.noise_std
+                return z + eta
             elif self.mode == "rescue":
-                # Rescue: restore subspace P from original z onto a perturbed baseline (mu)
-                return mu + (z_centered @ p)
+                # Genuine Rescue: Corrupt orthogonal complement (I - P) with eta,
+                # but RESTORE clean signal in candidate subspace P:
+                # z_rescue = z + eta(I - P) = z + eta - (eta @ P)
+                eta = torch.randn(z.shape, device=dev, generator=self.rng) * self.noise_std
+                return z + eta - (eta @ p)
             return z
 
         if hasattr(self.model, "encode"):
@@ -273,7 +282,7 @@ def evaluate_episodes(agent, task_specs: list[dict], track: str = "structured", 
 def main():
     parser = argparse.ArgumentParser(description="Rigorous Behavioral Circuit Necessity and Restoration Benchmark")
     parser.add_argument("--episodes", type=int, default=30, help="Episodes per circuit evaluation (N >= 30)")
-    parser.add_argument("--n-rand", type=int, default=30, help="Number of random 8D subspace draws (N = 30)")
+    parser.add_argument("--n-rand", type=int, default=50, help="Number of random 8D subspace draws (N >= 50)")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
@@ -375,44 +384,82 @@ def main():
     print(f"  Clean Agent (Structured): Success = {clean_res['success_rate']*100:5.1f}% | Col = {clean_res['collision_rate']*100:5.1f}% | GoalErr = {clean_res['mean_goal_error']:.3f}m")
     print(f"  Clean Agent (Track C):    Success = {clean_res_tc['success_rate']*100:5.1f}% | Col = {clean_res_tc['collision_rate']*100:5.1f}% | GoalErr = {clean_res_tc['mean_goal_error']:.3f}m")
 
-    # Evaluate ALL 30 Random 8D Subspace Controls (no slicing!)
-    print(f"\n--- 4. Running Matched Random 8D Subspace Controls (Full N = {args.n_rand} draws) ---")
-    rand_nec_drops = []
-    rand_suf_scores = []
+    # Evaluate Random 8D Subspace Controls strictly in matching tracks (Track C & Track B)
+    print(f"\n--- 4. Running Matched Random 8D Subspace Controls (N = {args.n_rand} draws in both Track C & Structured) ---")
+    rand_st_nec_drops = []
+    rand_st_suf_scores = []
+    rand_st_res_scores = []
+
+    rand_tc_nec_drops = []
+    rand_tc_suf_scores = []
+    rand_tc_res_scores = []
+
     for r_idx, p_r in enumerate(rand_subspaces_h):
+        # 1. Structured Track random controls
         with SubspaceTransformHook(agent_h.model, mode="ablate", proj=p_r, mean_vec=mean_h):
             r_nec = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
-            rand_nec_drops.append(float(clean_res["success_rate"] - r_nec["success_rate"]))
+            rand_st_nec_drops.append(float(clean_res["success_rate"] - r_nec["success_rate"]))
 
         with SubspaceTransformHook(agent_h.model, mode="retain", proj=p_r, mean_vec=mean_h):
             r_suf = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
-            rand_suf_scores.append(float(r_suf["success_rate"]))
+            rand_st_suf_scores.append(float(r_suf["success_rate"]))
 
-    mean_rand_nec_drop = float(np.mean(rand_nec_drops))
-    std_rand_nec_drop = float(np.std(rand_nec_drops, ddof=1))
-    mean_rand_suf_score = float(np.mean(rand_suf_scores))
-    std_rand_suf_score = float(np.std(rand_suf_scores, ddof=1))
-    ci95_rand_drop = float(1.96 * std_rand_nec_drop / np.sqrt(len(rand_nec_drops)))
-    print(f"  Random 8D Control (N={len(rand_nec_drops)}): Mean Nec Drop = {mean_rand_nec_drop*100:5.1f}% (+/- {ci95_rand_drop*100:.1f}%) | Mean Retained Suf = {mean_rand_suf_score*100:5.1f}%")
+        with SubspaceTransformHook(agent_h.model, mode="rescue", proj=p_r, mean_vec=mean_h):
+            r_res = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
+            rand_st_res_scores.append(float(r_res["success_rate"]))
+
+        # 2. Track C Observation random controls
+        with SubspaceTransformHook(agent_h_track_c.model, mode="ablate", proj=p_r, mean_vec=mean_h):
+            r_tc_nec = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
+            rand_tc_nec_drops.append(float(clean_res_tc["success_rate"] - r_tc_nec["success_rate"]))
+
+        with SubspaceTransformHook(agent_h_track_c.model, mode="retain", proj=p_r, mean_vec=mean_h):
+            r_tc_suf = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
+            rand_tc_suf_scores.append(float(r_tc_suf["success_rate"]))
+
+        with SubspaceTransformHook(agent_h_track_c.model, mode="rescue", proj=p_r, mean_vec=mean_h):
+            r_tc_res = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
+            rand_tc_res_scores.append(float(r_tc_res["success_rate"]))
+
+    # Summary statistics for both regimes
+    mean_st_nec = float(np.mean(rand_st_nec_drops))
+    std_st_nec = float(np.std(rand_st_nec_drops, ddof=1))
+    mean_st_suf = float(np.mean(rand_st_suf_scores))
+    mean_st_res = float(np.mean(rand_st_res_scores))
+
+    mean_tc_nec = float(np.mean(rand_tc_nec_drops))
+    std_tc_nec = float(np.std(rand_tc_nec_drops, ddof=1))
+    mean_tc_suf = float(np.mean(rand_tc_suf_scores))
+    mean_tc_res = float(np.mean(rand_tc_res_scores))
+
+    print(f"  [Structured Random Controls] Mean Nec Drop = {mean_st_nec*100:5.1f}% (+/- {1.96*std_st_nec/np.sqrt(len(rand_st_nec_drops))*100:.1f}%) | Mean Suf = {mean_st_suf*100:5.1f}% | Mean Rescue = {mean_st_res*100:5.1f}%")
+    print(f"  [Track C Random Controls]    Mean Nec Drop = {mean_tc_nec*100:5.1f}% (+/- {1.96*std_tc_nec/np.sqrt(len(rand_tc_nec_drops))*100:.1f}%) | Mean Suf = {mean_tc_suf*100:5.1f}% | Mean Rescue = {mean_tc_res*100:5.1f}%")
+
+    # Evaluate corrupt-only baseline (no rescue) in both tracks
+    with SubspaceTransformHook(agent_h.model, mode="corrupt_only", mean_vec=mean_h):
+        corrupt_res_st = evaluate_episodes(agent_h, task_specs, track="structured", max_steps=45)
+    with SubspaceTransformHook(agent_h_track_c.model, mode="corrupt_only", mean_vec=mean_h):
+        corrupt_res_tc = evaluate_episodes(agent_h_track_c, task_specs, track="observation", max_steps=45)
+    print(f"  [Corrupted Baseline] Structured: {corrupt_res_st['success_rate']*100:5.1f}% | Track C: {corrupt_res_tc['success_rate']*100:5.1f}%")
 
     # 5. Evaluate Circuit Candidates
     print("\n--- 5. Evaluating Targeted Circuit Interventions ---")
     circuit_targets = [
-        # (cid, name, proj, dims, eval_track, target_agent, mean_vec, unrel_proj)
-        ("C1_target_grounding_track_c", "C1 Visual Target Grounding (Track C Observation)", c1_sub_h["p_axis"], c1_sub_h["axis_dims"], "observation", agent_h_track_c, mean_h, unrel_sub_h["p_axis"], clean_res_tc),
-        ("C2_axis_aligned", "C2 Ego Step Displacement (Axis-Aligned Top-8)", c2_sub_h["p_axis"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res),
-        ("C2_rotated_pca", "C2 Ego Step Displacement (Rotated PCA Subspace)", c2_sub_h["p_pca"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res),
-        ("C2_multivariate_reg", "C2 Ego Step Displacement (Multivariate Regression)", c2_sub_h["p_reg"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res),
-        ("C3_obstacle_risk_hjepa", "C3 Obstacle Collision Risk (H-JEPA Native Space)", c3_sub_h["p_axis"], c3_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res),
-        ("C4_forward_dynamics_hjepa", "C4 Forward Dynamics Transition Delta (H-JEPA Native Space)", c4_sub_h["p_axis"], c4_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res),
-        ("Unrelated_Color_Control", "Within-Model Unrelated Control (Color Nuisance)", unrel_sub_h["p_axis"], unrel_sub_h["axis_dims"], "structured", agent_h, mean_h, c1_sub_h["p_axis"], clean_res),
+        # (cid, name, proj, dims, eval_track, target_agent, mean_vec, unrel_proj, cur_clean, cur_corrupt, rand_drops, rand_sufs, rand_ress, mean_rand_drop, std_rand_drop, mean_rand_suf, mean_rand_res)
+        ("C1_target_grounding_track_c", "C1 Visual Target Grounding (Track C Observation)", c1_sub_h["p_axis"], c1_sub_h["axis_dims"], "observation", agent_h_track_c, mean_h, unrel_sub_h["p_axis"], clean_res_tc, corrupt_res_tc, rand_tc_nec_drops, rand_tc_suf_scores, rand_tc_res_scores, mean_tc_nec, std_tc_nec, mean_tc_suf, mean_tc_res),
+        ("C2_axis_aligned", "C2 Ego Step Displacement (Axis-Aligned Top-8)", c2_sub_h["p_axis"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
+        ("C2_rotated_pca", "C2 Ego Step Displacement (Rotated PCA Subspace)", c2_sub_h["p_pca"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
+        ("C2_multivariate_reg", "C2 Ego Step Displacement (Multivariate Regression)", c2_sub_h["p_reg"], c2_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
+        ("C3_obstacle_risk_hjepa", "C3 Obstacle Collision Risk (H-JEPA Native Space)", c3_sub_h["p_axis"], c3_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
+        ("C4_forward_dynamics_hjepa", "C4 Forward Dynamics Transition Delta (H-JEPA Native Space)", c4_sub_h["p_axis"], c4_sub_h["axis_dims"], "structured", agent_h, mean_h, unrel_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
+        ("Unrelated_Color_Control", "Within-Model Unrelated Control (Color Nuisance)", unrel_sub_h["p_axis"], unrel_sub_h["axis_dims"], "structured", agent_h, mean_h, c1_sub_h["p_axis"], clean_res, corrupt_res_st, rand_st_nec_drops, rand_st_suf_scores, rand_st_res_scores, mean_st_nec, std_st_nec, mean_st_suf, mean_st_res),
     ]
 
     all_circuit_results = []
     necessity_payload = {}
     sufficiency_payload = {}
 
-    for cid, cname, proj, dims, eval_track, cur_agent, cur_mean, p_unrelated, cur_clean in circuit_targets:
+    for cid, cname, proj, dims, eval_track, cur_agent, cur_mean, p_unrelated, cur_clean, cur_corrupt, rand_drops, rand_sufs, rand_ress, mean_rand_nec_drop, std_rand_nec_drop, mean_rand_suf_score, mean_rand_res_score in circuit_targets:
         print(f"\n  Testing [{cid}: {cname}] in Track '{eval_track}'...")
         # 1. Targeted Ablation (Necessity)
         with SubspaceTransformHook(cur_agent.model, mode="ablate", proj=proj, mean_vec=cur_mean):
@@ -434,25 +481,30 @@ def main():
             unrel_res = evaluate_episodes(cur_agent, task_specs, track=eval_track, max_steps=45)
             unrel_drop = float(cur_clean["success_rate"] - unrel_res["success_rate"])
 
-        # Selectivity Gain vs random control
+        # Selectivity Gain vs matching random control
         sel_gain_nec = float(nec_drop - mean_rand_nec_drop)
         sel_gain_suf = float(suf_score - mean_rand_suf_score)
+        sel_gain_res = float(res_score - mean_rand_res_score)
         sel_gain_unrel = float(nec_drop - unrel_drop)
 
         # Statistical classification against empirical random distribution
         z_score = float((nec_drop - mean_rand_nec_drop) / (std_rand_nec_drop + 1e-8))
-        percentile = float(np.mean([1.0 if r_d <= nec_drop else 0.0 for r_d in rand_nec_drops]))
+        n_exceed = sum(1 for r_d in rand_drops if r_d >= nec_drop)
+        p_val_nec = float((n_exceed + 1) / (len(rand_drops) + 1))
 
-        if sel_gain_nec > 0.05 and sel_gain_unrel > 0.05 and z_score > 1.645:
+        n_exceed_res = sum(1 for r_r in rand_ress if r_r >= res_score)
+        p_val_res = float((n_exceed_res + 1) / (len(rand_ress) + 1))
+
+        if sel_gain_nec > 0.05 and sel_gain_unrel > 0.05 and p_val_nec <= 0.05:
             verdict = "SELECTIVE_CAUSAL_CIRCUIT"
         elif sel_gain_nec < -0.02 or z_score < -1.0:
             verdict = "FALSIFIED_NON_SELECTIVE"
         else:
             verdict = "UNRESOLVED_NON_SELECTIVE"
 
-        print(f"    Clean: {cur_clean['success_rate']*100:5.1f}% | Ablated: {nec_res['success_rate']*100:5.1f}% | NecDrop: {nec_drop*100:5.1f}%")
-        print(f"    Random Drop: {mean_rand_nec_drop*100:5.1f}% | Selectivity Gain: {sel_gain_nec*100:+5.1f}% (z={z_score:+.2f}, pctl={percentile*100:.1f}%)")
-        print(f"    Unrelated Control Drop: {unrel_drop*100:5.1f}% | Retained Suf: {suf_score*100:5.1f}% | Rescued: {res_score*100:5.1f}%")
+        print(f"    Clean: {cur_clean['success_rate']*100:5.1f}% | Corrupt: {cur_corrupt['success_rate']*100:5.1f}% | Ablated: {nec_res['success_rate']*100:5.1f}% | NecDrop: {nec_drop*100:5.1f}%")
+        print(f"    Random Drop: {mean_rand_nec_drop*100:5.1f}% | Selectivity Gain: {sel_gain_nec*100:+5.1f}% (p_rand={p_val_nec:.4f}, z={z_score:+.2f})")
+        print(f"    Retained Suf: {suf_score*100:5.1f}% (rand={mean_rand_suf_score*100:5.1f}%) | Rescued: {res_score*100:5.1f}% (rand={mean_rand_res_score*100:5.1f}%, p_res={p_val_res:.4f})")
         print(f"    Verdict: {verdict}")
 
         rec_entry = {
@@ -461,18 +513,22 @@ def main():
             "track": eval_track,
             "dimensions": dims,
             "clean_success_rate": cur_clean["success_rate"],
+            "corrupted_baseline_success_rate": cur_corrupt["success_rate"],
             "ablated_success_rate": nec_res["success_rate"],
             "necessity_drop": nec_drop,
             "mean_random_control_drop": mean_rand_nec_drop,
             "random_control_std": std_rand_nec_drop,
             "selectivity_gain_vs_random": sel_gain_nec,
+            "empirical_randomization_p_value": p_val_nec,
             "unrelated_control_drop": unrel_drop,
             "selectivity_gain_vs_unrelated": sel_gain_unrel,
             "z_score_vs_random": z_score,
-            "percentile_vs_random": percentile,
             "sufficiency_retained_success": suf_score,
             "rescue_restored_success": res_score,
+            "rescue_selectivity_gain": sel_gain_res,
+            "rescue_empirical_p_value": p_val_res,
             "mean_random_sufficiency": mean_rand_suf_score,
+            "mean_random_rescue": mean_rand_res_score,
             "final_verdict": verdict,
             "raw_records": {
                 "clean": cur_clean["records"],
@@ -489,6 +545,7 @@ def main():
             "necessity_drop": nec_drop,
             "random_control_drop": mean_rand_nec_drop,
             "selectivity_gain": sel_gain_nec,
+            "empirical_p_value": p_val_nec,
             "verdict": verdict,
             "records": nec_res["records"],
         }
@@ -498,13 +555,18 @@ def main():
             "retained_success_rate": suf_score,
             "rescue_success_rate": res_score,
             "random_control_retained": mean_rand_suf_score,
+            "random_control_rescue": mean_rand_res_score,
+            "rescue_empirical_p_value": p_val_res,
             "verdict": verdict,
             "records": suf_res["records"],
         }
 
     # Build execution metadata
+    this_script = Path(__file__).resolve()
     metadata = {
-        "command_executed": f"python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes {args.episodes} --n-rand {args.n_rand}",
+        "script_path": str(this_script.relative_to(repo_root)),
+        "script_sha256": _sha256(this_script),
+        "command_executed": f"python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes {args.episodes} --n-rand {args.n_rand} --device {args.device}",
         "execution_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "git_commit": _git_sha(),
         "working_tree_clean": _git_clean(),
@@ -522,6 +584,7 @@ def main():
             "n_random_subspace_draws": args.n_rand,
             "subspace_dimension": 8,
             "max_steps": 45,
+            "information_regimes": "Strictly matched: Track C random controls for C1; Structured random controls for C2-C4",
         },
         "environment": {
             "python": sys.version.split()[0],
@@ -533,13 +596,21 @@ def main():
     full_artifact = {
         "execution_metadata": metadata,
         "random_subspace_controls": {
-            "n_draws_evaluated": len(rand_nec_drops),
-            "mean_necessity_drop": mean_rand_nec_drop,
-            "std_necessity_drop": std_rand_nec_drop,
-            "ci95_necessity_drop": ci95_rand_drop,
-            "mean_sufficiency_score": mean_rand_suf_score,
-            "std_sufficiency_score": std_rand_suf_score,
-            "individual_drops": rand_nec_drops,
+            "n_draws_evaluated": len(rand_st_nec_drops),
+            "structured_regime": {
+                "mean_necessity_drop": mean_st_nec,
+                "std_necessity_drop": std_st_nec,
+                "mean_sufficiency_score": mean_st_suf,
+                "mean_rescue_score": mean_st_res,
+                "individual_drops": rand_st_nec_drops,
+            },
+            "track_c_regime": {
+                "mean_necessity_drop": mean_tc_nec,
+                "std_necessity_drop": std_tc_nec,
+                "mean_sufficiency_score": mean_tc_suf,
+                "mean_rescue_score": mean_tc_res,
+                "individual_drops": rand_tc_nec_drops,
+            },
         },
         "circuits": all_circuit_results,
     }

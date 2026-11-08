@@ -35,6 +35,7 @@ sys.path.insert(0, str(pkg_root))
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 from scipy.stats import binom
 
 from env.amr_env import JetAutoEnv
@@ -42,7 +43,52 @@ from models.h_jepa import HJEPAModel
 from models.le_world_model import LeWorldModel
 from models.baseline_policy import BaselineNavigationPolicy
 from research.benchmarks.model_wrappers import BaselineAgent, HJEPAAgent, LeWMAgent
-from research.datasets.generation.capability_tasks import generate_task_specification, CANONICAL_OBSTACLES
+from research.datasets.generation.capability_tasks import (
+    CANONICAL_OBSTACLES,
+    generate_task_specification,
+    get_waypoint_for_relation,
+)
+
+
+def assert_task_spec_valid(
+    spec: dict,
+    clearance_thresh: float = 0.45,
+    min_obs_sep: float = 0.30,
+    arena_bounds: tuple[float, float] = (-1.85, 1.85),
+) -> None:
+    """Rigorous geometric validation of task specification."""
+    init_xy = np.asarray(spec["initial_pose"][:2], dtype=np.float32)
+    assert (
+        arena_bounds[0] <= init_xy[0] <= arena_bounds[1]
+        and arena_bounds[0] <= init_xy[1] <= arena_bounds[1]
+    ), f"Initial pose {init_xy} out of bounds {arena_bounds}"
+
+    wps = spec.get("waypoints", [])
+    assert len(wps) > 0, "No waypoints in spec"
+    final_wp = np.asarray(wps[-1][:2], dtype=np.float32)
+    assert (
+        arena_bounds[0] <= final_wp[0] <= arena_bounds[1]
+        and arena_bounds[0] <= final_wp[1] <= arena_bounds[1]
+    ), f"Final waypoint {final_wp} out of bounds {arena_bounds}"
+
+    obs_dict = spec.get("obstacles", {})
+    obs_positions = [np.asarray(o["pos"][:2], dtype=np.float32) for o in obs_dict.values()]
+
+    # Waypoint clearance from all obstacle centers
+    for i, o_pos in enumerate(obs_positions):
+        d_wp = float(np.linalg.norm(final_wp - o_pos))
+        assert d_wp >= clearance_thresh, f"Waypoint {final_wp} too close to obstacle {i} at {o_pos}: dist={d_wp:.3f} < {clearance_thresh}"
+
+    # Initial pose clearance from all obstacle centers
+    for i, o_pos in enumerate(obs_positions):
+        d_init = float(np.linalg.norm(init_xy - o_pos))
+        assert d_init >= clearance_thresh, f"Initial pose {init_xy} too close to obstacle {i} at {o_pos}: dist={d_init:.3f} < {clearance_thresh}"
+
+    # Inter-obstacle separation
+    for i in range(len(obs_positions)):
+        for j in range(i + 1, len(obs_positions)):
+            d_obs = float(np.linalg.norm(obs_positions[i] - obs_positions[j]))
+            assert d_obs >= min_obs_sep, f"Obstacle overlap: obs {i} and {j} separated by {d_obs:.3f} < {min_obs_sep}"
 
 
 def _sha256(path: Path) -> str:
@@ -216,6 +262,7 @@ def main():
     for i in range(n_eps):
         spec = generate_task_specification("object_grounding", "easy", seed_idx=6100 + i)
         spec["episode_id"] = f"nom_{i:02d}"
+        assert_task_spec_valid(spec)
         nominal_specs.append(spec)
 
     res_nom_h = evaluate_suite_track_c(agent_h, nominal_specs)
@@ -227,39 +274,71 @@ def main():
 
     nom_h_succ = [r["success"] for r in res_nom_h["records"]]
 
-    # --- 2. Appearance Nuisance: Floor Texture & Illumination ---
-    print("\n--- 2. Evaluating Appearance Nuisance (Floor & Lighting) ---")
-    nuisance_specs = []
+    # --- 2A. Appearance Nuisance: Floor Texture Only ---
+    print("\n--- 2A. Evaluating Floor Appearance Nuisance (Geometry & Light Constant) ---")
+    floor_specs = []
     for i in range(n_eps):
         spec = copy.deepcopy(nominal_specs[i])
-        spec["episode_id"] = f"nuisance_{i:02d}"
+        spec["episode_id"] = f"nuis_floor_{i:02d}"
         spec["floor_rgba"] = [0.15, 0.20, 0.35, 1.0]  # dark slate/blue floor
-        spec["light_diffuse_scale"] = 0.7  # 30% ambient lighting drop
-        nuisance_specs.append(spec)
+        assert_task_spec_valid(spec)
+        floor_specs.append(spec)
 
-    res_nuis_h = evaluate_suite_track_c(agent_h, nuisance_specs)
-    nuis_h_succ = [r["success"] for r in res_nuis_h["records"]]
-    pair_nuis = _paired_contingency(nom_h_succ, nuis_h_succ)
-    print(f"  [H-JEPA Nuisance]  Succ: {res_nuis_h['success_count']}/{n_eps} ({res_nuis_h['success_rate']*100:5.1f}%) | Delta: {pair_nuis['mean_diff']*100:+5.1f}% [CI95: {pair_nuis['ci95_low']*100:+5.1f}%, {pair_nuis['ci95_high']*100:+5.1f}%] | p={pair_nuis['mcnemar_exact_p_value']:.4f}")
+    res_floor_h = evaluate_suite_track_c(agent_h, floor_specs)
+    floor_h_succ = [r["success"] for r in res_floor_h["records"]]
+    pair_floor = _paired_contingency(nom_h_succ, floor_h_succ)
+    print(f"  [H-JEPA Floor Nuisance] Succ: {res_floor_h['success_count']}/{n_eps} ({res_floor_h['success_rate']*100:5.1f}%) | Delta: {pair_floor['mean_diff']*100:+5.1f}% [CI95: {pair_floor['ci95_low']*100:+5.1f}%, {pair_floor['ci95_high']*100:+5.1f}%] | p={pair_floor['mcnemar_exact_p_value']:.4f}")
 
-    # --- 3. Semantically Relevant Appearance: Color Swap with Distractor ---
-    print("\n--- 3. Evaluating Semantically Relevant Appearance (Color Swap) ---")
+    # --- 2B. Appearance Nuisance: Illumination Only ---
+    print("\n--- 2B. Evaluating Illumination Nuisance (Geometry & Floor Constant) ---")
+    illum_specs = []
+    for i in range(n_eps):
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"nuis_illum_{i:02d}"
+        spec["light_diffuse_scale"] = 0.50  # 50% lighting reduction
+        assert_task_spec_valid(spec)
+        illum_specs.append(spec)
+
+    res_illum_h = evaluate_suite_track_c(agent_h, illum_specs)
+    illum_h_succ = [r["success"] for r in res_illum_h["records"]]
+    pair_illum = _paired_contingency(nom_h_succ, illum_h_succ)
+    print(f"  [H-JEPA Illum Nuisance] Succ: {res_illum_h['success_count']}/{n_eps} ({res_illum_h['success_rate']*100:5.1f}%) | Delta: {pair_illum['mean_diff']*100:+5.1f}% [CI95: {pair_illum['ci95_low']*100:+5.1f}%, {pair_illum['ci95_high']*100:+5.1f}%] | p={pair_illum['mcnemar_exact_p_value']:.4f}")
+
+    # --- 2C. Appearance Nuisance: Target Object Appearance Only ---
+    print("\n--- 2C. Evaluating Target Appearance Nuisance (Floor & Lighting Constant) ---")
+    obj_app_specs = []
+    for i in range(n_eps):
+        spec = copy.deepcopy(nominal_specs[i])
+        spec["episode_id"] = f"nuis_obj_app_{i:02d}"
+        spec["color_mutations"] = {"obs_yellow_cyl": [0.85, 0.15, 0.85, 1.0]}  # magenta target cylinder
+        assert_task_spec_valid(spec)
+        obj_app_specs.append(spec)
+
+    res_obj_app_h = evaluate_suite_track_c(agent_h, obj_app_specs)
+    obj_app_h_succ = [r["success"] for r in res_obj_app_h["records"]]
+    pair_obj_app = _paired_contingency(nom_h_succ, obj_app_h_succ)
+    print(f"  [H-JEPA Obj Appearance] Succ: {res_obj_app_h['success_count']}/{n_eps} ({res_obj_app_h['success_rate']*100:5.1f}%) | Delta: {pair_obj_app['mean_diff']*100:+5.1f}% [CI95: {pair_obj_app['ci95_low']*100:+5.1f}%, {pair_obj_app['ci95_high']*100:+5.1f}%] | p={pair_obj_app['mcnemar_exact_p_value']:.4f}")
+
+    # --- 3. Semantically Relevant Appearance: Color-Defined Semantic Targeting (Experiment B) ---
+    print("\n--- 3. Evaluating Color-Defined Semantic Targeting (Color Swap with Distractor) ---")
     sem_specs = []
     for i in range(n_eps):
         spec = copy.deepcopy(nominal_specs[i])
         spec["episode_id"] = f"sem_color_{i:02d}"
-        target = spec.get("target_key", "yellow_cylinder")
-        # Swap colors between target cylinder (yellow) and distractor cylinder (blue)
         # Target cylinder painted blue, distractor cylinder painted yellow
         spec["color_mutations"] = {
             "obs_yellow_cyl": [0.2, 0.4, 0.85, 1.0],  # blue
             "obs_blue_cyl": [0.95, 0.85, 0.1, 1.0],   # yellow
         }
-        # Update waypoint to the cylinder that is now yellow (obs_blue_cyl pos)
-        if "obs_blue_cyl" in [o.get("geom_name") for o in spec.get("obstacles", {}).values()]:
-            for o in spec["obstacles"].values():
-                if o.get("geom_name") == "obs_blue_cyl":
-                    spec["waypoints"] = [o["pos"].copy()]
+        # The agent task instruction is to target the yellow object.
+        # Since obs_blue_cyl is now physically yellow, the approach waypoint is recomputed
+        # with clearance in front of obs_blue_cyl.
+        obs = spec.get("obstacles", {})
+        if "blue_cylinder" in obs:
+            t_pos = obs["blue_cylinder"]["pos"]
+            new_wp = get_waypoint_for_relation(t_pos, "approach", spec["initial_pose"], clearance=0.60)
+            spec["waypoints"] = [new_wp]
+        assert_task_spec_valid(spec)
         sem_specs.append(spec)
 
     res_sem_h = evaluate_suite_track_c(agent_h, sem_specs)
@@ -280,7 +359,10 @@ def main():
             pos_r = obs["red_box"]["pos"].copy()
             obs["yellow_cylinder"]["pos"] = pos_r
             obs["red_box"]["pos"] = pos_y
-            spec["waypoints"] = [pos_r.copy()]  # target is physically at pos_r now
+            # Recompute valid approach waypoint with clearance in front of new target position
+            new_wp = get_waypoint_for_relation(pos_r, "approach", spec["initial_pose"], clearance=0.60)
+            spec["waypoints"] = [new_wp]
+        assert_task_spec_valid(spec)
         rearrange_specs.append(spec)
 
     res_rearr_h = evaluate_suite_track_c(agent_h, rearrange_specs)
@@ -293,26 +375,38 @@ def main():
     rng_layout = np.random.default_rng(777)
     rand_specs = []
     for i in range(n_eps):
-        spec = copy.deepcopy(nominal_specs[i])
-        spec["episode_id"] = f"rand_layout_{i:02d}"
-        for k, o_dict in spec.get("obstacles", {}).items():
-            delta_xy = rng_layout.uniform(-0.35, 0.35, size=2)
-            o_dict["pos"][:2] = np.clip(o_dict["pos"][:2] + delta_xy, -1.8, 1.8)
-        # Update target waypoint to new target position
-        t_key = spec.get("target_key", "yellow_cylinder")
-        if t_key in spec.get("obstacles", {}):
-            spec["waypoints"] = [spec["obstacles"][t_key]["pos"].copy()]
-        rand_specs.append(spec)
+        valid = False
+        for _ in range(100):
+            spec = copy.deepcopy(nominal_specs[i])
+            spec["episode_id"] = f"rand_layout_{i:02d}"
+            for k, o_dict in spec.get("obstacles", {}).items():
+                delta_xy = rng_layout.uniform(-0.25, 0.25, size=2)
+                o_dict["pos"][:2] = np.clip(o_dict["pos"][:2] + delta_xy, -1.7, 1.7)
+            t_key = spec.get("target_key", "yellow_cylinder")
+            if t_key in spec.get("obstacles", {}):
+                t_pos = spec["obstacles"][t_key]["pos"]
+                wp = get_waypoint_for_relation(t_pos, spec.get("semantic_relation", "approach"), spec["initial_pose"], clearance=0.60)
+                spec["waypoints"] = [wp]
+            try:
+                assert_task_spec_valid(spec)
+                valid = True
+                rand_specs.append(spec)
+                break
+            except AssertionError:
+                continue
+        assert valid, f"Could not generate geometrically valid randomized layout for ep {i}"
 
     res_rand_h = evaluate_suite_track_c(agent_h, rand_specs)
     rand_h_succ = [r["success"] for r in res_rand_h["records"]]
     pair_rand = _paired_contingency(nom_h_succ, rand_h_succ)
     print(f"  [H-JEPA Layout]    Succ: {res_rand_h['success_count']}/{n_eps} ({res_rand_h['success_rate']*100:5.1f}%) | Delta: {pair_rand['mean_diff']*100:+5.1f}% [CI95: {pair_rand['ci95_low']*100:+5.1f}%, {pair_rand['ci95_high']*100:+5.1f}%] | p={pair_rand['mcnemar_exact_p_value']:.4f}")
 
-    # --- 6. Rigid SE(2) Global Transformation (90, 180, 270 deg) ---
-    print("\n--- 6. Evaluating Rigid SE(2) Global Transformations ---")
+    # --- 6. Rigid SE(2) Global Transformation (90, 180, 270 deg) & Latent Equivariance ---
+    print("\n--- 6. Evaluating Rigid SE(2) Global Transformations & Latent Equivariance ---")
     se2_angles = [np.pi / 2, np.pi, -np.pi / 2]
     se2_results = {}
+    latent_equiv_results = {}
+
     for ang in se2_angles:
         deg = int(round(np.degrees(ang)))
         c_a, s_a = np.cos(ang), np.sin(ang)
@@ -322,22 +416,20 @@ def main():
         for i in range(n_eps):
             spec = copy.deepcopy(nominal_specs[i])
             spec["episode_id"] = f"se2_{deg:+d}_{i:02d}"
-            # Transform initial pose
             p = spec["initial_pose"]
             new_xy = R @ p[:2]
             spec["initial_pose"] = np.array([new_xy[0], new_xy[1], p[2] + ang], dtype=np.float32)
 
-            # Transform all obstacles
             for k, o_dict in spec.get("obstacles", {}).items():
                 o_xy = R @ o_dict["pos"][:2]
                 o_dict["pos"] = np.array([o_xy[0], o_xy[1], o_dict["pos"][2]], dtype=np.float32)
 
-            # Transform waypoints
             wps = []
             for wp in spec.get("waypoints", []):
                 w_xy = R @ wp[:2]
-                wps.append(np.array([w_xy[0], w_xy[1], wp[2]], dtype=np.float32))
+                wps.append(np.array([w_xy[0], w_xy[1], wp[2] + ang], dtype=np.float32))
             spec["waypoints"] = wps
+            assert_task_spec_valid(spec)
             se2_specs.append(spec)
 
         res_se2_h = evaluate_suite_track_c(agent_h, se2_specs)
@@ -352,8 +444,63 @@ def main():
         }
         print(f"  [SE(2) {deg:+4d} deg] Succ: {res_se2_h['success_count']}/{n_eps} ({res_se2_h['success_rate']*100:5.1f}%) | Delta: {pair_se2['mean_diff']*100:+5.1f}% | p={pair_se2['mcnemar_exact_p_value']:.4f}")
 
+    # Latent SE(2) Equivariance vs Behavioral Rotation Analysis
+    print("\n--- Measuring Latent Transformation under Global Rigid vs Egocentric Rotation ---")
+    env_eval = JetAutoEnv()
+    cos_sims_global = []
+    cos_sims_ego_only = []
+    with torch.no_grad():
+        for i in range(min(10, n_eps)):
+            # Nominal initial observation
+            nom_s = nominal_specs[i]
+            env_eval.restore_physical_baseline()
+            env_eval.apply_task_spec(nom_s)
+            p_init = nom_s["initial_pose"]
+            obs_nom, _ = env_eval.reset(options={"initial_pos": (float(p_init[0]), float(p_init[1]), float(p_init[2]))})
+            t_nom = torch.from_numpy(obs_nom).permute(2, 0, 1).unsqueeze(0).float().to(args.device) / 255.0
+            z_nom = agent_h.model.encode(t_nom)
+
+            # Global 90 deg rotation (whole scene rigidly rotated with AMR)
+            rot_s = copy.deepcopy(nom_s)
+            R_90 = np.array([[0, -1], [1, 0]], dtype=np.float32)
+            p_rot = R_90 @ p_init[:2]
+            rot_s["initial_pose"] = np.array([p_rot[0], p_rot[1], p_init[2] + np.pi/2], dtype=np.float32)
+            for k, o_dict in rot_s.get("obstacles", {}).items():
+                o_dict["pos"][:2] = R_90 @ o_dict["pos"][:2]
+            env_eval.restore_physical_baseline()
+            env_eval.apply_task_spec(rot_s)
+            obs_glob, _ = env_eval.reset(options={"initial_pos": (float(p_rot[0]), float(p_rot[1]), float(p_init[2] + np.pi/2))})
+            t_glob = torch.from_numpy(obs_glob).permute(2, 0, 1).unsqueeze(0).float().to(args.device) / 255.0
+            z_glob = agent_h.model.encode(t_glob)
+            cos_glob = float(F.cosine_similarity(z_nom, z_glob).item())
+            cos_sims_global.append(cos_glob)
+
+            # Egocentric yaw only (robot yawed by 90 deg, scene static)
+            obs_yaw, _ = env_eval.reset(options={"initial_pos": (float(p_init[0]), float(p_init[1]), float(p_init[2] + np.pi/2))})
+            t_yaw = torch.from_numpy(obs_yaw).permute(2, 0, 1).unsqueeze(0).float().to(args.device) / 255.0
+            z_yaw = agent_h.model.encode(t_yaw)
+            cos_yaw = float(F.cosine_similarity(z_nom, z_yaw).item())
+            cos_sims_ego_only.append(cos_yaw)
+    env_eval.close()
+
+    latent_equiv_results = {
+        "global_rigid_rotation_latent_cosine": float(np.mean(cos_sims_global)),
+        "egocentric_yaw_rotation_latent_cosine": float(np.mean(cos_sims_ego_only)),
+        "interpretation": (
+            "Under global rigid rotation, the robot's camera view of local obstacles is preserved "
+            f"(cosine sim = {np.mean(cos_sims_global):.3f}), yielding behavioral rotation robustness. "
+            "However, egocentric camera rotation shifts visual scene contents "
+            f"(cosine sim = {np.mean(cos_sims_ego_only):.3f}); the CNN does not possess steerable group-equivariant filters."
+        ),
+    }
+    print(f"  Latent Cosine Sim (Global Rigid Rotation): {latent_equiv_results['global_rigid_rotation_latent_cosine']:.4f}")
+    print(f"  Latent Cosine Sim (Egocentric Yaw Shift):   {latent_equiv_results['egocentric_yaw_rotation_latent_cosine']:.4f}")
+
     # Build execution metadata
+    this_script = Path(__file__).resolve()
     metadata = {
+        "script_path": str(this_script.relative_to(repo_root)),
+        "script_sha256": _sha256(this_script),
         "command_executed": f"python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite {n_eps} --device {args.device}",
         "execution_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "git_commit": _git_sha(),
@@ -372,6 +519,7 @@ def main():
             "track": "Track C (pure observation, zero simulator coordinates)",
             "episodes_per_suite": n_eps,
             "max_steps": 50,
+            "categorical_task_encoding": "encode_task_id discrete index in [0, 63]",
         },
         "environment": {
             "platform": sys.platform,
@@ -386,9 +534,17 @@ def main():
             "hjepa_nominal": res_nom_h,
             "lewm_nominal": res_nom_l,
             "baseline_nominal": res_nom_b,
-            "appearance_nuisance": {
-                "results": res_nuis_h,
-                "paired_contingency": pair_nuis,
+            "appearance_nuisance_floor": {
+                "results": res_floor_h,
+                "paired_contingency": pair_floor,
+            },
+            "appearance_nuisance_illumination": {
+                "results": res_illum_h,
+                "paired_contingency": pair_illum,
+            },
+            "appearance_nuisance_object": {
+                "results": res_obj_app_h,
+                "paired_contingency": pair_obj_app,
             },
             "semantically_relevant_appearance": {
                 "results": res_sem_h,
@@ -403,6 +559,7 @@ def main():
                 "paired_contingency": pair_rand,
             },
             "se2_rigid_transformations": se2_results,
+            "latent_equivariance": latent_equiv_results,
         },
     }
 

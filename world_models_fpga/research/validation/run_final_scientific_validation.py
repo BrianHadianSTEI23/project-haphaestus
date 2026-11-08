@@ -188,8 +188,28 @@ def build_manifest(records_dir: str | Path, output: str | Path) -> dict:
             src_commit = str(item.get("source_git_commit", ""))
             if not _git_commit_exists(src_commit):
                 provenance_errors.append(f"source_git_commit not found in local git history: {src_commit}")
-            if not item.get("working_tree_clean", True):
-                provenance_errors.append(f"working_tree_clean is False for commit: {src_commit}")
+            if "working_tree_clean" not in item:
+                provenance_errors.append(f"working_tree_clean missing from record for commit: {src_commit}")
+            elif item.get("working_tree_clean") is not True:
+                provenance_errors.append(f"working_tree_clean is not True for commit: {src_commit} (actual={item.get('working_tree_clean')})")
+
+            # Check in-tree script sha256 if script_path is provided
+            script_p = item.get("script_path") or item.get("results", {}).get("execution_metadata", {}).get("script_path")
+            script_s = item.get("script_sha256") or item.get("results", {}).get("execution_metadata", {}).get("script_sha256")
+            if script_p and _git_commit_exists(src_commit):
+                try:
+                    tree_content = subprocess.check_output(
+                        ["git", "cat-file", "-p", f"{src_commit}:{script_p}"],
+                        stderr=subprocess.DEVNULL
+                    )
+                    actual_tree_sha = hashlib.sha256(tree_content).hexdigest()
+                    if script_s and actual_tree_sha != script_s:
+                        provenance_errors.append(
+                            f"script_sha256 mismatch in git tree at commit {src_commit}: "
+                            f"declared={script_s[:8]}.., in-tree={actual_tree_sha[:8]}.."
+                        )
+                except Exception:
+                    provenance_errors.append(f"script_path {script_p} not found in git commit {src_commit}")
 
             if not ds_file.exists():
                 provenance_errors.append(f"dataset_path not found: {ds_file}")
@@ -451,12 +471,14 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
 
         # Inspect if raw artifact has genuine embedded provenance metadata
         meta = res_data.get("execution_metadata", {})
-        if meta and meta.get("command_executed") and meta.get("git_commit") and meta.get("dataset_sha256"):
+        has_core_meta = meta and meta.get("command_executed") and meta.get("git_commit") and meta.get("dataset_sha256")
+        is_clean = meta.get("working_tree_clean") is True if meta else False
+
+        if has_core_meta and is_clean:
             status = "INDEPENDENTLY_EXECUTED"
             cmd_exec = meta.get("command_executed")
             ts = meta.get("execution_timestamp", datetime.datetime.now(datetime.timezone.utc).isoformat())
             src_commit = meta.get("git_commit")
-            # Preserve declared metadata hashes directly from the experiment's execution metadata
             ds_path = meta.get("dataset_path", "unknown")
             ds_sha = meta.get("dataset_sha256", "unknown")
             ckpt_path = meta.get("checkpoint_path", "unknown")
@@ -465,23 +487,27 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             cfg = meta.get("configuration", {})
             env = meta.get("environment", sys_env)
             checkpoints_list = meta.get("checkpoints", [])
-            working_tree_clean = meta.get("working_tree_clean", True)
-            notes = "Independently executed with verified embedded execution metadata."
+            working_tree_clean = True
+            script_path = meta.get("script_path", None)
+            script_sha = meta.get("script_sha256", None)
+            notes = "Independently executed with verified embedded execution metadata and clean working tree."
         else:
             status = "LEGACY_UNVERIFIED"
-            cmd_exec = "UNKNOWN_HISTORICAL_RUN"
-            ts = "UNKNOWN_HISTORICAL_TIMESTAMP"
-            src_commit = "UNVERIFIED_PRE_AUDIT_COMMIT"
-            ds_path = "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz"
-            ds_sha = "UNVERIFIED"
-            ckpt_path = "world_models_fpga/checkpoints_v4/hjepa_best.pt"
-            ckpt_sha = "UNVERIFIED"
-            seed = 42
-            cfg = {"source_artifact": str(src_path.relative_to(base_dir))}
-            env = sys_env
-            checkpoints_list = []
-            working_tree_clean = False
-            notes = "Historical result artifact without embedded execution provenance. Re-execution required under strict protocol."
+            cmd_exec = meta.get("command_executed", "UNKNOWN_HISTORICAL_RUN")
+            ts = meta.get("execution_timestamp", "UNKNOWN_HISTORICAL_TIMESTAMP")
+            src_commit = meta.get("git_commit", "UNVERIFIED_PRE_AUDIT_COMMIT")
+            ds_path = meta.get("dataset_path", "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz")
+            ds_sha = meta.get("dataset_sha256", "UNVERIFIED")
+            ckpt_path = meta.get("checkpoint_path", "world_models_fpga/checkpoints_v4/hjepa_best.pt")
+            ckpt_sha = meta.get("checkpoint_sha256", "UNVERIFIED")
+            seed = int(meta.get("random_seed", 42))
+            cfg = meta.get("configuration", {"source_artifact": str(src_path.relative_to(base_dir))})
+            env = meta.get("environment", sys_env)
+            checkpoints_list = meta.get("checkpoints", [])
+            working_tree_clean = meta.get("working_tree_clean", "UNKNOWN_UNVERIFIED")
+            script_path = meta.get("script_path", None)
+            script_sha = meta.get("script_sha256", None)
+            notes = "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required."
 
         record = {
             "record_id": f"REC-{eval_name.upper()}-001",
@@ -491,7 +517,8 @@ def populate_provenance_records(base_dir: Path, records_dir: Path, val_summary: 
             "execution_timestamp": ts,
             "source_git_commit": src_commit,
             "working_tree_clean": working_tree_clean,
-            "source_git_commit": src_commit,
+            "script_path": script_path,
+            "script_sha256": script_sha,
             "dataset_path": ds_path,
             "dataset_sha256": ds_sha,
             "checkpoint_path": ckpt_path,
