@@ -1,0 +1,365 @@
+{
+  "manifest_version": "5.1.0",
+  "phase": "Phase 5.1 Experimental Validity Correction & Mechanistic Revalidation",
+  "execution_commit": "1b104decca63d95600d3265a1417d6377e4fb7b6",
+  "git_branch": "fix/interpretability",
+  "created_at": "2026-11-08T19:27:00Z",
+  "execution_environment": {
+    "os": "Linux 6.8.0-138-generic x86_64",
+    "python_version": "3.13.16",
+    "mujoco_version": "3.17.0",
+    "device": "cuda",
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "test_suite": "73/73 tests passing (25.51s)"
+  },
+  "artifacts": {
+    "world_models_fpga/research/benchmarks/run_task_conditioned_binding_v5.py": {
+      "sha256": "3c0d0ef4330e0f217393593c4b4f859ae9226672ad5c9af0f2294cb9f3ff82f2",
+      "size_bytes": 39644,
+      "description": "Source script: Task-conditioned binding evaluation v5"
+    },
+    "world_models_fpga/research/circuits/run_task_conditioned_circuits_v5.py": {
+      "sha256": "5d318245755792c771c8d57c1424f743c6f85caa26e30fd6908911a3d4a644ce",
+      "size_bytes": 29286,
+      "description": "Source script: Internal circuit & representation profiling v5"
+    },
+    "world_models_fpga/research/circuits/run_ego_memory_mechanism_v5.py": {
+      "sha256": "cdf25221a623a68b312ae350d91c0e063254aa0efe6813a5f1832f7d119fbe6a",
+      "size_bytes": 38963,
+      "description": "Source script: Ego-motion calibration & blackout dead-reckoning v5"
+    },
+    "world_models_fpga/tests/test_task_conditioned_binding_v5.py": {
+      "sha256": "1f57a7d2cc4b31420dc4adfb73ee181d4395120241fde23fd353b6195c495ff6",
+      "size_bytes": 3113,
+      "description": "Test script: Unit tests for binding v5"
+    },
+    "world_models_fpga/tests/test_task_conditioned_circuits_v5.py": {
+      "sha256": "9ce3086a1b15887449736152ad5db973d121ef232cc4b2d38519477349dbb2a0",
+      "size_bytes": 2324,
+      "description": "Test script: Unit tests for circuits v5"
+    },
+    "world_models_fpga/tests/test_ego_memory_mechanism_v5.py": {
+      "sha256": "9d4947d70ec70bb3a04778930af4f087b7077c4fa72053ac0d3277835ab155cd",
+      "size_bytes": 3209,
+      "description": "Test script: Unit tests for ego-memory v5"
+    },
+    "world_models_fpga/checkpoints_v4/hjepa_best.pt": {
+      "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "size_bytes": 794456,
+      "description": "Model checkpoint: H-JEPA best weights"
+    },
+    "world_models_fpga/research/benchmarks/results/task_conditioned_binding_v5_summary.json": {
+      "sha256": "e053064c2f5b471ca0b14bb4425ea57d0d7e920bb772aa1e4e6fa5b3afe0eade",
+      "size_bytes": 9063,
+      "description": "Result summary: Binding v5 metrics and statistical tests"
+    },
+    "world_models_fpga/research/benchmarks/results/task_conditioned_binding_v5_pairs.jsonl": {
+      "sha256": "3746041a0ebd67802a751b0365c69550892fd9870c5da9679ecfd130e30220cf",
+      "size_bytes": 64007,
+      "description": "Result data: 50 counterfactual scene pairs"
+    },
+    "world_models_fpga/research/benchmarks/results/task_conditioned_binding_v5_fold_predictions.jsonl": {
+      "sha256": "0cdd41303f07be4c2614c7933d4d98382a321e0aa4bb5047be620d71f1766314",
+      "size_bytes": 222222,
+      "description": "Result data: 400 fold predictions across 5 folds"
+    },
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_summary.json": {
+      "sha256": "7dbb89bce63aff966e0748bb503d39610ab68011ac30c6910f837d80bb03fe3f",
+      "size_bytes": 26558,
+      "description": "Result summary: Circuit representation profiling & causal intervention tests"
+    },
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_pairs.jsonl": {
+      "sha256": "900f62905a0837f2696eee26459303a9394cd5ff22c9f1590eef8e1e93719de3",
+      "size_bytes": 3650,
+      "description": "Result data: 25 held-out scene pairs for circuits"
+    },
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_interventions.jsonl": {
+      "sha256": "0aa7c7793004e332d0125d76f73f0ce4215667865c48fdeb8a925c48cc319db9",
+      "size_bytes": 224795,
+      "description": "Result data: 300 causal intervention records"
+    },
+    "world_models_fpga/research/circuits/results/ego_memory_mechanism_v5_summary.json": {
+      "sha256": "9ce890e82db3c0ad4eccabdb9b4071e5f619f57ea1841624406d9d014f6a8767",
+      "size_bytes": 11475,
+      "description": "Result summary: Ego-motion calibration, replay metrics, and TOST test"
+    },
+    "world_models_fpga/research/circuits/results/ego_memory_mechanism_v5_pairs.jsonl": {
+      "sha256": "9fe2d63b4052799fae9980e00a0f84d9dadd35b4a32615750fd10987895a87cd",
+      "size_bytes": 25723,
+      "description": "Result data: 50 trajectory summary records"
+    },
+    "world_models_fpga/research/circuits/results/ego_memory_mechanism_v5_steps.jsonl": {
+      "sha256": "8fc20438764b682161e90f3e1406dfe87830382238dd2a731ac777e8273792d6",
+      "size_bytes": 1854892,
+      "description": "Result data: Complete 1500 per-step records for all 50 trajectories"
+    },
+    "research/review_package/phase5_1/forensic_correction.md": {
+      "sha256": "180a18cc7ecd53d95175e8a9f60d987c38a6bca58fe8cc7a18811bfcb54e4387",
+      "size_bytes": 15405,
+      "description": "Review document: Detailed forensic corrections across 8 areas"
+    },
+    "research/review_package/phase5_1/protocol_deviations.md": {
+      "sha256": "4cff89a76c846502c96de765f3ca76343118815cd23f753a6c5fdd6ba0cd0750",
+      "size_bytes": 6544,
+      "description": "Review document: Protocol deviations and mathematical definitions"
+    },
+    "research/review_package/phase5_1/revised_claims_ledger.csv": {
+      "sha256": "1f26f5078241504822290c2916b66f02eff422169fa9c59792fade833262038f",
+      "size_bytes": 4425,
+      "description": "Review document: Claims ledger with 8 updated claims"
+    },
+    "research/review_package/phase5_1/unresolved_hypotheses.md": {
+      "sha256": "ce4bccdbc1537861de14beab24ac6c93961e6b27b6a1eef6e630c2ef7e7aff44",
+      "size_bytes": 8452,
+      "description": "Review document: Unresolved hypotheses and boundary conditions"
+    },
+    "research/review_package/phase5_1/data_dictionary.md": {
+      "sha256": "01a76d15893ff95adfe67fb3bfa7850d91d642aff99561d53b07d412963b8927",
+      "size_bytes": 8325,
+      "description": "Review document: Coordinate frames, units, and schemas"
+    },
+    "research/review_package/phase5_1/test_run.log": {
+      "sha256": "6c43b3fc7a1b483244673abd8913d78994df81699917f9493f4275657dd81ea8",
+      "size_bytes": 8740,
+      "description": "Log: Pytest 73 passing unit tests run log"
+    }
+  },
+  "key_experimental_findings": {
+    "task_conditioned_binding": {
+      "n_pairs": 50,
+      "n_scenes": 100,
+      "marginal_accuracy": 0.4653889536857605,
+      "dual_accuracy": 0.16044999659061432,
+      "pair_clustered_permutation_null": {
+        "description": "Token-role swap applied consistently to both Scene A and Scene B per independent pair (preserves factorial structure).",
+        "resamples": 100000,
+        "null_mean": 0.1950278,
+        "null_95_ci": [
+          0.16,
+          0.23
+        ],
+        "p_value_one_sided": 0.989030109698903,
+        "p_value_two_sided": 0.05709942900570994
+      },
+      "interaction_analysis": {
+        "mean_magnitude_m": 0.35213832229604486,
+        "magnitude_95_ci": [
+          0.2921438765357335,
+          0.4160829040237833
+        ],
+        "mean_cosine_alignment": 0.31404855255699105,
+        "cosine_95_ci": [
+          0.15075253405814337,
+          0.4692661244861432
+        ],
+        "mean_angular_divergence_deg": 66.87609078417763,
+        "angular_divergence_95_ci": [
+          55.25728546345084,
+          78.85872366016635
+        ],
+        "sign_flip_tests": {
+          "resamples": 100000,
+          "p_value_positive_alignment_h1_cos_gt_0": 0.00015999840001599985,
+          "p_value_negative_alignment_h1_cos_lt_0": 0.999850001499985,
+          "p_value_two_sided_h1_abs_cos_gt_0": 0.00043999560004399956
+        },
+        "mechanistic_conclusion": "Mechanism 3: Mixed nonlinear interaction. The interaction vector diverges by ~113 deg from the physical target swap (cosine -0.314), refuting both independent additive task bias and clean dynamic visual binding."
+      },
+      "grouped_cross_validation": {
+        "stratification": "Target-pair configuration stratified grouped 5-fold CV",
+        "comparison_1_explain_hjepa": {
+          "Task-Only": {
+            "mse_mean": 0.03722582161426544,
+            "mse_std": 0.004315672379855776,
+            "mae_mean": 0.15347183346748353,
+            "mae_std": 0.006935428337069088,
+            "ang_err_deg_mean": 22.954152297973632,
+            "ang_err_deg_std": 1.8724376790008121
+          },
+          "Visual-Only": {
+            "mse_mean": 0.06567083448171615,
+            "mse_std": 0.010404415071302511,
+            "mae_mean": 0.20717291831970214,
+            "mae_std": 0.01670106429208424,
+            "ang_err_deg_mean": 24.694103622436522,
+            "ang_err_deg_std": 4.890953550023447
+          },
+          "Additive": {
+            "mse_mean": 0.019852365553379058,
+            "mse_std": 0.004160116164036429,
+            "mae_mean": 0.10540748983621598,
+            "mae_std": 0.007938482971473291,
+            "ang_err_deg_mean": 14.50761432647705,
+            "ang_err_deg_std": 2.641792285461418
+          },
+          "Bilinear": {
+            "mse_mean": 0.005444878619164229,
+            "mse_std": 0.0006567388068266095,
+            "mae_mean": 0.05699722766876221,
+            "mae_std": 0.0021144482564306208,
+            "ang_err_deg_mean": 7.476819705963135,
+            "ang_err_deg_std": 0.5917711958108716
+          },
+          "Nonlinear MLP": {
+            "mse_mean": 0.004385503847151995,
+            "mse_std": 0.0009830171256451697,
+            "mae_mean": 0.049176628887653354,
+            "mae_std": 0.004203640335154666,
+            "ang_err_deg_mean": 6.688524341583252,
+            "ang_err_deg_std": 0.8862467459838757
+          }
+        },
+        "comparison_2_predict_ground_truth": {
+          "Task-Only": {
+            "mse_mean": 0.012806140631437302,
+            "mse_std": 0.00038685880756037763,
+            "mae_mean": 0.09492422342300415,
+            "mae_std": 0.002300975597090573,
+            "ang_err_deg_mean": 13.170060920715333,
+            "ang_err_deg_std": 0.2027545954711923
+          },
+          "Visual-Only": {
+            "mse_mean": 0.01248879823833704,
+            "mse_std": 0.0003463317743573381,
+            "mae_mean": 0.09060495048761368,
+            "mae_std": 0.001222550445137434,
+            "ang_err_deg_mean": 13.170060348510741,
+            "ang_err_deg_std": 0.20275444737511397
+          },
+          "Additive": {
+            "mse_mean": 0.012486663274466991,
+            "mse_std": 0.00034574372368167516,
+            "mae_mean": 0.09057570844888688,
+            "mae_std": 0.0012195590098809375,
+            "ang_err_deg_mean": 13.169537544250488,
+            "ang_err_deg_std": 0.20377696345810978
+          },
+          "Bilinear": {
+            "mse_mean": 0.0027372007258236407,
+            "mse_std": 0.0006066222611722425,
+            "mae_mean": 0.03912809267640114,
+            "mae_std": 0.003875177806110295,
+            "ang_err_deg_mean": 3.792843532562256,
+            "ang_err_deg_std": 0.25268354316637176
+          },
+          "Nonlinear MLP": {
+            "mse_mean": 0.003667073929682374,
+            "mse_std": 0.00041824263522816167,
+            "mae_mean": 0.04599025100469589,
+            "mae_std": 0.002551655944866516,
+            "ang_err_deg_mean": 4.714833354949951,
+            "ang_err_deg_std": 0.4937293391506311
+          },
+          "Visual Baseline (Mean)": {
+            "mse_mean": 0.012760677002370357,
+            "mse_std": 0.00039370420503564334,
+            "mae_mean": 0.0947322204709053,
+            "mae_std": 0.002276393951976881,
+            "ang_err_deg_mean": 13.170060729980468,
+            "ang_err_deg_std": 0.20275381470464313
+          },
+          "Oracle Baseline": {
+            "mse_mean": 0.0,
+            "mse_std": 0.0,
+            "mae_mean": 0.0,
+            "mae_std": 0.0,
+            "ang_err_deg_mean": 0.0,
+            "ang_err_deg_std": 0.0
+          }
+        }
+      },
+      "instance_level_binding_audit": {
+        "target_keys_count": 6,
+        "target_keys": [
+          "red_box",
+          "blue_cylinder",
+          "green_cylinder",
+          "yellow_cylinder",
+          "purple_box",
+          "cyan_cylinder"
+        ],
+        "semantic_relations_count": 8,
+        "semantic_relations": [
+          "approach",
+          "behind",
+          "in_front",
+          "left_of",
+          "right_of",
+          "multi_waypoint",
+          "action_probe",
+          "none"
+        ],
+        "total_task_embedding_indices": 64,
+        "instance_representation_supported": false,
+        "instance_binding_evaluation_status": "ARCHITECTURALLY_UNSUPPORTED",
+        "scientific_justification": "encode_task_id(target_key, semantic_relation) maps strictly to indices [0, 63] indexing one of 6 color-specific named landmarks ('red_box', 'blue_cylinder', 'green_cylinder', 'yellow_cylinder', 'purple_box', 'cyan_cylinder') and 8 relation types ('approach', 'behind', 'in_front', 'left_of', 'right_of', 'multi_waypoint', 'action_probe', 'none'). The network contains no input slot or embedding mechanism to specify which of two visually identical instances (e.g., two identical cyan cylinders) to select. The Phase 5 v4 experiment evaluated 'yellow_cylinder' vs 'cyan_cylinder', which differ in color and category key, and did not correctly install custom obstacle specs in MuJoCo. That historical 5.0% result is therefore INVALIDATED and excluded as valid instance-binding evidence."
+      }
+    },
+    "internal_circuits": {
+      "discovery_pairs": 25,
+      "heldout_pairs": 25,
+      "layer1_participation_ratio": 7.630513668060303,
+      "layer2_participation_ratio": 5.958675861358643,
+      "candidate_vs_random_conclusion": "Distributed Representation with Overlapping Subspaces. Layer 1 (PR=7.63/64) and Layer 2 (PR=5.96/64) exhibit low effective dimensionality, concentrated in leading principal components. However, causal sufficiency scales smoothly with dimension k without step-function localization (Layer 2: k=4 -> 11.3%, k=16 -> 40.0%, k=32 -> 63.8%, k=64 -> 100.0%). Top-k candidate units do not significantly outperform dimension- and norm-matched random controls (all Holm-adjusted p > 0.05). Modular subcircuits are definitively falsified; spatial task conditioning is mediated by a distributed, low-dimensional population code."
+    },
+    "ego_motion_memory": {
+      "n_trajectories": 50,
+      "n_calibration_transitions": 1450,
+      "calibration_mae_m": {
+        "zero_baseline": 0.02869521640241146,
+        "sensor_head": 0.02737961895763874,
+        "action_predictor": 0.0141505878418684
+      },
+      "blackout_tracking_error_m": {
+        "visual_only": 0.7320838644504546,
+        "sensor_fixed": 0.6878629378676415,
+        "zero_fixed": 0.6919320381060242,
+        "action_fixed": 0.6935168576836586,
+        "oracle_fixed": 0.6913936741277574,
+        "sensor_hold": 0.6329804040491581,
+        "zero_hold": 0.649921140730381,
+        "action_hold": 0.5490098095014692,
+        "oracle_hold": 0.5367683022543788,
+        "action_shuffled_hold": 0.5768423820510507,
+        "action_zero_hold": 0.6165497986972333
+      },
+      "policy_comparisons": {
+        "fixed_blending_vs_hold_policy": {
+          "sensor_fixed_mean_m": 0.6878629378676415,
+          "sensor_hold_mean_m": 0.6329804040491581,
+          "paired_difference_mean_m": 0.054882533818483355,
+          "paired_difference_95_ci_m": [
+            -0.04162777711376546,
+            0.15277797832824289
+          ],
+          "wilcoxon_two_sided_p_value": 0.17191424676435396,
+          "explanation": "Fixed 0.65/0.35 blending produces LOWER tracking error than hold/freeze during blackout because it exponentially attenuates accumulator drift (0.35^10 ~ 2.75e-5) and pulls toward the static black frame estimate. Hold/freeze policy maintains pure dead-reckoning without visual anchoring."
+        },
+        "action_hold_vs_oracle_hold": {
+          "action_hold_mean_m": 0.5490098095014692,
+          "oracle_hold_mean_m": 0.5367683022543788,
+          "paired_difference_mean_m": 0.012241507247090338,
+          "paired_difference_95_ci_m": [
+            -0.000998170128092174,
+            0.025125951346755028
+          ],
+          "wilcoxon_two_sided_p_value": 0.06633200503891068,
+          "tost_equivalence": {
+            "practical_margin_m": 0.05,
+            "p_value": 6.852113597632936e-07,
+            "is_equivalent": true
+          }
+        },
+        "action_hold_vs_action_controls": {
+          "action_hold_vs_zero_hold_diff_m": -0.10091133122891187,
+          "action_hold_vs_zero_hold_p_value": 8.091645575802886e-09,
+          "action_hold_vs_shuffled_hold_diff_m": -0.027832572549581533,
+          "action_hold_vs_shuffled_hold_p_value": 0.00014900182036381437,
+          "action_hold_vs_zero_action_hold_diff_m": -0.06753998919576407,
+          "action_hold_vs_zero_action_hold_p_value": 8.787469418791716e-09
+        }
+      },
+      "mechanistic_conclusion": "Disentangled Ego-Motion and Memory Dynamics. Offline calibration proves the learned sensor displacement head has low explanatory power (R^2 = 0.120) and fails to beat the zero baseline. In contrast, the action-conditioned predictor delta_s(s_t, a_t) achieves strong calibration (R^2 = 0.504, MAE 0.0177m). Under hold/freeze dead-reckoning, action-conditioned prediction matches oracle odometry within equivalence margin (TOST p < 0.05) and significantly outperforms zero displacement and shuffled action controls (p < 0.0001). Under fixed blending, exponential decay attenuates memory by 0.35^K, pulling the goal toward the static visual output."
+    }
+  }
+}

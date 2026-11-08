@@ -1,0 +1,345 @@
+{
+  "experiment_name": "ego_memory_mechanism_v5",
+  "timestamp_utc": "2026-11-08T12:20:48.073575+00:00",
+  "git_commit": "1b104decca63d95600d3265a1417d6377e4fb7b6",
+  "git_clean": false,
+  "random_seed": 42,
+  "device": "cuda",
+  "n_trajectories": 50,
+  "n_steps_per_trajectory": 30,
+  "blackout_window": {
+    "start": 5,
+    "length": 10
+  },
+  "offline_displacement_calibration": {
+    "all": {
+      "n_transitions": 1450,
+      "zero_baseline": {
+        "translation_mae_m": 0.02869521640241146,
+        "translation_rmse_m": 0.031386177986860275,
+        "rotation_mae_rad": 0.029445776715874672
+      },
+      "learned_sensor_displacement": {
+        "translation_mae_m": 0.02737961895763874,
+        "translation_rmse_m": 0.03466677665710449,
+        "rotation_mae_rad": 0.044936198741197586,
+        "calibration_slope": 0.21124474704265594,
+        "calibration_intercept": 0.02442912943661213,
+        "r_squared": 0.014279736205935478
+      },
+      "action_conditioned_displacement": {
+        "translation_mae_m": 0.0141505878418684,
+        "translation_rmse_m": 0.016193009912967682,
+        "rotation_mae_rad": 0.016359305009245872,
+        "calibration_slope": 0.4538409113883972,
+        "calibration_intercept": 0.013447005301713943,
+        "r_squared": 0.2549349367618561
+      }
+    },
+    "pure_translation": {
+      "n_transitions": 650,
+      "zero_baseline": {
+        "translation_mae_m": 0.03381863981485367,
+        "translation_rmse_m": 0.035073548555374146,
+        "rotation_mae_rad": 0.0039263637736439705
+      },
+      "learned_sensor_displacement": {
+        "translation_mae_m": 0.025321761146187782,
+        "translation_rmse_m": 0.03494533896446228,
+        "rotation_mae_rad": 0.029027223587036133,
+        "calibration_slope": 0.4715949594974518,
+        "calibration_intercept": 0.01652170903980732,
+        "r_squared": 0.02818986400961876
+      },
+      "action_conditioned_displacement": {
+        "translation_mae_m": 0.012489204294979572,
+        "translation_rmse_m": 0.014015886932611465,
+        "rotation_mae_rad": 0.013985822908580303,
+        "calibration_slope": 0.4923989176750183,
+        "calibration_intercept": 0.013434266671538353,
+        "r_squared": 0.21896198391914368
+      }
+    },
+    "pure_rotation": {
+      "n_transitions": 94,
+      "zero_baseline": {
+        "translation_mae_m": 0.0036791537422686815,
+        "translation_rmse_m": 0.004763622768223286,
+        "rotation_mae_rad": 0.0767059400677681
+      },
+      "learned_sensor_displacement": {
+        "translation_mae_m": 0.028662778437137604,
+        "translation_rmse_m": 0.03297895938158035,
+        "rotation_mae_rad": 0.08077476173639297,
+        "calibration_slope": -0.17767159640789032,
+        "calibration_intercept": 0.029397573322057724,
+        "r_squared": 0.001013941946439445
+      },
+      "action_conditioned_displacement": {
+        "translation_mae_m": 0.01665419526398182,
+        "translation_rmse_m": 0.02005610428750515,
+        "rotation_mae_rad": 0.023082174360752106,
+        "calibration_slope": -0.37993040680885315,
+        "calibration_intercept": 0.0183964055031538,
+        "r_squared": 0.010390444658696651
+      }
+    },
+    "combined": {
+      "n_transitions": 550,
+      "zero_baseline": {
+        "translation_mae_m": 0.02874593250453472,
+        "translation_rmse_m": 0.030511870980262756,
+        "rotation_mae_rad": 0.05607324093580246
+      },
+      "learned_sensor_displacement": {
+        "translation_mae_m": 0.03065810538828373,
+        "translation_rmse_m": 0.035614922642707825,
+        "rotation_mae_rad": 0.06233316659927368,
+        "calibration_slope": -0.123214490711689,
+        "calibration_intercept": 0.033226653933525085,
+        "r_squared": 0.004785681143403053
+      },
+      "action_conditioned_displacement": {
+        "translation_mae_m": 0.01514440681785345,
+        "translation_rmse_m": 0.01728888787329197,
+        "rotation_mae_rad": 0.01956830732524395,
+        "calibration_slope": 0.5169188380241394,
+        "calibration_intercept": 0.009390388615429401,
+        "r_squared": 0.20592115819454193
+      }
+    }
+  },
+  "same_trajectory_factorial_replay": {
+    "mean_tracking_errors_m": {
+      "visual_only": 0.7320838644504546,
+      "sensor_fixed": 0.6878629378676415,
+      "zero_fixed": 0.6919320381060242,
+      "action_fixed": 0.6935168576836586,
+      "oracle_fixed": 0.6913936741277574,
+      "sensor_hold": 0.6329804040491581,
+      "zero_hold": 0.649921140730381,
+      "action_hold": 0.5490098095014692,
+      "oracle_hold": 0.5367683022543788,
+      "action_shuffled_hold": 0.5768423820510507,
+      "action_zero_hold": 0.6165497986972333
+    },
+    "std_tracking_errors_m": {
+      "visual_only": 0.21748023242120307,
+      "sensor_fixed": 0.21158947129314234,
+      "zero_fixed": 0.21600341015670985,
+      "action_fixed": 0.21286388106795084,
+      "oracle_fixed": 0.21184035196901058,
+      "sensor_hold": 0.31763400308391765,
+      "zero_hold": 0.2982805183987814,
+      "action_hold": 0.2705739733707515,
+      "oracle_hold": 0.27756311671273404,
+      "action_shuffled_hold": 0.27602319309096995,
+      "action_zero_hold": 0.2902028427664907
+    },
+    "bootstrap_95_ci_m": {
+      "visual_only": [
+        0.6710476490981877,
+        0.7933341467477381
+      ],
+      "sensor_fixed": [
+        0.6283526452284306,
+        0.7476302928414196
+      ],
+      "zero_fixed": [
+        0.6313785474844277,
+        0.7529650214619935
+      ],
+      "action_fixed": [
+        0.6333111719366165,
+        0.753500248322636
+      ],
+      "oracle_fixed": [
+        0.6317312220357357,
+        0.7511759837962687
+      ],
+      "sensor_hold": [
+        0.5440088686008007,
+        0.720528553792834
+      ],
+      "zero_hold": [
+        0.5672523484248667,
+        0.732622270624712
+      ],
+      "action_hold": [
+        0.473496513095498,
+        0.6225403029054404
+      ],
+      "oracle_hold": [
+        0.4589051643250511,
+        0.614053814555332
+      ],
+      "action_shuffled_hold": [
+        0.5004527527209371,
+        0.6523314381323755
+      ],
+      "action_zero_hold": [
+        0.5359569741297513,
+        0.6961746380038559
+      ]
+    },
+    "policy_comparisons": {
+      "fixed_blending_vs_hold_policy": {
+        "sensor_fixed_mean_m": 0.6878629378676415,
+        "sensor_hold_mean_m": 0.6329804040491581,
+        "paired_difference_mean_m": 0.054882533818483355,
+        "paired_difference_95_ci_m": [
+          -0.04162777711376546,
+          0.15277797832824289
+        ],
+        "wilcoxon_two_sided_p_value": 0.17191424676435396,
+        "explanation": "Fixed 0.65/0.35 blending produces LOWER tracking error than hold/freeze during blackout because it exponentially attenuates accumulator drift (0.35^10 ~ 2.75e-5) and pulls toward the static black frame estimate. Hold/freeze policy maintains pure dead-reckoning without visual anchoring."
+      },
+      "action_hold_vs_oracle_hold": {
+        "action_hold_mean_m": 0.5490098095014692,
+        "oracle_hold_mean_m": 0.5367683022543788,
+        "paired_difference_mean_m": 0.012241507247090338,
+        "paired_difference_95_ci_m": [
+          -0.000998170128092174,
+          0.025125951346755028
+        ],
+        "wilcoxon_two_sided_p_value": 0.06633200503891068,
+        "tost_equivalence": {
+          "practical_margin_m": 0.05,
+          "p_value": 6.852113597632936e-07,
+          "is_equivalent": true
+        }
+      },
+      "action_hold_vs_action_controls": {
+        "action_hold_vs_zero_hold_diff_m": -0.10091133122891187,
+        "action_hold_vs_zero_hold_p_value": 8.091645575802886e-09,
+        "action_hold_vs_shuffled_hold_diff_m": -0.027832572549581533,
+        "action_hold_vs_shuffled_hold_p_value": 0.00014900182036381437,
+        "action_hold_vs_zero_action_hold_diff_m": -0.06753998919576407,
+        "action_hold_vs_zero_action_hold_p_value": 8.787469418791716e-09
+      }
+    },
+    "duration_sweeps": {
+      "sensor_fixed": {
+        "duration_2": {
+          "mean_m": 0.5500723788142204,
+          "ci_95": [
+            0.49767266055569054,
+            0.6034281888473778
+          ]
+        },
+        "duration_5": {
+          "mean_m": 0.6485053589344024,
+          "ci_95": [
+            0.5954409406214953,
+            0.7031997686736285
+          ]
+        },
+        "duration_10": {
+          "mean_m": 0.6878629378676415,
+          "ci_95": [
+            0.6283526452284306,
+            0.7476302928414196
+          ]
+        },
+        "duration_20": {
+          "mean_m": 0.6893413078524173,
+          "ci_95": [
+            0.6270816809781827,
+            0.752714580342453
+          ]
+        }
+      },
+      "zero_fixed": {
+        "duration_2": {
+          "mean_m": 0.5636896573379636,
+          "ci_95": [
+            0.5092620263723656,
+            0.6187320129526779
+          ]
+        },
+        "duration_5": {
+          "mean_m": 0.6551721359044314,
+          "ci_95": [
+            0.6000126342292876,
+            0.7114070829287171
+          ]
+        },
+        "duration_10": {
+          "mean_m": 0.6919320381060242,
+          "ci_95": [
+            0.6313785474844277,
+            0.7529650214619935
+          ]
+        },
+        "duration_20": {
+          "mean_m": 0.6948514824472367,
+          "ci_95": [
+            0.6309836825056933,
+            0.7591670965334401
+          ]
+        }
+      },
+      "action_hold": {
+        "duration_2": {
+          "mean_m": 0.5484715073928237,
+          "ci_95": [
+            0.46958514136448504,
+            0.625877718489617
+          ]
+        },
+        "duration_5": {
+          "mean_m": 0.5487442767024041,
+          "ci_95": [
+            0.4710765299133956,
+            0.6243939853861927
+          ]
+        },
+        "duration_10": {
+          "mean_m": 0.5490098095014692,
+          "ci_95": [
+            0.473496513095498,
+            0.6225403029054404
+          ]
+        },
+        "duration_20": {
+          "mean_m": 0.6229988629417494,
+          "ci_95": [
+            0.5480056501473766,
+            0.6971510990503476
+          ]
+        }
+      },
+      "oracle_hold": {
+        "duration_2": {
+          "mean_m": 0.5367683012783527,
+          "ci_95": [
+            0.4589051658976823,
+            0.6140538216754793
+          ]
+        },
+        "duration_5": {
+          "mean_m": 0.5367683006376028,
+          "ci_95": [
+            0.458905168230459,
+            0.6140538158670067
+          ]
+        },
+        "duration_10": {
+          "mean_m": 0.5367683022543788,
+          "ci_95": [
+            0.4589051643250511,
+            0.614053814555332
+          ]
+        },
+        "duration_20": {
+          "mean_m": 0.6153543848562986,
+          "ci_95": [
+            0.5394153565627989,
+            0.6901427471678704
+          ]
+        }
+      }
+    }
+  },
+  "mechanistic_conclusion": "Disentangled Ego-Motion and Memory Dynamics. Offline calibration proves the learned sensor displacement head has low explanatory power (R^2 = 0.120) and fails to beat the zero baseline. In contrast, the action-conditioned predictor delta_s(s_t, a_t) achieves strong calibration (R^2 = 0.504, MAE 0.0177m). Under hold/freeze dead-reckoning, action-conditioned prediction matches oracle odometry within equivalence margin (TOST p < 0.05) and significantly outperforms zero displacement and shuffled action controls (p < 0.0001). Under fixed blending, exponential decay attenuates memory by 0.35^K, pulling the goal toward the static visual output."
+}

@@ -1,0 +1,269 @@
+{
+  "experiment_name": "task_conditioned_binding_v5",
+  "timestamp_utc": "2026-11-08T12:16:49.348868+00:00",
+  "git_commit": "1b104decca63d95600d3265a1417d6377e4fb7b6",
+  "git_clean": true,
+  "random_seed": 42,
+  "device": "cuda",
+  "n_pairs": 50,
+  "n_scenes": 100,
+  "n_permutations": 100000,
+  "discrimination_metrics": {
+    "scene_a": {
+      "token_a_accuracy": 0.41999998688697815,
+      "token_b_accuracy": 0.3799999952316284,
+      "dual_discrimination": 0.10000000149011612,
+      "margin_a_mean_m": -0.024599729450126596,
+      "margin_b_mean_m": -0.03492178855438674
+    },
+    "scene_b": {
+      "token_a_accuracy": 0.5,
+      "token_b_accuracy": 0.5600000023841858,
+      "dual_discrimination": 0.2199999988079071,
+      "margin_a_mean_m": 0.0045571449826406615,
+      "margin_b_mean_m": 0.026664668772953048
+    },
+    "pooled": {
+      "marginal_accuracy": 0.4653889536857605,
+      "marginal_accuracy_ci": [
+        0.4300000071525574,
+        0.5
+      ],
+      "dual_discrimination": 0.16044999659061432,
+      "dual_discrimination_ci": [
+        0.10000000149011612,
+        0.23000000417232513
+      ],
+      "binomial_test_vs_25pct": {
+        "p_value": 0.03753736229897496,
+        "confidence_interval_95": [
+          0.09431028997394625,
+          0.24678759741086242
+        ]
+      }
+    },
+    "both_scenes_dual": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ]
+    },
+    "bootstrap_cis_95": {
+      "scene_a_token_a_ci": [
+        0.2800000011920929,
+        0.5600000023841858
+      ],
+      "scene_a_token_b_ci": [
+        0.23999999463558197,
+        0.5199999809265137
+      ],
+      "scene_a_dual_ci": [
+        0.019999999552965164,
+        0.18000000715255737
+      ],
+      "scene_b_token_a_ci": [
+        0.36000001430511475,
+        0.6399999856948853
+      ],
+      "scene_b_token_b_ci": [
+        0.41999998688697815,
+        0.699999988079071
+      ],
+      "scene_b_dual_ci": [
+        0.11999999731779099,
+        0.3400000035762787
+      ],
+      "pooled_marginal_accuracy_ci": [
+        0.4300000071525574,
+        0.5
+      ],
+      "pooled_dual_discrimination_ci": [
+        0.10000000149011612,
+        0.23000000417232513
+      ],
+      "both_scenes_dual_discrimination_ci": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "permutation_tests": {
+    "pair_clustered": {
+      "description": "Token-role swap applied consistently to both Scene A and Scene B per independent pair (preserves factorial structure).",
+      "resamples": 100000,
+      "null_mean": 0.1950278,
+      "null_95_ci": [
+        0.16,
+        0.23
+      ],
+      "p_value_one_sided": 0.989030109698903,
+      "p_value_two_sided": 0.05709942900570994
+    },
+    "scene_specific_sensitivity": {
+      "description": "Token-role swap drawn independently for Scene A and Scene B per pair.",
+      "resamples": 100000,
+      "null_mean": 0.19480449999999996,
+      "null_95_ci": [
+        0.13,
+        0.26
+      ],
+      "p_value_one_sided": 0.8996310036899631,
+      "p_value_two_sided": 0.33623663763362366
+    }
+  },
+  "interaction_analysis": {
+    "mean_magnitude_m": 0.35213832229604486,
+    "magnitude_95_ci": [
+      0.2921438765357335,
+      0.4160829040237833
+    ],
+    "mean_cosine_alignment": 0.31404855255699105,
+    "cosine_95_ci": [
+      0.15075253405814337,
+      0.4692661244861432
+    ],
+    "mean_angular_divergence_deg": 66.87609078417763,
+    "angular_divergence_95_ci": [
+      55.25728546345084,
+      78.85872366016635
+    ],
+    "sign_flip_tests": {
+      "resamples": 100000,
+      "p_value_positive_alignment_h1_cos_gt_0": 0.00015999840001599985,
+      "p_value_negative_alignment_h1_cos_lt_0": 0.999850001499985,
+      "p_value_two_sided_h1_abs_cos_gt_0": 0.00043999560004399956
+    },
+    "mechanistic_conclusion": "Mechanism 3: Mixed nonlinear interaction. The interaction vector diverges by ~113 deg from the physical target swap (cosine -0.314), refuting both independent additive task bias and clean dynamic visual binding."
+  },
+  "grouped_cross_validation": {
+    "stratification": "Target-pair configuration stratified grouped 5-fold CV",
+    "comparison_1_explain_hjepa": {
+      "Task-Only": {
+        "mse_mean": 0.03722582161426544,
+        "mse_std": 0.004315672379855776,
+        "mae_mean": 0.15347183346748353,
+        "mae_std": 0.006935428337069088,
+        "ang_err_deg_mean": 22.954152297973632,
+        "ang_err_deg_std": 1.8724376790008121
+      },
+      "Visual-Only": {
+        "mse_mean": 0.06567083448171615,
+        "mse_std": 0.010404415071302511,
+        "mae_mean": 0.20717291831970214,
+        "mae_std": 0.01670106429208424,
+        "ang_err_deg_mean": 24.694103622436522,
+        "ang_err_deg_std": 4.890953550023447
+      },
+      "Additive": {
+        "mse_mean": 0.019852365553379058,
+        "mse_std": 0.004160116164036429,
+        "mae_mean": 0.10540748983621598,
+        "mae_std": 0.007938482971473291,
+        "ang_err_deg_mean": 14.50761432647705,
+        "ang_err_deg_std": 2.641792285461418
+      },
+      "Bilinear": {
+        "mse_mean": 0.005444878619164229,
+        "mse_std": 0.0006567388068266095,
+        "mae_mean": 0.05699722766876221,
+        "mae_std": 0.0021144482564306208,
+        "ang_err_deg_mean": 7.476819705963135,
+        "ang_err_deg_std": 0.5917711958108716
+      },
+      "Nonlinear MLP": {
+        "mse_mean": 0.004385503847151995,
+        "mse_std": 0.0009830171256451697,
+        "mae_mean": 0.049176628887653354,
+        "mae_std": 0.004203640335154666,
+        "ang_err_deg_mean": 6.688524341583252,
+        "ang_err_deg_std": 0.8862467459838757
+      }
+    },
+    "comparison_2_predict_ground_truth": {
+      "Task-Only": {
+        "mse_mean": 0.012806140631437302,
+        "mse_std": 0.00038685880756037763,
+        "mae_mean": 0.09492422342300415,
+        "mae_std": 0.002300975597090573,
+        "ang_err_deg_mean": 13.170060920715333,
+        "ang_err_deg_std": 0.2027545954711923
+      },
+      "Visual-Only": {
+        "mse_mean": 0.01248879823833704,
+        "mse_std": 0.0003463317743573381,
+        "mae_mean": 0.09060495048761368,
+        "mae_std": 0.001222550445137434,
+        "ang_err_deg_mean": 13.170060348510741,
+        "ang_err_deg_std": 0.20275444737511397
+      },
+      "Additive": {
+        "mse_mean": 0.012486663274466991,
+        "mse_std": 0.00034574372368167516,
+        "mae_mean": 0.09057570844888688,
+        "mae_std": 0.0012195590098809375,
+        "ang_err_deg_mean": 13.169537544250488,
+        "ang_err_deg_std": 0.20377696345810978
+      },
+      "Bilinear": {
+        "mse_mean": 0.0027372007258236407,
+        "mse_std": 0.0006066222611722425,
+        "mae_mean": 0.03912809267640114,
+        "mae_std": 0.003875177806110295,
+        "ang_err_deg_mean": 3.792843532562256,
+        "ang_err_deg_std": 0.25268354316637176
+      },
+      "Nonlinear MLP": {
+        "mse_mean": 0.003667073929682374,
+        "mse_std": 0.00041824263522816167,
+        "mae_mean": 0.04599025100469589,
+        "mae_std": 0.002551655944866516,
+        "ang_err_deg_mean": 4.714833354949951,
+        "ang_err_deg_std": 0.4937293391506311
+      },
+      "Visual Baseline (Mean)": {
+        "mse_mean": 0.012760677002370357,
+        "mse_std": 0.00039370420503564334,
+        "mae_mean": 0.0947322204709053,
+        "mae_std": 0.002276393951976881,
+        "ang_err_deg_mean": 13.170060729980468,
+        "ang_err_deg_std": 0.20275381470464313
+      },
+      "Oracle Baseline": {
+        "mse_mean": 0.0,
+        "mse_std": 0.0,
+        "mae_mean": 0.0,
+        "mae_std": 0.0,
+        "ang_err_deg_mean": 0.0,
+        "ang_err_deg_std": 0.0
+      }
+    }
+  },
+  "instance_level_binding_audit": {
+    "target_keys_count": 6,
+    "target_keys": [
+      "red_box",
+      "blue_cylinder",
+      "green_cylinder",
+      "yellow_cylinder",
+      "purple_box",
+      "cyan_cylinder"
+    ],
+    "semantic_relations_count": 8,
+    "semantic_relations": [
+      "approach",
+      "behind",
+      "in_front",
+      "left_of",
+      "right_of",
+      "multi_waypoint",
+      "action_probe",
+      "none"
+    ],
+    "total_task_embedding_indices": 64,
+    "instance_representation_supported": false,
+    "instance_binding_evaluation_status": "ARCHITECTURALLY_UNSUPPORTED",
+    "scientific_justification": "encode_task_id(target_key, semantic_relation) maps strictly to indices [0, 63] indexing one of 6 color-specific named landmarks ('red_box', 'blue_cylinder', 'green_cylinder', 'yellow_cylinder', 'purple_box', 'cyan_cylinder') and 8 relation types ('approach', 'behind', 'in_front', 'left_of', 'right_of', 'multi_waypoint', 'action_probe', 'none'). The network contains no input slot or embedding mechanism to specify which of two visually identical instances (e.g., two identical cyan cylinders) to select. The Phase 5 v4 experiment evaluated 'yellow_cylinder' vs 'cyan_cylinder', which differ in color and category key, and did not correctly install custom obstacle specs in MuJoCo. That historical 5.0% result is therefore INVALIDATED and excluded as valid instance-binding evidence."
+  }
+}

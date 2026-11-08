@@ -270,15 +270,17 @@ def run_task_conditioned_circuits_v5(
     print(f"[2/5] Loading intermediate activation records from {v4_activations_path}...")
     records = []
     with v4_activations_path.open("r", encoding="utf-8") as f:
-        for line in f:
+        for idx, line in enumerate(f):
             if line.strip():
-                records.append(json.loads(line))
-    print(f"Loaded {len(records)} activation records across 4 factorial conditions.")
+                item = json.loads(line)
+                item["pair_idx"] = int(item["pair_id"].split("_")[1]) if (isinstance(item["pair_id"], str) and "_" in item["pair_id"]) else int(item["pair_id"])
+                records.append(item)
+    print(f"Loaded {len(records)} pair activation records across 4 factorial conditions.")
 
     # Split into Discovery (pairs 0..24) and Held-Out (pairs 25..49)
     discovery_records = [r for r in records if r["pair_idx"] < 25]
     heldout_records = [r for r in records if r["pair_idx"] >= 25]
-    print(f"Split: {len(discovery_records)} discovery records (25 pairs) | {len(heldout_records)} held-out records (25 pairs)")
+    print(f"Split: {len(discovery_records)} discovery pairs | {len(heldout_records)} held-out pairs")
 
     # 2. Representation Statistics across all 9 stages
     print("\n[3/5] Computing comprehensive representation statistics on discovery split...")
@@ -295,8 +297,13 @@ def run_task_conditioned_circuits_v5(
     ]
 
     stage_stats = {}
+    cond_keys = ["cond_aa", "cond_ab", "cond_ba", "cond_bb"]
     for st in stages:
-        arr = np.array([r["activations"][st] for r in discovery_records], dtype=np.float32)
+        obs_list = []
+        for r in discovery_records:
+            for c in cond_keys:
+                obs_list.append(r["conditions"][c][st])
+        arr = np.array(obs_list, dtype=np.float32)
         life_sp = compute_treves_rolls_lifetime_sparsity(arr)
         pop_sp = compute_population_sparsity(arr)
         spec = compute_spectral_analysis(arr)
@@ -314,17 +321,15 @@ def run_task_conditioned_circuits_v5(
         print(f"  Stage {st:25s}: PR = {spec['participation_ratio']:.2f}/{arr.shape[1]} | LifeSp = {life_sp['mean_lifetime_sparsity']:.3f} | PopSp = {pop_sp['mean_population_sparsity']:.3f} | ZeroFr = {zero_fr['mean_zero_fraction']:.3f}")
 
     # 3. Candidate Unit Ranking on Discovery Split
-    # Compute task sensitivity per unit in Layer 1 post and Layer 2 post:
-    # Sensitivity = mean_{pairs} ||act(z_A, e_B) - act(z_A, e_A)|| / (std + 1e-6)
     def rank_units(layer_key: str) -> list[int]:
         pair_diffs = []
-        for p_idx in range(25):
-            r_aa = next(r for r in discovery_records if r["pair_idx"] == p_idx and r["condition"] == "zA_eA")
-            r_ab = next(r for r in discovery_records if r["pair_idx"] == p_idx and r["condition"] == "zA_eB")
-            diff = np.abs(np.array(r_ab["activations"][layer_key]) - np.array(r_aa["activations"][layer_key]))
+        for r in discovery_records:
+            act_aa = np.array(r["conditions"]["cond_aa"][layer_key])
+            act_ab = np.array(r["conditions"]["cond_ab"][layer_key])
+            diff = np.abs(act_ab - act_aa)
             pair_diffs.append(diff)
         mean_diff = np.mean(pair_diffs, axis=0)
-        return list(np.argsort(mean_diff)[::-1])
+        return [int(u) for u in np.argsort(mean_diff)[::-1]]
 
     ranked_l1 = rank_units("layer1_post_relu_64d")
     ranked_l2 = rank_units("layer2_post_relu_64d")
@@ -335,9 +340,9 @@ def run_task_conditioned_circuits_v5(
 
     # 4. Causal Interventions on Held-Out Split with Multi-Draw Random Controls
     # Units separated: Translation (meters) and Orientation (radians/degrees)
-    print(f"\n[5/5] Evaluating Causal Interventions on Held-Out Split ({len(heldout_records)//4} pairs, {n_random_draws} random draws/pair)...")
+    print(f"\n[5/5] Evaluating Causal Interventions on Held-Out Split ({len(heldout_records)} pairs, {n_random_draws} random draws/pair)...")
     k_values = [2, 4, 8, 16, 32, 64]
-    heldout_pair_indices = sorted(list(set(r["pair_idx"] for r in heldout_records)))
+    heldout_pair_indices = [r["pair_idx"] for r in heldout_records]
 
     intervention_records = []
     layer_configs = [
@@ -366,12 +371,10 @@ def run_task_conditioned_circuits_v5(
             pair_suff_trans_rand = []
             pair_suff_ang_rand = []
 
-            for p_idx in heldout_pair_indices:
-                r_aa = next(r for r in heldout_records if r["pair_idx"] == p_idx and r["condition"] == "zA_eA")
-                r_ab = next(r for r in heldout_records if r["pair_idx"] == p_idx and r["condition"] == "zA_eB")
-
-                act_aa = torch.tensor(r_aa["activations"][l_key], dtype=torch.float32, device=device).unsqueeze(0)
-                act_ab = torch.tensor(r_ab["activations"][l_key], dtype=torch.float32, device=device).unsqueeze(0)
+            for r in heldout_records:
+                p_idx = r["pair_idx"]
+                act_aa = torch.tensor(r["conditions"]["cond_aa"][l_key], dtype=torch.float32, device=device).unsqueeze(0)
+                act_ab = torch.tensor(r["conditions"]["cond_ab"][l_key], dtype=torch.float32, device=device).unsqueeze(0)
 
                 with torch.no_grad():
                     g_aa = forward_grounding_from_layer(model, act_aa, start_l).squeeze(0).cpu().numpy()
