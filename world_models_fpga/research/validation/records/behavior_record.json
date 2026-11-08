@@ -2,1037 +2,2209 @@
   "record_id": "REC-BEHAVIOR-001",
   "evaluation": "behavior",
   "provenance_status": "INDEPENDENTLY_EXECUTED",
-  "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_behavioral_benchmarks.py",
-  "execution_timestamp": "2026-11-07T17:32:19.342093+00:00",
-  "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+  "command_executed": "python world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py --episodes 40 --device cuda",
+  "execution_timestamp": "2026-11-08T03:22:27.278675+00:00",
+  "source_git_commit": "daa659d5f02d960dc4cc68ccc95012ca1dcda443",
   "working_tree_clean": true,
+  "script_path": "world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py",
+  "script_sha256": "212d9b4a23f49df0e68f572f78dd291194fd45feec40a6aa92f8062e312c2fba",
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
   "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
   "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
   "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
-  "checkpoints": [],
+  "checkpoints": [
+    {
+      "name": "hjepa_best.pt",
+      "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+      "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+    }
+  ],
   "random_seed": 42,
   "configuration": {
-    "capabilities": 6,
-    "episodes_per_cap": 10,
-    "seeds": [
-      42,
-      1337,
-      2026
+    "episodes": 40,
+    "horizon_k": 5,
+    "num_candidates": 24,
+    "conditions": [
+      "cond_1_intact_collision_head",
+      "cond_2_shuffled_collision_binding",
+      "cond_3_collision_head_disabled",
+      "cond_4_random_collision_predictor",
+      "cond_5_oracle_collision_predictor"
     ],
-    "tracks": [
-      "oracle",
-      "structured",
-      "observation"
-    ]
+    "safety_type": "Empirical prospective safety filter (NOT a formal Control Barrier Function)"
   },
   "environment": {
-    "python_version": "3.13.16",
-    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+    "python": "3.13.16",
+    "torch": "2.14.1+cu126",
+    "device": "cuda"
   },
-  "result_artifact_path": "world_models_fpga/research/benchmarks/results/behavioral_eval_results.json",
-  "result_artifact_sha256": "09cc29bf25f914eda1c57545b77f90e6a7174473c65a6a2335568305a0422174",
-  "provenance_notes": "Independently executed with verified embedded execution metadata.",
+  "result_artifact_path": "world_models_fpga/research/benchmarks/results/predictive_safety_benchmark.json",
+  "result_artifact_sha256": "4c4afd13e5fe7ecd23243ddcb8dfcdec3762c2583f691f1aa2e3642ec4b874ae",
+  "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
   "config": {
-    "capabilities": 6,
-    "episodes_per_cap": 10,
-    "seeds": [
-      42,
-      1337,
-      2026
+    "episodes": 40,
+    "horizon_k": 5,
+    "num_candidates": 24,
+    "conditions": [
+      "cond_1_intact_collision_head",
+      "cond_2_shuffled_collision_binding",
+      "cond_3_collision_head_disabled",
+      "cond_4_random_collision_predictor",
+      "cond_5_oracle_collision_predictor"
     ],
-    "tracks": [
-      "oracle",
-      "structured",
-      "observation"
-    ]
+    "safety_type": "Empirical prospective safety filter (NOT a formal Control Barrier Function)"
   },
-  "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
+  "git_commit": "daa659d5f02d960dc4cc68ccc95012ca1dcda443",
   "seed": 42,
   "results": {
-    "Oracle": {
-      "capabilities": {
-        "object_grounding": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.8,
-          "success_rate_ci95": 0.2613333333333333,
-          "goal_reached_rate": 0.8,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 1.0,
-          "path_efficiency_ci95": 0.0,
-          "mean_goal_error_m": 0.25689672976732253,
-          "goal_error_ci95_m": 0.016051270888738423,
-          "latency_mean_us": 11374.211245373157,
-          "latency_median_us": 10776.989001897164,
-          "latency_p99_us": 16930.422609531524
-        },
-        "spatial_reasoning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.6,
-          "success_rate_ci95": 0.32006665972366866,
-          "goal_reached_rate": 0.6,
-          "collision_rate": 0.1,
-          "collision_rate_ci95": 0.19599999999999998,
-          "path_efficiency": 0.9228832983673166,
-          "path_efficiency_ci95": 0.07022129747102372,
-          "mean_goal_error_m": 0.6250564873218536,
-          "goal_error_ci95_m": 0.3669787645194075,
-          "latency_mean_us": 11491.923351885825,
-          "latency_median_us": 10643.250003340654,
-          "latency_p99_us": 26234.745000741514
-        },
-        "obstacle_avoidance": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.6,
-          "success_rate_ci95": 0.32006665972366855,
-          "goal_reached_rate": 0.6,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9585677326994686,
-          "path_efficiency_ci95": 0.04824975545128927,
-          "mean_goal_error_m": 0.5688293501734734,
-          "goal_error_ci95_m": 0.2831331491058153,
-          "latency_mean_us": 12913.037600554291,
-          "latency_median_us": 11850.101749587338,
-          "latency_p99_us": 24994.475926765874
-        },
-        "action_prediction": {
-          "episodes_evaluated": 10,
-          "success_rate": 1.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.1,
-          "collision_rate": 0.4,
-          "collision_rate_ci95": 0.32006665972366866,
-          "path_efficiency": 0.7826788933469025,
-          "path_efficiency_ci95": 0.1514539822627404,
-          "mean_goal_error_m": 1.3159516349434852,
-          "goal_error_ci95_m": 0.5283295642152682,
-          "latency_mean_us": 20.401174073293312,
-          "latency_median_us": 19.20149770739954,
-          "latency_p99_us": 44.261224952060736
-        },
-        "temporal_planning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 1.0,
-          "path_efficiency_ci95": 0.0,
-          "mean_goal_error_m": 2.6368471324443816,
-          "goal_error_ci95_m": 0.9047427171480263,
-          "latency_mean_us": 11355.239666650212,
-          "latency_median_us": 10456.548501679208,
-          "latency_p99_us": 19898.384442742125
-        },
-        "generalization": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.8,
-          "success_rate_ci95": 0.2613333333333333,
-          "goal_reached_rate": 0.8,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.8412816450444076,
-          "path_efficiency_ci95": 0.06503166032977362,
-          "mean_goal_error_m": 0.4805081531405449,
-          "goal_error_ci95_m": 0.3015813229922052,
-          "latency_mean_us": 11302.936060114025,
-          "latency_median_us": 10835.686000064015,
-          "latency_p99_us": 17410.869749003905
-        }
-      },
-      "overall": {
-        "track": "oracle",
-        "ablation_mode": "oracle_controller",
-        "success_rate": 0.6333333333333333,
-        "success_rate_ci95": 0.19379999768566733,
-        "goal_reached_rate": 0.4833333333333334,
-        "collision_rate": 0.08333333333333333,
-        "collision_rate_ci95": 0.08601110995394477,
-        "path_efficiency": 0.9175685949096826,
-        "mean_goal_error_m": 0.9806815812985102,
-        "latency_mean_us": 9742.958183108467,
-        "latency_median_us": 10710.119502618909,
-        "latency_p99_us": 26234.745000741514
-      }
-    },
-    "Random": {
-      "capabilities": {
-        "object_grounding": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9385658107180135,
-          "path_efficiency_ci95": 0.04366302495023948,
-          "mean_goal_error_m": 1.135198113322258,
-          "goal_error_ci95_m": 0.3187771725727665,
-          "latency_mean_us": 19.107334069293593,
-          "latency_median_us": 16.796999261714518,
-          "latency_p99_us": 91.03951756696917
-        },
-        "spatial_reasoning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 0.1,
-          "collision_rate_ci95": 0.19599999999999998,
-          "path_efficiency": 0.9959400076359921,
-          "path_efficiency_ci95": 0.007957585033455313,
-          "mean_goal_error_m": 1.7997411370277405,
-          "goal_error_ci95_m": 0.18175350014478747,
-          "latency_mean_us": 17.3221149946981,
-          "latency_median_us": 16.438747479696758,
-          "latency_p99_us": 35.4236610044609
-        },
-        "obstacle_avoidance": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 1.0,
-          "path_efficiency_ci95": 0.0,
-          "mean_goal_error_m": 1.6260944128036499,
-          "goal_error_ci95_m": 0.2387333251334113,
-          "latency_mean_us": 21.118796390753964,
-          "latency_median_us": 20.112249330850318,
-          "latency_p99_us": 66.49335215770408
-        },
-        "action_prediction": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9286206634347515,
-          "path_efficiency_ci95": 0.041936489105150215,
-          "mean_goal_error_m": 1.0697594046592713,
-          "goal_error_ci95_m": 0.15264178338018958,
-          "latency_mean_us": 18.369874753016312,
-          "latency_median_us": 16.89724922471214,
-          "latency_p99_us": 41.29271421916185
-        },
-        "temporal_planning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 0.4,
-          "collision_rate_ci95": 0.32006665972366866,
-          "path_efficiency": 1.0,
-          "path_efficiency_ci95": 0.0,
-          "mean_goal_error_m": 2.867161375284195,
-          "goal_error_ci95_m": 0.8697042293097386,
-          "latency_mean_us": 22.012988263655625,
-          "latency_median_us": 19.789498765021563,
-          "latency_p99_us": 74.56083170545753
-        },
-        "generalization": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 1.0,
-          "path_efficiency_ci95": 0.0,
-          "mean_goal_error_m": 2.160861873626709,
-          "goal_error_ci95_m": 0.08865703001955551,
-          "latency_mean_us": 17.16952144168841,
-          "latency_median_us": 16.032499843277037,
-          "latency_p99_us": 34.810433474194724
-        }
-      },
-      "overall": {
-        "track": "observation",
-        "ablation_mode": "random",
-        "success_rate": 0.0,
-        "success_rate_ci95": 0.0,
-        "goal_reached_rate": 0.0,
-        "collision_rate": 0.08333333333333333,
-        "collision_rate_ci95": 0.08601110995394477,
-        "path_efficiency": 0.9771877469647929,
-        "mean_goal_error_m": 1.7764693861206373,
-        "latency_mean_us": 19.183438318851003,
-        "latency_median_us": 16.84712424321333,
-        "latency_p99_us": 91.03951756696917
-      }
-    },
-    "Baseline": {
-      "capabilities": {
-        "object_grounding": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.4,
-          "success_rate_ci95": 0.32006665972366866,
-          "goal_reached_rate": 0.4,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9351580356969741,
-          "path_efficiency_ci95": 0.047961165603509145,
-          "mean_goal_error_m": 0.3600417286157608,
-          "goal_error_ci95_m": 0.0808540673511522,
-          "latency_mean_us": 1872.0854548473562,
-          "latency_median_us": 1030.651001201477,
-          "latency_p99_us": 177121.41119925186
-        },
-        "spatial_reasoning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.3,
-          "success_rate_ci95": 0.2993949454037815,
-          "goal_reached_rate": 0.4,
-          "collision_rate": 0.6,
-          "collision_rate_ci95": 0.32006665972366866,
-          "path_efficiency": 0.9978665885539023,
-          "path_efficiency_ci95": 0.004181486434351708,
-          "mean_goal_error_m": 0.6566638469696044,
-          "goal_error_ci95_m": 0.2999090113052765,
-          "latency_mean_us": 1148.2233375436238,
-          "latency_median_us": 1049.5370006537996,
-          "latency_p99_us": 2879.193343980296
-        },
-        "obstacle_avoidance": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.3,
-          "success_rate_ci95": 0.2993949454037815,
-          "goal_reached_rate": 0.5,
-          "collision_rate": 0.6,
-          "collision_rate_ci95": 0.32006665972366866,
-          "path_efficiency": 0.9986972278190016,
-          "path_efficiency_ci95": 0.0017031493396085485,
-          "mean_goal_error_m": 0.4457092672586441,
-          "goal_error_ci95_m": 0.1552797890704789,
-          "latency_mean_us": 1111.1617036080322,
-          "latency_median_us": 1056.5587490418693,
-          "latency_p99_us": 1941.42164294608
-        },
-        "action_prediction": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.1,
-          "success_rate_ci95": 0.19599999999999998,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9610133966276371,
-          "path_efficiency_ci95": 0.03817783864240323,
-          "mean_goal_error_m": 0.7903934121131897,
-          "goal_error_ci95_m": 0.17230478449728284,
-          "latency_mean_us": 1081.7105251369367,
-          "latency_median_us": 1021.5732509095687,
-          "latency_p99_us": 1821.6048584872624
-        },
-        "temporal_planning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 1.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 1.0,
-          "path_efficiency_ci95": 0.0,
-          "mean_goal_error_m": 2.519001841545105,
-          "goal_error_ci95_m": 0.8079757940203735,
-          "latency_mean_us": 1135.9768812414227,
-          "latency_median_us": 1037.0392501499737,
-          "latency_p99_us": 2873.1435074667397
-        },
-        "generalization": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 1.0,
-          "collision_rate": 1.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9877384372975013,
-          "path_efficiency_ci95": 0.010214566294945283,
-          "mean_goal_error_m": 0.24301737695932388,
-          "goal_error_ci95_m": 0.002701778452698973,
-          "latency_mean_us": 1147.8965615993006,
-          "latency_median_us": 1038.8607533968752,
-          "latency_p99_us": 2896.676064498024
-        }
-      },
-      "overall": {
-        "track": "structured",
-        "ablation_mode": "reactive",
-        "success_rate": 0.18333333333333335,
-        "success_rate_ci95": 0.1858094250885386,
-        "goal_reached_rate": 0.3833333333333333,
-        "collision_rate": 0.5333333333333333,
-        "collision_rate_ci95": 0.10668888657455622,
-        "path_efficiency": 0.9800789476658361,
-        "mean_goal_error_m": 0.8358045789102713,
-        "latency_mean_us": 1249.5090773294453,
-        "latency_median_us": 1037.9500017734244,
-        "latency_p99_us": 177121.41119925186
-      }
-    },
-    "LeWM": {
-      "capabilities": {
-        "object_grounding": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.9,
-          "success_rate_ci95": 0.19599999999999998,
-          "goal_reached_rate": 0.9,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9917786661178136,
-          "path_efficiency_ci95": 0.016113814409085277,
-          "mean_goal_error_m": 0.30375746041536333,
-          "goal_error_ci95_m": 0.12329443300574287,
-          "latency_mean_us": 3383.7160713242747,
-          "latency_median_us": 2077.12349765643,
-          "latency_p99_us": 111124.35656012536
-        },
-        "spatial_reasoning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.2,
-          "success_rate_ci95": 0.26133333333333336,
-          "goal_reached_rate": 0.2,
-          "collision_rate": 0.6,
-          "collision_rate_ci95": 0.32006665972366866,
-          "path_efficiency": 0.9422092558988497,
-          "path_efficiency_ci95": 0.06369117399781625,
-          "mean_goal_error_m": 0.6664527624845504,
-          "goal_error_ci95_m": 0.2886151827700207,
-          "latency_mean_us": 2422.3545435787382,
-          "latency_median_us": 2203.6672507965704,
-          "latency_p99_us": 5794.352098361561
-        },
-        "obstacle_avoidance": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.1,
-          "success_rate_ci95": 0.19599999999999998,
-          "goal_reached_rate": 0.4,
-          "collision_rate": 0.9,
-          "collision_rate_ci95": 0.19599999999999998,
-          "path_efficiency": 0.928838037774911,
-          "path_efficiency_ci95": 0.06162724746536369,
-          "mean_goal_error_m": 0.4276486307382584,
-          "goal_error_ci95_m": 0.14161031346793387,
-          "latency_mean_us": 2281.6679833640783,
-          "latency_median_us": 2057.6057522703195,
-          "latency_p99_us": 6357.174461799147
-        },
-        "action_prediction": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.2,
-          "success_rate_ci95": 0.26133333333333336,
-          "goal_reached_rate": 0.5,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.8814329057317366,
-          "path_efficiency_ci95": 0.09676054830675686,
-          "mean_goal_error_m": 0.48189745396375655,
-          "goal_error_ci95_m": 0.22732607693510487,
-          "latency_mean_us": 2268.8433228824724,
-          "latency_median_us": 2096.063250064617,
-          "latency_p99_us": 5771.557928977563
-        },
-        "temporal_planning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.0,
-          "collision_rate": 1.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 1.0,
-          "path_efficiency_ci95": 0.0,
-          "mean_goal_error_m": 2.452494686841965,
-          "goal_error_ci95_m": 0.6791792196937829,
-          "latency_mean_us": 2226.8548063530643,
-          "latency_median_us": 2044.5819973247126,
-          "latency_p99_us": 4184.778065187133
-        },
-        "generalization": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.2,
-          "success_rate_ci95": 0.26133333333333336,
-          "goal_reached_rate": 0.8,
-          "collision_rate": 0.8,
-          "collision_rate_ci95": 0.2613333333333333,
-          "path_efficiency": 0.9353920830622526,
-          "path_efficiency_ci95": 0.03167685825618322,
-          "mean_goal_error_m": 0.32358200252056124,
-          "goal_error_ci95_m": 0.13083014441047347,
-          "latency_mean_us": 2283.790764919261,
-          "latency_median_us": 2090.050002152566,
-          "latency_p99_us": 5519.182647102571
-        }
-      },
-      "overall": {
-        "track": "structured",
-        "ablation_mode": "prediction_used",
-        "success_rate": 0.26666666666666666,
-        "success_rate_ci95": 0.19600000000000004,
-        "goal_reached_rate": 0.4666666666666666,
-        "collision_rate": 0.5499999999999999,
-        "collision_rate_ci95": 0.12956666550950033,
-        "path_efficiency": 0.9466084914309271,
-        "mean_goal_error_m": 0.7759721661607425,
-        "latency_mean_us": 2477.871248736981,
-        "latency_median_us": 2083.586749904498,
-        "latency_p99_us": 111124.35656012536
-      }
-    },
-    "H-JEPA": {
-      "capabilities": {
-        "object_grounding": {
-          "episodes_evaluated": 10,
-          "success_rate": 1.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 1.0,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9782047666061032,
-          "path_efficiency_ci95": 0.0427186574520375,
-          "mean_goal_error_m": 0.23238386511802672,
-          "goal_error_ci95_m": 0.005319979946732607,
-          "latency_mean_us": 4144.983368208437,
-          "latency_median_us": 3858.645248328685,
-          "latency_p99_us": 6411.6630630720465
-        },
-        "spatial_reasoning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.6,
-          "success_rate_ci95": 0.32006665972366855,
-          "goal_reached_rate": 0.6,
-          "collision_rate": 0.4,
-          "collision_rate_ci95": 0.32006665972366855,
-          "path_efficiency": 1.0,
-          "path_efficiency_ci95": 0.0,
-          "mean_goal_error_m": 0.5352737739682197,
-          "goal_error_ci95_m": 0.29599011841176437,
-          "latency_mean_us": 4449.828498219568,
-          "latency_median_us": 4125.544748603716,
-          "latency_p99_us": 10298.112328765283
-        },
-        "obstacle_avoidance": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.2,
-          "success_rate_ci95": 0.26133333333333336,
-          "goal_reached_rate": 0.3,
-          "collision_rate": 0.8,
-          "collision_rate_ci95": 0.2613333333333333,
-          "path_efficiency": 0.9668879135491233,
-          "path_efficiency_ci95": 0.06461606148359307,
-          "mean_goal_error_m": 0.5146542504429817,
-          "goal_error_ci95_m": 0.1566348264278599,
-          "latency_mean_us": 4170.090531102365,
-          "latency_median_us": 3844.778499114909,
-          "latency_p99_us": 10479.27514546463
-        },
-        "action_prediction": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.2,
-          "success_rate_ci95": 0.26133333333333336,
-          "goal_reached_rate": 1.0,
-          "collision_rate": 0.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9888938942179817,
-          "path_efficiency_ci95": 0.02176796733275601,
-          "mean_goal_error_m": 0.23031920194625854,
-          "goal_error_ci95_m": 0.00985947236698816,
-          "latency_mean_us": 4128.609372139884,
-          "latency_median_us": 3933.594998670742,
-          "latency_p99_us": 6033.447879909362
-        },
-        "temporal_planning": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.0,
-          "success_rate_ci95": 0.0,
-          "goal_reached_rate": 0.1,
-          "collision_rate": 1.0,
-          "collision_rate_ci95": 0.0,
-          "path_efficiency": 0.9925753321253566,
-          "path_efficiency_ci95": 0.01455234903430106,
-          "mean_goal_error_m": 2.1625934451818467,
-          "goal_error_ci95_m": 0.7310940939689704,
-          "latency_mean_us": 4350.133460090792,
-          "latency_median_us": 3984.5914998295484,
-          "latency_p99_us": 8948.126733866218
-        },
-        "generalization": {
-          "episodes_evaluated": 10,
-          "success_rate": 0.2,
-          "success_rate_ci95": 0.26133333333333336,
-          "goal_reached_rate": 0.6,
-          "collision_rate": 0.7,
-          "collision_rate_ci95": 0.2993949454037815,
-          "path_efficiency": 0.8841094788067922,
-          "path_efficiency_ci95": 0.04534694880106748,
-          "mean_goal_error_m": 0.38755871206521986,
-          "goal_error_ci95_m": 0.13052929287483053,
-          "latency_mean_us": 4314.307970257111,
-          "latency_median_us": 3937.6537497446407,
-          "latency_p99_us": 9166.8915711678
-        }
-      },
-      "overall": {
-        "track": "structured",
-        "ablation_mode": "prediction_used",
-        "success_rate": 0.3666666666666667,
-        "success_rate_ci95": 0.1840111099539448,
-        "goal_reached_rate": 0.6000000000000001,
-        "collision_rate": 0.4833333333333334,
-        "collision_rate_ci95": 0.14679915641013055,
-        "path_efficiency": 0.9684452308842263,
-        "mean_goal_error_m": 0.6771305414537588,
-        "latency_mean_us": 4259.6588666696925,
-        "latency_median_us": 3935.6243742076913,
-        "latency_p99_us": 10479.27514546463
-      }
-    },
-    "_tracks_and_ablations": {
-      "track_a_oracle": {
-        "track": "oracle",
-        "ablation_mode": "oracle_controller",
-        "success_rate": 0.6333333333333333,
-        "success_rate_ci95": 0.19379999768566733,
-        "goal_reached_rate": 0.4833333333333334,
-        "collision_rate": 0.08333333333333333,
-        "collision_rate_ci95": 0.08601110995394477,
-        "path_efficiency": 0.9175685949096826,
-        "mean_goal_error_m": 0.9806815812985102,
-        "latency_mean_us": 9742.958183108467,
-        "latency_median_us": 10710.119502618909,
-        "latency_p99_us": 26234.745000741514
-      },
-      "track_b_structured_multi_seed": {
-        "Baseline": {
-          "seeds": [
-            42,
-            1337,
-            2026
-          ],
-          "per_seed": {
-            "seed_42": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.2,
-              "success_rate_ci95": 0.1455851451308087,
-              "goal_reached_rate": 0.36666666666666664,
-              "collision_rate": 0.5,
-              "collision_rate_ci95": 0.18198143141351084,
-              "path_efficiency": 0.9773789412359922,
-              "path_efficiency_ci95": 0.020529326129697646,
-              "mean_goal_error_m": 0.7315586929519972,
-              "goal_error_ci95_m": 0.30771597781247095,
-              "latency_mean_us": 1127.8279638608033,
-              "latency_median_us": 1020.7689992967062,
-              "latency_p99_us": 3332.854066578875
-            },
-            "seed_1337": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.4,
-              "success_rate_ci95": 0.1783046598497581,
-              "goal_reached_rate": 0.5,
-              "collision_rate": 0.3333333333333333,
-              "collision_rate_ci95": 0.17157373893670413,
-              "path_efficiency": 0.9541412717878692,
-              "path_efficiency_ci95": 0.02901529201514727,
-              "mean_goal_error_m": 0.739138533671697,
-              "goal_error_ci95_m": 0.35034598822432433,
-              "latency_mean_us": 1093.8053787341519,
-              "latency_median_us": 1015.5764975934289,
-              "latency_p99_us": 2987.7091667433006
-            },
-            "seed_2026": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.13333333333333333,
-              "success_rate_ci95": 0.12372358265187183,
-              "goal_reached_rate": 0.23333333333333334,
-              "collision_rate": 0.43333333333333335,
-              "collision_rate_ci95": 0.18035656467524525,
-              "path_efficiency": 0.9602558017783253,
-              "path_efficiency_ci95": 0.030690709501194464,
-              "mean_goal_error_m": 0.7961842452486356,
-              "goal_error_ci95_m": 0.26778467256602145,
-              "latency_mean_us": 1116.7440981876687,
-              "latency_median_us": 1027.5250024278648,
-              "latency_p99_us": 2867.3493231457546
-            }
-          },
-          "mean_success_rate": 0.24444444444444446,
-          "std_success_rate": 0.13877773329774218,
-          "mean_collision_rate": 0.4222222222222222,
-          "std_collision_rate": 0.08388704928078612,
-          "mean_path_efficiency": 0.9639253382673956,
-          "mean_goal_error_m": 0.7556271572907766
-        },
-        "LeWM": {
-          "seeds": [
-            42,
-            1337,
-            2026
-          ],
-          "per_seed": {
-            "seed_42": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.26666666666666666,
-              "success_rate_ci95": 0.16095043381610954,
-              "goal_reached_rate": 0.4666666666666667,
-              "collision_rate": 0.6,
-              "collision_rate_ci95": 0.17830465984975807,
-              "path_efficiency": 0.9455391827935277,
-              "path_efficiency_ci95": 0.03415171365160387,
-              "mean_goal_error_m": 0.6997626970211664,
-              "goal_error_ci95_m": 0.3040716136230604,
-              "latency_mean_us": 2186.0000362103706,
-              "latency_median_us": 2035.73499857157,
-              "latency_p99_us": 4237.474396713515
-            },
-            "seed_1337": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.26666666666666666,
-              "success_rate_ci95": 0.16095043381610954,
-              "goal_reached_rate": 0.43333333333333335,
-              "collision_rate": 0.5333333333333333,
-              "collision_rate_ci95": 0.18157657789441553,
-              "path_efficiency": 0.9604999785722506,
-              "path_efficiency_ci95": 0.040890687018484854,
-              "mean_goal_error_m": 0.833828620115916,
-              "goal_error_ci95_m": 0.33248132647487466,
-              "latency_mean_us": 2276.153089575826,
-              "latency_median_us": 2050.3164996625856,
-              "latency_p99_us": 4095.5023880778776
-            },
-            "seed_2026": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.26666666666666666,
-              "success_rate_ci95": 0.16095043381610954,
-              "goal_reached_rate": 0.4666666666666667,
-              "collision_rate": 0.5333333333333333,
-              "collision_rate_ci95": 0.18157657789441553,
-              "path_efficiency": 0.9564565868456635,
-              "path_efficiency_ci95": 0.030359738539784152,
-              "mean_goal_error_m": 0.9131746063629786,
-              "goal_error_ci95_m": 0.38032792319426556,
-              "latency_mean_us": 2308.5016353913097,
-              "latency_median_us": 2026.3229962438345,
-              "latency_p99_us": 5892.568009842947
-            }
-          },
-          "mean_success_rate": 0.26666666666666666,
-          "std_success_rate": 0.0,
-          "mean_collision_rate": 0.5555555555555555,
-          "std_collision_rate": 0.03849001794597504,
-          "mean_path_efficiency": 0.9541652494038139,
-          "mean_goal_error_m": 0.815588641166687
-        },
-        "H-JEPA": {
-          "seeds": [
-            42,
-            1337,
-            2026
-          ],
-          "per_seed": {
-            "seed_42": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.4,
-              "success_rate_ci95": 0.1783046598497581,
-              "goal_reached_rate": 0.6333333333333333,
-              "collision_rate": 0.5,
-              "collision_rate_ci95": 0.18198143141351084,
-              "path_efficiency": 0.9678525986423522,
-              "path_efficiency_ci95": 0.026863734306506414,
-              "mean_goal_error_m": 0.6829504897197087,
-              "goal_error_ci95_m": 0.3044834452358315,
-              "latency_mean_us": 4423.82921852808,
-              "latency_median_us": 3864.948248519795,
-              "latency_p99_us": 10974.21490536945
-            },
-            "seed_1337": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.36666666666666664,
-              "success_rate_ci95": 0.17539166898086325,
-              "goal_reached_rate": 0.7,
-              "collision_rate": 0.5,
-              "collision_rate_ci95": 0.18198143141351084,
-              "path_efficiency": 0.9442925664288941,
-              "path_efficiency_ci95": 0.03899157174613082,
-              "mean_goal_error_m": 0.629678626358509,
-              "goal_error_ci95_m": 0.3218580900087244,
-              "latency_mean_us": 4144.19403448279,
-              "latency_median_us": 3822.438000497641,
-              "latency_p99_us": 9199.068825681754
-            },
-            "seed_2026": {
-              "episodes_evaluated": 30,
-              "success_rate": 0.26666666666666666,
-              "success_rate_ci95": 0.16095043381610954,
-              "goal_reached_rate": 0.6666666666666666,
-              "collision_rate": 0.5666666666666667,
-              "collision_rate_ci95": 0.18035656467524525,
-              "path_efficiency": 0.9756072946112719,
-              "path_efficiency_ci95": 0.016623743922997307,
-              "mean_goal_error_m": 0.6439409320553143,
-              "goal_error_ci95_m": 0.32289065026790525,
-              "latency_mean_us": 4213.299885408368,
-              "latency_median_us": 3891.464748448925,
-              "latency_p99_us": 10475.306177909077
-            }
-          },
-          "mean_success_rate": 0.3444444444444444,
-          "std_success_rate": 0.06938886664887109,
-          "mean_collision_rate": 0.5222222222222223,
-          "std_collision_rate": 0.03849001794597504,
-          "mean_path_efficiency": 0.962584153227506,
-          "mean_goal_error_m": 0.6521900160445107
-        }
-      },
-      "track_c_observation_only": {
-        "Baseline": {
-          "episodes_evaluated": 30,
-          "success_rate": 0.03333333333333333,
-          "success_rate_ci95": 0.06533333333333333,
-          "goal_reached_rate": 0.06666666666666667,
-          "collision_rate": 0.3,
-          "collision_rate_ci95": 0.16678873690576557,
-          "path_efficiency": 0.9749758419973522,
-          "path_efficiency_ci95": 0.02670237429114372,
-          "mean_goal_error_m": 1.459774866203467,
-          "goal_error_ci95_m": 0.43828872950836206,
-          "latency_mean_us": 1814.9875906137277,
-          "latency_median_us": 1327.7979978738585,
-          "latency_p99_us": 85065.36251061119
-        },
-        "LeWM": {
-          "episodes_evaluated": 30,
-          "success_rate": 0.1,
-          "success_rate_ci95": 0.10918885884810649,
-          "goal_reached_rate": 0.1,
-          "collision_rate": 0.5,
-          "collision_rate_ci95": 0.18198143141351084,
-          "path_efficiency": 0.9346264901262127,
-          "path_efficiency_ci95": 0.050610095281227105,
-          "mean_goal_error_m": 1.5587684179345767,
-          "goal_error_ci95_m": 0.47597289412626936,
-          "latency_mean_us": 3110.2604717014256,
-          "latency_median_us": 2735.9695013728924,
-          "latency_p99_us": 18147.221627478582
-        },
-        "H-JEPA": {
-          "episodes_evaluated": 30,
-          "success_rate": 0.13333333333333333,
-          "success_rate_ci95": 0.12372358265187183,
-          "goal_reached_rate": 0.16666666666666666,
-          "collision_rate": 0.7666666666666667,
-          "collision_rate_ci95": 0.15393903356082184,
-          "path_efficiency": 0.8299349170966,
-          "path_efficiency_ci95": 0.07458256495167018,
-          "mean_goal_error_m": 1.7731311932206153,
-          "goal_error_ci95_m": 0.4814748601560355,
-          "latency_mean_us": 5049.470127459542,
-          "latency_median_us": 4472.617250939948,
-          "latency_p99_us": 11790.632047464169
-        }
-      },
-      "controlled_ablations": {
-        "LeWM": {
-          "prediction_used": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.06666666666666667,
-            "success_rate_ci95": 0.09078828894720775,
-            "goal_reached_rate": 0.23333333333333334,
-            "collision_rate": 0.6666666666666666,
-            "collision_rate_ci95": 0.1715737389367041,
-            "path_efficiency": 0.9892649567685544,
-            "path_efficiency_ci95": 0.010524663499882026,
-            "mean_goal_error_m": 1.1909478162725766,
-            "goal_error_ci95_m": 0.45102127723638286,
-            "latency_mean_us": 2252.241638986615,
-            "latency_median_us": 2033.164750173455,
-            "latency_p99_us": 5376.4604963493175
-          },
-          "reactive": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.06666666666666667,
-            "success_rate_ci95": 0.09078828894720775,
-            "goal_reached_rate": 0.16666666666666666,
-            "collision_rate": 0.7666666666666667,
-            "collision_rate_ci95": 0.15393903356082186,
-            "path_efficiency": 0.9967217727615061,
-            "path_efficiency_ci95": 0.0045450877922305205,
-            "mean_goal_error_m": 1.3008611465493838,
-            "goal_error_ci95_m": 0.4345201349653251,
-            "latency_mean_us": 1348.9496106794634,
-            "latency_median_us": 1229.2817536945222,
-            "latency_p99_us": 4456.9252296205395
-          },
-          "prediction_ignored": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.06666666666666667,
-            "success_rate_ci95": 0.09078828894720775,
-            "goal_reached_rate": 0.16666666666666666,
-            "collision_rate": 0.7666666666666667,
-            "collision_rate_ci95": 0.15393903356082186,
-            "path_efficiency": 0.9967217727615061,
-            "path_efficiency_ci95": 0.0045450877922305205,
-            "mean_goal_error_m": 1.300821282962958,
-            "goal_error_ci95_m": 0.43458222367185034,
-            "latency_mean_us": 2098.633461666338,
-            "latency_median_us": 1925.4334983997978,
-            "latency_p99_us": 5562.921301441383
-          },
-          "no_action_conditioning": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.06666666666666667,
-            "success_rate_ci95": 0.09078828894720775,
-            "goal_reached_rate": 0.16666666666666666,
-            "collision_rate": 0.7666666666666667,
-            "collision_rate_ci95": 0.15393903356082186,
-            "path_efficiency": 0.9967217727615061,
-            "path_efficiency_ci95": 0.0045450877922305205,
-            "mean_goal_error_m": 1.3009067490696906,
-            "goal_error_ci95_m": 0.43462357078956876,
-            "latency_mean_us": 2220.5569173480267,
-            "latency_median_us": 2059.758498944575,
-            "latency_p99_us": 4101.32708914316
-          },
-          "no_collision_prediction": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.06666666666666667,
-            "success_rate_ci95": 0.09078828894720775,
-            "goal_reached_rate": 0.13333333333333333,
-            "collision_rate": 0.7333333333333333,
-            "collision_rate_ci95": 0.1609504338161096,
-            "path_efficiency": 0.9920638332574263,
-            "path_efficiency_ci95": 0.008480894179861557,
-            "mean_goal_error_m": 1.2750154693921407,
-            "goal_error_ci95_m": 0.4325339159267966,
-            "latency_mean_us": 2147.498059751485,
-            "latency_median_us": 2023.8347515260102,
-            "latency_p99_us": 3865.4019391819015
-          }
-        },
-        "H-JEPA": {
-          "prediction_used": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.36666666666666664,
-            "success_rate_ci95": 0.17539166898086325,
-            "goal_reached_rate": 0.5333333333333333,
-            "collision_rate": 0.6333333333333333,
-            "collision_rate_ci95": 0.17539166898086325,
-            "path_efficiency": 0.9893838158149696,
-            "path_efficiency_ci95": 0.016675600632110592,
-            "mean_goal_error_m": 1.1588330169518788,
-            "goal_error_ci95_m": 0.4810012234249382,
-            "latency_mean_us": 4055.325468839429,
-            "latency_median_us": 3813.482999248663,
-            "latency_p99_us": 6661.64687558194
-          },
-          "reactive": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.0,
-            "success_rate_ci95": 0.0,
-            "goal_reached_rate": 0.0,
-            "collision_rate": 0.7666666666666667,
-            "collision_rate_ci95": 0.15393903356082186,
-            "path_efficiency": 0.9941800069013238,
-            "path_efficiency_ci95": 0.007923828306719333,
-            "mean_goal_error_m": 1.5735875149567922,
-            "goal_error_ci95_m": 0.3487911635464035,
-            "latency_mean_us": 1238.1675409310642,
-            "latency_median_us": 1174.6365016733762,
-            "latency_p99_us": 2002.251435721698
-          },
-          "prediction_ignored": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.03333333333333333,
-            "success_rate_ci95": 0.06533333333333333,
-            "goal_reached_rate": 0.06666666666666667,
-            "collision_rate": 0.7333333333333333,
-            "collision_rate_ci95": 0.1609504338161096,
-            "path_efficiency": 0.9996849711809247,
-            "path_efficiency_ci95": 0.0006174564853875568,
-            "mean_goal_error_m": 1.634638891617457,
-            "goal_error_ci95_m": 0.3918738186087221,
-            "latency_mean_us": 3824.2694991107514,
-            "latency_median_us": 3611.3002479396528,
-            "latency_p99_us": 6623.805185873053
-          },
-          "no_action_conditioning": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.03333333333333333,
-            "success_rate_ci95": 0.06533333333333333,
-            "goal_reached_rate": 0.06666666666666667,
-            "collision_rate": 0.7,
-            "collision_rate_ci95": 0.16678873690576557,
-            "path_efficiency": 0.9999242438845396,
-            "path_efficiency_ci95": 0.00014848198630240854,
-            "mean_goal_error_m": 1.6360501448313396,
-            "goal_error_ci95_m": 0.39215121466383623,
-            "latency_mean_us": 4078.169552983267,
-            "latency_median_us": 3851.103003398748,
-            "latency_p99_us": 13931.380736078436
-          },
-          "no_collision_prediction": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.3,
-            "success_rate_ci95": 0.16678873690576557,
-            "goal_reached_rate": 0.5333333333333333,
-            "collision_rate": 0.7,
-            "collision_rate_ci95": 0.16678873690576557,
-            "path_efficiency": 0.9894169172900423,
-            "path_efficiency_ci95": 0.017231927123037703,
-            "mean_goal_error_m": 1.1575973163048425,
-            "goal_error_ci95_m": 0.4811401462925592,
-            "latency_mean_us": 4098.10023788009,
-            "latency_median_us": 3839.2455007851822,
-            "latency_p99_us": 8689.809345218966
-          },
-          "no_temporal_hierarchy": {
-            "episodes_evaluated": 30,
-            "success_rate": 0.36666666666666664,
-            "success_rate_ci95": 0.17539166898086325,
-            "goal_reached_rate": 0.4666666666666667,
-            "collision_rate": 0.6,
-            "collision_rate_ci95": 0.17830465984975807,
-            "path_efficiency": 0.9961135847294761,
-            "path_efficiency_ci95": 0.007617373930226839,
-            "mean_goal_error_m": 1.1862704738974572,
-            "goal_error_ci95_m": 0.47469853851614313,
-            "latency_mean_us": 1945.460356628001,
-            "latency_median_us": 1821.924997784663,
-            "latency_p99_us": 3411.9350778899384
-          }
-        }
-      }
-    },
     "execution_metadata": {
-      "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/benchmarks/run_behavioral_benchmarks.py",
-      "git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
-      "execution_timestamp": "2026-11-07T17:32:19.342093+00:00",
+      "script_path": "world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py",
+      "script_sha256": "212d9b4a23f49df0e68f572f78dd291194fd45feec40a6aa92f8062e312c2fba",
+      "command_executed": "python world_models_fpga/research/benchmarks/run_predictive_safety_benchmark.py --episodes 40 --device cuda",
+      "execution_timestamp": "2026-11-08T03:22:27.278675+00:00",
+      "git_commit": "daa659d5f02d960dc4cc68ccc95012ca1dcda443",
+      "working_tree_clean": true,
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
       "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
       "checkpoint_sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+      "checkpoints": [
+        {
+          "name": "hjepa_best.pt",
+          "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+          "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+        }
+      ],
       "random_seed": 42,
       "configuration": {
-        "capabilities": 6,
-        "episodes_per_cap": 10,
-        "seeds": [
-          42,
-          1337,
-          2026
+        "episodes": 40,
+        "horizon_k": 5,
+        "num_candidates": 24,
+        "conditions": [
+          "cond_1_intact_collision_head",
+          "cond_2_shuffled_collision_binding",
+          "cond_3_collision_head_disabled",
+          "cond_4_random_collision_predictor",
+          "cond_5_oracle_collision_predictor"
         ],
-        "tracks": [
-          "oracle",
-          "structured",
-          "observation"
-        ]
+        "safety_type": "Empirical prospective safety filter (NOT a formal Control Barrier Function)"
       },
       "environment": {
-        "python_version": "3.13.16",
-        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+        "python": "3.13.16",
+        "torch": "2.14.1+cu126",
+        "device": "cuda"
       }
-    }
+    },
+    "held_out_prediction_quality": {
+      "brier_score": 0.007409103595361321,
+      "expected_calibration_error_ece": 0.021331739877971354,
+      "auroc": 1.0,
+      "false_negative_rate_at_05": 0.0,
+      "false_negatives_count": 0,
+      "total_positive_collisions": 30,
+      "total_eval_samples": 500
+    },
+    "closed_loop_safety_eval": {
+      "conditions": {
+        "cond_1_intact_collision_head": {
+          "episodes_evaluated": 40,
+          "success_rate": 0.2750000059604645,
+          "collision_rate": 0.699999988079071,
+          "mean_final_goal_error_m": 0.6663241386413574,
+          "per_episode_success": [
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
+          "per_episode_collision": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ],
+          "per_episode_goal_error": [
+            0.6712781190872192,
+            0.22878707945346832,
+            0.7072336077690125,
+            0.24086575210094452,
+            0.8961920738220215,
+            0.24858355522155762,
+            0.6110302209854126,
+            0.24875949323177338,
+            0.7287011742591858,
+            0.2406703233718872,
+            0.941393256187439,
+            0.23193630576133728,
+            0.6428242325782776,
+            0.2285751849412918,
+            0.8058379292488098,
+            0.3791586756706238,
+            0.889564037322998,
+            0.2473365217447281,
+            0.6413245797157288,
+            0.23842166364192963,
+            0.8366988301277161,
+            0.9917739033699036,
+            0.9097076058387756,
+            1.1389306783676147,
+            0.8286622762680054,
+            0.6612003445625305,
+            0.8869675397872925,
+            0.241509810090065,
+            0.9677094221115112,
+            1.6234912872314453,
+            0.815833568572998,
+            0.23702381551265717,
+            0.8513280153274536,
+            0.8051243424415588,
+            0.9112147688865662,
+            1.144925832748413,
+            0.7954311966896057,
+            0.8826545476913452,
+            0.805881679058075,
+            0.2484232783317566
+          ],
+          "records": [
+            {
+              "episode_idx": 0,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6712781190872192,
+              "path_length_m": 0.891109003481688
+            },
+            {
+              "episode_idx": 1,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.22878707945346832,
+              "path_length_m": 0.6015950161963701
+            },
+            {
+              "episode_idx": 2,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7072336077690125,
+              "path_length_m": 0.858611901756376
+            },
+            {
+              "episode_idx": 3,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24086575210094452,
+              "path_length_m": 1.4499733075499535
+            },
+            {
+              "episode_idx": 4,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8961920738220215,
+              "path_length_m": 0.8183413257502252
+            },
+            {
+              "episode_idx": 5,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24858355522155762,
+              "path_length_m": 0.9963485524058342
+            },
+            {
+              "episode_idx": 6,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6110302209854126,
+              "path_length_m": 0.8445539971580729
+            },
+            {
+              "episode_idx": 7,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24875949323177338,
+              "path_length_m": 1.3822351656854153
+            },
+            {
+              "episode_idx": 8,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7287011742591858,
+              "path_length_m": 0.7648036789614707
+            },
+            {
+              "episode_idx": 9,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2406703233718872,
+              "path_length_m": 0.7762935180217028
+            },
+            {
+              "episode_idx": 10,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.941393256187439,
+              "path_length_m": 0.8776113218045793
+            },
+            {
+              "episode_idx": 11,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23193630576133728,
+              "path_length_m": 1.6158757768571377
+            },
+            {
+              "episode_idx": 12,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6428242325782776,
+              "path_length_m": 0.8466657707467675
+            },
+            {
+              "episode_idx": 13,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2285751849412918,
+              "path_length_m": 0.49794881232082844
+            },
+            {
+              "episode_idx": 14,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8058379292488098,
+              "path_length_m": 0.8098234896315262
+            },
+            {
+              "episode_idx": 15,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.3791586756706238,
+              "path_length_m": 1.5345533788204193
+            },
+            {
+              "episode_idx": 16,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.889564037322998,
+              "path_length_m": 0.8296250634593889
+            },
+            {
+              "episode_idx": 17,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2473365217447281,
+              "path_length_m": 0.9284504540264606
+            },
+            {
+              "episode_idx": 18,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6413245797157288,
+              "path_length_m": 0.8742844872176647
+            },
+            {
+              "episode_idx": 19,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23842166364192963,
+              "path_length_m": 1.3230965938419104
+            },
+            {
+              "episode_idx": 20,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8366988301277161,
+              "path_length_m": 0.788793588115368
+            },
+            {
+              "episode_idx": 21,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9917739033699036,
+              "path_length_m": 0.6160000175295863
+            },
+            {
+              "episode_idx": 22,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9097076058387756,
+              "path_length_m": 0.9427979164756835
+            },
+            {
+              "episode_idx": 23,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.1389306783676147,
+              "path_length_m": 0.2932063242406002
+            },
+            {
+              "episode_idx": 24,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8286622762680054,
+              "path_length_m": 0.8934056751895696
+            },
+            {
+              "episode_idx": 25,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6612003445625305,
+              "path_length_m": 1.1814227756112814
+            },
+            {
+              "episode_idx": 26,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8869675397872925,
+              "path_length_m": 0.8147072559222579
+            },
+            {
+              "episode_idx": 27,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.241509810090065,
+              "path_length_m": 0.7806784510612488
+            },
+            {
+              "episode_idx": 28,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9677094221115112,
+              "path_length_m": 0.9120726177352481
+            },
+            {
+              "episode_idx": 29,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.6234912872314453,
+              "path_length_m": 0.3214076377626043
+            },
+            {
+              "episode_idx": 30,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.815833568572998,
+              "path_length_m": 0.8985404270933941
+            },
+            {
+              "episode_idx": 31,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.23702381551265717,
+              "path_length_m": 0.7202043253928423
+            },
+            {
+              "episode_idx": 32,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8513280153274536,
+              "path_length_m": 0.8079013386741281
+            },
+            {
+              "episode_idx": 33,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8051243424415588,
+              "path_length_m": 0.8022704644827172
+            },
+            {
+              "episode_idx": 34,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9112147688865662,
+              "path_length_m": 0.9468010690179653
+            },
+            {
+              "episode_idx": 35,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.144925832748413,
+              "path_length_m": 0.36616785946534947
+            },
+            {
+              "episode_idx": 36,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7954311966896057,
+              "path_length_m": 0.8677487671375275
+            },
+            {
+              "episode_idx": 37,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8826545476913452,
+              "path_length_m": 0.8699326392961666
+            },
+            {
+              "episode_idx": 38,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.805881679058075,
+              "path_length_m": 0.7228156274068169
+            },
+            {
+              "episode_idx": 39,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2484232783317566,
+              "path_length_m": 0.7932715229690075
+            }
+          ]
+        },
+        "cond_2_shuffled_collision_binding": {
+          "episodes_evaluated": 40,
+          "success_rate": 0.2750000059604645,
+          "collision_rate": 0.699999988079071,
+          "mean_final_goal_error_m": 0.6828140616416931,
+          "per_episode_success": [
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
+          "per_episode_collision": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ],
+          "per_episode_goal_error": [
+            0.7278299927711487,
+            0.22878707945346832,
+            0.8194729089736938,
+            0.2475806623697281,
+            0.90682452917099,
+            0.2261941134929657,
+            0.642206609249115,
+            0.22354021668434143,
+            0.7678858041763306,
+            0.2406703233718872,
+            0.9463932514190674,
+            0.29827773571014404,
+            0.6672505140304565,
+            0.2285751849412918,
+            0.8229331970214844,
+            0.23210720717906952,
+            0.8914079070091248,
+            0.2279554009437561,
+            0.7337061762809753,
+            0.232874795794487,
+            0.8211237788200378,
+            0.9960988163948059,
+            0.8963476419448853,
+            1.1456133127212524,
+            0.8443498015403748,
+            1.0643326044082642,
+            0.882827639579773,
+            0.24287766218185425,
+            0.8235326409339905,
+            1.5998921394348145,
+            0.7796679139137268,
+            0.23451918363571167,
+            0.838721752166748,
+            0.9728561639785767,
+            0.8608714938163757,
+            1.1558597087860107,
+            0.7458853125572205,
+            1.102194905281067,
+            0.7551034688949585,
+            0.2374146580696106
+          ],
+          "records": [
+            {
+              "episode_idx": 0,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7278299927711487,
+              "path_length_m": 0.9368490466149524
+            },
+            {
+              "episode_idx": 1,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.22878707945346832,
+              "path_length_m": 0.6015950161963701
+            },
+            {
+              "episode_idx": 2,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8194729089736938,
+              "path_length_m": 0.8821254478098126
+            },
+            {
+              "episode_idx": 3,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2475806623697281,
+              "path_length_m": 1.4251082967966795
+            },
+            {
+              "episode_idx": 4,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.90682452917099,
+              "path_length_m": 0.8581017472897656
+            },
+            {
+              "episode_idx": 5,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2261941134929657,
+              "path_length_m": 0.9959473833441734
+            },
+            {
+              "episode_idx": 6,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.642206609249115,
+              "path_length_m": 0.8466271415818483
+            },
+            {
+              "episode_idx": 7,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.22354021668434143,
+              "path_length_m": 1.3731785956770182
+            },
+            {
+              "episode_idx": 8,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7678858041763306,
+              "path_length_m": 0.8137810233893106
+            },
+            {
+              "episode_idx": 9,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2406703233718872,
+              "path_length_m": 0.7762935180217028
+            },
+            {
+              "episode_idx": 10,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9463932514190674,
+              "path_length_m": 0.9304185720975511
+            },
+            {
+              "episode_idx": 11,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.29827773571014404,
+              "path_length_m": 1.6164418384432793
+            },
+            {
+              "episode_idx": 12,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6672505140304565,
+              "path_length_m": 0.8346174402395263
+            },
+            {
+              "episode_idx": 13,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2285751849412918,
+              "path_length_m": 0.49794881232082844
+            },
+            {
+              "episode_idx": 14,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8229331970214844,
+              "path_length_m": 0.9087056036805734
+            },
+            {
+              "episode_idx": 15,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23210720717906952,
+              "path_length_m": 1.6212428864091635
+            },
+            {
+              "episode_idx": 16,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8914079070091248,
+              "path_length_m": 0.9172417663503438
+            },
+            {
+              "episode_idx": 17,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2279554009437561,
+              "path_length_m": 0.9386679362505674
+            },
+            {
+              "episode_idx": 18,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7337061762809753,
+              "path_length_m": 0.9485370465554297
+            },
+            {
+              "episode_idx": 19,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.232874795794487,
+              "path_length_m": 1.2932496201246977
+            },
+            {
+              "episode_idx": 20,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8211237788200378,
+              "path_length_m": 0.8204376337234862
+            },
+            {
+              "episode_idx": 21,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9960988163948059,
+              "path_length_m": 0.6925921298679896
+            },
+            {
+              "episode_idx": 22,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8963476419448853,
+              "path_length_m": 0.9320106966770254
+            },
+            {
+              "episode_idx": 23,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.1456133127212524,
+              "path_length_m": 0.2960709541439428
+            },
+            {
+              "episode_idx": 24,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8443498015403748,
+              "path_length_m": 0.82143886142876
+            },
+            {
+              "episode_idx": 25,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.0643326044082642,
+              "path_length_m": 0.5276370548526756
+            },
+            {
+              "episode_idx": 26,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.882827639579773,
+              "path_length_m": 0.9214695312839467
+            },
+            {
+              "episode_idx": 27,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24287766218185425,
+              "path_length_m": 0.7445814907550812
+            },
+            {
+              "episode_idx": 28,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8235326409339905,
+              "path_length_m": 1.1374828414991498
+            },
+            {
+              "episode_idx": 29,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.5998921394348145,
+              "path_length_m": 0.4782151184626855
+            },
+            {
+              "episode_idx": 30,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7796679139137268,
+              "path_length_m": 0.7522129720309749
+            },
+            {
+              "episode_idx": 31,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.23451918363571167,
+              "path_length_m": 0.7265726011246443
+            },
+            {
+              "episode_idx": 32,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.838721752166748,
+              "path_length_m": 0.868004267802462
+            },
+            {
+              "episode_idx": 33,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9728561639785767,
+              "path_length_m": 0.6004322074586526
+            },
+            {
+              "episode_idx": 34,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8608714938163757,
+              "path_length_m": 1.0126155733596534
+            },
+            {
+              "episode_idx": 35,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.1558597087860107,
+              "path_length_m": 0.32583200977387605
+            },
+            {
+              "episode_idx": 36,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7458853125572205,
+              "path_length_m": 0.7463378582615405
+            },
+            {
+              "episode_idx": 37,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.102194905281067,
+              "path_length_m": 0.5069374073063955
+            },
+            {
+              "episode_idx": 38,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7551034688949585,
+              "path_length_m": 0.9222907513612881
+            },
+            {
+              "episode_idx": 39,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2374146580696106,
+              "path_length_m": 0.7696075234562159
+            }
+          ]
+        },
+        "cond_3_collision_head_disabled": {
+          "episodes_evaluated": 40,
+          "success_rate": 0.30000001192092896,
+          "collision_rate": 0.699999988079071,
+          "mean_final_goal_error_m": 0.6796723008155823,
+          "per_episode_success": [
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
+          "per_episode_collision": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ],
+          "per_episode_goal_error": [
+            0.7324820160865784,
+            0.22878707945346832,
+            0.7393528819084167,
+            0.2379806488752365,
+            0.9056046009063721,
+            0.21686597168445587,
+            0.6728162169456482,
+            0.2385474294424057,
+            0.7491838335990906,
+            0.2406703233718872,
+            0.943871796131134,
+            0.23682145774364471,
+            0.6789553165435791,
+            0.2285751849412918,
+            0.764500617980957,
+            0.21901662647724152,
+            0.9055922627449036,
+            0.2280362844467163,
+            0.693604052066803,
+            0.2409430742263794,
+            0.8135668039321899,
+            0.9689639210700989,
+            0.8524625897407532,
+            1.172003984451294,
+            0.7885032892227173,
+            1.104985237121582,
+            0.8726763725280762,
+            0.24627017974853516,
+            0.9264323115348816,
+            1.6386921405792236,
+            0.7711362838745117,
+            0.22202928364276886,
+            0.8357297778129578,
+            0.972806990146637,
+            0.8584588170051575,
+            1.2077511548995972,
+            0.7516860961914062,
+            1.080498456954956,
+            0.788131594657898,
+            0.21189939975738525
+          ],
+          "records": [
+            {
+              "episode_idx": 0,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7324820160865784,
+              "path_length_m": 0.8232903824537061
+            },
+            {
+              "episode_idx": 1,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.22878707945346832,
+              "path_length_m": 0.6015950161963701
+            },
+            {
+              "episode_idx": 2,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7393528819084167,
+              "path_length_m": 0.8036148187238723
+            },
+            {
+              "episode_idx": 3,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2379806488752365,
+              "path_length_m": 1.4352316111326218
+            },
+            {
+              "episode_idx": 4,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9056046009063721,
+              "path_length_m": 0.836582625284791
+            },
+            {
+              "episode_idx": 5,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.21686597168445587,
+              "path_length_m": 1.0055627413094044
+            },
+            {
+              "episode_idx": 6,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6728162169456482,
+              "path_length_m": 0.7679566292790696
+            },
+            {
+              "episode_idx": 7,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2385474294424057,
+              "path_length_m": 1.3608651962131262
+            },
+            {
+              "episode_idx": 8,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7491838335990906,
+              "path_length_m": 0.7413556636602152
+            },
+            {
+              "episode_idx": 9,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2406703233718872,
+              "path_length_m": 0.7762935180217028
+            },
+            {
+              "episode_idx": 10,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.943871796131134,
+              "path_length_m": 0.8801811278681271
+            },
+            {
+              "episode_idx": 11,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23682145774364471,
+              "path_length_m": 1.6137029360979795
+            },
+            {
+              "episode_idx": 12,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6789553165435791,
+              "path_length_m": 0.8032553137745708
+            },
+            {
+              "episode_idx": 13,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2285751849412918,
+              "path_length_m": 0.49794881232082844
+            },
+            {
+              "episode_idx": 14,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.764500617980957,
+              "path_length_m": 0.8425005351891741
+            },
+            {
+              "episode_idx": 15,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.21901662647724152,
+              "path_length_m": 1.6438520569354296
+            },
+            {
+              "episode_idx": 16,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9055922627449036,
+              "path_length_m": 0.8619022867060266
+            },
+            {
+              "episode_idx": 17,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2280362844467163,
+              "path_length_m": 0.9378629196435213
+            },
+            {
+              "episode_idx": 18,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.693604052066803,
+              "path_length_m": 0.8152597970329225
+            },
+            {
+              "episode_idx": 19,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2409430742263794,
+              "path_length_m": 1.2815672140568495
+            },
+            {
+              "episode_idx": 20,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8135668039321899,
+              "path_length_m": 0.7891050913603976
+            },
+            {
+              "episode_idx": 21,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9689639210700989,
+              "path_length_m": 0.4853792784997495
+            },
+            {
+              "episode_idx": 22,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8524625897407532,
+              "path_length_m": 1.0334054116392508
+            },
+            {
+              "episode_idx": 23,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.172003984451294,
+              "path_length_m": 0.2271490584826097
+            },
+            {
+              "episode_idx": 24,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7885032892227173,
+              "path_length_m": 0.7248419018578716
+            },
+            {
+              "episode_idx": 25,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.104985237121582,
+              "path_length_m": 0.34547516668681055
+            },
+            {
+              "episode_idx": 26,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8726763725280762,
+              "path_length_m": 0.8181638328824192
+            },
+            {
+              "episode_idx": 27,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24627017974853516,
+              "path_length_m": 0.7405679263174534
+            },
+            {
+              "episode_idx": 28,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9264323115348816,
+              "path_length_m": 1.039786935551092
+            },
+            {
+              "episode_idx": 29,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.6386921405792236,
+              "path_length_m": 0.5520670756231993
+            },
+            {
+              "episode_idx": 30,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7711362838745117,
+              "path_length_m": 0.7244031556183472
+            },
+            {
+              "episode_idx": 31,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.22202928364276886,
+              "path_length_m": 0.7388489916920662
+            },
+            {
+              "episode_idx": 32,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8357297778129578,
+              "path_length_m": 0.7851975109078921
+            },
+            {
+              "episode_idx": 33,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.972806990146637,
+              "path_length_m": 0.4350808531380608
+            },
+            {
+              "episode_idx": 34,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8584588170051575,
+              "path_length_m": 0.9999647738877684
+            },
+            {
+              "episode_idx": 35,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.2077511548995972,
+              "path_length_m": 0.19655385497026145
+            },
+            {
+              "episode_idx": 36,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7516860961914062,
+              "path_length_m": 0.6902167784282938
+            },
+            {
+              "episode_idx": 37,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.080498456954956,
+              "path_length_m": 0.34539443271933123
+            },
+            {
+              "episode_idx": 38,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.788131594657898,
+              "path_length_m": 0.7395923046860844
+            },
+            {
+              "episode_idx": 39,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.21189939975738525,
+              "path_length_m": 0.7955419216305017
+            }
+          ]
+        },
+        "cond_4_random_collision_predictor": {
+          "episodes_evaluated": 40,
+          "success_rate": 0.22499999403953552,
+          "collision_rate": 0.699999988079071,
+          "mean_final_goal_error_m": 0.6644473671913147,
+          "per_episode_success": [
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
+          "per_episode_collision": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ],
+          "per_episode_goal_error": [
+            0.3276384770870209,
+            0.2487088143825531,
+            0.5589349865913391,
+            0.244882732629776,
+            0.6815106272697449,
+            0.24227315187454224,
+            0.340614378452301,
+            0.3872171640396118,
+            0.7081297636032104,
+            0.23699615895748138,
+            0.9518524408340454,
+            0.9232131242752075,
+            0.6845313906669617,
+            0.2303166687488556,
+            0.7829129695892334,
+            1.0181028842926025,
+            0.7871593236923218,
+            0.24074846506118774,
+            0.8560980558395386,
+            0.24887827038764954,
+            0.7741634249687195,
+            0.9935611486434937,
+            0.6843595504760742,
+            1.154767632484436,
+            0.7616109848022461,
+            1.1298322677612305,
+            0.8775148391723633,
+            0.24696747958660126,
+            0.6453260183334351,
+            1.6214011907577515,
+            0.7783790826797485,
+            0.24126183986663818,
+            0.83940589427948,
+            0.9248809218406677,
+            0.658535361289978,
+            1.1612619161605835,
+            0.7294836640357971,
+            1.0399771928787231,
+            0.36545562744140625,
+            0.24902896583080292
+          ],
+          "records": [
+            {
+              "episode_idx": 0,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.3276384770870209,
+              "path_length_m": 1.4321310017257929
+            },
+            {
+              "episode_idx": 1,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2487088143825531,
+              "path_length_m": 0.5992686175741255
+            },
+            {
+              "episode_idx": 2,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.5589349865913391,
+              "path_length_m": 1.1811178461648524
+            },
+            {
+              "episode_idx": 3,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.244882732629776,
+              "path_length_m": 1.4572089156135917
+            },
+            {
+              "episode_idx": 4,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6815106272697449,
+              "path_length_m": 1.3055293023353443
+            },
+            {
+              "episode_idx": 5,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24227315187454224,
+              "path_length_m": 1.0644752162043005
+            },
+            {
+              "episode_idx": 6,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.340614378452301,
+              "path_length_m": 1.3303847694769502
+            },
+            {
+              "episode_idx": 7,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.3872171640396118,
+              "path_length_m": 1.2465787939727306
+            },
+            {
+              "episode_idx": 8,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7081297636032104,
+              "path_length_m": 0.9095419755904004
+            },
+            {
+              "episode_idx": 9,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23699615895748138,
+              "path_length_m": 0.8836027793586254
+            },
+            {
+              "episode_idx": 10,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9518524408340454,
+              "path_length_m": 0.9413376594893634
+            },
+            {
+              "episode_idx": 11,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9232131242752075,
+              "path_length_m": 1.2074389869812876
+            },
+            {
+              "episode_idx": 12,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6845313906669617,
+              "path_length_m": 0.9476443149615079
+            },
+            {
+              "episode_idx": 13,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2303166687488556,
+              "path_length_m": 0.5603560754097998
+            },
+            {
+              "episode_idx": 14,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7829129695892334,
+              "path_length_m": 0.9192801747121848
+            },
+            {
+              "episode_idx": 15,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 1.0181028842926025,
+              "path_length_m": 1.0194234568625689
+            },
+            {
+              "episode_idx": 16,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7871593236923218,
+              "path_length_m": 1.2435619570314884
+            },
+            {
+              "episode_idx": 17,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24074846506118774,
+              "path_length_m": 0.9518221656326205
+            },
+            {
+              "episode_idx": 18,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8560980558395386,
+              "path_length_m": 0.8690694099059328
+            },
+            {
+              "episode_idx": 19,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24887827038764954,
+              "path_length_m": 1.3165490627288818
+            },
+            {
+              "episode_idx": 20,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7741634249687195,
+              "path_length_m": 1.004861272405833
+            },
+            {
+              "episode_idx": 21,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9935611486434937,
+              "path_length_m": 0.5864447437779745
+            },
+            {
+              "episode_idx": 22,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.6843595504760742,
+              "path_length_m": 1.3083788519725204
+            },
+            {
+              "episode_idx": 23,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.154767632484436,
+              "path_length_m": 0.5283815601142123
+            },
+            {
+              "episode_idx": 24,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7616109848022461,
+              "path_length_m": 0.8880730076925829
+            },
+            {
+              "episode_idx": 25,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.1298322677612305,
+              "path_length_m": 0.6816006788285449
+            },
+            {
+              "episode_idx": 26,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.8775148391723633,
+              "path_length_m": 0.8941418653121218
+            },
+            {
+              "episode_idx": 27,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24696747958660126,
+              "path_length_m": 0.7700195601209998
+            },
+            {
+              "episode_idx": 28,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.6453260183334351,
+              "path_length_m": 1.406991551630199
+            },
+            {
+              "episode_idx": 29,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.6214011907577515,
+              "path_length_m": 0.5497673130594194
+            },
+            {
+              "episode_idx": 30,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7783790826797485,
+              "path_length_m": 0.8480498301214539
+            },
+            {
+              "episode_idx": 31,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.24126183986663818,
+              "path_length_m": 0.8231201303424314
+            },
+            {
+              "episode_idx": 32,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.83940589427948,
+              "path_length_m": 0.933234685799107
+            },
+            {
+              "episode_idx": 33,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.9248809218406677,
+              "path_length_m": 0.6277542794123292
+            },
+            {
+              "episode_idx": 34,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.658535361289978,
+              "path_length_m": 1.2655272223055363
+            },
+            {
+              "episode_idx": 35,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.1612619161605835,
+              "path_length_m": 0.5341970567824319
+            },
+            {
+              "episode_idx": 36,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.7294836640357971,
+              "path_length_m": 0.8325352868996561
+            },
+            {
+              "episode_idx": 37,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.0399771928787231,
+              "path_length_m": 0.529802089324221
+            },
+            {
+              "episode_idx": 38,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 0.36545562744140625,
+              "path_length_m": 1.2875654678791761
+            },
+            {
+              "episode_idx": 39,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24902896583080292,
+              "path_length_m": 0.7844606041908264
+            }
+          ]
+        },
+        "cond_5_oracle_collision_predictor": {
+          "episodes_evaluated": 40,
+          "success_rate": 0.375,
+          "collision_rate": 0.07500000298023224,
+          "mean_final_goal_error_m": 0.5259014964103699,
+          "per_episode_success": [
+            true,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
+          "per_episode_collision": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "per_episode_goal_error": [
+            0.24936558306217194,
+            0.24224434792995453,
+            0.8724560141563416,
+            0.23728816211223602,
+            0.9491351842880249,
+            0.22773854434490204,
+            0.8007238507270813,
+            0.2220604121685028,
+            0.8644121289253235,
+            0.24034038186073303,
+            0.5462225079536438,
+            0.23293861746788025,
+            0.34684455394744873,
+            0.23455755412578583,
+            0.8999585509300232,
+            0.2325468361377716,
+            0.9579147696495056,
+            0.23244799673557281,
+            0.2918130159378052,
+            0.234322652220726,
+            0.7982255816459656,
+            0.3307887613773346,
+            0.3631567358970642,
+            1.114132285118103,
+            0.30791527032852173,
+            0.31027311086654663,
+            0.840725302696228,
+            0.24689926207065582,
+            0.418589323759079,
+            1.7016808986663818,
+            0.29941678047180176,
+            0.2454163134098053,
+            0.809390127658844,
+            0.24546341598033905,
+            0.3462935984134674,
+            1.0963703393936157,
+            0.3607066571712494,
+            1.0679922103881836,
+            0.7725363373756409,
+            0.24475723505020142
+          ],
+          "records": [
+            {
+              "episode_idx": 0,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24936558306217194,
+              "path_length_m": 1.3871481996029615
+            },
+            {
+              "episode_idx": 1,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24224434792995453,
+              "path_length_m": 0.5925151389092207
+            },
+            {
+              "episode_idx": 2,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.8724560141563416,
+              "path_length_m": 0.8168263965344522
+            },
+            {
+              "episode_idx": 3,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23728816211223602,
+              "path_length_m": 1.4484025705605745
+            },
+            {
+              "episode_idx": 4,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.9491351842880249,
+              "path_length_m": 1.0515659821685404
+            },
+            {
+              "episode_idx": 5,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.22773854434490204,
+              "path_length_m": 1.0019228104501963
+            },
+            {
+              "episode_idx": 6,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.8007238507270813,
+              "path_length_m": 1.101169789355481
+            },
+            {
+              "episode_idx": 7,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2220604121685028,
+              "path_length_m": 1.3616712503135204
+            },
+            {
+              "episode_idx": 8,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.8644121289253235,
+              "path_length_m": 0.92279767870059
+            },
+            {
+              "episode_idx": 9,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24034038186073303,
+              "path_length_m": 0.7742182053625584
+            },
+            {
+              "episode_idx": 10,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.5462225079536438,
+              "path_length_m": 1.659236490726471
+            },
+            {
+              "episode_idx": 11,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23293861746788025,
+              "path_length_m": 1.6629246659576893
+            },
+            {
+              "episode_idx": 12,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.34684455394744873,
+              "path_length_m": 1.283787775784731
+            },
+            {
+              "episode_idx": 13,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23455755412578583,
+              "path_length_m": 0.49817625992000103
+            },
+            {
+              "episode_idx": 14,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.8999585509300232,
+              "path_length_m": 0.8366386482957751
+            },
+            {
+              "episode_idx": 15,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2325468361377716,
+              "path_length_m": 1.6295144017785788
+            },
+            {
+              "episode_idx": 16,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.9579147696495056,
+              "path_length_m": 1.0607759817503393
+            },
+            {
+              "episode_idx": 17,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.23244799673557281,
+              "path_length_m": 0.9370332956314087
+            },
+            {
+              "episode_idx": 18,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.2918130159378052,
+              "path_length_m": 1.3259437328670174
+            },
+            {
+              "episode_idx": 19,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.234322652220726,
+              "path_length_m": 1.2844379600137472
+            },
+            {
+              "episode_idx": 20,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.7982255816459656,
+              "path_length_m": 1.050326096243225
+            },
+            {
+              "episode_idx": 21,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.3307887613773346,
+              "path_length_m": 1.5116191050037742
+            },
+            {
+              "episode_idx": 22,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.3631567358970642,
+              "path_length_m": 1.5879144314676523
+            },
+            {
+              "episode_idx": 23,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.114132285118103,
+              "path_length_m": 0.9153654875699431
+            },
+            {
+              "episode_idx": 24,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.30791527032852173,
+              "path_length_m": 1.53938405867666
+            },
+            {
+              "episode_idx": 25,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.31027311086654663,
+              "path_length_m": 1.5354037452489138
+            },
+            {
+              "episode_idx": 26,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.840725302696228,
+              "path_length_m": 1.0580586657160893
+            },
+            {
+              "episode_idx": 27,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24689926207065582,
+              "path_length_m": 0.7406114526093006
+            },
+            {
+              "episode_idx": 28,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.418589323759079,
+              "path_length_m": 1.6363988667726517
+            },
+            {
+              "episode_idx": 29,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.7016808986663818,
+              "path_length_m": 0.8665121915983036
+            },
+            {
+              "episode_idx": 30,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.29941678047180176,
+              "path_length_m": 1.4690822483971715
+            },
+            {
+              "episode_idx": 31,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.2454163134098053,
+              "path_length_m": 0.7062476519495249
+            },
+            {
+              "episode_idx": 32,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.809390127658844,
+              "path_length_m": 1.0758514470653608
+            },
+            {
+              "episode_idx": 33,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24546341598033905,
+              "path_length_m": 1.5052430918440223
+            },
+            {
+              "episode_idx": 34,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.3462935984134674,
+              "path_length_m": 1.6090613696724176
+            },
+            {
+              "episode_idx": 35,
+              "success": false,
+              "collision": true,
+              "goal_error_m": 1.0963703393936157,
+              "path_length_m": 0.7693460133159533
+            },
+            {
+              "episode_idx": 36,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.3607066571712494,
+              "path_length_m": 1.3957202553574461
+            },
+            {
+              "episode_idx": 37,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 1.0679922103881836,
+              "path_length_m": 0.6989001413458027
+            },
+            {
+              "episode_idx": 38,
+              "success": false,
+              "collision": false,
+              "goal_error_m": 0.7725363373756409,
+              "path_length_m": 1.0134996214183047
+            },
+            {
+              "episode_idx": 39,
+              "success": true,
+              "collision": false,
+              "goal_error_m": 0.24475723505020142,
+              "path_length_m": 0.7632624357938766
+            }
+          ]
+        }
+      },
+      "comparisons": {
+        "intact_vs_shuffled_binding": {
+          "collision_rate_intact": 0.699999988079071,
+          "collision_rate_shuffled": 0.699999988079071,
+          "delta_collision_rate": 0.0,
+          "mcnemar_p_value": 1.0,
+          "hypothesis_binding_verified": false
+        },
+        "intact_vs_collision_head_disabled": {
+          "collision_rate_intact": 0.699999988079071,
+          "collision_rate_disabled": 0.699999988079071,
+          "delta_collision_rate": 0.0,
+          "mcnemar_p_value": 1.0
+        },
+        "intact_vs_random_collision_predictor": {
+          "collision_rate_intact": 0.699999988079071,
+          "collision_rate_random": 0.699999988079071,
+          "delta_collision_rate": 0.0,
+          "mcnemar_p_value": 1.0
+        },
+        "intact_vs_oracle_physics": {
+          "collision_rate_intact": 0.699999988079071,
+          "collision_rate_oracle": 0.07500000298023224,
+          "delta_collision_rate": -0.625,
+          "mcnemar_p_value": 5.960464477539063e-08
+        }
+      }
+    },
+    "scientific_qualification": "This benchmark evaluates the empirical utility of prospective collision predictions. It does NOT establish a formal Control Barrier Function (CBF). Formal CBFs require mathematical forward invariance guarantees with class-K functions and known Lie derivatives, which cannot be formally asserted for neural network latent predictions."
   }
 }

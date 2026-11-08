@@ -3,9 +3,11 @@
   "evaluation": "generalization",
   "provenance_status": "INDEPENDENTLY_EXECUTED",
   "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda",
-  "execution_timestamp": "2026-11-08T01:44:49.383290+00:00",
-  "source_git_commit": "ac30ad52e52ca077068e051aaa8c821e3b4bb19f",
+  "execution_timestamp": "2026-11-08T02:40:55.162163+00:00",
+  "source_git_commit": "0041158c674a87098736afd67d0a9da797c47395",
   "working_tree_clean": true,
+  "script_path": "world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
+  "script_sha256": "ad03608b1d62ebf6061ef91a58a18addd690b42d801151420fe5b63261dc9114",
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
   "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
   "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -31,7 +33,8 @@
   "configuration": {
     "track": "Track C (pure observation, zero simulator coordinates)",
     "episodes_per_suite": 20,
-    "max_steps": 50
+    "max_steps": 50,
+    "categorical_task_encoding": "encode_task_id discrete index in [0, 63]"
   },
   "environment": {
     "platform": "linux",
@@ -39,20 +42,23 @@
     "cuda_available": true
   },
   "result_artifact_path": "world_models_fpga/research/benchmarks/results/track_c_visual_grounding.json",
-  "result_artifact_sha256": "8c3e23b7eeae2615d1a4b67eba38724b6ee15079bbc6a3b855958f94bca33269",
-  "provenance_notes": "Independently executed with verified embedded execution metadata.",
+  "result_artifact_sha256": "1b7af5ca3260e4639743bddd9b102669ff2a137c762ae24bd6ca63a3783ec045",
+  "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
   "config": {
     "track": "Track C (pure observation, zero simulator coordinates)",
     "episodes_per_suite": 20,
-    "max_steps": 50
+    "max_steps": 50,
+    "categorical_task_encoding": "encode_task_id discrete index in [0, 63]"
   },
-  "git_commit": "ac30ad52e52ca077068e051aaa8c821e3b4bb19f",
+  "git_commit": "0041158c674a87098736afd67d0a9da797c47395",
   "seed": 42,
   "results": {
     "execution_metadata": {
+      "script_path": "world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py",
+      "script_sha256": "ad03608b1d62ebf6061ef91a58a18addd690b42d801151420fe5b63261dc9114",
       "command_executed": "python world_models_fpga/research/benchmarks/run_track_c_visual_grounding.py --episodes-per-suite 20 --device cuda",
-      "execution_timestamp": "2026-11-08T01:44:49.383290+00:00",
-      "git_commit": "ac30ad52e52ca077068e051aaa8c821e3b4bb19f",
+      "execution_timestamp": "2026-11-08T02:40:55.162163+00:00",
+      "git_commit": "0041158c674a87098736afd67d0a9da797c47395",
       "working_tree_clean": true,
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
       "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
@@ -79,7 +85,8 @@
       "configuration": {
         "track": "Track C (pure observation, zero simulator coordinates)",
         "episodes_per_suite": 20,
-        "max_steps": 50
+        "max_steps": 50,
+        "categorical_task_encoding": "encode_task_id discrete index in [0, 63]"
       },
       "environment": {
         "platform": "linux",
@@ -664,196 +671,196 @@
           }
         ]
       },
-      "appearance_nuisance": {
+      "appearance_nuisance_floor": {
         "results": {
           "episodes_evaluated": 20,
           "success_count": 1,
           "success_rate": 0.05,
           "goal_reached_count": 1,
           "goal_reached_rate": 0.05,
-          "collision_count": 2,
-          "collision_rate": 0.1,
-          "mean_final_goal_error_m": 1.2149144679307937,
+          "collision_count": 3,
+          "collision_rate": 0.15,
+          "mean_final_goal_error_m": 1.2566193528473377,
           "records": [
             {
-              "episode_id": "nuisance_00",
+              "episode_id": "nuis_floor_00",
               "target_key": "purple_box",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.5522170066833496,
-              "path_length_m": 1.2334194676950574
+              "final_goal_error_m": 1.6120368242263794,
+              "path_length_m": 1.2721814452670515
             },
             {
-              "episode_id": "nuisance_01",
+              "episode_id": "nuis_floor_01",
               "target_key": "cyan_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 0.8126955032348633,
-              "path_length_m": 0.8518196623772383
+              "final_goal_error_m": 1.0877853631973267,
+              "path_length_m": 1.0949549805372953
             },
             {
-              "episode_id": "nuisance_02",
+              "episode_id": "nuis_floor_02",
               "target_key": "yellow_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.4743839502334595,
-              "path_length_m": 0.9944259356707335
+              "final_goal_error_m": 1.5725666284561157,
+              "path_length_m": 1.1143054887652397
             },
             {
-              "episode_id": "nuisance_03",
+              "episode_id": "nuis_floor_03",
               "target_key": "red_box",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.272064208984375,
-              "path_length_m": 0.8965548351407051
+              "final_goal_error_m": 1.1161099672317505,
+              "path_length_m": 0.8503907201811671
             },
             {
-              "episode_id": "nuisance_04",
+              "episode_id": "nuis_floor_04",
               "target_key": "blue_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 0.9327173829078674,
-              "path_length_m": 1.0620638206601143
+              "final_goal_error_m": 1.2739959955215454,
+              "path_length_m": 1.3226360576227307
             },
             {
-              "episode_id": "nuisance_05",
+              "episode_id": "nuis_floor_05",
               "target_key": "green_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.4634507894515991,
-              "path_length_m": 1.421431869152002
+              "final_goal_error_m": 1.3189319372177124,
+              "path_length_m": 1.4224248946411535
             },
             {
-              "episode_id": "nuisance_06",
+              "episode_id": "nuis_floor_06",
               "target_key": "purple_box",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.8066799640655518,
-              "path_length_m": 1.4758733953349292
+              "final_goal_error_m": 1.7147010564804077,
+              "path_length_m": 1.4523283634334803
             },
             {
-              "episode_id": "nuisance_07",
+              "episode_id": "nuis_floor_07",
               "target_key": "cyan_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 0.7854857444763184,
-              "path_length_m": 0.9250430651009083
+              "final_goal_error_m": 1.0035654306411743,
+              "path_length_m": 1.1015061121433973
             },
             {
-              "episode_id": "nuisance_08",
+              "episode_id": "nuis_floor_08",
               "target_key": "yellow_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.3479944467544556,
-              "path_length_m": 0.9679749542847276
+              "final_goal_error_m": 1.4354134798049927,
+              "path_length_m": 1.0982294529676437
             },
             {
-              "episode_id": "nuisance_09",
+              "episode_id": "nuis_floor_09",
               "target_key": "red_box",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.2483398914337158,
-              "path_length_m": 0.8765923040919006
+              "final_goal_error_m": 1.1302440166473389,
+              "path_length_m": 0.8305220324546099
             },
             {
-              "episode_id": "nuisance_10",
+              "episode_id": "nuis_floor_10",
               "target_key": "blue_cylinder",
               "success": false,
               "goal_reached": false,
-              "collision": false,
-              "final_goal_error_m": 1.0561285018920898,
-              "path_length_m": 1.1341605046764016
+              "collision": true,
+              "final_goal_error_m": 1.3171709775924683,
+              "path_length_m": 1.319990297080949
             },
             {
-              "episode_id": "nuisance_11",
+              "episode_id": "nuis_floor_11",
               "target_key": "green_cylinder",
               "success": true,
               "goal_reached": true,
               "collision": false,
-              "final_goal_error_m": 0.2776365876197815,
-              "path_length_m": 0.2862170822918415
+              "final_goal_error_m": 0.24825002253055573,
+              "path_length_m": 0.4082641052082181
             },
             {
-              "episode_id": "nuisance_12",
+              "episode_id": "nuis_floor_12",
               "target_key": "purple_box",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.6784025430679321,
-              "path_length_m": 1.2743540918454528
+              "final_goal_error_m": 1.6109633445739746,
+              "path_length_m": 1.1608299976214767
             },
             {
-              "episode_id": "nuisance_13",
+              "episode_id": "nuis_floor_13",
               "target_key": "cyan_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.0877643823623657,
-              "path_length_m": 0.9385935668833554
+              "final_goal_error_m": 1.2757514715194702,
+              "path_length_m": 1.135681320913136
             },
             {
-              "episode_id": "nuisance_14",
+              "episode_id": "nuis_floor_14",
               "target_key": "yellow_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.343819260597229,
-              "path_length_m": 0.9588141180574894
+              "final_goal_error_m": 1.237993836402893,
+              "path_length_m": 0.889970326796174
             },
             {
-              "episode_id": "nuisance_15",
+              "episode_id": "nuis_floor_15",
               "target_key": "red_box",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.2404346466064453,
-              "path_length_m": 0.8767688823863864
+              "final_goal_error_m": 1.0856252908706665,
+              "path_length_m": 0.8176131206564605
             },
             {
-              "episode_id": "nuisance_16",
+              "episode_id": "nuis_floor_16",
               "target_key": "blue_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 0.9259611368179321,
-              "path_length_m": 1.068953400477767
+              "final_goal_error_m": 1.2235016822814941,
+              "path_length_m": 1.2944263884564862
             },
             {
-              "episode_id": "nuisance_17",
+              "episode_id": "nuis_floor_17",
               "target_key": "green_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.4682073593139648,
-              "path_length_m": 1.3268920870032161
+              "final_goal_error_m": 1.3603780269622803,
+              "path_length_m": 1.2370746008091373
             },
             {
-              "episode_id": "nuisance_18",
+              "episode_id": "nuis_floor_18",
               "target_key": "purple_box",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.778120517730713,
-              "path_length_m": 1.4129428314045072
+              "final_goal_error_m": 1.707276463508606,
+              "path_length_m": 1.3749118824489415
             },
             {
-              "episode_id": "nuisance_19",
+              "episode_id": "nuis_floor_19",
               "target_key": "cyan_cylinder",
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 0.7457855343818665,
-              "path_length_m": 0.911560739390552
+              "final_goal_error_m": 0.800125241279602,
+              "path_length_m": 1.0170260546728969
             }
           ]
         },
@@ -869,16 +876,426 @@
           "ci95_high": -0.8500000238418579
         }
       },
+      "appearance_nuisance_illumination": {
+        "results": {
+          "episodes_evaluated": 20,
+          "success_count": 17,
+          "success_rate": 0.85,
+          "goal_reached_count": 17,
+          "goal_reached_rate": 0.85,
+          "collision_count": 0,
+          "collision_rate": 0.0,
+          "mean_final_goal_error_m": 0.3230069622397423,
+          "records": [
+            {
+              "episode_id": "nuis_illum_00",
+              "target_key": "purple_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24966520071029663,
+              "path_length_m": 0.2954029478132725
+            },
+            {
+              "episode_id": "nuis_illum_01",
+              "target_key": "cyan_cylinder",
+              "success": false,
+              "goal_reached": false,
+              "collision": false,
+              "final_goal_error_m": 0.759966254234314,
+              "path_length_m": 0.649620097829029
+            },
+            {
+              "episode_id": "nuis_illum_02",
+              "target_key": "yellow_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26070722937583923,
+              "path_length_m": 0.41868909634649754
+            },
+            {
+              "episode_id": "nuis_illum_03",
+              "target_key": "red_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2502908706665039,
+              "path_length_m": 0.38421562872827053
+            },
+            {
+              "episode_id": "nuis_illum_04",
+              "target_key": "blue_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24645836651325226,
+              "path_length_m": 0.42809946462512016
+            },
+            {
+              "episode_id": "nuis_illum_05",
+              "target_key": "green_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2634602189064026,
+              "path_length_m": 0.4314512014389038
+            },
+            {
+              "episode_id": "nuis_illum_06",
+              "target_key": "purple_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26718223094940186,
+              "path_length_m": 0.3408189583569765
+            },
+            {
+              "episode_id": "nuis_illum_07",
+              "target_key": "cyan_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.27561211585998535,
+              "path_length_m": 0.3267654003575444
+            },
+            {
+              "episode_id": "nuis_illum_08",
+              "target_key": "yellow_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.25372257828712463,
+              "path_length_m": 0.31906411796808243
+            },
+            {
+              "episode_id": "nuis_illum_09",
+              "target_key": "red_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.25486958026885986,
+              "path_length_m": 0.3390384539961815
+            },
+            {
+              "episode_id": "nuis_illum_10",
+              "target_key": "blue_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2559816837310791,
+              "path_length_m": 0.3712054640054703
+            },
+            {
+              "episode_id": "nuis_illum_11",
+              "target_key": "green_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26802828907966614,
+              "path_length_m": 0.2779331635683775
+            },
+            {
+              "episode_id": "nuis_illum_12",
+              "target_key": "purple_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.25039806962013245,
+              "path_length_m": 0.4368612412363291
+            },
+            {
+              "episode_id": "nuis_illum_13",
+              "target_key": "cyan_cylinder",
+              "success": false,
+              "goal_reached": false,
+              "collision": false,
+              "final_goal_error_m": 0.5769327282905579,
+              "path_length_m": 0.6984135042876005
+            },
+            {
+              "episode_id": "nuis_illum_14",
+              "target_key": "yellow_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26994532346725464,
+              "path_length_m": 0.26584279350936413
+            },
+            {
+              "episode_id": "nuis_illum_15",
+              "target_key": "red_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26324212551116943,
+              "path_length_m": 0.32476139068603516
+            },
+            {
+              "episode_id": "nuis_illum_16",
+              "target_key": "blue_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.25273847579956055,
+              "path_length_m": 0.38847863860428333
+            },
+            {
+              "episode_id": "nuis_illum_17",
+              "target_key": "green_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.23450379073619843,
+              "path_length_m": 0.4357078094035387
+            },
+            {
+              "episode_id": "nuis_illum_18",
+              "target_key": "purple_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2638120949268341,
+              "path_length_m": 0.25813998468220234
+            },
+            {
+              "episode_id": "nuis_illum_19",
+              "target_key": "cyan_cylinder",
+              "success": false,
+              "goal_reached": false,
+              "collision": false,
+              "final_goal_error_m": 0.7426220178604126,
+              "path_length_m": 0.5334046618081629
+            }
+          ]
+        },
+        "paired_contingency": {
+          "n11_both_success": 17,
+          "n00_both_fail": 0,
+          "n10_nom_succ_mut_fail": 3,
+          "n01_nom_fail_mut_succ": 0,
+          "discordant_count": 3,
+          "mcnemar_exact_p_value": 0.25,
+          "mean_diff": -0.15000000596046448,
+          "ci95_low": -0.30000001192092896,
+          "ci95_high": 0.0
+        }
+      },
+      "appearance_nuisance_object": {
+        "results": {
+          "episodes_evaluated": 20,
+          "success_count": 20,
+          "success_rate": 1.0,
+          "goal_reached_count": 20,
+          "goal_reached_rate": 1.0,
+          "collision_count": 0,
+          "collision_rate": 0.0,
+          "mean_final_goal_error_m": 0.25779776871204374,
+          "records": [
+            {
+              "episode_id": "nuis_obj_app_00",
+              "target_key": "purple_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.25055140256881714,
+              "path_length_m": 0.29426534101366997
+            },
+            {
+              "episode_id": "nuis_obj_app_01",
+              "target_key": "cyan_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2714506685733795,
+              "path_length_m": 0.2898850664496422
+            },
+            {
+              "episode_id": "nuis_obj_app_02",
+              "target_key": "yellow_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24445337057113647,
+              "path_length_m": 0.43604767322540283
+            },
+            {
+              "episode_id": "nuis_obj_app_03",
+              "target_key": "red_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2716725170612335,
+              "path_length_m": 0.3640882056206465
+            },
+            {
+              "episode_id": "nuis_obj_app_04",
+              "target_key": "blue_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26845014095306396,
+              "path_length_m": 0.4072859399020672
+            },
+            {
+              "episode_id": "nuis_obj_app_05",
+              "target_key": "green_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2526722252368927,
+              "path_length_m": 0.4234086759388447
+            },
+            {
+              "episode_id": "nuis_obj_app_06",
+              "target_key": "purple_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.27903375029563904,
+              "path_length_m": 0.2700986545532942
+            },
+            {
+              "episode_id": "nuis_obj_app_07",
+              "target_key": "cyan_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26348376274108887,
+              "path_length_m": 0.2843781132251024
+            },
+            {
+              "episode_id": "nuis_obj_app_08",
+              "target_key": "yellow_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24135413765907288,
+              "path_length_m": 0.33157928474247456
+            },
+            {
+              "episode_id": "nuis_obj_app_09",
+              "target_key": "red_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24468420445919037,
+              "path_length_m": 0.3508102912455797
+            },
+            {
+              "episode_id": "nuis_obj_app_10",
+              "target_key": "blue_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2568965256214142,
+              "path_length_m": 0.3747387658804655
+            },
+            {
+              "episode_id": "nuis_obj_app_11",
+              "target_key": "green_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24679042398929596,
+              "path_length_m": 0.2978315446525812
+            },
+            {
+              "episode_id": "nuis_obj_app_12",
+              "target_key": "purple_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.25787338614463806,
+              "path_length_m": 0.4404900223016739
+            },
+            {
+              "episode_id": "nuis_obj_app_13",
+              "target_key": "cyan_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2575613260269165,
+              "path_length_m": 0.3555134292691946
+            },
+            {
+              "episode_id": "nuis_obj_app_14",
+              "target_key": "yellow_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.242732971906662,
+              "path_length_m": 0.2795123811811209
+            },
+            {
+              "episode_id": "nuis_obj_app_15",
+              "target_key": "red_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2749899923801422,
+              "path_length_m": 0.312977259978652
+            },
+            {
+              "episode_id": "nuis_obj_app_16",
+              "target_key": "blue_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2538827955722809,
+              "path_length_m": 0.38747978769242764
+            },
+            {
+              "episode_id": "nuis_obj_app_17",
+              "target_key": "green_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2431330382823944,
+              "path_length_m": 0.4305859748274088
+            },
+            {
+              "episode_id": "nuis_obj_app_18",
+              "target_key": "purple_box",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26489242911338806,
+              "path_length_m": 0.25786883383989334
+            },
+            {
+              "episode_id": "nuis_obj_app_19",
+              "target_key": "cyan_cylinder",
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2693963050842285,
+              "path_length_m": 0.2211355622857809
+            }
+          ]
+        },
+        "paired_contingency": {
+          "n11_both_success": 20,
+          "n00_both_fail": 0,
+          "n10_nom_succ_mut_fail": 0,
+          "n01_nom_fail_mut_succ": 0,
+          "discordant_count": 0,
+          "mcnemar_exact_p_value": 1.0,
+          "mean_diff": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        }
+      },
       "semantically_relevant_appearance": {
         "results": {
           "episodes_evaluated": 20,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "goal_reached_count": 0,
-          "goal_reached_rate": 0.0,
-          "collision_count": 13,
-          "collision_rate": 0.65,
-          "mean_final_goal_error_m": 1.7777865052223205,
+          "success_count": 2,
+          "success_rate": 0.1,
+          "goal_reached_count": 2,
+          "goal_reached_rate": 0.1,
+          "collision_count": 11,
+          "collision_rate": 0.55,
+          "mean_final_goal_error_m": 1.3469085901975633,
           "records": [
             {
               "episode_id": "sem_color_00",
@@ -886,7 +1303,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.2438161373138428,
+              "final_goal_error_m": 0.8725276589393616,
               "path_length_m": 0.9253233199124224
             },
             {
@@ -895,7 +1312,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 2.2275748252868652,
+              "final_goal_error_m": 1.6353237628936768,
               "path_length_m": 0.6142871957272291
             },
             {
@@ -904,7 +1321,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.6198986768722534,
+              "final_goal_error_m": 1.1744968891143799,
               "path_length_m": 1.1514423955777602
             },
             {
@@ -913,7 +1330,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.0949084758758545,
+              "final_goal_error_m": 1.5585088729858398,
               "path_length_m": 0.8926032951567322
             },
             {
@@ -922,7 +1339,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 0.5945000648498535,
+              "final_goal_error_m": 1.1234267950057983,
               "path_length_m": 1.8707746379077435
             },
             {
@@ -931,7 +1348,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 3.2868144512176514,
+              "final_goal_error_m": 2.686979055404663,
               "path_length_m": 1.4355816406896338
             },
             {
@@ -940,7 +1357,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.303881049156189,
+              "final_goal_error_m": 0.8742520213127136,
               "path_length_m": 1.1363626282545738
             },
             {
@@ -949,7 +1366,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 2.1953518390655518,
+              "final_goal_error_m": 1.5998358726501465,
               "path_length_m": 0.6620408345479518
             },
             {
@@ -958,7 +1375,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.6302419900894165,
+              "final_goal_error_m": 1.1305290460586548,
               "path_length_m": 1.0954271279570094
             },
             {
@@ -967,17 +1384,17 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.9984256029129028,
+              "final_goal_error_m": 1.4504361152648926,
               "path_length_m": 0.7514252887649491
             },
             {
               "episode_id": "sem_color_10",
               "target_key": "blue_cylinder",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.4433104991912842,
-              "path_length_m": 1.1577430856996216
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2550010681152344,
+              "path_length_m": 0.373356468975544
             },
             {
               "episode_id": "sem_color_11",
@@ -985,7 +1402,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.9017493724823,
+              "final_goal_error_m": 2.3019602298736572,
               "path_length_m": 1.1031024546755361
             },
             {
@@ -994,7 +1411,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.2241415977478027,
+              "final_goal_error_m": 0.8952911496162415,
               "path_length_m": 1.1403130691905972
             },
             {
@@ -1003,7 +1420,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 2.222368001937866,
+              "final_goal_error_m": 1.6297061443328857,
               "path_length_m": 0.7129020462743938
             },
             {
@@ -1012,7 +1429,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.6274335384368896,
+              "final_goal_error_m": 1.0852081775665283,
               "path_length_m": 1.1103216592455283
             },
             {
@@ -1021,17 +1438,17 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.049828052520752,
+              "final_goal_error_m": 1.503524661064148,
               "path_length_m": 0.7914805397831515
             },
             {
               "episode_id": "sem_color_16",
               "target_key": "blue_cylinder",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.41124987602233887,
-              "path_length_m": 1.3779437269549817
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2731969952583313,
+              "path_length_m": 0.3712624628096819
             },
             {
               "episode_id": "sem_color_17",
@@ -1039,7 +1456,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.9289710521698,
+              "final_goal_error_m": 2.3301703929901123,
               "path_length_m": 1.1281536350725219
             },
             {
@@ -1048,7 +1465,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.3249459266662598,
+              "final_goal_error_m": 0.9260962605476379,
               "path_length_m": 1.0479348969238345
             },
             {
@@ -1057,33 +1474,33 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 2.2263190746307373,
+              "final_goal_error_m": 1.6317006349563599,
               "path_length_m": 0.5958515622187406
             }
           ]
         },
         "paired_contingency": {
-          "n11_both_success": 0,
+          "n11_both_success": 2,
           "n00_both_fail": 0,
-          "n10_nom_succ_mut_fail": 20,
+          "n10_nom_succ_mut_fail": 18,
           "n01_nom_fail_mut_succ": 0,
-          "discordant_count": 20,
-          "mcnemar_exact_p_value": 1.9073486328125e-06,
-          "mean_diff": -1.0,
+          "discordant_count": 18,
+          "mcnemar_exact_p_value": 7.62939453125e-06,
+          "mean_diff": -0.8999999761581421,
           "ci95_low": -1.0,
-          "ci95_high": -1.0
+          "ci95_high": -0.75
         }
       },
       "visual_geometry_grounding": {
         "results": {
           "episodes_evaluated": 20,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "goal_reached_count": 0,
-          "goal_reached_rate": 0.0,
-          "collision_count": 16,
-          "collision_rate": 0.8,
-          "mean_final_goal_error_m": 1.64833844602108,
+          "success_count": 3,
+          "success_rate": 0.15,
+          "goal_reached_count": 3,
+          "goal_reached_rate": 0.15,
+          "collision_count": 13,
+          "collision_rate": 0.65,
+          "mean_final_goal_error_m": 1.2058483563363551,
           "records": [
             {
               "episode_id": "rearr_00",
@@ -1091,7 +1508,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 0.9498529434204102,
+              "final_goal_error_m": 0.6311718225479126,
               "path_length_m": 0.9253233199124224
             },
             {
@@ -1100,7 +1517,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 2.1657161712646484,
+              "final_goal_error_m": 1.5658111572265625,
               "path_length_m": 0.6142871957272291
             },
             {
@@ -1109,17 +1526,17 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.573239803314209,
+              "final_goal_error_m": 1.975056529045105,
               "path_length_m": 1.271971258598569
             },
             {
               "episode_id": "rearr_03",
               "target_key": "red_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.44600170850753784,
-              "path_length_m": 1.0676524733062251
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24653658270835876,
+              "path_length_m": 0.38992029055953026
             },
             {
               "episode_id": "rearr_04",
@@ -1127,7 +1544,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.673730731010437,
+              "final_goal_error_m": 1.2356876134872437,
               "path_length_m": 1.0950332928914577
             },
             {
@@ -1136,7 +1553,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.307427406311035,
+              "final_goal_error_m": 1.8429991006851196,
               "path_length_m": 1.4355816406896338
             },
             {
@@ -1145,7 +1562,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 0.8955716490745544,
+              "final_goal_error_m": 0.637064516544342,
               "path_length_m": 1.1363626282545738
             },
             {
@@ -1154,7 +1571,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 2.2360103130340576,
+              "final_goal_error_m": 1.6374099254608154,
               "path_length_m": 0.6620408345479518
             },
             {
@@ -1163,17 +1580,17 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.5908544063568115,
+              "final_goal_error_m": 1.9929002523422241,
               "path_length_m": 1.0243375699992612
             },
             {
               "episode_id": "rearr_09",
               "target_key": "red_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.4447190761566162,
-              "path_length_m": 1.0065152883853443
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.25472116470336914,
+              "path_length_m": 0.34038730151951313
             },
             {
               "episode_id": "rearr_10",
@@ -1181,7 +1598,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.681978464126587,
+              "final_goal_error_m": 1.2121199369430542,
               "path_length_m": 1.0288955483410973
             },
             {
@@ -1190,7 +1607,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.9747955799102783,
+              "final_goal_error_m": 1.4419527053833008,
               "path_length_m": 1.1031024546755361
             },
             {
@@ -1199,7 +1616,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 0.9682210683822632,
+              "final_goal_error_m": 0.7164473533630371,
               "path_length_m": 1.1403130691905972
             },
             {
@@ -1208,7 +1625,7 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 2.2229790687561035,
+              "final_goal_error_m": 1.625104308128357,
               "path_length_m": 0.7129020462743938
             },
             {
@@ -1217,17 +1634,17 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.4695465564727783,
+              "final_goal_error_m": 1.869838833808899,
               "path_length_m": 1.1247466441673168
             },
             {
               "episode_id": "rearr_15",
               "target_key": "red_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.5593299865722656,
-              "path_length_m": 1.1566206216157298
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24205221235752106,
+              "path_length_m": 0.34637253917753696
             },
             {
               "episode_id": "rearr_16",
@@ -1235,7 +1652,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 1.6830544471740723,
+              "final_goal_error_m": 1.2551965713500977,
               "path_length_m": 1.3031840163748711
             },
             {
@@ -1244,7 +1661,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 2.048450469970703,
+              "final_goal_error_m": 1.5405421257019043,
               "path_length_m": 1.1281536350725219
             },
             {
@@ -1253,7 +1670,7 @@
               "success": false,
               "goal_reached": false,
               "collision": true,
-              "final_goal_error_m": 0.8769126534461975,
+              "final_goal_error_m": 0.595919132232666,
               "path_length_m": 1.0479348969238345
             },
             {
@@ -1262,42 +1679,42 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 2.198376417160034,
+              "final_goal_error_m": 1.5984352827072144,
               "path_length_m": 0.5958515622187406
             }
           ]
         },
         "paired_contingency": {
-          "n11_both_success": 0,
+          "n11_both_success": 3,
           "n00_both_fail": 0,
-          "n10_nom_succ_mut_fail": 20,
+          "n10_nom_succ_mut_fail": 17,
           "n01_nom_fail_mut_succ": 0,
-          "discordant_count": 20,
-          "mcnemar_exact_p_value": 1.9073486328125e-06,
-          "mean_diff": -1.0,
+          "discordant_count": 17,
+          "mcnemar_exact_p_value": 1.52587890625e-05,
+          "mean_diff": -0.8500000238418579,
           "ci95_low": -1.0,
-          "ci95_high": -1.0
+          "ci95_high": -0.699999988079071
         }
       },
       "layout_generalization": {
         "results": {
           "episodes_evaluated": 20,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "goal_reached_count": 0,
-          "goal_reached_rate": 0.0,
-          "collision_count": 12,
-          "collision_rate": 0.6,
-          "mean_final_goal_error_m": 0.6802742913365364,
+          "success_count": 16,
+          "success_rate": 0.8,
+          "goal_reached_count": 16,
+          "goal_reached_rate": 0.8,
+          "collision_count": 0,
+          "collision_rate": 0.0,
+          "mean_final_goal_error_m": 0.38944522738456727,
           "records": [
             {
               "episode_id": "rand_layout_00",
               "target_key": "purple_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.5698683857917786,
-              "path_length_m": 1.1690689891693182
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26911428570747375,
+              "path_length_m": 0.25772033631801605
             },
             {
               "episode_id": "rand_layout_01",
@@ -1305,35 +1722,35 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 0.8314483165740967,
-              "path_length_m": 0.7098032997455448
+              "final_goal_error_m": 0.9629073739051819,
+              "path_length_m": 1.0301022031344473
             },
             {
               "episode_id": "rand_layout_02",
               "target_key": "yellow_cylinder",
               "success": false,
               "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.4221954345703125,
-              "path_length_m": 1.5664795428747311
+              "collision": false,
+              "final_goal_error_m": 0.6450507044792175,
+              "path_length_m": 1.4291426252602832
             },
             {
               "episode_id": "rand_layout_03",
               "target_key": "red_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.5941141247749329,
-              "path_length_m": 0.904283496318385
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.26073744893074036,
+              "path_length_m": 0.190919054672122
             },
             {
               "episode_id": "rand_layout_04",
               "target_key": "blue_cylinder",
-              "success": false,
-              "goal_reached": false,
+              "success": true,
+              "goal_reached": true,
               "collision": false,
-              "final_goal_error_m": 0.9239826798439026,
-              "path_length_m": 2.102144882082939
+              "final_goal_error_m": 0.27168431878089905,
+              "path_length_m": 0.43936355970799923
             },
             {
               "episode_id": "rand_layout_05",
@@ -1341,17 +1758,17 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.3053882122039795,
-              "path_length_m": 1.805212315171957
+              "final_goal_error_m": 1.1368693113327026,
+              "path_length_m": 2.1069704554975033
             },
             {
               "episode_id": "rand_layout_06",
               "target_key": "purple_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.4958399534225464,
-              "path_length_m": 1.248321883729659
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.275824636220932,
+              "path_length_m": 0.3276289068162441
             },
             {
               "episode_id": "rand_layout_07",
@@ -1359,129 +1776,129 @@
               "success": false,
               "goal_reached": false,
               "collision": false,
-              "final_goal_error_m": 1.5814567804336548,
-              "path_length_m": 1.0444761412218213
+              "final_goal_error_m": 0.8770080208778381,
+              "path_length_m": 1.0888340509263799
             },
             {
               "episode_id": "rand_layout_08",
               "target_key": "yellow_cylinder",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.4915461838245392,
-              "path_length_m": 1.2518641649148776
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2737800180912018,
+              "path_length_m": 0.34402321837842464
             },
             {
               "episode_id": "rand_layout_09",
               "target_key": "red_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.7449765801429749,
-              "path_length_m": 1.1780753676212044
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2435172200202942,
+              "path_length_m": 0.358052846044302
             },
             {
               "episode_id": "rand_layout_10",
               "target_key": "blue_cylinder",
-              "success": false,
-              "goal_reached": false,
+              "success": true,
+              "goal_reached": true,
               "collision": false,
-              "final_goal_error_m": 0.7741360664367676,
-              "path_length_m": 2.1380579378455877
+              "final_goal_error_m": 0.2559717297554016,
+              "path_length_m": 0.5666148215532303
             },
             {
               "episode_id": "rand_layout_11",
               "target_key": "green_cylinder",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.41447189450263977,
-              "path_length_m": 0.9531620707857655
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.25411832332611084,
+              "path_length_m": 0.3446327354758978
             },
             {
               "episode_id": "rand_layout_12",
               "target_key": "purple_box",
-              "success": false,
-              "goal_reached": false,
+              "success": true,
+              "goal_reached": true,
               "collision": false,
-              "final_goal_error_m": 0.4957452118396759,
-              "path_length_m": 1.3215367742814124
+              "final_goal_error_m": 0.25382474064826965,
+              "path_length_m": 0.4373011812567711
             },
             {
               "episode_id": "rand_layout_13",
               "target_key": "cyan_cylinder",
-              "success": false,
-              "goal_reached": false,
+              "success": true,
+              "goal_reached": true,
               "collision": false,
-              "final_goal_error_m": 0.806159496307373,
-              "path_length_m": 0.7945783792529255
+              "final_goal_error_m": 0.27772265672683716,
+              "path_length_m": 0.3523484207689762
             },
             {
               "episode_id": "rand_layout_14",
               "target_key": "yellow_cylinder",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.48613935708999634,
-              "path_length_m": 0.9813869437039102
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.27162906527519226,
+              "path_length_m": 0.059410981833934784
             },
             {
               "episode_id": "rand_layout_15",
               "target_key": "red_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.6944961547851562,
-              "path_length_m": 1.145990110013372
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24141129851341248,
+              "path_length_m": 0.3936521429568529
             },
             {
               "episode_id": "rand_layout_16",
               "target_key": "blue_cylinder",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.4378949701786041,
-              "path_length_m": 1.2794800295960158
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.23675179481506348,
+              "path_length_m": 0.554688835516572
             },
             {
               "episode_id": "rand_layout_17",
               "target_key": "green_cylinder",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.38586854934692383,
-              "path_length_m": 1.0088792991882656
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.24363955855369568,
+              "path_length_m": 0.288267083466053
             },
             {
               "episode_id": "rand_layout_18",
               "target_key": "purple_box",
-              "success": false,
-              "goal_reached": false,
-              "collision": true,
-              "final_goal_error_m": 0.3097958266735077,
-              "path_length_m": 1.081830362440087
+              "success": true,
+              "goal_reached": true,
+              "collision": false,
+              "final_goal_error_m": 0.2766398787498474,
+              "path_length_m": 0.14519749395549297
             },
             {
               "episode_id": "rand_layout_19",
               "target_key": "cyan_cylinder",
-              "success": false,
-              "goal_reached": false,
+              "success": true,
+              "goal_reached": true,
               "collision": false,
-              "final_goal_error_m": 0.8399616479873657,
-              "path_length_m": 0.5283819483593106
+              "final_goal_error_m": 0.2607021629810333,
+              "path_length_m": 0.14396288059651852
             }
           ]
         },
         "paired_contingency": {
-          "n11_both_success": 0,
+          "n11_both_success": 16,
           "n00_both_fail": 0,
-          "n10_nom_succ_mut_fail": 20,
+          "n10_nom_succ_mut_fail": 4,
           "n01_nom_fail_mut_succ": 0,
-          "discordant_count": 20,
-          "mcnemar_exact_p_value": 1.9073486328125e-06,
-          "mean_diff": -1.0,
-          "ci95_low": -1.0,
-          "ci95_high": -1.0
+          "discordant_count": 4,
+          "mcnemar_exact_p_value": 0.125,
+          "mean_diff": -0.20000000298023224,
+          "ci95_low": -0.4000000059604645,
+          "ci95_high": -0.05000000074505806
         }
       },
       "se2_rigid_transformations": {
@@ -2079,6 +2496,11 @@
             }
           ]
         }
+      },
+      "latent_equivariance": {
+        "global_rigid_rotation_latent_cosine": 0.9745365262031556,
+        "egocentric_yaw_rotation_latent_cosine": 0.3450486287474632,
+        "interpretation": "Under global rigid rotation, the robot's camera view of local obstacles is preserved (cosine sim = 0.975), yielding behavioral rotation robustness. However, egocentric camera rotation shifts visual scene contents (cosine sim = 0.345); the CNN does not possess steerable group-equivariant filters."
       }
     }
   }

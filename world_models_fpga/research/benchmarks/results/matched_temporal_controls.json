@@ -3,9 +3,9 @@
     "script_path": "world_models_fpga/research/benchmarks/run_matched_temporal_controls.py",
     "script_sha256": "460e4cf3ce879d9681c5c36aa04a42e1710cddc9397916509625ad7113004aa1",
     "command_executed": "python world_models_fpga/research/benchmarks/run_matched_temporal_controls.py --episodes 50 --device cuda",
-    "execution_timestamp": "2026-11-08T02:42:21.259312+00:00",
-    "git_commit": "0041158c674a87098736afd67d0a9da797c47395",
-    "working_tree_clean": false,
+    "execution_timestamp": "2026-11-08T03:24:30.501165+00:00",
+    "git_commit": "9db418ac15825d1fb8504b04f944cac5304a94f3",
+    "working_tree_clean": true,
     "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
     "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
     "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -735,7 +735,7 @@
           0.961402952671051,
           0.24808312952518463,
           0.22650830447673798,
-          0.5246666669845581,
+          0.524666965007782,
           0.21801798045635223,
           0.23348401486873627,
           0.9313492774963379,
@@ -917,8 +917,8 @@
             "episode_idx": 21,
             "success": false,
             "collision": true,
-            "goal_error_m": 0.5246666669845581,
-            "path_length_m": 0.9302995055331849
+            "goal_error_m": 0.524666965007782,
+            "path_length_m": 0.9302991227596067
           },
           {
             "episode_idx": 22,
@@ -1544,7 +1544,7 @@
             "success": false,
             "collision": true,
             "goal_error_m": 1.6090490818023682,
-            "path_length_m": 0.5060265671927482
+            "path_length_m": 0.5060271222610027
           },
           {
             "episode_idx": 38,
@@ -3178,7 +3178,7 @@
         "episodes_evaluated": 50,
         "success_rate": 0.36000001430511475,
         "collision_rate": 0.4000000059604645,
-        "mean_final_goal_error_m": 0.5367331504821777,
+        "mean_final_goal_error_m": 0.5367311239242554,
         "per_episode_success": [
           false,
           true,
@@ -3313,7 +3313,7 @@
           0.24916008114814758,
           0.6491574645042419,
           0.8918328285217285,
-          0.24747690558433533,
+          0.24737709760665894,
           0.6782631874084473,
           1.1955156326293945,
           0.320289671421051,
@@ -3543,8 +3543,8 @@
             "episode_idx": 29,
             "success": true,
             "collision": false,
-            "goal_error_m": 0.24747690558433533,
-            "path_length_m": 0.4126048469915986
+            "goal_error_m": 0.24737709760665894,
+            "path_length_m": 0.4126894483342767
           },
           {
             "episode_idx": 30,
@@ -4332,9 +4332,9 @@
     },
     "computational_efficiency": {
       "measured_mean_step_time_ms": {
-        "macro_direct_1pass": 0.15332658134866506,
-        "micro_recursive_kpass": 0.6044462812133133,
-        "speedup_ratio": 3.942214558601557
+        "macro_direct_1pass": 0.171521520242095,
+        "micro_recursive_kpass": 0.6366399582475424,
+        "speedup_ratio": 3.711720589631863
       },
       "fpga_cycle_estimates_100mhz": {
         "macro_direct_cycles": 45000,

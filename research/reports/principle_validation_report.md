@@ -65,11 +65,13 @@ xychart-beta
 ### Computational Principles Derived:
 1. **The Computational Latency Amortization Principle:**
    - In open-loop multi-step prediction at $K=5$, direct macro prediction reduces physical displacement error from 0.0814m to 0.0460m (a **43.5% error reduction**).
-   - In computational budget, direct macro prediction evaluates the $K=5$ horizon in a **single inference pass (4,327 clock cycles / 34.61 $\mu$s @ 125 MHz)**, whereas recursive micro unrolling requires **5 sequential inference passes (21,635 clock cycles / 173.08 $\mu$s)**. Macro prediction amortizes latency by $5\times$.
-2. **The Causal Lookahead Principle:**
-   - In `run_matched_temporal_controls.py`, macro lookahead significantly outperforms random candidate selection (46.7% vs 23.3%, $+23.3\%$, McNemar exact $p = 0.0156$). Shuffled action-outcome binding (`cond_E_shuffled_binding`) achieves 36.7%, matching the reactive baseline.
+   - In computational budget, direct macro prediction evaluates the $K=5$ horizon in a **single inference pass (0.17 ms step time / 4,327 clock cycles / 34.61 $\mu$s @ 125 MHz)**, whereas recursive micro unrolling requires **5 sequential inference passes (0.64 ms step time / 21,635 clock cycles / 173.08 $\mu$s)**. Macro prediction amortizes latency by $4.2\times$.
+2. **The Predictive Lookahead & Kinematic Heuristic Equivalence:**
+   - In `run_matched_temporal_controls.py` ($N=50$), macro lookahead significantly outperforms random candidate selection (46.0% vs 26.0%, Holm-adjusted $p = 0.0117$).
+   - However, non-predictive open-loop unicycle kinematic projection (`cond_G_straight_line_heuristic`) achieves identical closed-loop success (**46.0%**, $n_{10}=0, n_{01}=0, p = 1.0000$).
+   - Under Holm–Bonferroni multiplicity control across 6 pairwise comparisons, macro vs multi-permutation shuffled binding (34.0%, unadjusted $p = 0.03125$) yields adjusted $p = 0.1562 > 0.05$. Candidate search effects remain intertwined with forward transition modeling.
    - Condition A (Reactive) and Condition F (Prior-Only Scorer) are mathematically and behaviorally equivalent ($\Delta = 0.0\%$, identical trajectory).
-3. **Hierarchy in Closed Loop:** In closed loop, direct macro (46.7%) achieves parity with recursive micro (53.3%, McNemar exact $p = 0.625$, Wilcoxon $p = 0.696$). Its true computational utility is latency amortization and kinematic drift suppression.
+3. **Hierarchy in Closed Loop:** In closed loop, direct macro (46.0%) achieves parity with recursive micro (50.0%, McNemar exact $p = 0.7266$, Wilcoxon $p = 0.4750$). Its genuine computational utility is latency amortization and kinematic drift suppression.
 
 ---
 
@@ -125,11 +127,13 @@ Evaluated across four complex, multi-stage tasks requiring sequential subgoals a
 
 | Hypothesis | Proposed Mechanism | Experimental Evidence | Final Scientific Verdict |
 |---|---|---|---|
-| **H1: Causal Lookahead Utility** | Action-conditioned prediction guides navigation | Shuffled negative control collapses success from 46.7% to 23.3% ($p = 0.0082$) | **CONFIRMED (Level E3)** |
+| **H1: Causal Lookahead Utility** | Action-conditioned prediction guides navigation | Outperforms random actions (46.0% vs 26.0%, Holm-adjusted $p = 0.0117$). Matched by straight-line kinematic heuristic (46.0%, $p = 1.0000$). Shuffled binding Holm-adjusted $p = 0.1562$. | **CALIBRATED (Level E3)** |
 | **H2: Inductive Bias Separation** | Convolutional prior explains distance, learning explains orientation | Random CNN $R^2=-0.02$ on $\theta$ vs $0.24$ trained; Random CNN achieves $R^2=0.30$ on pos and $0.977$ AUROC on col | **CONFIRMED (Level E2)** |
-| **H3: Temporal Hierarchy Advantage** | Macro subgoals prevent compounding drift and amortize compute | Cuts 5-step drift from 0.079m to 0.045m; $5\times$ compute reduction (4,327 vs 21,635 cycles) | **REFINED (Amortization & Stability)** |
-| **H4: Visual-Spatial Invariance** | Representations exhibit visual invariance and spatial equivariance | 86.7% floor retention; 93.3% target color retention; allocentric spatial map prior | **CONFIRMED (Level E3)** |
+| **H3: Temporal Hierarchy Advantage** | Macro subgoals prevent compounding drift and amortize compute | Cuts 5-step drift from 0.081m to 0.046m (-43.5%); $4.2\times$ compute reduction (0.17 ms vs 0.64 ms, 4,327 vs 21,635 cycles); achieves closed-loop parity with micro (46.0% vs 50.0%, $p = 0.7266$). | **REFINED (Amortization & Stability)** |
+| **H4: Visual-Spatial Invariance** | Representations exhibit visual invariance and spatial equivariance | SE(2) global equivariance (100.0%, latent cosine = 0.975); allocentric map prior (15.0% landmark swap, 1.206m error); extreme floor texture sensitivity (5.0%, $p < 0.0001$). | **CALIBRATED (Level E3)** |
 | **H5: Cross-Architecture Transfer** | Forward dynamics transfer via orthogonal Procrustes | LeWM $\to$ H-JEPA achieves 0.977 cosine; macro $\to$ micro drops to 0.639 | **CONFIRMED (Level E2, Asymmetric)** |
 | **H6: Embodiment Robustness** | Lookahead world models recover from physical disturbances | H-JEPA achieves robust performance under friction scaling and actuator scaling | **CONFIRMED (Level E2)** |
-| **C2: Modular Egocentric Circuit** | Dedicated 8D linear subspace for egocentric rotation | Top-8 C2 ablation yields identical 15.0% drop across axis, PCA, and regression (+4.0% selectivity) | **FALSIFIED (Modular) / SUPPORTED (Distributed)** |
-| **C4: Modular Forward Dynamics** | Dedicated 8D linear subspace for forward transitions | Top-8 ablation drops 5.0% vs 11.0% random drop (Selectivity = -6.0%) | **FALSIFIED (Non-Selective)** |
+| **H-Safety: Predictive Safety Barrier** | Collision prediction provides prospective safety barrier | 70.0% closed-loop collisions across intact, shuffled, and disabled heads ($p = 1.0000$), while oracle cuts collisions to 7.5% ($p < 10^{-7}$). Offline AUROC 1.0 does not guarantee safety. | **FALSIFIED AS PROSPECTIVE BARRIER** |
+| **C1: Visual Target Grounding** | Dedicated latent subspace for target identification | Nec drop 23.3% vs Track C random 1.6% ($z = +2.99, p = 0.0196$); rescue restores 60.0% success vs random rescue mean 51.6% | **CONFIRMED (Level E2, Selective Circuit)** |
+| **C2: Modular Egocentric Circuit** | Dedicated 8D linear subspace for egocentric rotation | Top-8 C2 ablation yields 10.0% drop vs structured random 5.3% ($z = +0.62, p = 0.5294$), within random distribution | **FALSIFIED (Modular) / UNRESOLVED_NON_SELECTIVE** |
+| **C4: Modular Forward Dynamics** | Dedicated 8D linear subspace for forward transitions | Top-8 ablation drops 6.7% vs structured random 5.3% ($z = +0.07, p = 0.7059$) | **FALSIFIED (Modular) / UNRESOLVED_NON_SELECTIVE** |

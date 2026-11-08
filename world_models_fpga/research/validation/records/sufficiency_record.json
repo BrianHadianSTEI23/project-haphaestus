@@ -2,10 +2,12 @@
   "record_id": "REC-SUFFICIENCY-001",
   "evaluation": "sufficiency",
   "provenance_status": "INDEPENDENTLY_EXECUTED",
-  "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30",
-  "execution_timestamp": "2026-11-08T01:54:09.466506+00:00",
-  "source_git_commit": "d377d99aaae8f78240f22159d69a6d8682a50b78",
+  "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 50 --device cuda",
+  "execution_timestamp": "2026-11-08T03:11:49.955016+00:00",
+  "source_git_commit": "ec186389aac3cea87aaa01b1d51a6ac975147682",
   "working_tree_clean": true,
+  "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+  "script_sha256": "4bcb23a28a55e43e8e01b44ef6807757e480c930f7b7bde34057e5c91a3d327a",
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
   "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
   "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -25,9 +27,10 @@
   "random_seed": 42,
   "configuration": {
     "episodes": 30,
-    "n_random_subspace_draws": 30,
+    "n_random_subspace_draws": 50,
     "subspace_dimension": 8,
-    "max_steps": 45
+    "max_steps": 45,
+    "information_regimes": "Strictly matched: Track C random controls for C1; Structured random controls for C2-C4"
   },
   "environment": {
     "python": "3.13.16",
@@ -35,21 +38,24 @@
     "device": "cuda"
   },
   "result_artifact_path": "world_models_fpga/research/circuits/results/sufficiency_results.json",
-  "result_artifact_sha256": "491f305d9f25408046bf1dc0a227b9dbbcaf1b2b3a4426cc604b324fa4623773",
-  "provenance_notes": "Independently executed with verified embedded execution metadata.",
+  "result_artifact_sha256": "37cf9509d0b23327e41766296e43fcacebc945aaf4f2b891a5a4fd35c09afa3e",
+  "provenance_notes": "Independently executed with verified embedded execution metadata and clean working tree.",
   "config": {
     "episodes": 30,
-    "n_random_subspace_draws": 30,
+    "n_random_subspace_draws": 50,
     "subspace_dimension": 8,
-    "max_steps": 45
+    "max_steps": 45,
+    "information_regimes": "Strictly matched: Track C random controls for C1; Structured random controls for C2-C4"
   },
-  "git_commit": "d377d99aaae8f78240f22159d69a6d8682a50b78",
+  "git_commit": "ec186389aac3cea87aaa01b1d51a6ac975147682",
   "seed": 42,
   "results": {
     "execution_metadata": {
-      "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 30",
-      "execution_timestamp": "2026-11-08T01:54:09.466506+00:00",
-      "git_commit": "d377d99aaae8f78240f22159d69a6d8682a50b78",
+      "script_path": "world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py",
+      "script_sha256": "4bcb23a28a55e43e8e01b44ef6807757e480c930f7b7bde34057e5c91a3d327a",
+      "command_executed": "python world_models_fpga/research/circuits/run_rigorous_behavioral_circuits.py --episodes 30 --n-rand 50 --device cuda",
+      "execution_timestamp": "2026-11-08T03:11:49.955016+00:00",
+      "git_commit": "ec186389aac3cea87aaa01b1d51a6ac975147682",
       "working_tree_clean": true,
       "dataset_path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
       "dataset_sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7",
@@ -70,9 +76,10 @@
       "random_seed": 42,
       "configuration": {
         "episodes": 30,
-        "n_random_subspace_draws": 30,
+        "n_random_subspace_draws": 50,
         "subspace_dimension": 8,
-        "max_steps": 45
+        "max_steps": 45,
+        "information_regimes": "Strictly matched: Track C random controls for C1; Structured random controls for C2-C4"
       },
       "environment": {
         "python": "3.13.16",
@@ -85,8 +92,10 @@
         "circuit_id": "C1_target_grounding_track_c",
         "clean_success_rate": 0.46666666865348816,
         "retained_success_rate": 0.2666666805744171,
-        "rescue_success_rate": 0.2666666805744171,
-        "random_control_retained": 0.5100000023841857,
+        "rescue_success_rate": 0.6000000238418579,
+        "random_control_retained": 0.27066667392849925,
+        "random_control_rescue": 0.5160000061988831,
+        "rescue_empirical_p_value": 0.09803921568627451,
         "verdict": "SELECTIVE_CAUSAL_CIRCUIT",
         "records": [
           {
@@ -142,8 +151,8 @@
             "episode_id": "circuit_eval_obstacle_avoidance_07",
             "success": false,
             "collision": true,
-            "goal_error": 2.0391438007354736,
-            "path_length": 1.097785722464323
+            "goal_error": 2.0323007106781006,
+            "path_length": 1.0827066889032722
           },
           {
             "episode_id": "circuit_eval_object_grounding_08",
@@ -233,8 +242,8 @@
             "episode_id": "circuit_eval_object_grounding_20",
             "success": false,
             "collision": false,
-            "goal_error": 1.799142837524414,
-            "path_length": 1.5317618160042912
+            "goal_error": 1.7993258237838745,
+            "path_length": 1.5316663368139416
           },
           {
             "episode_id": "circuit_eval_obstacle_avoidance_21",
@@ -275,8 +284,8 @@
             "episode_id": "circuit_eval_object_grounding_26",
             "success": false,
             "collision": false,
-            "goal_error": 1.7949199676513672,
-            "path_length": 1.500567747047171
+            "goal_error": 1.7949156761169434,
+            "path_length": 1.5005511508788913
           },
           {
             "episode_id": "circuit_eval_obstacle_avoidance_27",
@@ -305,8 +314,10 @@
         "circuit_id": "C2_axis_aligned",
         "clean_success_rate": 0.6000000238418579,
         "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5,
-        "random_control_retained": 0.5100000023841857,
+        "rescue_success_rate": 0.6333333253860474,
+        "random_control_retained": 0.5080000030994415,
+        "random_control_rescue": 0.5880000138282776,
+        "rescue_empirical_p_value": 0.19607843137254902,
         "verdict": "UNRESOLVED_NON_SELECTIVE",
         "records": [
           {
@@ -525,8 +536,10 @@
         "circuit_id": "C2_rotated_pca",
         "clean_success_rate": 0.6000000238418579,
         "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5,
-        "random_control_retained": 0.5100000023841857,
+        "rescue_success_rate": 0.5333333611488342,
+        "random_control_retained": 0.5080000030994415,
+        "random_control_rescue": 0.5880000138282776,
+        "rescue_empirical_p_value": 0.9411764705882353,
         "verdict": "UNRESOLVED_NON_SELECTIVE",
         "records": [
           {
@@ -745,8 +758,10 @@
         "circuit_id": "C2_multivariate_reg",
         "clean_success_rate": 0.6000000238418579,
         "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5,
-        "random_control_retained": 0.5100000023841857,
+        "rescue_success_rate": 0.5666666626930237,
+        "random_control_retained": 0.5080000030994415,
+        "random_control_rescue": 0.5880000138282776,
+        "rescue_empirical_p_value": 0.803921568627451,
         "verdict": "UNRESOLVED_NON_SELECTIVE",
         "records": [
           {
@@ -965,8 +980,10 @@
         "circuit_id": "C3_obstacle_risk_hjepa",
         "clean_success_rate": 0.6000000238418579,
         "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5,
-        "random_control_retained": 0.5100000023841857,
+        "rescue_success_rate": 0.5666666626930237,
+        "random_control_retained": 0.5080000030994415,
+        "random_control_rescue": 0.5880000138282776,
+        "rescue_empirical_p_value": 0.803921568627451,
         "verdict": "UNRESOLVED_NON_SELECTIVE",
         "records": [
           {
@@ -1185,8 +1202,10 @@
         "circuit_id": "C4_forward_dynamics_hjepa",
         "clean_success_rate": 0.6000000238418579,
         "retained_success_rate": 0.5,
-        "rescue_success_rate": 0.5,
-        "random_control_retained": 0.5100000023841857,
+        "rescue_success_rate": 0.6000000238418579,
+        "random_control_retained": 0.5080000030994415,
+        "random_control_rescue": 0.5880000138282776,
+        "rescue_empirical_p_value": 0.5882352941176471,
         "verdict": "UNRESOLVED_NON_SELECTIVE",
         "records": [
           {
@@ -1406,7 +1425,9 @@
         "clean_success_rate": 0.6000000238418579,
         "retained_success_rate": 0.5,
         "rescue_success_rate": 0.5,
-        "random_control_retained": 0.5100000023841857,
+        "random_control_retained": 0.5080000030994415,
+        "random_control_rescue": 0.5880000138282776,
+        "rescue_empirical_p_value": 1.0,
         "verdict": "FALSIFIED_NON_SELECTIVE",
         "records": [
           {

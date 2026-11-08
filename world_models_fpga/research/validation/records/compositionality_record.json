@@ -1,11 +1,13 @@
 {
   "record_id": "REC-COMPOSITIONALITY-001",
   "evaluation": "compositionality",
-  "provenance_status": "INDEPENDENTLY_EXECUTED",
+  "provenance_status": "LEGACY_UNVERIFIED",
   "command_executed": "MUJOCO_GL=egl .venv/bin/python world_models_fpga/research/synthesis/experiment_c_novel_composition/run_novel_composition.py",
   "execution_timestamp": "2026-11-07T17:32:19.346673+00:00",
   "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
-  "working_tree_clean": true,
+  "working_tree_clean": "UNKNOWN_UNVERIFIED",
+  "script_path": null,
+  "script_sha256": null,
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
   "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
   "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -27,7 +29,7 @@
   },
   "result_artifact_path": "world_models_fpga/research/synthesis/experiment_c_novel_composition/novel_composition_results.json",
   "result_artifact_sha256": "2bb522c94ffd5506038b87a2dea70da9c87068a4366b9022a4c38f1061933bf2",
-  "provenance_notes": "Independently executed with verified embedded execution metadata.",
+  "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
   "config": {
     "tasks": [
       "T1_dual_landmark_slalom",

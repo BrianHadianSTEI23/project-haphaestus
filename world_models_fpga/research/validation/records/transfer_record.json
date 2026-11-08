@@ -1,11 +1,13 @@
 {
   "record_id": "REC-TRANSFER-001",
   "evaluation": "transfer",
-  "provenance_status": "INDEPENDENTLY_EXECUTED",
+  "provenance_status": "LEGACY_UNVERIFIED",
   "command_executed": ".venv/bin/python world_models_fpga/research/principles/test_causal_transfer.py",
   "execution_timestamp": "2026-11-07T17:32:19.346668+00:00",
   "source_git_commit": "cbc6c4e6c0d7ff439365db135564c0fffcf1a209",
-  "working_tree_clean": true,
+  "working_tree_clean": "UNKNOWN_UNVERIFIED",
+  "script_path": null,
+  "script_sha256": null,
   "dataset_path": "world_models_fpga/research/datasets/splits_v4/held_out_test_benchmark.npz",
   "dataset_sha256": "5b5153fcef96e2f0398a0e13a21b942d599066ef97c902ba711167f9e9ad9f38",
   "checkpoint_path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
@@ -26,7 +28,7 @@
   },
   "result_artifact_path": "world_models_fpga/research/principles/results/causal_transfer_results.json",
   "result_artifact_sha256": "7eeaf0ccf330d84e68632db9b2516e36bd41951e5f39a9b7383eb3d27ab1dffd",
-  "provenance_notes": "Independently executed with verified embedded execution metadata.",
+  "provenance_notes": "Artifact lacks verified clean execution provenance. Strict in-tree re-execution required.",
   "config": {
     "models": [
       "Baseline",
