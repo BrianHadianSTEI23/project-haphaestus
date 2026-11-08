@@ -1,0 +1,4 @@
+condition,expected_rows,observed_rows,missing_rows,unexpected_rows,duplicate_rows
+candidate,2400,2400,0,0,0
+dimension_matched_random,240000,240000,0,0,0
+norm_matched_random,205400,205400,0,0,0

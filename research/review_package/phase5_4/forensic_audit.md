@@ -26,6 +26,9 @@ To determine this, Phase 5.4 evaluated the identical 447,800 interventions direc
 
 ## 2. Full-Model Spatial Geometry: The Orthogonality Discovery
 
+> [!IMPORTANT]
+> **Ground-Truth Target Definition**: In all analyses below, the ground truth evaluated is the task-defined standoff goal waypoint $\mathbf{w} = \mathbf{p}_{\text{obj}} - 0.60 \frac{\mathbf{p}_{\text{obj}} - \mathbf{p}_{\text{robot}}}{\|\mathbf{p}_{\text{obj}} - \mathbf{p}_{\text{robot}}\|}$ located 0.60 m in front of the target object in robot body coordinates, exactly reflecting the agent's navigational objective, not the physical object center.
+
 Evaluating H-JEPA's unperturbed predictions across all 120 evaluation scenes (60 independent pairs) revealed an unexpected geometric phenomenon:
 
 ### A. Intact Model Accuracy & Error Metrics:
@@ -64,11 +67,12 @@ Let $\Delta\mathbf{g}_{\text{gt}} = \mathbf{g}_{\text{gt}}^B - \mathbf{g}_{\text
 ### C. Scene-Swap Reversal Invariants:
 In each paired trial, Scene B physically swaps the positions of Target A and Target B, which mathematically guarantees:
 $$\Delta\mathbf{g}_{\text{gt}}^B = -\Delta\mathbf{g}_{\text{gt}}^A$$
-When evaluating whether H-JEPA's task contrast vector reverses between Scene A and Scene B:
+If H-JEPA's task contrast vector veridically tracked target swapping, its output displacement would also invert ($\Delta\mathbf{g}_{\text{model}}^B = -\Delta\mathbf{g}_{\text{model}}^A$), yielding an ideal reversal cosine of $\cos(\Delta\mathbf{g}_{\text{model}}^A, -\Delta\mathbf{g}_{\text{model}}^B) = +1.0$.
+Evaluating the observed model contrast across scenes:
 - **Model Scene-Swap Reversal Cosine**: Mean **$-0.7119$** (95% CI: $[-0.8045, -0.6055]$, median $-0.8804$).
 - **Angular Deviation from Reversal**: Mean **$143.50^\circ$** (median $151.69^\circ$).
 
-This confirms that H-JEPA is genuinely sensitive to physical object swapping—its internal output shift partially inverts ($\cos \approx -0.71$) when the scene objects invert. However, because its baseline contrast vector is rotated $\approx 90^\circ$ from the physical axis, its predictions are systematically biased away from the true metric coordinates.
+**Directional Interpretation**: Because $\cos(\Delta\mathbf{g}_{\text{model}}^A, -\Delta\mathbf{g}_{\text{model}}^B) = -\cos(\Delta\mathbf{g}_{\text{model}}^A, \Delta\mathbf{g}_{\text{model}}^B) = -0.7119$, the positive direct cosine $\cos(\Delta\mathbf{g}_{\text{model}}^A, \Delta\mathbf{g}_{\text{model}}^B) = +0.7119$ demonstrates that H-JEPA's output contrast retains substantially the *same* orientation across scenes, **failing to reverse** with the physical target swap. This disconfirms sensitivity to physical target coordinate inversion under scene swap.
 
 ---
 
@@ -87,30 +91,30 @@ $$\text{baseline\_error} = \|\mathbf{g}_{\text{base}} - \mathbf{g}_{\text{recip\
 $$\text{transplant\_error} = \|\mathbf{g}_{\text{trans}} - \mathbf{g}_{\text{donor\_gt}}\|_2$$
 $$\text{error\_improvement} = \text{baseline\_error} - \text{transplant\_error}$$
 
-Across all 4,800 candidate interventions:
-- **Mean Error Improvement**: only **$+0.0344$ m** ($3.4$ cm, 95% CI: $[0.0210, 0.0480]$ m).
-- **Proportion Positive**: only **$54.0\%$** of candidate interventions actually reduce spatial error toward the donor target.
+Across all 2,400 candidate interventions ($60 \text{ pairs} \times 2 \text{ scenes} \times 2 \text{ layers} \times 5\text{ }k\text{'s} \times 2 \text{ directions} \times 1 \text{ candidate draw}$):
+- **Mean Error Improvement**: only **$+0.0344$ m** ($3.4$ cm, 95% CI: $[+0.0183, +0.0502]$ m).
+- **Proportion Positive**: only **$54.0\%$** of candidate interventions actually reduce spatial error toward the donor target (95% CI: $[51.1\%, 56.9\%]$).
 - **Mean Baseline Error**: $0.4881$ m.
 - **Mean Transplant Error**: $0.4537$ m.
 
 Transplanting candidate activations barely nudges the predicted goal closer to the donor object ($+3.4$ cm out of $\approx 49$ cm baseline error).
 
-### C. Confirmatory Evaluation Against Norm-Matched Controls:
-In the two settings with 100% complete common support across all 60 pairs:
+### C. Complete Common Support Evaluations (Exploratory Post-Hoc Status):
+Because these analyses evaluate ground-truth metrics post-hoc on existing Phase 5.3 intervention records, the complete-support comparisons are classified as `EXPLORATORY_COMPLETE_SUPPORT` (do not use `CONFIRMATORY_EVALUATED`). In the two settings with 100% complete common support across all 60 pairs:
 
 1. **Layer 1, $k=2$ ($N=60$ pairs)**:
    - Candidate $\eta_{\text{gt}} = -0.021$ vs Strict Norm-Matched Random $\eta_{\text{gt}} = -0.039$.
-   - Paired Difference $\Delta\eta_{\text{gt}} = +0.018$ (95% CI: $[-0.007, +0.046]$, Wilcoxon $p = 0.2730$).
+   - Paired Difference $\Delta\eta_{\text{gt}} = +0.018$ (Two-sided Wilcoxon $p = 0.5461$, Holm-adjusted $p_{\text{adj}} = 1.0000$).
    - Candidate Error Improvement $= +0.005$ m vs Norm-Matched Error Improvement $= \mathbf{+0.016}$ m.
-   - Paired Difference in Error Improvement $= -0.012$ m (95% CI: $[-0.028, +0.004]$ m, Wilcoxon $p = 0.9416$).
+   - Paired Difference in Error Improvement $= -0.012$ m (Two-sided Wilcoxon $p = 0.1169$, Holm-adjusted $p_{\text{adj}} = 0.4675$).
 
 2. **Layer 1, $k=4$ ($N=60$ pairs)**:
    - Candidate $\eta_{\text{gt}} = -0.042$ vs Strict Norm-Matched Random $\eta_{\text{gt}} = -0.038$.
-   - Paired Difference $\Delta\eta_{\text{gt}} = -0.004$ (95% CI: $[-0.036, +0.026]$, Wilcoxon $p = 0.5527$).
+   - Paired Difference $\Delta\eta_{\text{gt}} = -0.004$ (Two-sided Wilcoxon $p = 0.8946$, Holm-adjusted $p_{\text{adj}} = 1.0000$).
    - Candidate Error Improvement $= +0.027$ m vs Norm-Matched Error Improvement $= \mathbf{+0.034}$ m.
-   - Paired Difference in Error Improvement $= -0.007$ m (95% CI: $[-0.027, +0.014]$ m, Wilcoxon $p = 0.6186$).
+   - Paired Difference in Error Improvement $= -0.007$ m (Two-sided Wilcoxon $p = 0.7628$, Holm-adjusted $p_{\text{adj}} = 1.0000$).
 
-**Definitive Statistical Verdict:** In neither setting do candidate units show statistically significant superiority over norm-matched random controls in steering toward the ground-truth physical target. Furthermore, norm-matched random controls achieve slightly *larger* mean error reductions ($+1.6$ cm and $+3.4$ cm) than candidate units ($+0.5$ cm and $+2.7$ cm).
+**Definitive Statistical Verdict:** In neither setting do candidate units show statistically significant superiority over norm-matched random controls in steering toward the ground-truth physical target (all Holm $p_{\text{adj}} \ge 0.4675$). Furthermore, norm-matched random controls achieve slightly *larger* mean error reductions ($+1.6$ cm and $+3.4$ cm) than candidate units ($+0.5$ cm and $+2.7$ cm). Confidence intervals do not establish equivalence, as no pre-specified equivalence margin was defined.
 
 ---
 

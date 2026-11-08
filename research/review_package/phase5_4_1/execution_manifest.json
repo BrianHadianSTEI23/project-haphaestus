@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "phase": "5.4.1",
+    "title": "Forensic Reconciliation, Statistical Reporting, & Intelligence-Principle Correction",
+    "baseline_commit": "0cafb12240dcd749a7c3e0c8c9612f4ddeca5ea2",
+    "source_execution_commit": "d668ce5c0f552eb90a8e26307409b813efc5fc08",
+    "timestamp_utc": "2026-11-08T16:13:30Z"
+  },
+  "input_artifacts": {
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_pairs.jsonl": "5d9a0dc8abad2a6c6a78a762004f383eeb4f94a0aa427217f33d4a9e95e5eead",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_intervention_metrics.jsonl.gz": "711d9f74450540b49706fd3a817809855f4968953bd5543cfbcb50f5827a249e",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_scene_metrics.jsonl": "e5a039aac72da608e02c1173b1ac8673d716d97b1c08e5a7fb1f5176c22ecff5",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_summary.json": "1b28eb8b9a2e5a47fd1adad149deb2b8cddfd5fbb722e303e1a5b53c44f9394d",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_ground_truth_summary.json": "f6285a1370029e74e04f4501331551115074001edca2b4b7dc3f9b3b58bfea3e"
+  },
+  "source_code": {
+    "world_models_fpga/research/circuits/run_task_conditioned_circuits_v5_4_1_reporting_audit.py": "b7ca5e039f4daaed1f9dbbb04d9990b6a3fa050ed9d4fa4f4bea8518b691d17f"
+  },
+  "unit_tests": {
+    "world_models_fpga/tests/test_task_conditioned_circuits_v5_4_1_reporting_audit.py": "ea9ae467f27b2877194c26dab2b902a35c89db9ff1eeeca857effa052bb97178"
+  },
+  "output_artifacts": {
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_1_audit_summary.json": "e48dbb8f5d4d26795642eb53d63f03771eb1a84fcaf50ad3848135672a6af6b3",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_1_condition_counts.csv": "bb2d2bf9f96d31f976854bdaa5717cab7fb45167af97d174b71d50f13d69af7b",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_1_pair_metrics.jsonl": "050bbc6c5a44115b03767a9d671d4025150719a7b72f0f2e10a96a0160ceb16c",
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_1_schema.md": "602cde866260a1fe3f336a3054a672ca1623654d95ecbe68e879f21448edf69c"
+  },
+  "review_package": {
+    "research/review_package/phase5_4_1/README.md": "74bafe8e8eb797d75d5c9f846024f10530c58430923c7764a04cb7e565645853",
+    "research/review_package/phase5_4_1/forensic_audit.md": "d4da51b3df3449aab34ac497e0873b59aca8da445b303e5d332b02c0b681637b",
+    "research/review_package/phase5_4_1/data_dictionary.md": "eee9154f90640ae922cb99f6448f233e359341e02e07f25d22c59f590c1e8398",
+    "research/review_package/phase5_4_1/protocol_deviations.md": "e6bf31619fb92ad30ff1e216385f422502ee065c71b99347faf66d7349379d7c",
+    "research/review_package/phase5_4_1/revised_claims_ledger.csv": "c41d90236804b56954d28c132965ccc3e17afc265d41ff2423c284c3e3ded696",
+    "research/review_package/phase5_4_1/unresolved_hypotheses.md": "1d66eba24a272834e43aa74612ce1243a292166694a0973c39bed070dcbd3547",
+    "research/review_package/phase5_4_1/test_run.log": "859b2525589015e7b26816395af79915e355d9b2f5136640f4058fb43a5f291f"
+  }
+}

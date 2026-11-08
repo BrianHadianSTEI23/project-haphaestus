@@ -10,7 +10,7 @@
 ### Status: EMPIRICALLY CONFIRMED / MECHANISTICALLY UNRESOLVED
 In Phase 5.4, we established that across 120 evaluation scenes (60 independent pairs):
 - The model's task-induced output displacement $\Delta\mathbf{g}_{\text{model}} = \mathbf{g}_{\text{pred}}^B - \mathbf{g}_{\text{pred}}^A$ is **nearly orthogonal** to the physical target displacement $\Delta\mathbf{g}_{\text{gt}} = \mathbf{g}_{\text{gt}}^B - \mathbf{g}_{\text{gt}}^A$ (mean cosine $= +0.0010$, mean angular deviation $= 90.63^\circ$).
-- Despite this orthogonality, under physical scene swap, the model's output contrast reverses with cosine $-0.7119$ ($143.5^\circ$), demonstrating genuine sensitivity to physical scene inversion.
+- Under physical scene swap where physical target coordinates invert ($\Delta\mathbf{g}_{\text{gt}}^B = -\Delta\mathbf{g}_{\text{gt}}^A$), the model's output contrast fails to reverse, exhibiting a negative reversal cosine of $-0.7119$ ($143.50^\circ$). Because $\cos(\Delta\mathbf{g}_{\text{model}}^A, -\Delta\mathbf{g}_{\text{model}}^B) = -0.7119$, the model contrast retains substantially the *same* orientation across physical scene swap ($\Delta\mathbf{g}_{\text{model}}^A \cdot \Delta\mathbf{g}_{\text{model}}^B = +0.7119$), failing to invert with the physical targets.
 
 ### Open Questions:
 1. Why does the task-conditioning pathway rotate the output displacement orthogonal to the physical target offset?

@@ -1566,7 +1566,7 @@
       "status": "EMPIRICALLY_CONFIRMED"
     },
     "CLAIM_PHYSICAL_SCENE_SWAP_CONSISTENCY": {
-      "statement": "When physical target objects swap locations between Scene A and Scene B, model contrast fails to reverse cleanly (mean reversal cosine -0.0620, angular deviation 93.5 deg).",
+      "statement": "When physical target objects swap locations between Scene A and Scene B, model contrast fails to reverse cleanly, retaining substantially the same orientation across scenes (mean reversal cosine -0.7119, angular deviation 143.5 deg).",
       "status": "EMPIRICALLY_CONFIRMED"
     },
     "CLAIM_CAUSAL_INTERVENTION_MODEL_VS_GT_DIVERGENCE": {

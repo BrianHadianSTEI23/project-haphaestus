@@ -25,6 +25,7 @@ All raw experimental outputs are stored in `world_models_fpga/research/circuits/
   - $+X$: Points directly forward along the robot's heading direction.
   - $+Y$: Points lateral left, perpendicular to the robot's heading.
 - **Physical Translations ($x, y$)**: Metres ($m$) from the robot base center.
+- **Ground-Truth Target Definition**: The evaluated ground truth is the task-defined standoff goal waypoint $\mathbf{w} = \mathbf{p}_{\text{obj}} - 0.60 \frac{\mathbf{p}_{\text{obj}} - \mathbf{p}_{\text{robot}}}{\|\mathbf{p}_{\text{obj}} - \mathbf{p}_{\text{robot}}\|}$ located 0.60 m in front of the target object in robot body coordinates, exactly reflecting the agent's navigation objective, not the physical object center.
 - **Goal Displacements ($\mathbf{g}_{\text{model}}, \mathbf{g}_{\text{gt}}$)**: 2D vectors $[x, y]$ in metres.
 - **Heading Angles ($\theta$, bearing)**: Radians, wrapped to $[-\pi, \pi]$ using `atan2(sin, cos)`.
 - **Contrast Projection Efficiency ($\eta$)**: Dimensionless scalar projection.
@@ -62,7 +63,7 @@ One record per independent pair ($N=60$) and scene (`Scene_A` and `Scene_B`).
 - `heading_error_A_rad`: Absolute circular heading error under Task A (rad).
 - `heading_error_B_rad`: Absolute circular heading error under Task B (rad).
 - `mean_heading_error_rad`: Average absolute heading error (rad).
-- `scene_swap_cos`: Cosine similarity of model contrast reversal $\cos(-\Delta\mathbf{g}_{\text{model}}^A, \Delta\mathbf{g}_{\text{model}}^B)$.
+- `scene_swap_cos`: Cosine similarity of model contrast reversal $\cos(\Delta\mathbf{g}_{\text{model}}^A, -\Delta\mathbf{g}_{\text{model}}^B)$ (where $+1.0$ indicates clean reversal $\Delta\mathbf{g}_{\text{model}}^B = -\Delta\mathbf{g}_{\text{model}}^A$, and negative values indicate failure to reverse / retention of same orientation across scenes).
 - `scene_swap_ang_deg`: Angular deviation from perfect inversion ($^\circ$).
 
 ### B. `task_conditioned_circuits_v5_4_intervention_metrics.jsonl.gz` (447,800 records)
