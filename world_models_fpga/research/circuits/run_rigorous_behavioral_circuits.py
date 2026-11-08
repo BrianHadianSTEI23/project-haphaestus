@@ -161,7 +161,8 @@ class SubspaceTransformHook:
         self.proj = torch.as_tensor(proj, dtype=torch.float32) if proj is not None else None
         self.mean_vec = torch.as_tensor(mean_vec, dtype=torch.float32) if mean_vec is not None else None
         self.noise_std = float(noise_std)
-        self.rng = torch.Generator().manual_seed(rng_seed)
+        self.rng_seed = int(rng_seed)
+        self.gen = None
         self._orig_encode = getattr(model, "encode", getattr(model, "encoder", None))
 
     def __enter__(self):
@@ -174,6 +175,9 @@ class SubspaceTransformHook:
             mu = self.mean_vec.to(dev).view(1, -1) if self.mean_vec is not None else torch.zeros_like(z)
             p = self.proj.to(dev) if self.proj is not None else None
             z_centered = z - mu
+            if self.gen is None or self.gen.device != dev:
+                self.gen = torch.Generator(device=dev).manual_seed(self.rng_seed)
+
             if self.mode == "ablate":
                 # Remove subspace: z - P(z - mu)
                 return mu + (z_centered - (z_centered @ p))
@@ -182,13 +186,13 @@ class SubspaceTransformHook:
                 return mu + (z_centered @ p)
             elif self.mode == "corrupt_only":
                 # Background corrupted baseline: z + eta
-                eta = torch.randn(z.shape, device=dev, generator=self.rng) * self.noise_std
+                eta = torch.randn(z.shape, device=dev, dtype=z.dtype, generator=self.gen) * self.noise_std
                 return z + eta
             elif self.mode == "rescue":
                 # Genuine Rescue: Corrupt orthogonal complement (I - P) with eta,
                 # but RESTORE clean signal in candidate subspace P:
                 # z_rescue = z + eta(I - P) = z + eta - (eta @ P)
-                eta = torch.randn(z.shape, device=dev, generator=self.rng) * self.noise_std
+                eta = torch.randn(z.shape, device=dev, dtype=z.dtype, generator=self.gen) * self.noise_std
                 return z + eta - (eta @ p)
             return z
 
