@@ -115,7 +115,10 @@ class JetAutoEnv(gym.Env):
         for key, obstacle in obstacles.items():
             geom_name = obstacle.get("geom_name")
             if not geom_name:
-                raise ValueError(f"Obstacle {key!r} has no geom_name")
+                if key in self.OBSTACLES:
+                    geom_name = self.OBSTACLES[key]["geom"]
+                else:
+                    raise ValueError(f"Obstacle {key!r} has no geom_name")
             geom_id = self.geometry_id(geom_name)
             self.model.geom_pos[geom_id] = np.asarray(obstacle["pos"], dtype=np.float64)
             if "rgba" in obstacle:
@@ -209,11 +212,20 @@ class JetAutoEnv(gym.Env):
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
+
+        # Apply task specification if explicitly passed in options
+        if options and "task_spec" in options and options["task_spec"] is not None:
+            self.apply_task_spec(options["task_spec"])
+
         mujoco.mj_resetData(self.model, self.data)
 
-        # Custom initial pose if provided in options
+        # Custom initial pose if provided in options or active task_spec
         if options and "initial_pos" in options:
             rx, ry, r_theta = options["initial_pos"]
+        elif options and "task_spec" in options and isinstance(options["task_spec"], dict) and "initial_pose" in options["task_spec"]:
+            rx, ry, r_theta = options["task_spec"]["initial_pose"]
+        elif self.active_task_spec and "initial_pose" in self.active_task_spec:
+            rx, ry, r_theta = self.active_task_spec["initial_pose"]
         else:
             # Randomize initial robot pose within safe central clearance
             for _ in range(100):
