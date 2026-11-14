@@ -1,0 +1,70 @@
+{
+  "manifest_name": "Phase 5.5.1.1 Execution Manifest",
+  "source_commit": "fbd96a9",
+  "timestamp_utc": "2026-11-14T13:17:22.475332+00:00",
+  "integrity_checks_passed": true,
+  "input_hashes": {
+    "scenes_jsonl": {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_scenes.jsonl",
+      "bytes": 188119,
+      "sha256": "2cf3f1c2e32239a9a5b31b516da6f6af514829869684a4623ae2a8017a62ba4e"
+    },
+    "episodes_jsonl": {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_episodes.jsonl",
+      "bytes": 1748380,
+      "sha256": "634af17d545bbea24571db5d0509bea5b0d5a8ee0bb4858a81b2d18b6f32e0fa"
+    },
+    "scene_pairs_jsonl": {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_scene_pairs.jsonl",
+      "bytes": 369639,
+      "sha256": "ef0822f03284b11c487dec12811e48ec96c1087223a86cb7c5f49f7f6b7386b3"
+    },
+    "summary_json": {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_summary.json",
+      "bytes": 295994,
+      "sha256": "ae4908b412866248db46e32aed6d007048953769969adbfb26c5edeba4bf6828"
+    },
+    "shard_manifest_json": {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_v5_5_1_trace_export/shard_manifest.json",
+      "bytes": 116618,
+      "sha256": "26b13a8fbecc954cdc8fc5580748e772b5c24f3e294f64431cc19499ae6c38a8"
+    }
+  },
+  "raw_outputs": [
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_1_scene_pair_matrix.csv",
+      "bytes": 114256,
+      "sha256": "58936a98fc29328cce1749a757cc90dabfbe5a361515abc1de7e4e4abcb9c1e8"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_1_category_side_table.csv",
+      "bytes": 8748,
+      "sha256": "b04be41e21fff447beda0c3be6cfbf9d52a626433f6f3b93496efa6cf16762d6"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_1_episode_effects.csv",
+      "bytes": 184853,
+      "sha256": "800bf1561c0a90ee47d702299a1b50a33359e48c5d76a894a1e3457713289367"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_1_geometry_audit.json",
+      "bytes": 55593,
+      "sha256": "7b3f445eeb95962d0498d972cd4477b27fbcba1e76ff46927e456850bd99315b"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_1_schema.md",
+      "bytes": 1999,
+      "sha256": "413ba99c6b651825eabc2d779b5449d3e55a3859951f661f0d1cf25830d98362"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_1_H1_reanalysis_summary.json",
+      "bytes": 111185,
+      "sha256": "7132b814469580b9ecf8f60078c6163245cca63bc43cc91905f479b63aff5482"
+    },
+    {
+      "path": "research/review_package/phase5_5_1_1/execution_run.log",
+      "bytes": 231,
+      "sha256": "3a3faec419e658b77302d47bc00558a389a8fe3ef14553a5f6ba7801580327f5"
+    }
+  ]
+}
