@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.16, pytest-9.2.0, pluggy-1.7.0 -- /home/hadynata/vs-code-data/hdl/project-haphaestus/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/hadynata/vs-code-data/hdl/project-haphaestus
+configfile: pytest.ini
+plugins: anyio-4.16.0, platformdirs-4.14.5
+collecting ... collected 4 items
+
+world_models_fpga/tests/test_task_conditioned_closed_loop_grounding_v5_5.py::test_body_world_goal_round_trip_across_poses PASSED [ 25%]
+world_models_fpga/tests/test_task_conditioned_closed_loop_grounding_v5_5.py::test_area_matched_distractor_mask_and_background_fill PASSED [ 50%]
+world_models_fpga/tests/test_task_conditioned_closed_loop_grounding_v5_5.py::test_paired_mcnemar_and_holm_adjustment PASSED [ 75%]
+world_models_fpga/tests/test_task_conditioned_closed_loop_grounding_v5_5.py::test_generate_figures_handles_100pct_wilson_ci PASSED [100%]
+
+============================== 4 passed in 2.14s ===============================

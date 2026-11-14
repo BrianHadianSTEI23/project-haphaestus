@@ -1,0 +1,18 @@
+Phase 5.4.2 Estimand Audit completed.
+Reconciliation OK: True (447,800 rows)
+Baseline Identity Across Draws OK: True (max diff=0.000e+00)
+No-op Cross-Target Artifact Mean: +0.0037m (BaseRecip=0.4881m, BaseDonor=0.4844m)
+
+[layer1_post_relu_64d]
+  k= 2 (100.0% cov, EXPLORATORY_COMPLETE_SUPPORT): CandGain=+0.0008m, CandEta=-0.0206 (dimless), Cand-Norm DiffGain=-0.0117m (p=0.1169, adj=0.4675045159936239)
+  k= 4 (100.0% cov, EXPLORATORY_COMPLETE_SUPPORT): CandGain=+0.0234m, CandEta=-0.0425 (dimless), Cand-Norm DiffGain=-0.0067m (p=0.7628, adj=1.0)
+  k= 8 ( 93.3% cov, EXPLORATORY_INCOMPLETE_SUPPORT): CandGain=+0.0390m, CandEta=-0.0613 (dimless), Cand-Norm DiffGain=+0.0141m (p=0.1192, adj=None)
+  k=16 ( 76.7% cov, EXPLORATORY_INCOMPLETE_SUPPORT): CandGain=+0.0579m, CandEta=-0.1566 (dimless), Cand-Norm DiffGain=+0.0314m (p=0.0000, adj=None)
+  k=32 ( 61.7% cov, EXPLORATORY_INCOMPLETE_SUPPORT): CandGain=+0.0297m, CandEta=-0.1487 (dimless), Cand-Norm DiffGain=+0.0312m (p=0.0001, adj=None)
+
+[layer2_post_relu_64d]
+  k= 2 ( 81.7% cov, EXPLORATORY_INCOMPLETE_SUPPORT): CandGain=-0.0027m, CandEta=+0.0002 (dimless), Cand-Norm DiffGain=-0.0138m (p=0.0019, adj=None)
+  k= 4 ( 65.0% cov, EXPLORATORY_INCOMPLETE_SUPPORT): CandGain=+0.0469m, CandEta=+0.0017 (dimless), Cand-Norm DiffGain=+0.0051m (p=0.2645, adj=None)
+  k= 8 ( 66.7% cov, EXPLORATORY_INCOMPLETE_SUPPORT): CandGain=+0.0561m, CandEta=-0.0576 (dimless), Cand-Norm DiffGain=+0.0032m (p=0.1969, adj=None)
+  k=16 ( 51.7% cov, EXPLORATORY_INCOMPLETE_SUPPORT): CandGain=+0.0368m, CandEta=-0.0674 (dimless), Cand-Norm DiffGain=-0.0104m (p=0.8544, adj=None)
+  k=32 ( 80.0% cov, EXPLORATORY_INCOMPLETE_SUPPORT): CandGain=+0.0186m, CandEta=-0.1383 (dimless), Cand-Norm DiffGain=-0.0174m (p=0.0005, adj=None)

@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.16, pytest-9.2.0, pluggy-1.7.0 -- /home/hadynata/vs-code-data/hdl/project-haphaestus/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/hadynata/vs-code-data/hdl/project-haphaestus
+configfile: pytest.ini
+plugins: anyio-4.16.0, platformdirs-4.14.5
+collecting ... collected 3 items
+
+world_models_fpga/tests/test_task_conditioned_circuits_v5_4_2_estimand_audit.py::test_cross_target_bug_vs_single_target_estimands_under_noop_and_shift PASSED [ 33%]
+world_models_fpga/tests/test_task_conditioned_circuits_v5_4_2_estimand_audit.py::test_streaming_pair_level_aggregation_and_baseline_identity_audit PASSED [ 66%]
+world_models_fpga/tests/test_task_conditioned_circuits_v5_4_2_estimand_audit.py::test_holm_bonferroni_adjust_monotonicity PASSED [100%]
+
+============================== 3 passed in 0.71s ===============================

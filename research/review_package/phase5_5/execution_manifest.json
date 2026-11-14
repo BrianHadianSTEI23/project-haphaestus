@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "phase": "5.5",
+    "title": "Closed-Loop Mechanistic Grounding Experiment",
+    "baseline_commit": "3362ccd9ea1b006012d2f04636f25019eb28e1da",
+    "execution_commit": "b604db8b832bcb4cf715d0aa49f47fca9f0b6a45",
+    "timestamp_utc": "2026-11-14T11:23:31Z"
+  },
+  "input_artifacts": {
+    "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_2_scene_specs.jsonl": "5edfcf5d8e1638b9e624ea7fb796ab87a951ce88ef81b5244af339c9d7f34337",
+    "world_models_fpga/checkpoints_v4/hjepa_best.pt": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442",
+    "world_models_fpga/env/amr_arena.xml": "0e655e50a8119de6402a5f041369c4728d7d2d9cf4bd8bc4bf8a9a582653bb51"
+  },
+  "source_code": {
+    "world_models_fpga/research/benchmarks/run_task_conditioned_closed_loop_grounding_v5_5.py": "efa7154403d6a40fba41f29ef146c345f93b0fed4fa180f3fdbe6266a55f4b31"
+  },
+  "unit_tests": {
+    "world_models_fpga/tests/test_task_conditioned_closed_loop_grounding_v5_5.py": "7a98236421f7f409b69b58d94fffbed3e3caaf249804da9bc780240d9f397b1c"
+  },
+  "output_artifacts": {
+    "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_summary.json": "ec259e2a728f963341db1073430bc758a104970dae2085e56f59534ffa278487",
+    "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_episodes.jsonl": "68d857e93f24578abeabea544b1ff1d2cf431db45e1c609890ef71916eece604",
+    "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_condition_table.csv": "bde32d83eda683b1643267f38faa2fdcf87760f58a9e43470d36490ad791d548",
+    "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_traces.npz": "9c834b491c80991d913abc4f915cdd8d683bfc4dab303ae2dbf69093b934239c"
+  },
+  "figures": {
+    "research/review_package/phase5_5/figures/fig1_condition_success_and_error.png": "92b178f8f1cd6b083ba561b7a4c91e0dc7faf7072d9945110af1beedce7683da",
+    "research/review_package/phase5_5/figures/fig2_closed_loop_temporal_evolution.png": "a0ecc9c8ae3aab87beabef0512615be58abf833bd7450747a4df31b02ff37364",
+    "research/review_package/phase5_5/figures/fig3_static_contrast_vs_closed_loop.png": "a70f914412b3d18bad53215a2f461dad3c0950a1ad9d6d18d0e5c17f931db0d4"
+  },
+  "review_package": {
+    "research/review_package/phase5_5/preregistered_protocol.md": "e7506b2f34cee0eb0ec8701623d5432ba9e54412f8dab54892e63c66c69b5c4d",
+    "research/review_package/phase5_5/README.md": "8e70b7594475248a32ed76dc14cdbd0a8d7a1954c85fcdeb258cd7f127110f48",
+    "research/review_package/phase5_5/forensic_audit.md": "e54eb4c5d550c398af2a3de92c1ccba668e541899a0b4b4259dec84123917987",
+    "research/review_package/phase5_5/protocol_deviations.md": "3fbce164a683c718de8f9d1e5a7daf290a35d1fbac3388647fdf6142909d1f24",
+    "research/review_package/phase5_5/data_dictionary.md": "2812a927da2b0e156ad2e7a00ab1d9965d11c513bf8c4d48d5f6fee079105a1b",
+    "research/review_package/phase5_5/unresolved_hypotheses.md": "5178b39302799f9c0fd1d2405cf575b7d959f7ec24ca7e7c50f49048a2c2af19",
+    "research/review_package/phase5_5/revised_claims_ledger.csv": "36a5a6dba5cc105fa7136ea12c8f10260ad1e544be7aefb7c5761cce611a2610",
+    "research/review_package/phase5_5/execution_run.log": "723e48649b7fdc05be674a65b07b6fad2e28ad5b0afa89b3674576b25a039e9c",
+    "research/review_package/phase5_5/test_run.log": "8afc1f945bf6d34fab5976a55b723697037f7dee72385ee23cbf83966c974750"
+  }
+}

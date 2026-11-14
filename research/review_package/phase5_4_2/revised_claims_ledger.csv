@@ -1,0 +1,5 @@
+claim_id,hypothesis,status,evidence_level,key_result
+CLAIM_542_01,Cross-target error difference confound in Phase 5.4,CONFIRMED_INVALID_ESTIMAND,E2,"No-op artifact = +0.0037m (95% CI [-0.0106, +0.0175]m); baseline identical across all 447,800 rows (max diff 0.0)."
+CLAIM_542_02,Single-target selectivity in complete-support Layer 1 k=2 and k=4,UNRESOLVED_NO_EVIDENCE_OF_SUPERIORITY,E2,"k=2: CandGain=+0.0008m vs Norm=+0.0125m (diff=-0.0117m, Holm p_adj=0.4675); k=4: CandGain=+0.0234m vs Norm=+0.0302m (diff=-0.0067m, Holm p_adj=1.0000); equivalence not established."
+CLAIM_542_03,Dimensionless eta_gt and negative parallel projection despite radial donor gain at k>=4,VALIDATED_VECTOR_DECOMPOSITION,E2,"In Layer 1 k=16, donor_target_gain_m=+0.0579m co-occurs with recipient_target_change_m=-0.0783m while parallel=-0.0493m, eta_gt=-0.1566 (dimensionless), orth=0.2577m."
+CLAIM_542_04,Selectivity vs norm magnitude in 8/10 incomplete-support settings,UNIDENTIFIABLE_INCOMPLETE_SUPPORT,E2,"Common support coverage 51.7%-93.3% across Layer 1 k=8..32 and all Layer 2 k."
