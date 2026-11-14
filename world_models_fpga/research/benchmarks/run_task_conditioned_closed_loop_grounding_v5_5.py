@@ -926,10 +926,18 @@ def run_phase5_5_experiment(
         init_pos = np.asarray(spec["initial_pose"], dtype=np.float32)
         env.reset(options={"initial_pos": (float(init_pos[0]), float(init_pos[1]), float(init_pos[2]))})
         eval_wp = np.asarray(spec["waypoints"][-1], dtype=np.float32)
+        oracle_wp = (
+            eval_wp
+            if len(eval_wp) >= 3
+            else np.array(
+                [eval_wp[0], eval_wp[1], float(np.arctan2(eval_wp[1] - init_pos[1], eval_wp[0] - init_pos[0]))],
+                dtype=np.float32,
+            )
+        )
         reached, col = False, False
         for _ in range(max_steps):
             pose = env.get_robot_pose()
-            act, _ = oracle.act(np.zeros((64, 64, 3), dtype=np.uint8), robot_pose=pose, target_pose=eval_wp, task_spec=spec)
+            act, _ = oracle.act(np.zeros((64, 64, 3), dtype=np.uint8), robot_pose=pose, target_pose=oracle_wp, task_spec=spec)
             _, _, _, _, info = env.step(act)
             if info.get("collision", False):
                 col = True
