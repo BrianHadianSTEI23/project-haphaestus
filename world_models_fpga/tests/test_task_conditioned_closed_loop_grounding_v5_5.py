@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -10,8 +13,10 @@ from world_models_fpga.research.benchmarks.run_task_conditioned_closed_loop_grou
     apply_local_background_mask,
     body_goal_to_world_pose,
     build_area_matched_distractor_mask,
+    generate_figures_from_saved_artifacts,
     holm_bonferroni_adjust,
     paired_mcnemar_exact,
+    wilson_ci,
 )
 
 
@@ -75,3 +80,67 @@ def test_paired_mcnemar_and_holm_adjustment() -> None:
     assert adj[0] == pytest.approx(0.05)
     assert adj[2] == pytest.approx(0.12)
     assert adj[1] == pytest.approx(0.12)
+
+
+def test_generate_figures_handles_100pct_wilson_ci(tmp_path: Path) -> None:
+    """Ensures 100% success rates (where Wilson upper bound can round slightly < 1.0) plot without negative yerr."""
+    ci_lo, ci_hi = wilson_ci(60, 60)
+    summary = {
+        "conditions": {
+            "C1_full_closed_loop": {
+                "success_rate": 0.85,
+                "success_wilson_95ci": list(wilson_ci(51, 60)),
+                "by_context": {
+                    "nominal": {"mean_final_goal_error_m": 0.44},
+                    "illumination_shift": {"mean_final_goal_error_m": 0.44},
+                },
+            },
+            "C2_frozen_world_goal": {
+                "success_rate": 0.60,
+                "success_wilson_95ci": list(wilson_ci(36, 60)),
+                "by_context": {
+                    "nominal": {"mean_final_goal_error_m": 0.48},
+                    "illumination_shift": {"mean_final_goal_error_m": 0.47},
+                },
+            },
+            "C6_oracle_waypoint": {
+                "success_rate": 1.0,
+                "success_wilson_95ci": [ci_lo, ci_hi],
+                "by_context": {
+                    "nominal": {"mean_final_goal_error_m": 0.33},
+                    "illumination_shift": {"mean_final_goal_error_m": 0.33},
+                },
+            },
+        }
+    }
+    summary_path = tmp_path / "summary.json"
+    summary_path.write_text(json.dumps(summary), encoding="utf-8")
+
+    episodes = []
+    npz_data = {}
+    for cname in ("C1_full_closed_loop", "C2_frozen_world_goal", "C6_oracle_waypoint"):
+        episodes.append(
+            {
+                "condition": cname,
+                "pair_id": "PAIR_000",
+                "step0_static_contrast_eta_gt": -0.2,
+                "step0_blended_goal_ang_err_deg": 40.0,
+                "final_eval_goal_error_m": 0.3 if cname == "C6_oracle_waypoint" else 0.45,
+                "success": cname != "C2_frozen_world_goal",
+            }
+        )
+        prefix = f"{cname}__PAIR_000__"
+        npz_data[prefix + "dist_target_wp"] = np.linspace(0.9, 0.3, 5, dtype=np.float32)
+        npz_data[prefix + "goal_ang_err_rad"] = np.linspace(0.8, 0.2, 5, dtype=np.float32)
+        npz_data[prefix + "action_target_cos"] = np.linspace(0.5, 0.9, 5, dtype=np.float32)
+
+    ep_path = tmp_path / "episodes.jsonl"
+    ep_path.write_text("\n".join(json.dumps(e) for e in episodes) + "\n", encoding="utf-8")
+    npz_path = tmp_path / "traces.npz"
+    np.savez_compressed(npz_path, **npz_data)
+    figs_dir = tmp_path / "figs"
+
+    written = generate_figures_from_saved_artifacts(summary_path, ep_path, npz_path, figs_dir)
+    assert len(written) == 3
+    for fn in written:
+        assert (figs_dir / fn).exists()

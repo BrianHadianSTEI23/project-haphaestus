@@ -756,8 +756,14 @@ def generate_figures_from_saved_artifacts(
     fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.0), dpi=180)
     x = np.arange(len(cond_order))
     rates = [summary["conditions"][c]["success_rate"] * 100.0 for c in cond_order]
-    lo_err = [(summary["conditions"][c]["success_rate"] - summary["conditions"][c]["success_wilson_95ci"][0]) * 100.0 for c in cond_order]
-    hi_err = [(summary["conditions"][c]["success_wilson_95ci"][1] - summary["conditions"][c]["success_rate"]) * 100.0 for c in cond_order]
+    lo_err = [
+        max(0.0, (summary["conditions"][c]["success_rate"] - summary["conditions"][c]["success_wilson_95ci"][0]) * 100.0)
+        for c in cond_order
+    ]
+    hi_err = [
+        max(0.0, (summary["conditions"][c]["success_wilson_95ci"][1] - summary["conditions"][c]["success_rate"]) * 100.0)
+        for c in cond_order
+    ]
     colors = ["#2563eb", "#f59e0b", "#dc2626", "#16a34a", "#7c3aed", "#0d9488", "#64748b"][: len(cond_order)]
 
     axes[0].bar(x, rates, yerr=[lo_err, hi_err], capsize=4, color=colors, alpha=0.88, edgecolor="#111827")
@@ -1128,7 +1134,27 @@ def main() -> None:
     parser.add_argument("--goal-threshold", type=float, default=0.35)
     parser.add_argument("--limit", type=int, default=None, help="Optional subset size for quick pilot check")
     parser.add_argument("--seed", type=int, default=5500)
+    parser.add_argument(
+        "--plot-only",
+        action="store_true",
+        help="Regenerate Phase 5.5 figures strictly from saved summary/episodes/traces artifacts.",
+    )
     args = parser.parse_args()
+
+    if args.plot_only:
+        results_dir = REPO_ROOT / "world_models_fpga/research/benchmarks/results"
+        summary_path = results_dir / "task_conditioned_closed_loop_grounding_v5_5_summary.json"
+        ep_jsonl_path = results_dir / "task_conditioned_closed_loop_grounding_v5_5_episodes.jsonl"
+        npz_path = results_dir / "task_conditioned_closed_loop_grounding_v5_5_traces.npz"
+        figures_dir = REPO_ROOT / "research/review_package/phase5_5/figures"
+        written_figs = generate_figures_from_saved_artifacts(summary_path, ep_jsonl_path, npz_path, figures_dir)
+        with summary_path.open("r", encoding="utf-8") as f:
+            summary_out = json.load(f)
+        summary_out["generated_figures"] = [str((figures_dir / fn).relative_to(REPO_ROOT)) for fn in written_figs]
+        with summary_path.open("w", encoding="utf-8") as f:
+            json.dump(summary_out, f, indent=2)
+        print("Phase 5.5 figures regenerated from saved artifacts:", written_figs)
+        return
 
     out = run_phase5_5_experiment(
         device=args.device,
