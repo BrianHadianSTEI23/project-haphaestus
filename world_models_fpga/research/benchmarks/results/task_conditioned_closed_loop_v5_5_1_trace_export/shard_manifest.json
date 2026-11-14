@@ -1,0 +1,3833 @@
+{
+  "n_shards": 39,
+  "total_rows": 32557,
+  "total_episodes": 840,
+  "max_shard_bytes_limit": 4200000,
+  "max_observed_shard_bytes": 4199903,
+  "shards": [
+    {
+      "filename": "part_000.jsonl",
+      "bytes": 4195152,
+      "sha256": "d0024c8fb545923713b82e1b286178e28d345e5b18485e3e1cb553e2d4d0f19e",
+      "n_rows": 830,
+      "episodes": [
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_000__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_000__B",
+          "n_steps_in_shard": 14
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_001__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_001__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_002__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_002__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_003__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_003__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_004__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_004__B",
+          "n_steps_in_shard": 24
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_005__A",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_005__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_006__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_006__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_007__A",
+          "n_steps_in_shard": 40
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_007__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_008__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_008__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_009__A",
+          "n_steps_in_shard": 35
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_009__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_010__A",
+          "n_steps_in_shard": 11
+        }
+      ]
+    },
+    {
+      "filename": "part_001.jsonl",
+      "bytes": 4196355,
+      "sha256": "4fee95d1330c02a9ea605537b755054f68e28a82cb6cfe6129be61ba7ec68aa5",
+      "n_rows": 834,
+      "episodes": [
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_010__A",
+          "n_steps_in_shard": 34
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_010__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_011__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_011__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_012__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_012__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_013__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_013__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_014__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_014__B",
+          "n_steps_in_shard": 29
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_015__A",
+          "n_steps_in_shard": 16
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_015__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_016__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_016__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_017__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_017__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_018__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_018__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_019__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_019__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_020__A",
+          "n_steps_in_shard": 17
+        }
+      ]
+    },
+    {
+      "filename": "part_002.jsonl",
+      "bytes": 4198786,
+      "sha256": "6cd67a6ff04faf6d173864fcd112f51d62f65af059159525b39a25bbf9d5850d",
+      "n_rows": 835,
+      "episodes": [
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_020__A",
+          "n_steps_in_shard": 28
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_020__B",
+          "n_steps_in_shard": 29
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_021__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_021__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_022__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_022__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_023__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_023__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_024__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_024__B",
+          "n_steps_in_shard": 24
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_025__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_025__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_026__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_026__B",
+          "n_steps_in_shard": 20
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_027__A",
+          "n_steps_in_shard": 26
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_027__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_028__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_028__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_029__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_029__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_030__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_030__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_031__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_031__B",
+          "n_steps_in_shard": 28
+        }
+      ]
+    },
+    {
+      "filename": "part_003.jsonl",
+      "bytes": 4195815,
+      "sha256": "63552e866d621807ff898bd95d1626c27f6c49704a6f20b011ad35d3e97bf9ea",
+      "n_rows": 830,
+      "episodes": [
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_031__B",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_032__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_032__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_033__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_033__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_034__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_034__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_035__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_035__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_036__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_036__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_037__A",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_037__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_038__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_038__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_039__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_039__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_040__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_040__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_041__A",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_041__B",
+          "n_steps_in_shard": 28
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_042__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_042__B",
+          "n_steps_in_shard": 19
+        }
+      ]
+    },
+    {
+      "filename": "part_004.jsonl",
+      "bytes": 4199054,
+      "sha256": "a27ba0cd4b5b0ac64f9bcc254b7bf4ac8f8a1b98c9c7c7bcebb45ce954e843bf",
+      "n_rows": 832,
+      "episodes": [
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_042__B",
+          "n_steps_in_shard": 26
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_043__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_043__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_044__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_044__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_045__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_045__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_046__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_046__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_047__A",
+          "n_steps_in_shard": 27
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_047__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_048__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_048__B",
+          "n_steps_in_shard": 27
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_049__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_049__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_050__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_050__B",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_051__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_051__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_052__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_052__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_053__A",
+          "n_steps_in_shard": 14
+        }
+      ]
+    },
+    {
+      "filename": "part_005.jsonl",
+      "bytes": 4197840,
+      "sha256": "ef52e4b3b9a72cc40e1fd9322206d9dd4ae780882edb9a364909f77aa4590859",
+      "n_rows": 838,
+      "episodes": [
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_053__A",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_053__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_054__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_054__B",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_055__A",
+          "n_steps_in_shard": 26
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_055__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_056__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_056__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_057__A",
+          "n_steps_in_shard": 41
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_057__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_058__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_058__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_059__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F1_dynamic_visual_with_memory__SCENE_059__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_000__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_000__B",
+          "n_steps_in_shard": 14
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_001__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_001__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_002__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_002__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_003__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_003__B",
+          "n_steps_in_shard": 17
+        }
+      ]
+    },
+    {
+      "filename": "part_006.jsonl",
+      "bytes": 4197033,
+      "sha256": "7e0a93e4faba0e8af9a62797437d4c9ae9c18d756faf044997da947d46172b8b",
+      "n_rows": 854,
+      "episodes": [
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_003__B",
+          "n_steps_in_shard": 28
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_004__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_004__B",
+          "n_steps_in_shard": 24
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_005__A",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_005__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_006__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_006__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_007__A",
+          "n_steps_in_shard": 30
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_007__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_008__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_008__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_009__A",
+          "n_steps_in_shard": 33
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_009__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_010__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_010__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_011__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_011__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_012__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_012__B",
+          "n_steps_in_shard": 25
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_013__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_013__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_014__A",
+          "n_steps_in_shard": 8
+        }
+      ]
+    },
+    {
+      "filename": "part_007.jsonl",
+      "bytes": 4197676,
+      "sha256": "68b88bc69676f89212409427f7082fa236b2d3a4459efcf805d14a3cf46dac4e",
+      "n_rows": 850,
+      "episodes": [
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_014__A",
+          "n_steps_in_shard": 37
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_014__B",
+          "n_steps_in_shard": 28
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_015__A",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_015__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_016__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_016__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_017__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_017__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_018__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_018__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_019__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_019__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_020__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_020__B",
+          "n_steps_in_shard": 29
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_021__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_021__B",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_022__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_022__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_023__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_023__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_024__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_024__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_025__A",
+          "n_steps_in_shard": 35
+        }
+      ]
+    },
+    {
+      "filename": "part_008.jsonl",
+      "bytes": 4198182,
+      "sha256": "a73803807594dd5f0750f3b19c6af5461e09a44ceed960faf2df21cee0f8eeef",
+      "n_rows": 850,
+      "episodes": [
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_025__A",
+          "n_steps_in_shard": 10
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_025__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_026__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_026__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_027__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_027__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_028__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_028__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_029__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_029__B",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_030__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_030__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_031__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_031__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_032__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_032__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_033__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_033__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_034__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_034__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_035__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_035__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_036__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_036__B",
+          "n_steps_in_shard": 22
+        }
+      ]
+    },
+    {
+      "filename": "part_009.jsonl",
+      "bytes": 4199903,
+      "sha256": "4b79f3d7d81010bbf81c5a803cc32becf55b7d17d5f29e6f9dda2ce5a3cbed67",
+      "n_rows": 852,
+      "episodes": [
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_036__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_037__A",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_037__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_038__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_038__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_039__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_039__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_040__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_040__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_041__A",
+          "n_steps_in_shard": 11
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_041__B",
+          "n_steps_in_shard": 29
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_042__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_042__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_043__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_043__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_044__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_044__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_045__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_045__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_046__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_046__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_047__A",
+          "n_steps_in_shard": 27
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_047__B",
+          "n_steps_in_shard": 28
+        }
+      ]
+    },
+    {
+      "filename": "part_010.jsonl",
+      "bytes": 4196437,
+      "sha256": "fb3c4bfe48cd6458e7f379fa0a28aabe2f16de60b26cbd9b0894d3b73e27efaf",
+      "n_rows": 851,
+      "episodes": [
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_047__B",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_048__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_048__B",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_049__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_049__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_050__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_050__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_051__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_051__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_052__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_052__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_053__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_053__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_054__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_054__B",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_055__A",
+          "n_steps_in_shard": 26
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_055__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_056__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_056__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_057__A",
+          "n_steps_in_shard": 41
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_057__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_058__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_058__B",
+          "n_steps_in_shard": 31
+        }
+      ]
+    },
+    {
+      "filename": "part_011.jsonl",
+      "bytes": 4196789,
+      "sha256": "5eeadaa3cf44e8df9c2691347cbd010f69f520ff02878a11d9c760cdc8ac4449",
+      "n_rows": 827,
+      "episodes": [
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_058__B",
+          "n_steps_in_shard": 14
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_059__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F2_dynamic_visual_no_memory__SCENE_059__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_000__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_000__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_001__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_001__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_002__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_002__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_003__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_003__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_004__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_004__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_005__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_005__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_006__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_006__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_007__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_007__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_008__A",
+          "n_steps_in_shard": 30
+        }
+      ]
+    },
+    {
+      "filename": "part_012.jsonl",
+      "bytes": 4198246,
+      "sha256": "f9aeebddd869ab418653fd10ba5bd78af9a84c3a5479d4c904f43ef2512b8414",
+      "n_rows": 830,
+      "episodes": [
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_008__A",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_008__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_009__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_009__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_010__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_010__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_011__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_011__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_012__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_012__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_013__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_013__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_014__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_014__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_015__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_015__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_016__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_016__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_017__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_017__B",
+          "n_steps_in_shard": 5
+        }
+      ]
+    },
+    {
+      "filename": "part_013.jsonl",
+      "bytes": 4199862,
+      "sha256": "4c9c337e8c969a33c4ed60f3183c86e3b4f90f45c2cd52e46b86f8aa71ca4cbd",
+      "n_rows": 829,
+      "episodes": [
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_017__B",
+          "n_steps_in_shard": 40
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_018__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_018__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_019__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_019__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_020__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_020__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_021__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_021__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_022__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_022__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_023__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_023__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_024__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_024__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_025__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_025__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_026__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_026__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_027__A",
+          "n_steps_in_shard": 3
+        }
+      ]
+    },
+    {
+      "filename": "part_014.jsonl",
+      "bytes": 4199039,
+      "sha256": "7c790d2da2a649830d31b717f8fba52850b06d14f1c9088ab87710d78a0d3b43",
+      "n_rows": 835,
+      "episodes": [
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_027__A",
+          "n_steps_in_shard": 42
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_027__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_028__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_028__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_029__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_029__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_030__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_030__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_031__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_031__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_032__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_032__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_033__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_033__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_034__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_034__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_035__A",
+          "n_steps_in_shard": 35
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_035__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_036__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_036__B",
+          "n_steps_in_shard": 15
+        }
+      ]
+    },
+    {
+      "filename": "part_015.jsonl",
+      "bytes": 4196453,
+      "sha256": "4447a22ab2354c7b54890d9680fd995764c0065dfd51ecb7afcf819b27a0065d",
+      "n_rows": 830,
+      "episodes": [
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_036__B",
+          "n_steps_in_shard": 30
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_037__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_037__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_038__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_038__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_039__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_039__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_040__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_040__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_041__A",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_041__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_042__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_042__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_043__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_043__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_044__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_044__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_045__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_045__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_046__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_046__B",
+          "n_steps_in_shard": 2
+        }
+      ]
+    },
+    {
+      "filename": "part_016.jsonl",
+      "bytes": 4199390,
+      "sha256": "e73e725a99bb566f7456ae6fa4c17f32dfe480a73531df851fea5367aff5ea9a",
+      "n_rows": 830,
+      "episodes": [
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_046__B",
+          "n_steps_in_shard": 43
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_047__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_047__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_048__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_048__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_049__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_049__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_050__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_050__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_051__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_051__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_052__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_052__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_053__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_053__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_054__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_054__B",
+          "n_steps_in_shard": 13
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_055__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_055__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_056__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_056__B",
+          "n_steps_in_shard": 12
+        }
+      ]
+    },
+    {
+      "filename": "part_017.jsonl",
+      "bytes": 4196222,
+      "sha256": "5c965d70d3f43d5cb3b1449b73fd5fd49beb3e208449838951900328948b7249",
+      "n_rows": 840,
+      "episodes": [
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_056__B",
+          "n_steps_in_shard": 33
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_057__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_057__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_058__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_058__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_059__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F3_frozen_visual_with_memory__SCENE_059__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_000__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_000__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_001__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_001__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_002__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_002__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_003__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_003__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_004__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_004__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_005__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_005__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_006__A",
+          "n_steps_in_shard": 24
+        }
+      ]
+    },
+    {
+      "filename": "part_018.jsonl",
+      "bytes": 4197652,
+      "sha256": "95ba2b621032b0233d97e2f9cefff060e85fe781cb64b22f9fef955c8211565d",
+      "n_rows": 845,
+      "episodes": [
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_006__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_006__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_007__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_007__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_008__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_008__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_009__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_009__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_010__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_010__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_011__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_011__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_012__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_012__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_013__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_013__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_014__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_014__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_015__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_015__B",
+          "n_steps_in_shard": 14
+        }
+      ]
+    },
+    {
+      "filename": "part_019.jsonl",
+      "bytes": 4198893,
+      "sha256": "b54c6f06a0347b5321cffceb7d0f3b8eb0c3ff4325eddda9d9bfaf5703126831",
+      "n_rows": 847,
+      "episodes": [
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_015__B",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_016__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_016__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_017__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_017__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_018__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_018__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_019__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_019__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_020__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_020__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_021__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_021__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_022__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_022__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_023__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_023__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_024__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_024__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_025__A",
+          "n_steps_in_shard": 6
+        }
+      ]
+    },
+    {
+      "filename": "part_020.jsonl",
+      "bytes": 4197468,
+      "sha256": "9b805042d69f634e19a00fe0d1d9df2405dce43fadae9067d458f2ff47898266",
+      "n_rows": 855,
+      "episodes": [
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_025__A",
+          "n_steps_in_shard": 39
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_025__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_026__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_026__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_027__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_027__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_028__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_028__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_029__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_029__B",
+          "n_steps_in_shard": 42
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_030__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_030__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_031__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_031__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_032__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_032__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_033__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_033__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_034__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_034__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_035__A",
+          "n_steps_in_shard": 10
+        }
+      ]
+    },
+    {
+      "filename": "part_021.jsonl",
+      "bytes": 4195582,
+      "sha256": "ae04ed7aaf8414329e1cbe91004fd90877a509934ce3fd4a50b6c352157f749d",
+      "n_rows": 850,
+      "episodes": [
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_035__A",
+          "n_steps_in_shard": 26
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_035__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_036__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_036__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_037__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_037__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_038__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_038__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_039__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_039__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_040__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_040__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_041__A",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_041__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_042__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_042__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_043__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_043__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_044__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_044__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_045__A",
+          "n_steps_in_shard": 2
+        }
+      ]
+    },
+    {
+      "filename": "part_022.jsonl",
+      "bytes": 4197280,
+      "sha256": "a4e7bf91055ec896c86a153f56b2f07db91fdeb798ec01b6e521d85fc4729a11",
+      "n_rows": 844,
+      "episodes": [
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_045__A",
+          "n_steps_in_shard": 43
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_045__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_046__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_046__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_047__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_047__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_048__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_048__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_049__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_049__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_050__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_050__B",
+          "n_steps_in_shard": 20
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_051__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_051__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_052__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_052__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_053__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_053__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_054__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_054__B",
+          "n_steps_in_shard": 14
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_055__A",
+          "n_steps_in_shard": 26
+        }
+      ]
+    },
+    {
+      "filename": "part_023.jsonl",
+      "bytes": 4196529,
+      "sha256": "835f07f27657722d93d3d970123807e497de4d2d99d12c7e5bf40ce48d69b2a3",
+      "n_rows": 841,
+      "episodes": [
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_055__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_055__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_056__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_056__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_057__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_057__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_058__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_058__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_059__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "F4_frozen_visual_no_memory__SCENE_059__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_000__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_000__B",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_001__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_001__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_002__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_002__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_003__A",
+          "n_steps_in_shard": 43
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_003__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_004__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_004__B",
+          "n_steps_in_shard": 29
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_005__A",
+          "n_steps_in_shard": 13
+        }
+      ]
+    },
+    {
+      "filename": "part_024.jsonl",
+      "bytes": 4198903,
+      "sha256": "e74bbbec98d1f3149bc75ca84272b79bbc0c5f8819e5443a1cd0cc232c721585",
+      "n_rows": 835,
+      "episodes": [
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_005__A",
+          "n_steps_in_shard": 32
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_005__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_006__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_006__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_007__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_007__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_008__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_008__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_009__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_009__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_010__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_010__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_011__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_011__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_012__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_012__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_013__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_013__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_014__A",
+          "n_steps_in_shard": 38
+        }
+      ]
+    },
+    {
+      "filename": "part_025.jsonl",
+      "bytes": 4195994,
+      "sha256": "f5872f1fca9e12b2a1c5ebd401884ab999d0a396f8cead5f0d80cd67d98e2304",
+      "n_rows": 831,
+      "episodes": [
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_014__A",
+          "n_steps_in_shard": 7
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_014__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_015__A",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_015__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_016__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_016__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_017__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_017__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_018__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_018__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_019__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_019__B",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_020__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_020__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_021__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_021__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_022__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_022__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_023__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_023__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_024__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_024__B",
+          "n_steps_in_shard": 4
+        }
+      ]
+    },
+    {
+      "filename": "part_026.jsonl",
+      "bytes": 4197773,
+      "sha256": "21a6ccddda9b0fc97f64c7e2c17b04954d02977b1b0d986e9b4f2a8ad7da99b2",
+      "n_rows": 837,
+      "episodes": [
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_024__B",
+          "n_steps_in_shard": 41
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_025__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_025__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_026__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_026__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_027__A",
+          "n_steps_in_shard": 32
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_027__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_028__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_028__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_029__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_029__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_030__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_030__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_031__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_031__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_032__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_032__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_033__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_033__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_034__A",
+          "n_steps_in_shard": 26
+        }
+      ]
+    },
+    {
+      "filename": "part_027.jsonl",
+      "bytes": 4199270,
+      "sha256": "45397d7c59ebdf4cac3ae5379c811cadc23d3af9aa182ba7d3dfe6787c7da968",
+      "n_rows": 832,
+      "episodes": [
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_034__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_034__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_035__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_035__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_036__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_036__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_037__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_037__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_038__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_038__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_039__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_039__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_040__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_040__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_041__A",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_041__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_042__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_042__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_043__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_043__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_044__A",
+          "n_steps_in_shard": 18
+        }
+      ]
+    },
+    {
+      "filename": "part_028.jsonl",
+      "bytes": 4195323,
+      "sha256": "0dffb5697cec270a0fa81ee4a3c22ceee7c944f6ce9c5059e616e64807d5a6da",
+      "n_rows": 832,
+      "episodes": [
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_044__A",
+          "n_steps_in_shard": 27
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_044__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_045__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_045__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_046__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_046__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_047__A",
+          "n_steps_in_shard": 16
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_047__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_048__A",
+          "n_steps_in_shard": 42
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_048__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_049__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_049__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_050__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_050__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_051__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_051__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_052__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_052__B",
+          "n_steps_in_shard": 41
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_053__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_053__B",
+          "n_steps_in_shard": 31
+        }
+      ]
+    },
+    {
+      "filename": "part_029.jsonl",
+      "bytes": 4195565,
+      "sha256": "c3b360e2ccb5b48877339c717147eee8d416b580cf40e4b7b70fde288bce97e4",
+      "n_rows": 833,
+      "episodes": [
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_053__B",
+          "n_steps_in_shard": 14
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_054__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_054__B",
+          "n_steps_in_shard": 13
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_055__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_055__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_056__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_056__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_057__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_057__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_058__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_058__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_059__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M1_target_masked_rgb__SCENE_059__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_000__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_000__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_001__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_001__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_002__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_002__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_003__A",
+          "n_steps_in_shard": 41
+        }
+      ]
+    },
+    {
+      "filename": "part_030.jsonl",
+      "bytes": 4197859,
+      "sha256": "952dbd9ada0029c37e4c955e0a4f0dace4231c251876e070ae325f644b8fbe4f",
+      "n_rows": 833,
+      "episodes": [
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_003__A",
+          "n_steps_in_shard": 4
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_003__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_004__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_004__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_005__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_005__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_006__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_006__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_007__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_007__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_008__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_008__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_009__A",
+          "n_steps_in_shard": 26
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_009__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_010__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_010__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_011__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_011__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_012__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_012__B",
+          "n_steps_in_shard": 20
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_013__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_013__B",
+          "n_steps_in_shard": 20
+        }
+      ]
+    },
+    {
+      "filename": "part_031.jsonl",
+      "bytes": 4197498,
+      "sha256": "0bd542c75e93c7170c5dab8e96c509a2d3e19aec4105f474a9ea52976662f6ac",
+      "n_rows": 830,
+      "episodes": [
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_013__B",
+          "n_steps_in_shard": 25
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_014__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_014__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_015__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_015__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_016__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_016__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_017__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_017__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_018__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_018__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_019__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_019__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_020__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_020__B",
+          "n_steps_in_shard": 39
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_021__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_021__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_022__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_022__B",
+          "n_steps_in_shard": 25
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_023__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_023__B",
+          "n_steps_in_shard": 3
+        }
+      ]
+    },
+    {
+      "filename": "part_032.jsonl",
+      "bytes": 4194898,
+      "sha256": "af3ba8a6e514c15e5839c78efc4cbaac56eb94a690abcdabb0912957dec17181",
+      "n_rows": 836,
+      "episodes": [
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_023__B",
+          "n_steps_in_shard": 42
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_024__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_024__B",
+          "n_steps_in_shard": 30
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_025__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_025__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_026__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_026__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_027__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_027__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_028__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_028__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_029__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_029__B",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_030__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_030__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_031__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_031__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_032__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_032__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_033__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_033__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_034__A",
+          "n_steps_in_shard": 8
+        }
+      ]
+    },
+    {
+      "filename": "part_033.jsonl",
+      "bytes": 4196331,
+      "sha256": "2e8696bbc4c886d1979bf0b55d8dfd60331c43b69682c1319252e3c17255635e",
+      "n_rows": 833,
+      "episodes": [
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_034__A",
+          "n_steps_in_shard": 37
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_034__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_035__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_035__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_036__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_036__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_037__A",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_037__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_038__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_038__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_039__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_039__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_040__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_040__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_041__A",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_041__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_042__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_042__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_043__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_043__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_044__A",
+          "n_steps_in_shard": 30
+        }
+      ]
+    },
+    {
+      "filename": "part_034.jsonl",
+      "bytes": 4198309,
+      "sha256": "fb0c17ab3587f9d106f688c2b329a739bc255db260835393ac88b4a9c3e92935",
+      "n_rows": 830,
+      "episodes": [
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_044__A",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_044__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_045__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_045__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_046__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_046__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_047__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_047__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_048__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_048__B",
+          "n_steps_in_shard": 29
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_049__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_049__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_050__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_050__B",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_051__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_051__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_052__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_052__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_053__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_053__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_054__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_054__B",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_055__A",
+          "n_steps_in_shard": 39
+        }
+      ]
+    },
+    {
+      "filename": "part_035.jsonl",
+      "bytes": 4196415,
+      "sha256": "c3d85f00b5580ba2cbe94420a90425d3d60fcfa1f58a4ff1e7272f0eedce301f",
+      "n_rows": 833,
+      "episodes": [
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_055__A",
+          "n_steps_in_shard": 6
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_055__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_056__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_056__B",
+          "n_steps_in_shard": 25
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_057__A",
+          "n_steps_in_shard": 32
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_057__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_058__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_058__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_059__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "M2_distractor_masked_rgb__SCENE_059__B",
+          "n_steps_in_shard": 33
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_000__A",
+          "n_steps_in_shard": 33
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_000__B",
+          "n_steps_in_shard": 14
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_001__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_001__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_002__A",
+          "n_steps_in_shard": 24
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_002__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_003__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_003__B",
+          "n_steps_in_shard": 14
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_004__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_004__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_005__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_005__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_006__A",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_006__B",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_007__A",
+          "n_steps_in_shard": 36
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_007__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_008__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_008__B",
+          "n_steps_in_shard": 16
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_009__A",
+          "n_steps_in_shard": 7
+        }
+      ]
+    },
+    {
+      "filename": "part_036.jsonl",
+      "bytes": 4198412,
+      "sha256": "96dd4827b6e79ea5937193bbd6470c8d085f2236508d20dbc2e4a27eef2dddb3",
+      "n_rows": 837,
+      "episodes": [
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_009__A",
+          "n_steps_in_shard": 10
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_009__B",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_010__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_010__B",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_011__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_011__B",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_012__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_012__B",
+          "n_steps_in_shard": 14
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_013__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_013__B",
+          "n_steps_in_shard": 26
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_014__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_014__B",
+          "n_steps_in_shard": 16
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_015__A",
+          "n_steps_in_shard": 13
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_015__B",
+          "n_steps_in_shard": 24
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_016__A",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_016__B",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_017__A",
+          "n_steps_in_shard": 25
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_017__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_018__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_018__B",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_019__A",
+          "n_steps_in_shard": 27
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_019__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_020__A",
+          "n_steps_in_shard": 28
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_020__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_021__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_021__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_022__A",
+          "n_steps_in_shard": 28
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_022__B",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_023__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_023__B",
+          "n_steps_in_shard": 28
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_024__A",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_024__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_025__A",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_025__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_026__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_026__B",
+          "n_steps_in_shard": 20
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_027__A",
+          "n_steps_in_shard": 14
+        }
+      ]
+    },
+    {
+      "filename": "part_037.jsonl",
+      "bytes": 4199747,
+      "sha256": "caf266dd1cd37ed8af2eb1e37f53c9377918aede9f80d61708c6060a47af464a",
+      "n_rows": 836,
+      "episodes": [
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_027__A",
+          "n_steps_in_shard": 4
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_027__B",
+          "n_steps_in_shard": 36
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_028__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_028__B",
+          "n_steps_in_shard": 38
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_029__A",
+          "n_steps_in_shard": 25
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_029__B",
+          "n_steps_in_shard": 16
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_030__A",
+          "n_steps_in_shard": 20
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_030__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_031__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_031__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_032__A",
+          "n_steps_in_shard": 13
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_032__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_033__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_033__B",
+          "n_steps_in_shard": 38
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_034__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_034__B",
+          "n_steps_in_shard": 16
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_035__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_035__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_036__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_036__B",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_037__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_037__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_038__A",
+          "n_steps_in_shard": 27
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_038__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_039__A",
+          "n_steps_in_shard": 24
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_039__B",
+          "n_steps_in_shard": 24
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_040__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_040__B",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_041__A",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_041__B",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_042__A",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_042__B",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_043__A",
+          "n_steps_in_shard": 18
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_043__B",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_044__A",
+          "n_steps_in_shard": 42
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_044__B",
+          "n_steps_in_shard": 28
+        }
+      ]
+    },
+    {
+      "filename": "part_038.jsonl",
+      "bytes": 3678741,
+      "sha256": "24d32ffd1360f252a507fb5a3f00939783c5acbb98bf72930550f0380df8961d",
+      "n_rows": 730,
+      "episodes": [
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_044__B",
+          "n_steps_in_shard": 4
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_045__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_045__B",
+          "n_steps_in_shard": 25
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_046__A",
+          "n_steps_in_shard": 20
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_046__B",
+          "n_steps_in_shard": 16
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_047__A",
+          "n_steps_in_shard": 30
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_047__B",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_048__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_048__B",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_049__A",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_049__B",
+          "n_steps_in_shard": 31
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_050__A",
+          "n_steps_in_shard": 25
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_050__B",
+          "n_steps_in_shard": 15
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_051__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_051__B",
+          "n_steps_in_shard": 20
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_052__A",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_052__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_053__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_053__B",
+          "n_steps_in_shard": 37
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_054__A",
+          "n_steps_in_shard": 23
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_054__B",
+          "n_steps_in_shard": 11
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_055__A",
+          "n_steps_in_shard": 12
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_055__B",
+          "n_steps_in_shard": 20
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_056__A",
+          "n_steps_in_shard": 45
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_056__B",
+          "n_steps_in_shard": 22
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_057__A",
+          "n_steps_in_shard": 17
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_057__B",
+          "n_steps_in_shard": 33
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_058__A",
+          "n_steps_in_shard": 21
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_058__B",
+          "n_steps_in_shard": 19
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_059__A",
+          "n_steps_in_shard": 33
+        },
+        {
+          "episode_key": "O1_track_c_planner_goal_override__SCENE_059__B",
+          "n_steps_in_shard": 43
+        }
+      ]
+    }
+  ]
+}

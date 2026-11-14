@@ -1,0 +1,72 @@
+{
+  "audit_name": "Phase 5.4.2.1 Exact Intervention Key-Set Reconciliation Audit",
+  "timestamp_utc": "2026-11-14T12:16:40.107889+00:00",
+  "git_commit": "b9052895f6f752d82326fa6f6683ec9b061ab4bd",
+  "git_clean": false,
+  "provenance": {
+    "pairs_path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_pairs.jsonl",
+    "pairs_sha256": "5d9a0dc8abad2a6c6a78a762004f383eeb4f94a0aa427217f33d4a9e95e5eead",
+    "interventions_path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_interventions.jsonl.gz",
+    "interventions_sha256": "d57fee1c39717ddb061626ae63fbe657fe2a1e5fc70d6922bf3214b2b77ece0f",
+    "key_schema": [
+      "pair_id",
+      "scene_id",
+      "layer",
+      "direction",
+      "k",
+      "condition",
+      "draw_id"
+    ]
+  },
+  "expected_rows": 447800,
+  "observed_rows": 447800,
+  "observed_unique_keys": 447800,
+  "missing_keys_count": 0,
+  "unexpected_keys_count": 0,
+  "duplicate_rows_count": 0,
+  "duplicated_unique_keys_count": 0,
+  "unmatched_pair_id_rows_count": 0,
+  "unmatched_pair_ids": [],
+  "invalid_combinations_rows_count": 0,
+  "invalid_combination_samples": [],
+  "missing_key_samples": [],
+  "unexpected_key_samples": [],
+  "duplicate_key_samples": [],
+  "per_condition_discrepancies": {
+    "candidate": {
+      "condition": "candidate",
+      "expected_rows": 2400,
+      "observed_rows": 2400,
+      "observed_unique_keys": 2400,
+      "missing_keys_count": 0,
+      "unexpected_keys_count": 0,
+      "duplicate_keys_count": 0,
+      "count_delta_observed_minus_expected": 0,
+      "exact_set_equality": true
+    },
+    "dimension_matched_random": {
+      "condition": "dimension_matched_random",
+      "expected_rows": 240000,
+      "observed_rows": 240000,
+      "observed_unique_keys": 240000,
+      "missing_keys_count": 0,
+      "unexpected_keys_count": 0,
+      "duplicate_keys_count": 0,
+      "count_delta_observed_minus_expected": 0,
+      "exact_set_equality": true
+    },
+    "norm_matched_random": {
+      "condition": "norm_matched_random",
+      "expected_rows": 205400,
+      "observed_rows": 205400,
+      "observed_unique_keys": 205400,
+      "missing_keys_count": 0,
+      "unexpected_keys_count": 0,
+      "duplicate_keys_count": 0,
+      "count_delta_observed_minus_expected": 0,
+      "exact_set_equality": true
+    }
+  },
+  "exact_set_equality": true,
+  "reconciliation_verdict": "EXACT_SET_EQUALITY_VERIFIED"
+}

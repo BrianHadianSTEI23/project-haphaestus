@@ -1,0 +1,4 @@
+condition,expected_rows,observed_rows,observed_unique_keys,missing_keys_count,unexpected_keys_count,duplicate_keys_count,count_delta_observed_minus_expected,exact_set_equality
+candidate,2400,2400,2400,0,0,0,0,True
+dimension_matched_random,240000,240000,240000,0,0,0,0,True
+norm_matched_random,205400,205400,205400,0,0,0,0,True

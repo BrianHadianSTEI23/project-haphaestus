@@ -1,0 +1,43 @@
+{
+  "manifest_name": "Phase 5.4.2.1 Execution Manifest",
+  "source_commit": "b9052895f6f752d82326fa6f6683ec9b061ab4bd",
+  "timestamp_utc": "2026-11-14T12:16:40.107889+00:00",
+  "expected_rows": 447800,
+  "observed_rows": 447800,
+  "exact_set_equality": true,
+  "reconciliation_verdict": "EXACT_SET_EQUALITY_VERIFIED",
+  "inputs": [
+    {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_pairs.jsonl",
+      "bytes": 1887945,
+      "sha256": "5d9a0dc8abad2a6c6a78a762004f383eeb4f94a0aa427217f33d4a9e95e5eead"
+    },
+    {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_3_interventions.jsonl.gz",
+      "bytes": 72026171,
+      "sha256": "d57fee1c39717ddb061626ae63fbe657fe2a1e5fc70d6922bf3214b2b77ece0f"
+    }
+  ],
+  "raw_outputs": [
+    {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_2_1_audit_summary.json",
+      "bytes": 2432,
+      "sha256": "7362f1bdf448f8fd5384d98fa0fac949cd945548d6c8a891db0486f2edeec64c"
+    },
+    {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_2_1_key_reconciliation.csv",
+      "bytes": 331,
+      "sha256": "ba012f9b6550a322d5da45f8a84d4a415120e8c3810d38ec808b22632b2b3c2b"
+    },
+    {
+      "path": "world_models_fpga/research/circuits/results/task_conditioned_circuits_v5_4_2_1_schema.md",
+      "bytes": 866,
+      "sha256": "8d1094175f2775e06881d48e732781a2da39537c97d1afe1b78cbcdf43469b9b"
+    },
+    {
+      "path": "research/review_package/phase5_4_2_1/execution_run.log",
+      "bytes": 188,
+      "sha256": "362ca559c90cc32d94d35fc838349b7d6bd1e47300ff4aab49fde6b84f4c784b"
+    }
+  ]
+}

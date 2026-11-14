@@ -1,0 +1,3 @@
+Expected rows: 447800, Observed rows: 447800
+Missing: 0, Unexpected: 0, Duplicates: 0, Unmatched pairs: 0, Invalid combos: 0
+Verdict: EXACT_SET_EQUALITY_VERIFIED (exact_set_equality=True)

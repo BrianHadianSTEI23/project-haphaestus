@@ -1,0 +1,23 @@
+{
+  "n_accepted_scenes": 60,
+  "n_nominal_scenes": 30,
+  "n_illum_scenes": 30,
+  "total_candidates_evaluated": 755,
+  "n_rejected_candidates": 695,
+  "acceptance_rate": 0.07947019867549669,
+  "rejection_breakdown": {
+    "arena_bounds": 253,
+    "waypoint_sep_below_threshold": 346,
+    "oracle_unreachable_A": 4,
+    "obstacle_clearance": 84,
+    "oracle_unreachable_B": 8
+  },
+  "min_waypoint_separation_m": 0.9001826643943787,
+  "max_waypoint_separation_m": 1.0367763042449951,
+  "mean_waypoint_separation_m": 0.9424984743197758,
+  "min_init_target_dist_m": 0.8244704008102417,
+  "max_init_target_dist_m": 1.1973206996917725,
+  "min_init_visible_px": 274,
+  "oracle_A_success_count": 60,
+  "oracle_B_success_count": 60
+}
