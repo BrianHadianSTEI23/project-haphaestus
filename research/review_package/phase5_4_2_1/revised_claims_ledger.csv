@@ -1,0 +1,2 @@
+claim_id,hypothesis,status,evidence_level,key_result
+CLAIM_5421_01,Exact composite key-set equality across all 447800 Phase 5.3 intervention rows and expected pair settings,VERIFIED_EXACT_SET_EQUALITY,E2,"Expected=447800 Observed=447800 Unique=447800 Missing=0 Unexpected=0 Duplicates=0 UnmatchedPairs=0 InvalidCombos=0; candidate=2400/2400 dimension_matched_random=240000/240000 norm_matched_random=205400/205400."
