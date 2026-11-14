@@ -67,10 +67,12 @@ def _make_synthetic_scenes(n_scenes: int = 12) -> list[dict]:
 
 def test_b2_synthetic_coordinate_frame_and_action_signs() -> None:
     env = JetAutoEnv(obs_size=(64, 64))
+    model = HJEPAModel(latent_dim=32, stride_k=5, hidden_dim=64)
+    model.eval()
     try:
         audit = run_coordinate_and_training_audit(
             env,
-            model=None,
+            model=model,
             train_meta_path=None,
             train_npz_path=None,
             ckpt_path=None,
@@ -80,6 +82,7 @@ def test_b2_synthetic_coordinate_frame_and_action_signs() -> None:
         assert audit["simulator_action_signs"]["wz_pos_rotates_ccw_ok"] is True
         assert audit["mirrored_robot_single_object"]["dy_b_anti_symmetric_ok"] is True
         assert audit["mirrored_robot_single_object"]["u_mirror_sum_approx_63_ok"] is True
+        assert audit["controller_forced_goal_symmetry"]["executed"] is True
     finally:
         env.close()
 

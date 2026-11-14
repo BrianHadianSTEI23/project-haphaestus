@@ -53,8 +53,10 @@ from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+FPGA_ROOT = REPO_ROOT / "world_models_fpga"
+for _p in (REPO_ROOT, FPGA_ROOT):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
 from world_models_fpga.env.amr_env import JetAutoEnv
 from world_models_fpga.models.baseline_policy import (
@@ -605,7 +607,7 @@ def run_coordinate_and_training_audit(
     if model is not None:
         env.restore_physical_baseline()
         env.apply_task_spec({"target_key": "red_box", "semantic_relation": "approach", "obstacles": copy.deepcopy(CANONICAL_OBSTACLES)})
-        neutral_rgb = env.reset(options={"initial_pos": (0.0, 0.0, 0.0)})
+        neutral_rgb, _ = env.reset(options={"initial_pos": (0.0, 0.0, 0.0)})
         img_t = torch.from_numpy(neutral_rgb).permute(2, 0, 1).unsqueeze(0).float().to(device) / 255.0
         with torch.no_grad():
             z_neutral = model.encode(img_t)
@@ -769,7 +771,7 @@ def extract_scene_initial_observations(
         init_pose = np.asarray(sc["initial_pose"], dtype=np.float32)
         env.restore_physical_baseline()
         env.apply_task_spec(spec_a)
-        rgb0 = env.reset(options={"initial_pos": (float(init_pose[0]), float(init_pose[1]), float(init_pose[2]))})
+        rgb0, _ = env.reset(options={"initial_pos": (float(init_pose[0]), float(init_pose[1]), float(init_pose[2]))})
         pose_now = env.get_robot_pose()
         if not np.allclose(pose_now, init_pose, atol=1e-4):
             raise RuntimeError(f"Pose mismatch at reset for {sc['scene_id']}: {pose_now} vs {init_pose}")
