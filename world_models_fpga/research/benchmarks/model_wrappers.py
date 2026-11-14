@@ -127,6 +127,7 @@ class BaseAgentWrapper:
         self._ego_goal_memory = None
         self.last_goal_diag = {}
         # Fine-grained branch interceptor hooks for mechanistic circuit isolation
+        self.disable_memory = False
         self.branch_interceptors = {
             "task_id": None,          # Callable[[int], int] | None
             "task_token": None,       # Callable[[torch.Tensor], torch.Tensor] | None
@@ -137,6 +138,7 @@ class BaseAgentWrapper:
             "memory_prev": None,      # Callable[[torch.Tensor], torch.Tensor] | None
             "memory_updated": None,   # Callable[[torch.Tensor], torch.Tensor] | None
             "blended_goal": None,     # Callable[[torch.Tensor], torch.Tensor] | None
+            "planner_goal": None,     # Callable[[torch.Tensor], torch.Tensor] | None
         }
 
     def set_branch_interceptor(self, branch_name: str, fn):
@@ -518,8 +520,9 @@ class HJEPAAgent(BaseAgentWrapper):
                 vis_goal = self.branch_interceptors["visual_goal"](vis_goal)
 
             g_mem_prev = self._ego_goal_memory.clone() if self._ego_goal_memory is not None else None
-            if self._prev_latent is not None and self._ego_goal_memory is not None:
-                mem = self._ego_goal_memory.clone()
+            memory_branch_executed = False
+            if (not self.disable_memory) and (self._prev_latent is not None) and (g_mem_prev is not None):
+                mem = g_mem_prev.clone()
                 if self.branch_interceptors.get("memory_prev") is not None:
                     mem = self.branch_interceptors["memory_prev"](mem)
 
@@ -538,10 +541,18 @@ class HJEPAAgent(BaseAgentWrapper):
                     mem_updated = self.branch_interceptors["memory_updated"](mem_updated)
 
                 goal_t = 0.65 * vis_goal + 0.35 * mem_updated
+                memory_branch_executed = True
+                default_source = "track_c_blended"
+            elif self.disable_memory:
+                realized_disp = None
+                mem_updated = None
+                goal_t = vis_goal
+                default_source = "track_c_visual_only"
             else:
-                realized_disp = torch.zeros(3, device=self.device)
+                realized_disp = None
                 mem_updated = vis_goal
                 goal_t = vis_goal
+                default_source = "track_c_initial_visual"
 
             self._last_vis_goal = vis_goal
             self._last_mem_updated = mem_updated
@@ -551,19 +562,30 @@ class HJEPAAgent(BaseAgentWrapper):
                     goal_t = bg_fn(goal_t, vis_goal, mem_updated)
                 except TypeError:
                     goal_t = bg_fn(goal_t)
+                default_source = "track_c_blended_intercepted"
 
             self._prev_latent = s_t.detach()
-            self._ego_goal_memory = goal_t.squeeze(0).detach()
+            if self.disable_memory:
+                self._ego_goal_memory = None
+            else:
+                self._ego_goal_memory = goal_t.squeeze(0).detach()
+
+            g_blended_np = goal_t.squeeze(0).detach().cpu().numpy()
             self.last_goal_diag = {
                 "raw_task_id": raw_tid,
                 "used_task_id": tid,
                 "task_embedding": t_emb.squeeze(0).detach().cpu().numpy(),
                 "grounding_latent": s_ground.squeeze(0).detach().cpu().numpy(),
                 "g_visual_t": vis_goal.squeeze(0).detach().cpu().numpy(),
-                "g_memory_prev": g_mem_prev.cpu().numpy() if g_mem_prev is not None else None,
-                "delta_ego_t": realized_disp.detach().cpu().numpy(),
-                "g_memory_t": mem_updated.squeeze(0).detach().cpu().numpy(),
-                "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+                "g_memory_prev": g_mem_prev.cpu().numpy() if (not self.disable_memory and g_mem_prev is not None) else None,
+                "delta_ego_t": realized_disp.detach().cpu().numpy() if realized_disp is not None else None,
+                "g_memory_t": mem_updated.squeeze(0).detach().cpu().numpy() if mem_updated is not None else None,
+                "g_blended_t": g_blended_np,
+                "planner_goal_t": g_blended_np.copy(),
+                "task_embedding_executed": True,
+                "grounding_head_executed": True,
+                "memory_branch_executed": bool(memory_branch_executed),
+                "planner_goal_source": default_source,
                 "active_interceptors": [k for k, v in self.branch_interceptors.items() if v is not None],
             }
             return goal_t
@@ -582,11 +604,18 @@ class HJEPAAgent(BaseAgentWrapper):
         self.last_goal_diag = {
             "raw_task_id": None,
             "used_task_id": None,
+            "task_embedding": None,
+            "grounding_latent": None,
             "g_visual_t": None,
             "g_memory_prev": None,
             "delta_ego_t": None,
             "g_memory_t": None,
-            "g_blended_t": goal_t.squeeze(0).detach().cpu().numpy(),
+            "g_blended_t": None,
+            "planner_goal_t": goal_t.squeeze(0).detach().cpu().numpy(),
+            "task_embedding_executed": False,
+            "grounding_head_executed": False,
+            "memory_branch_executed": False,
+            "planner_goal_source": "track_b_oracle_waypoint",
             "active_interceptors": [k for k, v in self.branch_interceptors.items() if v is not None],
         }
         return goal_t
@@ -622,11 +651,41 @@ class HJEPAAgent(BaseAgentWrapper):
         two_phase = torch.stack(two_phase_list, dim=0)
         return torch.cat([const_cands, two_phase], dim=0)
 
+    def _common_goal_diag_fields(self) -> dict:
+        return {
+            "raw_task_id": self.last_goal_diag.get("raw_task_id"),
+            "used_task_id": self.last_goal_diag.get("used_task_id"),
+            "task_embedding": self.last_goal_diag.get("task_embedding"),
+            "grounding_latent": self.last_goal_diag.get("grounding_latent"),
+            "g_visual_t": self.last_goal_diag.get("g_visual_t"),
+            "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
+            "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
+            "g_memory_t": self.last_goal_diag.get("g_memory_t"),
+            "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+            "planner_goal_t": self.last_goal_diag.get("planner_goal_t"),
+            "task_embedding_executed": bool(self.last_goal_diag.get("task_embedding_executed", False)),
+            "grounding_head_executed": bool(self.last_goal_diag.get("grounding_head_executed", False)),
+            "memory_branch_executed": bool(self.last_goal_diag.get("memory_branch_executed", False)),
+            "planner_goal_source": self.last_goal_diag.get("planner_goal_source", "unknown"),
+        }
+
     @torch.no_grad()
     def act(self, obs_rgb, robot_pose=None, target_pose=None, task_spec=None, goal_vec_body=None):
         img_t = torch.from_numpy(obs_rgb).permute(2, 0, 1).unsqueeze(0).float().to(self.device) / 255.0
         s_t = self.model.encode(img_t)
         goal_t = self._resolve_goal_vec(s_t, robot_pose, target_pose, task_spec, goal_vec_body)
+
+        if self.branch_interceptors.get("planner_goal") is not None:
+            pg_fn = self.branch_interceptors["planner_goal"]
+            try:
+                goal_t = pg_fn(goal_t, self.last_goal_diag)
+            except TypeError:
+                goal_t = pg_fn(goal_t)
+            goal_t = torch.as_tensor(goal_t, dtype=torch.float32, device=self.device).view(1, 4)
+            self.last_goal_diag["planner_goal_t"] = goal_t.squeeze(0).detach().cpu().numpy()
+            self.last_goal_diag["planner_goal_source"] = (
+                "track_c_planner_goal_override" if self.track == "observation" else "planner_goal_interceptor"
+            )
 
         a_react = self.model.predict_reactive_action(s_t, goal_t)
         if self.ablation_mode == "reactive":
@@ -639,11 +698,7 @@ class HJEPAAgent(BaseAgentWrapper):
                     "latent": s_t.squeeze(0).cpu().numpy(),
                     "track": self.track,
                     "ablation_mode": self.ablation_mode,
-                    "g_visual_t": self.last_goal_diag.get("g_visual_t"),
-                    "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
-                    "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
-                    "g_memory_t": self.last_goal_diag.get("g_memory_t"),
-                    "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+                    **self._common_goal_diag_fields(),
                     "a_react": a_react.squeeze(0).cpu().numpy(),
                     "micro_action": act_react,
                 },
@@ -676,11 +731,7 @@ class HJEPAAgent(BaseAgentWrapper):
                 "latent": s_t.squeeze(0).cpu().numpy(),
                 "track": self.track,
                 "ablation_mode": self.ablation_mode,
-                "g_visual_t": self.last_goal_diag.get("g_visual_t"),
-                "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
-                "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
-                "g_memory_t": self.last_goal_diag.get("g_memory_t"),
-                "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+                **self._common_goal_diag_fields(),
                 "a_react": a_react.squeeze(0).cpu().numpy(),
                 "best_micro_idx": best_idx,
                 "micro_action": best_act,
@@ -756,11 +807,7 @@ class HJEPAAgent(BaseAgentWrapper):
             "predicted_next_latent": next_s_m[best_micro_idx].cpu().numpy(),
             "track": self.track,
             "ablation_mode": self.ablation_mode,
-            "g_visual_t": self.last_goal_diag.get("g_visual_t"),
-            "g_memory_prev": self.last_goal_diag.get("g_memory_prev"),
-            "delta_ego_t": self.last_goal_diag.get("delta_ego_t"),
-            "g_memory_t": self.last_goal_diag.get("g_memory_t"),
-            "g_blended_t": self.last_goal_diag.get("g_blended_t"),
+            **self._common_goal_diag_fields(),
             "a_react": a_react.squeeze(0).cpu().numpy(),
             "macro_cand_seqs": macro_seqs.cpu().numpy(),
             "best_macro_idx": best_macro_idx,

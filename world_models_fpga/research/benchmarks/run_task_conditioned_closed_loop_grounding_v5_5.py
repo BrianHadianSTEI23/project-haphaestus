@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
-"""Project Hephaestus: Phase 5.5 Closed-Loop Mechanistic Grounding Experiment.
+"""Project Hephaestus: Phase 5.5 Closed-Loop Mechanistic Grounding Experiment (Audit-Fixed).
 
 Resolves how H-JEPA can exhibit closed-loop navigation success when Phase 5.4
 finds that its static t=0 task-conditioned output contrast is poorly aligned
 with ground-truth waypoint contrast.
 
-Evaluates 6 matched primary conditions (C1-C6) plus 1 auxiliary controller-memory
-ablation (A1) across the exact N=60 dual-visible Phase 5.3/5.4 scenes
-(30 nominal + 30 illumination_shift) with full per-timestep neural, physical,
-and planner telemetry.
+Audit corrections applied (Phase 5.5.1 Part A2):
+  - Distinguishes C6_track_b_oracle_waypoint_upper_bound (Track B structured oracle
+    bypassing task embedding, grounding head, and memory branch) from
+    C7_track_c_planner_goal_override (Track C observation pipeline executed normally
+    with only planner goal overridden by gt_t without overwriting _ego_goal_memory).
+  - Replaces any missing-value zero/oracle trace substitutions with explicit NaN/null
+    markers and records explicit provenance (task_embedding_executed,
+    grounding_head_executed, memory_branch_executed, planner_goal_source).
+  - Notes that C2 freezes the blended t=0 goal (not pure visual vs pure memory) and
+    Phase 5.5 cohort pairs have close (0.28-0.38 m) target-distractor separation;
+    object-separated selection & 2x2 feedback/memory decomposition are tested in
+    run_task_conditioned_closed_loop_grounding_v5_5_1.py.
 """
 
 from __future__ import annotations
@@ -63,10 +71,34 @@ PRIMARY_CONDITIONS: Tuple[str, ...] = (
     "C3_target_masked_rgb",
     "C4_distractor_masked_rgb",
     "C5_swapped_task_token",
-    "C6_oracle_waypoint",
+    "C6_track_b_oracle_waypoint_upper_bound",
+    "C7_track_c_planner_goal_override",
 )
 AUXILIARY_CONDITIONS: Tuple[str, ...] = ("A1_visual_only_no_memory",)
 ALL_CONDITIONS: Tuple[str, ...] = PRIMARY_CONDITIONS + AUXILIARY_CONDITIONS
+_TRACK_B_CONDITION_ALIASES: Tuple[str, ...] = (
+    "C6_track_b_oracle_waypoint_upper_bound",
+    "C6_oracle_waypoint",
+)
+
+
+def _opt_float_or_none(val: Any) -> Optional[float]:
+    if val is None:
+        return None
+    f = float(val)
+    return None if np.isnan(f) else f
+
+
+def _safe_nanmean(vals: Sequence[Optional[float]]) -> Optional[float]:
+    arr = np.asarray([np.nan if v is None else float(v) for v in vals], dtype=np.float64)
+    valid = arr[~np.isnan(arr)]
+    return float(np.mean(valid)) if valid.size > 0 else None
+
+
+def _safe_nanmean_deg(rad_vals: Sequence[float]) -> Optional[float]:
+    arr = np.asarray(rad_vals, dtype=np.float64)
+    valid = arr[~np.isnan(arr)]
+    return float(np.degrees(np.mean(valid))) if valid.size > 0 else None
 
 
 def compute_file_sha256(filepath: Path) -> str:
@@ -329,7 +361,7 @@ def evaluate_episode_condition(
     goal_reach_threshold: float = 0.35,
 ) -> Dict[str, Any]:
     """Runs one closed-loop episode under a Phase 5.5 mechanistic condition with full telemetry."""
-    if condition_name not in ALL_CONDITIONS:
+    if condition_name not in ALL_CONDITIONS and condition_name not in _TRACK_B_CONDITION_ALIASES:
         raise ValueError(f"Unsupported condition {condition_name!r}")
 
     env.restore_physical_baseline()
@@ -337,10 +369,14 @@ def evaluate_episode_condition(
     agent.reset()
 
     original_track = agent.track
-    if condition_name == "C6_oracle_waypoint":
+    original_disable_memory = bool(getattr(agent, "disable_memory", False))
+    is_track_b_oracle = condition_name in _TRACK_B_CONDITION_ALIASES
+    if is_track_b_oracle:
         agent.track = "structured"
+        agent.disable_memory = True
     else:
         agent.track = "observation"
+        agent.disable_memory = condition_name == "A1_visual_only_no_memory"
 
     # Capture grounding_head internal L1/L2 post-ReLU activations during forward pass
     l1_captured: List[Optional[np.ndarray]] = [None]
@@ -375,13 +411,15 @@ def evaluate_episode_condition(
         # Configure condition interceptors
         current_pose_holder: List[np.ndarray] = [init_pos.copy()]
         frozen_world_goal_holder: List[Optional[np.ndarray]] = [None]
+        current_gt_holder: List[Optional[np.ndarray]] = [None]
 
-        if condition_name == "C5_swapped_task_token":
-            swapped_tid = int(spec["swapped_task_token"])
-            agent.set_branch_interceptor("task_id", lambda _tid, st=swapped_tid: st)
-        else:
-            nom_tid = int(spec["task_token"])
-            agent.set_branch_interceptor("task_id", lambda _tid, nt=nom_tid: nt)
+        if not is_track_b_oracle:
+            if condition_name == "C5_swapped_task_token":
+                swapped_tid = int(spec["swapped_task_token"])
+                agent.set_branch_interceptor("task_id", lambda _tid, st=swapped_tid: st)
+            else:
+                nom_tid = int(spec["task_token"])
+                agent.set_branch_interceptor("task_id", lambda _tid, nt=nom_tid: nt)
 
         if condition_name == "C2_frozen_world_goal":
             def _freeze_world_goal(g_blended_t, _v=None, _m=None):
@@ -395,6 +433,12 @@ def evaluate_episode_condition(
 
         elif condition_name == "A1_visual_only_no_memory":
             agent.set_branch_interceptor("blended_goal", lambda _g, vis, _mem: vis)
+
+        elif condition_name == "C7_track_c_planner_goal_override":
+            def _override_planner_goal(_goal_t, _diag=None, holder=current_gt_holder):
+                return torch.as_tensor(holder[0], dtype=torch.float32, device=agent.device).view(1, 4)
+
+            agent.set_branch_interceptor("planner_goal", _override_planner_goal)
 
         # Static t=0 contrast diagnostic on identical unmasked initial frame obs_0 (Task A vs Task B)
         # Only requires one quick grounding forward check
@@ -421,6 +465,7 @@ def evaluate_episode_condition(
         tr_g_vis: List[np.ndarray] = []
         tr_g_mem: List[np.ndarray] = []
         tr_g_blend: List[np.ndarray] = []
+        tr_g_planner: List[np.ndarray] = []
         tr_delta_ego: List[np.ndarray] = []
         tr_gt_target: List[np.ndarray] = []
         tr_gt_dist: List[np.ndarray] = []
@@ -439,6 +484,11 @@ def evaluate_episode_condition(
         tr_action_target_cos: List[float] = []
         tr_goal_ang_err_rad: List[float] = []
         tr_vis_ang_err_rad: List[float] = []
+        tr_planner_goal_ang_err_rad: List[float] = []
+        tr_task_emb_exec: List[bool] = []
+        tr_grounding_exec: List[bool] = []
+        tr_mem_exec: List[bool] = []
+        tr_planner_sources: List[str] = []
 
         collision_occurred = False
         goal_reached = False
@@ -455,6 +505,7 @@ def evaluate_episode_condition(
 
             gt_t = compute_body_frame_goal_vec(curr_pose, eval_wp)
             gt_d = compute_body_frame_goal_vec(curr_pose, dist_wp)
+            current_gt_holder[0] = gt_t
             tr_gt_target.append(gt_t)
             tr_gt_dist.append(gt_d)
             tr_dist_target_wp.append(float(np.linalg.norm(curr_pose[:2] - eval_wp[:2])))
@@ -483,37 +534,58 @@ def evaluate_episode_condition(
             l1_captured[0] = None
             l2_captured[0] = None
 
-            if condition_name == "C6_oracle_waypoint":
+            if is_track_b_oracle:
                 act, diag = agent.act(obs_for_agent, robot_pose=curr_pose, task_spec=spec, goal_vec_body=gt_t)
             else:
                 act, diag = agent.act(obs_for_agent, robot_pose=curr_pose, task_spec=spec)
 
             tr_latent_s.append(np.asarray(diag["latent"], dtype=np.float32))
-            tr_l1.append(l1_captured[0] if l1_captured[0] is not None else np.zeros(64, dtype=np.float32))
-            tr_l2.append(l2_captured[0] if l2_captured[0] is not None else np.zeros(64, dtype=np.float32))
+            tr_l1.append(
+                l1_captured[0] if l1_captured[0] is not None else np.full(64, np.nan, dtype=np.float32)
+            )
+            tr_l2.append(
+                l2_captured[0] if l2_captured[0] is not None else np.full(64, np.nan, dtype=np.float32)
+            )
 
-            g_vis = np.asarray(diag.get("g_visual_t") if diag.get("g_visual_t") is not None else gt_t, dtype=np.float32)
-            g_mem = np.asarray(diag.get("g_memory_t") if diag.get("g_memory_t") is not None else gt_t, dtype=np.float32)
-            g_bld = np.asarray(diag.get("g_blended_t") if diag.get("g_blended_t") is not None else gt_t, dtype=np.float32)
-            d_ego = np.asarray(diag.get("delta_ego_t") if diag.get("delta_ego_t") is not None else np.zeros(3), dtype=np.float32)
+            def _vec_or_nan(val: Any, dim: int) -> np.ndarray:
+                if val is None:
+                    return np.full(dim, np.nan, dtype=np.float32)
+                return np.asarray(val, dtype=np.float32)
+
+            g_vis = _vec_or_nan(diag.get("g_visual_t"), 4)
+            g_mem = _vec_or_nan(diag.get("g_memory_t"), 4)
+            g_bld = _vec_or_nan(diag.get("g_blended_t"), 4)
+            g_pln = _vec_or_nan(diag.get("planner_goal_t"), 4)
+            d_ego = _vec_or_nan(diag.get("delta_ego_t"), 3)
 
             tr_g_vis.append(g_vis)
             tr_g_mem.append(g_mem)
             tr_g_blend.append(g_bld)
+            tr_g_planner.append(g_pln)
             tr_delta_ego.append(d_ego)
+            tr_task_emb_exec.append(bool(diag.get("task_embedding_executed", not is_track_b_oracle)))
+            tr_grounding_exec.append(bool(diag.get("grounding_head_executed", l1_captured[0] is not None)))
+            tr_mem_exec.append(bool(diag.get("memory_branch_executed", False)))
+            tr_planner_sources.append(str(diag.get("planner_goal_source", "unknown")))
             tr_a_react.append(np.asarray(diag.get("a_react", act), dtype=np.float32))
             tr_a_exec.append(np.asarray(act, dtype=np.float32))
             tr_best_macro_idx.append(int(diag.get("best_macro_idx", -1)))
-            tr_pred_macro_disp.append(np.asarray(diag.get("pred_macro_disp", np.zeros(3)), dtype=np.float32))
-            tr_pred_micro_disp.append(np.asarray(diag.get("pred_micro_disp", np.zeros(3)), dtype=np.float32))
-            tr_col_risk.append(float(diag.get("col_risk", 0.0)))
+            tr_pred_macro_disp.append(_vec_or_nan(diag.get("pred_macro_disp"), 3))
+            tr_pred_micro_disp.append(_vec_or_nan(diag.get("pred_micro_disp"), 3))
+            tr_col_risk.append(float(diag.get("col_risk", np.nan)))
 
-            # Angular errors and action alignment
+            # Angular errors and action alignment (explicit NaN when component did not execute)
             ang_gt = float(np.arctan2(gt_t[1], gt_t[0]))
-            ang_bld = float(np.arctan2(g_bld[1], g_bld[0]))
-            ang_vis = float(np.arctan2(g_vis[1], g_vis[0]))
-            tr_goal_ang_err_rad.append(float(abs(np.arctan2(np.sin(ang_bld - ang_gt), np.cos(ang_bld - ang_gt)))))
-            tr_vis_ang_err_rad.append(float(abs(np.arctan2(np.sin(ang_vis - ang_gt), np.cos(ang_vis - ang_gt)))))
+
+            def _ang_err_or_nan(vec: np.ndarray) -> float:
+                if np.any(np.isnan(vec[:2])):
+                    return float(np.nan)
+                ang_v = float(np.arctan2(vec[1], vec[0]))
+                return float(abs(np.arctan2(np.sin(ang_v - ang_gt), np.cos(ang_v - ang_gt))))
+
+            tr_goal_ang_err_rad.append(_ang_err_or_nan(g_bld))
+            tr_vis_ang_err_rad.append(_ang_err_or_nan(g_vis))
+            tr_planner_goal_ang_err_rad.append(_ang_err_or_nan(g_pln))
 
             act_xy = np.asarray(act[:2], dtype=np.float64)
             gt_xy = np.asarray(gt_t[:2], dtype=np.float64)
@@ -583,10 +655,37 @@ def evaluate_episode_condition(
             "success": success,
             "step0_static_contrast_cosine": step0_contrast_cos,
             "step0_static_contrast_eta_gt": step0_contrast_eta_gt,
-            "step0_blended_goal_ang_err_deg": float(np.degrees(tr_goal_ang_err_rad[0])),
-            "mean_step_blended_goal_ang_err_deg": float(np.degrees(np.mean(tr_goal_ang_err_rad))),
-            "mean_step_vis_goal_ang_err_deg": float(np.degrees(np.mean(tr_vis_ang_err_rad))),
+            "step0_blended_goal_ang_err_deg": (
+                None if np.isnan(tr_goal_ang_err_rad[0]) else float(np.degrees(tr_goal_ang_err_rad[0]))
+            ),
+            "mean_step_blended_goal_ang_err_deg": _safe_nanmean_deg(tr_goal_ang_err_rad),
+            "mean_step_vis_goal_ang_err_deg": _safe_nanmean_deg(tr_vis_ang_err_rad),
+            "mean_step_planner_goal_ang_err_deg": _safe_nanmean_deg(tr_planner_goal_ang_err_rad),
             "mean_step_action_target_cos": float(np.mean(tr_action_target_cos)),
+            "task_embedding_executed_steps": int(sum(1 for x in tr_task_emb_exec if x)),
+            "grounding_head_executed_steps": int(sum(1 for x in tr_grounding_exec if x)),
+            "memory_branch_executed_steps": int(sum(1 for x in tr_mem_exec if x)),
+            "task_embedding_executed": bool(any(tr_task_emb_exec)),
+            "grounding_head_executed": bool(any(tr_grounding_exec)),
+            "memory_branch_executed": bool(any(tr_mem_exec)),
+            "planner_goal_source": tr_planner_sources[-1] if tr_planner_sources else "unknown",
+            "goal_intervention_semantics": (
+                "track_b_oracle_waypoint_bypass"
+                if is_track_b_oracle
+                else (
+                    "track_c_planner_goal_override_gt_preserving_memory"
+                    if condition_name == "C7_track_c_planner_goal_override"
+                    else (
+                        "frozen_blended_t0_world_goal"
+                        if condition_name == "C2_frozen_world_goal"
+                        else (
+                            "visual_only_memory_disabled"
+                            if condition_name == "A1_visual_only_no_memory"
+                            else "track_c_normal_or_input_masked"
+                        )
+                    )
+                )
+            ),
             "mean_target_visible_pixels": float(np.mean(tr_target_vis_px)),
             "mean_distractor_visible_pixels": float(np.mean(tr_distractor_vis_px)),
             "mean_masked_pixels": float(np.mean(tr_masked_px)),
@@ -599,6 +698,7 @@ def evaluate_episode_condition(
                 "g_visual": np.asarray(tr_g_vis, dtype=np.float32),
                 "g_memory": np.asarray(tr_g_mem, dtype=np.float32),
                 "g_blended": np.asarray(tr_g_blend, dtype=np.float32),
+                "planner_goal": np.asarray(tr_g_planner, dtype=np.float32),
                 "delta_ego": np.asarray(tr_delta_ego, dtype=np.float32),
                 "gt_target_body": np.asarray(tr_gt_target, dtype=np.float32),
                 "gt_distractor_body": np.asarray(tr_gt_dist, dtype=np.float32),
@@ -616,10 +716,15 @@ def evaluate_episode_condition(
                 "action_target_cos": np.asarray(tr_action_target_cos, dtype=np.float32),
                 "goal_ang_err_rad": np.asarray(tr_goal_ang_err_rad, dtype=np.float32),
                 "vis_ang_err_rad": np.asarray(tr_vis_ang_err_rad, dtype=np.float32),
+                "planner_goal_ang_err_rad": np.asarray(tr_planner_goal_ang_err_rad, dtype=np.float32),
+                "task_embedding_executed": np.asarray(tr_task_emb_exec, dtype=bool),
+                "grounding_head_executed": np.asarray(tr_grounding_exec, dtype=bool),
+                "memory_branch_executed": np.asarray(tr_mem_exec, dtype=bool),
             },
         }
     finally:
         agent.track = original_track
+        agent.disable_memory = original_disable_memory
         for h in hooks:
             h.remove()
 
@@ -632,8 +737,8 @@ def _summarize_condition_records(records: List[Dict[str, Any]], seed: int = 5500
     paths = [float(r["path_length_m"]) for r in records]
     steps = [float(r["executed_steps"]) for r in records]
     cols = [bool(r["collision"]) for r in records]
-    ang_errs = [float(r["mean_step_blended_goal_ang_err_deg"]) for r in records]
-    vis_ang_errs = [float(r["mean_step_vis_goal_ang_err_deg"]) for r in records]
+    ang_errs = [r.get("mean_step_blended_goal_ang_err_deg") for r in records]
+    vis_ang_errs = [r.get("mean_step_vis_goal_ang_err_deg") for r in records]
     act_cos = [float(r["mean_step_action_target_cos"]) for r in records]
     redir = [bool(r["redirected_to_distractor"]) for r in records]
     closer_dist = [bool(r["closer_to_distractor"]) for r in records]
@@ -650,7 +755,7 @@ def _summarize_condition_records(records: List[Dict[str, Any]], seed: int = 5500
             "mean_final_goal_error_m": float(np.mean([x["final_eval_goal_error_m"] for x in sub])) if ns else 0.0,
             "median_final_goal_error_m": float(np.median([x["final_eval_goal_error_m"] for x in sub])) if ns else 0.0,
             "mean_action_target_cos": float(np.mean([x["mean_step_action_target_cos"] for x in sub])) if ns else 0.0,
-            "mean_step_blended_goal_ang_err_deg": float(np.mean([x["mean_step_blended_goal_ang_err_deg"] for x in sub])) if ns else 0.0,
+            "mean_step_blended_goal_ang_err_deg": _safe_nanmean([x.get("mean_step_blended_goal_ang_err_deg") for x in sub]),
         }
 
     return {
@@ -669,8 +774,8 @@ def _summarize_condition_records(records: List[Dict[str, Any]], seed: int = 5500
         "mean_path_length_m": float(np.mean(paths)) if n else 0.0,
         "median_path_length_m": float(np.median(paths)) if n else 0.0,
         "mean_executed_steps": float(np.mean(steps)) if n else 0.0,
-        "mean_step_blended_goal_ang_err_deg": float(np.mean(ang_errs)) if n else 0.0,
-        "mean_step_vis_goal_ang_err_deg": float(np.mean(vis_ang_errs)) if n else 0.0,
+        "mean_step_blended_goal_ang_err_deg": _safe_nanmean(ang_errs),
+        "mean_step_vis_goal_ang_err_deg": _safe_nanmean(vis_ang_errs),
         "mean_step_action_target_cos": float(np.mean(act_cos)) if n else 0.0,
         "mean_target_visible_pixels": float(np.mean([r["mean_target_visible_pixels"] for r in records])) if n else 0.0,
         "mean_distractor_visible_pixels": float(np.mean([r["mean_distractor_visible_pixels"] for r in records])) if n else 0.0,
@@ -696,10 +801,21 @@ def _paired_comparison(recs_a: List[Dict[str, Any]], recs_b: List[Dict[str, Any]
     ed_mean, ed_lo, ed_hi = paired_bootstrap_diff_ci(err_a, err_b, seed=seed + 1)
     p_err_wilc = float(stats.wilcoxon(np.asarray(err_a) - np.asarray(err_b), alternative="two-sided").pvalue) if not np.allclose(err_a, err_b) else 1.0
 
-    ang_a = [float(r["mean_step_blended_goal_ang_err_deg"]) for r in recs_a]
-    ang_b = [float(r["mean_step_blended_goal_ang_err_deg"]) for r in recs_b]
-    ad_mean, ad_lo, ad_hi = paired_bootstrap_diff_ci(ang_a, ang_b, seed=seed + 2)
-    p_ang_wilc = float(stats.wilcoxon(np.asarray(ang_a) - np.asarray(ang_b), alternative="two-sided").pvalue) if not np.allclose(ang_a, ang_b) else 1.0
+    ang_a_raw = [r.get("mean_step_blended_goal_ang_err_deg") for r in recs_a]
+    ang_b_raw = [r.get("mean_step_blended_goal_ang_err_deg") for r in recs_b]
+    valid_ang_idx = [i for i, (va, vb) in enumerate(zip(ang_a_raw, ang_b_raw)) if va is not None and vb is not None and not np.isnan(va) and not np.isnan(vb)]
+    if len(valid_ang_idx) > 0:
+        ang_a = [float(ang_a_raw[i]) for i in valid_ang_idx]
+        ang_b = [float(ang_b_raw[i]) for i in valid_ang_idx]
+        ad_mean, ad_lo, ad_hi = paired_bootstrap_diff_ci(ang_a, ang_b, seed=seed + 2)
+        p_ang_wilc = (
+            float(stats.wilcoxon(np.asarray(ang_a) - np.asarray(ang_b), alternative="two-sided").pvalue)
+            if not np.allclose(ang_a, ang_b)
+            else 1.0
+        )
+        ang_diff_ci: Optional[List[float]] = [ad_lo, ad_hi]
+    else:
+        ad_mean, ang_diff_ci, p_ang_wilc = None, None, None
 
     cos_a = [float(r["mean_step_action_target_cos"]) for r in recs_a]
     cos_b = [float(r["mean_step_action_target_cos"]) for r in recs_b]
@@ -719,7 +835,7 @@ def _paired_comparison(recs_a: List[Dict[str, Any]], recs_b: List[Dict[str, Any]
         "final_error_diff_95ci_m": [ed_lo, ed_hi],
         "final_error_wilcoxon_two_sided_p": p_err_wilc,
         "goal_ang_err_diff_deg": ad_mean,
-        "goal_ang_err_diff_95ci_deg": [ad_lo, ad_hi],
+        "goal_ang_err_diff_95ci_deg": ang_diff_ci,
         "goal_ang_err_wilcoxon_two_sided_p": p_ang_wilc,
         "action_target_cos_diff": cd_mean,
         "action_target_cos_diff_95ci": [cd_lo, cd_hi],
@@ -747,12 +863,15 @@ def generate_figures_from_saved_artifacts(
         "C3_target_masked_rgb": "C3\nTgt Mask",
         "C4_distractor_masked_rgb": "C4\nDist Mask",
         "C5_swapped_task_token": "C5\nSwap Tok",
+        "C6_track_b_oracle_waypoint_upper_bound": "C6\nTrackB Orac",
         "C6_oracle_waypoint": "C6\nOracle WP",
+        "C7_track_c_planner_goal_override": "C7\nTrackC Ovrd",
         "A1_visual_only_no_memory": "A1\nVis Only",
     }
 
     # Figure 1: Condition Success Rates & Final Error by Context
-    cond_order = [c for c in ALL_CONDITIONS if c in summary["conditions"]]
+    known_order = list(ALL_CONDITIONS) + ["C6_oracle_waypoint"]
+    cond_order = [c for c in known_order if c in summary["conditions"]]
     fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.0), dpi=180)
     x = np.arange(len(cond_order))
     rates = [summary["conditions"][c]["success_rate"] * 100.0 for c in cond_order]
@@ -764,14 +883,14 @@ def generate_figures_from_saved_artifacts(
         max(0.0, (summary["conditions"][c]["success_wilson_95ci"][1] - summary["conditions"][c]["success_rate"]) * 100.0)
         for c in cond_order
     ]
-    colors = ["#2563eb", "#f59e0b", "#dc2626", "#16a34a", "#7c3aed", "#0d9488", "#64748b"][: len(cond_order)]
+    colors = ["#2563eb", "#f59e0b", "#dc2626", "#16a34a", "#7c3aed", "#0d9488", "#0284c7", "#64748b"][: len(cond_order)]
 
     axes[0].bar(x, rates, yerr=[lo_err, hi_err], capsize=4, color=colors, alpha=0.88, edgecolor="#111827")
     for idx, val in enumerate(rates):
         axes[0].text(idx, val + hi_err[idx] + 2.0, f"{val:.1f}%", ha="center", va="bottom", fontsize=8.5, fontweight="bold")
     axes[0].set_ylim(0, 118)
     axes[0].set_xticks(x)
-    axes[0].set_xticklabels([short_names[c] for c in cond_order], fontsize=8.5)
+    axes[0].set_xticklabels([short_names.get(c, c) for c in cond_order], fontsize=8.0)
     axes[0].set_ylabel("Closed-Loop Success Rate (%) [95% Wilson CI]")
     axes[0].set_title("Phase 5.5 Matched Cohort Success (N=60 per condition)")
     axes[0].grid(axis="y", linestyle="--", alpha=0.35)
@@ -784,7 +903,7 @@ def generate_figures_from_saved_artifacts(
     axes[1].bar(x + width / 2, ill_means, width=width, label="Illumination Shift (N=30)", color="#f97316", alpha=0.88)
     axes[1].axhline(0.35, color="#dc2626", linestyle="--", linewidth=1.2, label="Goal Threshold (0.35 m)")
     axes[1].set_xticks(x)
-    axes[1].set_xticklabels([short_names[c] for c in cond_order], fontsize=8.5)
+    axes[1].set_xticklabels([short_names.get(c, c) for c in cond_order], fontsize=8.0)
     axes[1].set_ylabel("Mean Final Waypoint Error (m)")
     axes[1].set_title("Final Goal Error Stratified by Illumination Context")
     axes[1].legend(fontsize=8, loc="upper left")
@@ -804,7 +923,9 @@ def generate_figures_from_saved_artifacts(
         ("C3_target_masked_rgb", "C3 Target Masked", "#dc2626", "-"),
         ("C4_distractor_masked_rgb", "C4 Distractor Masked", "#16a34a", "-."),
         ("C5_swapped_task_token", "C5 Swapped Token", "#7c3aed", ":"),
+        ("C6_track_b_oracle_waypoint_upper_bound", "C6 TrackB Oracle WP", "#0d9488", "--"),
         ("C6_oracle_waypoint", "C6 Oracle WP", "#0d9488", "--"),
+        ("C7_track_c_planner_goal_override", "C7 TrackC Goal Ovrd", "#0284c7", "-."),
     ]
     for cname, label, col, ls in plot_conds:
         eps_c = [ep for ep in episodes if ep["condition"] == cname]
@@ -831,18 +952,23 @@ def generate_figures_from_saved_artifacts(
 
         ts = np.arange(max_t)
         d_mean = np.nanmean(dist_mat, axis=0)
-        d_sem = np.nanstd(dist_mat, axis=0) / np.sqrt(np.sum(~np.isnan(dist_mat), axis=0))
+        d_sem = np.nanstd(dist_mat, axis=0) / np.sqrt(np.maximum(1, np.sum(~np.isnan(dist_mat), axis=0)))
         axes[0].plot(ts, d_mean, label=label, color=col, linestyle=ls, linewidth=2.0)
         axes[0].fill_between(ts, d_mean - d_sem, d_mean + d_sem, color=col, alpha=0.12)
 
-        # For active-step angle and action cosine, plot only while >=10 episodes are still running
+        # For active-step angle and action cosine, plot only while >=10 episodes (or >=1 for tiny cohorts) have non-NaN entries
+        min_active = min(10, len(eps_c))
         cnt_a = np.sum(~np.isnan(ang_mat), axis=0)
-        keep = cnt_a >= min(10, len(eps_c))
-        a_mean = np.nanmean(ang_mat[:, keep], axis=0)
-        axes[1].plot(ts[keep], a_mean, label=label, color=col, linestyle=ls, linewidth=2.0)
+        keep_a = cnt_a >= min_active
+        if np.any(keep_a):
+            a_mean = np.nanmean(ang_mat[:, keep_a], axis=0)
+            axes[1].plot(ts[keep_a], a_mean, label=label, color=col, linestyle=ls, linewidth=2.0)
 
-        c_mean = np.nanmean(cos_mat[:, keep], axis=0)
-        axes[2].plot(ts[keep], c_mean, label=label, color=col, linestyle=ls, linewidth=2.0)
+        cnt_c = np.sum(~np.isnan(cos_mat), axis=0)
+        keep_c = cnt_c >= min_active
+        if np.any(keep_c):
+            c_mean = np.nanmean(cos_mat[:, keep_c], axis=0)
+            axes[2].plot(ts[keep_c], c_mean, label=label, color=col, linestyle=ls, linewidth=2.0)
 
     axes[0].axhline(0.35, color="#111827", linestyle=":", linewidth=1.0, label="Threshold 0.35m")
     axes[0].set_xlabel("Control Step t")
@@ -994,7 +1120,8 @@ def run_phase5_5_experiment(
         ("C3_vs_C1_target_masked", "C3_target_masked_rgb", "C1_full_closed_loop"),
         ("C3_vs_C4_target_vs_distractor_mask", "C3_target_masked_rgb", "C4_distractor_masked_rgb"),
         ("C5_vs_C1_swapped_token", "C5_swapped_task_token", "C1_full_closed_loop"),
-        ("C6_vs_C1_oracle_waypoint", "C6_oracle_waypoint", "C1_full_closed_loop"),
+        ("C6_vs_C1_track_b_oracle_waypoint", "C6_track_b_oracle_waypoint_upper_bound", "C1_full_closed_loop"),
+        ("C7_vs_C1_track_c_planner_override", "C7_track_c_planner_goal_override", "C1_full_closed_loop"),
     ]
     planned_comparisons: Dict[str, Any] = {}
     raw_ps = []
