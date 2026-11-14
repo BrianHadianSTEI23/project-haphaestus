@@ -1,0 +1,81 @@
+{
+  "phase": "5.6",
+  "generated_utc": "2026-11-14T13:29:49.855393+00:00",
+  "execution_git_commit": "8479eb25c562dc72760ca7c229d86550a4e620db",
+  "git_working_tree_clean_at_execution": true,
+  "command": ".venv/bin/python world_models_fpga/research/benchmarks/run_task_conditioned_stagewise_binding_v5_6.py --device cuda",
+  "inputs": [
+    {
+      "path": "world_models_fpga/checkpoints_v4/hjepa_best.pt",
+      "bytes": 794456,
+      "sha256": "ac69688eae1f4128719dfce912da47c8ae55cbf2412fc8c10feba53d93f1f442"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_scenes.jsonl",
+      "bytes": 188119,
+      "sha256": "2cf3f1c2e32239a9a5b31b516da6f6af514829869684a4623ae2a8017a62ba4e"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_closed_loop_grounding_v5_5_1_1_geometry_audit.json",
+      "bytes": 55593,
+      "sha256": "7b3f445eeb95962d0498d972cd4477b27fbcba1e76ff46927e456850bd99315b"
+    },
+    {
+      "path": "world_models_fpga/research/datasets/splits_v4/train_benchmark.npz",
+      "bytes": 69355374,
+      "sha256": "8ba362a4908955d56610333ae5c4c44cadb6054bdcdc9490b12b6c9c4a06bab7"
+    },
+    {
+      "path": "world_models_fpga/research/datasets/splits_v4/train_benchmark_metadata.json",
+      "bytes": 1791327,
+      "sha256": "aff583117038e045d3285f96511d7cd0a2bc55fe81e84544e10d94e04809b6f0"
+    },
+    {
+      "path": "research/review_package/phase5_6/preregistered_protocol.md",
+      "bytes": 12189,
+      "sha256": "efb51d89135d814537a962387d6f2d8fd34b673b7e9cbd1d4178ef68f1200383"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/run_task_conditioned_stagewise_binding_v5_6.py",
+      "bytes": 93232,
+      "sha256": "d7905c9893495657e4e4dc9cb9e9ff9da3dcc060fb124f4227cf0f09769e62cf"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_stagewise_binding_v5_6_coordinate_audit.json",
+      "bytes": 12740,
+      "sha256": "d3c0a874a9f7d34668e3f6e931ef9aafb5dd5b2bf7141542279f0d1d44a62f98"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_stagewise_binding_v5_6_token_sweep.jsonl",
+      "bytes": 2512965,
+      "sha256": "9c5a345d440a7d7d6bd96098188e0d5059fa3918a34a259e0b65b2866aed037c"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_stagewise_binding_v5_6_probe_metrics.csv",
+      "bytes": 221521,
+      "sha256": "d7326d9176450cd93053c835a6f79428821f55243b6bfd926ce7bb2e6fa039b7"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_stagewise_binding_v5_6_intervention_pair_metrics.jsonl",
+      "bytes": 1419707,
+      "sha256": "69499985ab227b8b1abaf6e6529255af1accef9eda88368213d46665e567e445"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_stagewise_binding_v5_6_summary.json",
+      "bytes": 89269,
+      "sha256": "7d1e350aff42f2d285a52edfd27f8104a11ac57ed11e3fc2568222bbd247ad7e"
+    },
+    {
+      "path": "world_models_fpga/research/benchmarks/results/task_conditioned_stagewise_binding_v5_6_schema.md",
+      "bytes": 1387,
+      "sha256": "99d6d58ce40a35c88e373fb75b8a949f19daa6b3231e122d1e2c53d2066c188f"
+    },
+    {
+      "path": "research/review_package/phase5_6/execution_run.log",
+      "bytes": 914,
+      "sha256": "d9c35622c5cb327ca159996e52ca08831654e6f32c14edc8bda65010eaebea7a"
+    }
+  ]
+}
